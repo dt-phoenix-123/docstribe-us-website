@@ -1,0 +1,1282 @@
+import { useState, useRef, useEffect, useCallback } from 'react';
+
+// ── Phase keyword detection (drives Shakti highlight on the page) ─────────────
+const PHASE_KEYWORDS = [
+  // Phase 0 — Front End
+  ['contract', 'auth', 'authorization', 'prior auth', 'payor', 'medical necessity',
+   'fee schedule', 'intake', 'eligibility', 'front end', 'rulebook', 'plan-specific'],
+  // Phase 1 — Mid Cycle
+  ['cdi', 'coding', 'clinical', 'drg', 'cpt', 'modifier', 'charge capture',
+   'claim risk', 'mid cycle', 'documentation', 'routing', 'workbench', 'pre-bill'],
+  // Phase 2 — Back End
+  ['denial', 'appeal', 'era', 'reconcil', 'underpayment', 'recovery', 'remit',
+   'variance', 'back end', 'integrity', 'payment variance', 'collected'],
+];
+
+function detectPhase(words, index) {
+  const window = words.slice(Math.max(0, index - 4), index + 6).join(' ').toLowerCase();
+  for (let i = 0; i < PHASE_KEYWORDS.length; i++) {
+    if (PHASE_KEYWORDS[i].some(kw => window.includes(kw))) return i;
+  }
+  return null;
+}
+
+function emitPhase(phase) {
+  window.dispatchEvent(new CustomEvent('rudra-phase', { detail: { phase } }));
+}
+
+// ── Tour trigger detection ────────────────────────────────────────────────────
+const TOUR_RE = /\b(walk me through|show me (how|the|all|it)|the (whole |full |patient |revenue )(workflow|journey|cycle|process)|how does it (all |)work|full overview|explain (everything|the process|how it all)|give me (an |the )(overview|tour))\b/i;
+
+const TOUR_PHASE_COLORS = ['#00cba8', '#4d8aff', '#ff7b4a'];
+const TOUR_PHASE_LABELS = ['Front End', 'Mid Cycle', 'Back End'];
+
+// ── Constants ─────────────────────────────────────────────────────────────────
+const ROLES = [
+  { id: 'cfo',       label: 'Hospital CFO / CEO',  sub: 'Revenue & financial strategy',  abbr: 'CFO' },
+  { id: 'rcm',       label: 'RCM Director',         sub: 'Revenue cycle operations',       abbr: 'RCM' },
+  { id: 'physician', label: 'Physician / CMO',       sub: 'Clinical documentation',         abbr: 'MD'  },
+  { id: 'investor',  label: 'Investor / Partner',    sub: 'Market opportunity & growth',    abbr: '$'   },
+  { id: 'exploring', label: 'Just Exploring',        sub: 'Give me the full picture',       abbr: '?'   },
+];
+
+const PAINS = [
+  { id: 'denials',  label: 'Rising Denial Rates',     color: '#f87171', bg: 'rgba(248,113,113,0.08)'  },
+  { id: 'cdi',      label: 'CDI & Coding Gaps',       color: '#fbbf24', bg: 'rgba(251,191,36,0.08)'   },
+  { id: 'auth',     label: 'Prior Auth Delays',       color: '#a78bfa', bg: 'rgba(167,139,250,0.08)'  },
+  { id: 'underpay', label: 'Contract Underpayments',  color: '#60a5fa', bg: 'rgba(96,165,250,0.08)'   },
+  { id: 'drg',      label: 'DRG Downgrades',          color: '#34d399', bg: 'rgba(52,211,153,0.08)'   },
+  { id: 'all',      label: 'Show Me Everything',      color: '#38bdf8', bg: 'rgba(56,189,248,0.08)'   },
+];
+
+// ── EQ Canvas visualizer ──────────────────────────────────────────────────────
+function EQCanvas({ analyserRef, isPlaying }) {
+  const canvasRef = useRef(null);
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    let raf;
+    const BAR_COUNT = 42;
+    const GAP = 3;
+
+    const draw = () => {
+      raf = requestAnimationFrame(draw);
+      const W = canvas.width;
+      const H = canvas.height;
+      ctx.clearRect(0, 0, W, H);
+      const barW = (W - GAP * (BAR_COUNT - 1)) / BAR_COUNT;
+
+      if (isPlaying && analyserRef.current) {
+        const data = new Uint8Array(analyserRef.current.frequencyBinCount);
+        analyserRef.current.getByteFrequencyData(data);
+        for (let i = 0; i < BAR_COUNT; i++) {
+          const binIndex = Math.floor(i * data.length / BAR_COUNT);
+          const value = data[binIndex] / 255;
+          const barH = Math.max(3, value * (H - 6));
+          const x = i * (barW + GAP);
+          const y = H - barH;
+          const t = i / BAR_COUNT;
+          // teal (#00cba8) → indigo (#4d8aff)
+          const r = Math.round(0  + t * 77);
+          const g = Math.round(203 - t * 65);
+          const b = Math.round(168 + t * 87);
+          const a = 0.65 + value * 0.35;
+          ctx.fillStyle = `rgba(${r},${g},${b},${a})`;
+          ctx.fillRect(x, y, barW, barH);
+          // bright cap
+          ctx.fillStyle = `rgba(${r},${g},${b},1)`;
+          ctx.fillRect(x, y, barW, 2);
+        }
+      } else {
+        // idle: gentle breathing
+        for (let i = 0; i < BAR_COUNT; i++) {
+          const x = i * (barW + GAP);
+          const wave = Math.sin(Date.now() / 700 + i * 0.35) * 0.5 + 0.5;
+          const barH = 2 + wave * 5;
+          ctx.fillStyle = 'rgba(0,203,168,0.22)';
+          ctx.fillRect(x, H - barH, barW, barH);
+        }
+      }
+    };
+
+    draw();
+    return () => cancelAnimationFrame(raf);
+  }, [analyserRef, isPlaying]);
+
+  return (
+    <canvas
+      ref={canvasRef}
+      width={500}
+      height={68}
+      style={{ width: '100%', height: '68px', display: 'block' }}
+    />
+  );
+}
+
+// ── Outcomes visual (4-stat grid — shown for intro / general questions) ───────
+function OutcomesVisual({ visible }) {
+  const stats = [
+    { value: '18×',   label: 'Average ROI',        color: '#00cba8' },
+    { value: '$100M+', label: 'Revenue Recovered',  color: '#4d8aff' },
+    { value: '60 Days', label: 'Pilot to Live',     color: '#ff7b4a' },
+    { value: '100+',  label: 'Hospitals Deployed',  color: '#a78bfa' },
+  ];
+  return (
+    <div style={{ padding: '4px 24px 4px' }}>
+      <div style={{ fontSize: '9px', fontWeight: '700', letterSpacing: '2.5px', color: '#334155', marginBottom: '10px', fontFamily: 'Sora, sans-serif' }}>
+        GUARANTEED OUTCOMES
+      </div>
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '9px' }}>
+        {stats.map(({ value, label, color }, i) => (
+          <div key={label} style={{
+            padding: '12px 14px', borderRadius: '12px',
+            border: `1px solid ${color}30`, background: `${color}0d`,
+            opacity: visible ? 1 : 0,
+            transform: visible ? 'translateY(0)' : 'translateY(8px)',
+            transition: `opacity 0.45s ${i * 0.1}s ease, transform 0.45s ${i * 0.1}s ease`,
+          }}>
+            <div style={{ fontSize: '22px', fontWeight: '800', color, fontFamily: 'Sora, sans-serif', letterSpacing: '-0.5px', lineHeight: 1 }}>{value}</div>
+            <div style={{ fontSize: '10.5px', color: '#475569', marginTop: '4px', lineHeight: '1.3' }}>{label}</div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+// ── Phase flow visual (3-phase animated diagram — shown during tour) ───────────
+function PhaseFlowVisual({ activePhase, visible }) {
+  const phases = [
+    { label: 'Front End',  sub: 'Payor Intelligence',    color: '#00cba8', steps: ['Contract Parsing', 'Prior Auth Rules', 'Eligibility Checks', 'Fee Schedules'] },
+    { label: 'Mid Cycle',  sub: 'Clinical Intelligence', color: '#4d8aff', steps: ['CDI & Coding', 'DRG / CPT Edit', 'Claim Risk Score', 'Work Routing'] },
+    { label: 'Back End',   sub: 'Revenue Integrity',     color: '#ff7b4a', steps: ['ERA Reconcile', 'Underpayment Flag', 'Denial Appeals', 'Rulebook Update'] },
+  ];
+  return (
+    <div style={{ padding: '4px 24px 4px', opacity: visible ? 1 : 0, transition: 'opacity 0.4s ease' }}>
+      <div style={{ fontSize: '9px', fontWeight: '700', letterSpacing: '2.5px', color: '#334155', marginBottom: '10px', fontFamily: 'Sora, sans-serif' }}>
+        REVENUE CYCLE FLOW
+      </div>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '7px' }}>
+        {phases.map((phase, i) => {
+          const isActive = activePhase === i;
+          return (
+            <div key={i}>
+              <div style={{
+                borderRadius: '11px',
+                border: `1px solid ${isActive ? phase.color + '55' : phase.color + '18'}`,
+                background: isActive ? `${phase.color}10` : `${phase.color}04`,
+                padding: '10px 13px',
+                transition: 'all 0.45s ease',
+                boxShadow: isActive ? `0 0 18px ${phase.color}22` : 'none',
+              }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '9px', marginBottom: isActive ? '8px' : 0 }}>
+                  <div style={{
+                    width: '7px', height: '7px', borderRadius: '50%',
+                    background: phase.color,
+                    boxShadow: isActive ? `0 0 9px ${phase.color}` : 'none',
+                    transition: 'box-shadow 0.4s', flexShrink: 0,
+                  }} />
+                  <div>
+                    <div style={{ fontSize: '12px', fontWeight: '700', color: isActive ? phase.color : '#64748b', transition: 'color 0.4s', lineHeight: 1 }}>{phase.label}</div>
+                    <div style={{ fontSize: '10px', color: '#334155', marginTop: '2px' }}>{phase.sub}</div>
+                  </div>
+                </div>
+                {isActive && (
+                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: '5px' }}>
+                    {phase.steps.map((s, j) => (
+                      <span key={j} style={{
+                        fontSize: '9.5px', padding: '3px 8px', borderRadius: '20px',
+                        background: `${phase.color}18`, border: `1px solid ${phase.color}30`,
+                        color: phase.color, fontWeight: '500',
+                        animation: `rudraFadeIn 0.3s ${j * 0.07}s both ease`,
+                      }}>{s}</span>
+                    ))}
+                  </div>
+                )}
+              </div>
+              {i < 2 && (
+                <div style={{ display: 'flex', justifyContent: 'center', margin: '2px 0' }}>
+                  <svg width="10" height="8" viewBox="0 0 24 16" fill="none" stroke={phases[i].color + '35'} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                    <polyline points="6 2 12 12 18 2" />
+                  </svg>
+                </div>
+              )}
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
+// ── Tool: Stats Grid ─────────────────────────────────────────────────────────
+function StatsGrid({ data }) {
+  const stats = data?.stats || [];
+  return (
+    <div>
+      {data?.title && (
+        <div style={{ fontSize: '9px', fontWeight: '700', letterSpacing: '2.5px', color: '#334155', marginBottom: '10px', fontFamily: 'Sora, sans-serif' }}>
+          {data.title.toUpperCase()}
+        </div>
+      )}
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px' }}>
+        {stats.map(({ label, value, delta, color }, i) => (
+          <div key={i} style={{
+            padding: '11px 13px', borderRadius: '11px',
+            border: `1px solid ${color || '#00cba8'}30`,
+            background: `${color || '#00cba8'}0d`,
+            animation: `rudraFadeIn 0.4s ${i * 0.09}s both ease`,
+          }}>
+            <div style={{ fontSize: '20px', fontWeight: '800', color: color || '#00cba8', fontFamily: 'Sora, sans-serif', letterSpacing: '-0.5px', lineHeight: 1 }}>{value}</div>
+            <div style={{ fontSize: '10px', color: '#475569', marginTop: '3px', lineHeight: '1.3' }}>{label}</div>
+            {delta && <div style={{ fontSize: '9.5px', color: '#4ade80', marginTop: '4px', fontWeight: '700' }}>{delta}</div>}
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+// ── Tool: Comparison Table ────────────────────────────────────────────────────
+function ComparisonTable({ data }) {
+  const rows = data?.rows || [];
+  return (
+    <div>
+      {data?.title && (
+        <div style={{ fontSize: '9px', fontWeight: '700', letterSpacing: '2.5px', color: '#334155', marginBottom: '10px', fontFamily: 'Sora, sans-serif' }}>
+          {data.title.toUpperCase()}
+        </div>
+      )}
+      <div style={{ borderRadius: '10px', overflow: 'hidden', border: '1px solid rgba(255,255,255,0.06)' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr 1fr', background: 'rgba(255,255,255,0.03)', padding: '7px 12px', borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
+          <span style={{ fontSize: '9px', color: '#475569', fontWeight: '700', letterSpacing: '1px' }}>METRIC</span>
+          <span style={{ fontSize: '9px', color: '#f87171', fontWeight: '700', letterSpacing: '1px', textAlign: 'center' }}>BEFORE</span>
+          <span style={{ fontSize: '9px', color: '#4ade80', fontWeight: '700', letterSpacing: '1px', textAlign: 'center' }}>AFTER</span>
+        </div>
+        {rows.map((row, i) => (
+          <div key={i} style={{
+            display: 'grid', gridTemplateColumns: '2fr 1fr 1fr',
+            padding: '7px 12px',
+            borderBottom: i < rows.length - 1 ? '1px solid rgba(255,255,255,0.04)' : 'none',
+            animation: `rudraFadeIn 0.35s ${i * 0.07}s both ease`,
+          }}>
+            <span style={{ fontSize: '11px', color: '#94a3b8', lineHeight: '1.3' }}>{row.metric}</span>
+            <span style={{ fontSize: '11px', color: '#f87171', textAlign: 'center', fontWeight: '600' }}>{row.before}</span>
+            <span style={{ fontSize: '11px', color: '#4ade80', textAlign: 'center', fontWeight: '600' }}>{row.after}</span>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+// ── Tool: Phase Breakdown ─────────────────────────────────────────────────────
+function PhaseBreakdown({ data }) {
+  const phaseColors = ['#00cba8', '#4d8aff', '#ff7b4a'];
+  const color = phaseColors[data?.phase] || '#00cba8';
+  const steps = data?.steps || [];
+  const tags = data?.tags || [];
+  return (
+    <div>
+      <div style={{ fontSize: '9px', fontWeight: '700', letterSpacing: '2.5px', color: '#334155', marginBottom: '10px', fontFamily: 'Sora, sans-serif' }}>
+        {(data?.phaseName || 'PHASE DETAIL').toUpperCase()}
+      </div>
+      <div style={{ borderRadius: '11px', border: `1px solid ${color}40`, background: `${color}08`, padding: '12px 14px' }}>
+        {data?.problem && (
+          <div style={{ fontSize: '11px', color: '#64748b', marginBottom: '10px', lineHeight: '1.55', fontStyle: 'italic' }}>
+            {data.problem}
+          </div>
+        )}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', marginBottom: steps.length ? '10px' : 0 }}>
+          {steps.map((step, i) => (
+            <div key={i} style={{ display: 'flex', alignItems: 'flex-start', gap: '8px', animation: `rudraFadeIn 0.3s ${i * 0.07}s both ease` }}>
+              <div style={{ width: '5px', height: '5px', borderRadius: '50%', background: color, marginTop: '5px', flexShrink: 0, boxShadow: `0 0 5px ${color}` }} />
+              <span style={{ fontSize: '11.5px', color: '#cbd5e1', lineHeight: '1.45' }}>{step}</span>
+            </div>
+          ))}
+        </div>
+        {tags.length > 0 && (
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '5px', marginTop: '8px', marginBottom: data?.outcome ? '10px' : 0 }}>
+            {tags.map((tag, i) => (
+              <span key={i} style={{ fontSize: '9.5px', padding: '3px 8px', borderRadius: '20px', background: `${color}18`, border: `1px solid ${color}30`, color, fontWeight: '600' }}>{tag}</span>
+            ))}
+          </div>
+        )}
+        {data?.outcome && (
+          <div style={{ padding: '8px 10px', borderRadius: '8px', background: `${color}14`, border: `1px solid ${color}28`, fontSize: '11px', color, fontWeight: '600', lineHeight: '1.45' }}>
+            ✦ {data.outcome}
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
+// ── Tool router — renders the right component from AI tool call ────────────────
+function ToolOutput({ tool }) {
+  if (!tool?.type || !tool?.data) return null;
+  if (tool.type === 'stats_grid')       return <StatsGrid       data={tool.data} />;
+  if (tool.type === 'comparison_table') return <ComparisonTable data={tool.data} />;
+  if (tool.type === 'phase_breakdown')  return <PhaseBreakdown  data={tool.data} />;
+  return null;
+}
+
+// ── Role selection step ───────────────────────────────────────────────────────
+function RoleStep({ onSelect }) {
+  return (
+    <div style={{ padding: '28px 24px 32px' }}>
+      <h2 style={{ fontSize: '21px', fontWeight: '700', color: '#f1f5f9', margin: '0 0 8px', letterSpacing: '-0.3px' }}>
+        Who are you?
+      </h2>
+      <p style={{ fontSize: '13.5px', color: '#64748b', margin: '0 0 24px' }}>
+        I'll tailor your briefing in under 60 seconds.
+      </p>
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
+        {ROLES.map(role => (
+          <button
+            key={role.id}
+            className="rudra-card"
+            onClick={() => onSelect(role.id)}
+            style={{
+              padding: '18px 16px',
+              borderRadius: '14px',
+              border: '1px solid rgba(14,165,233,0.12)',
+              background: 'rgba(14,165,233,0.03)',
+              textAlign: 'left',
+              cursor: 'pointer',
+              transition: 'all 0.2s ease',
+              gridColumn: role.id === 'exploring' ? 'span 2' : undefined,
+            }}
+          >
+            <div style={{
+              width: '34px', height: '34px', borderRadius: '9px',
+              background: 'rgba(14,165,233,0.09)',
+              border: '1px solid rgba(14,165,233,0.18)',
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              fontSize: '11px', fontWeight: '700', color: '#38bdf8',
+              marginBottom: '10px', fontFamily: 'Sora, sans-serif',
+            }}>
+              {role.abbr}
+            </div>
+            <div style={{ fontSize: '13.5px', fontWeight: '600', color: '#e2e8f0', lineHeight: '1.35' }}>
+              {role.label}
+            </div>
+            <div style={{ fontSize: '12px', color: '#475569', marginTop: '3px' }}>
+              {role.sub}
+            </div>
+          </button>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+// ── Pain point selection step ─────────────────────────────────────────────────
+function PainStep({ onSelect, onBack }) {
+  return (
+    <div style={{ padding: '28px 24px 32px' }}>
+      <h2 style={{ fontSize: '21px', fontWeight: '700', color: '#f1f5f9', margin: '0 0 8px', letterSpacing: '-0.3px' }}>
+        What's keeping you up?
+      </h2>
+      <p style={{ fontSize: '13.5px', color: '#64748b', margin: '0 0 24px' }}>
+        Pick the problem that hits hardest.
+      </p>
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
+        {PAINS.map(pain => (
+          <button
+            key={pain.id}
+            className="rudra-chip"
+            onClick={() => onSelect(pain.id)}
+            style={{
+              padding: '14px 16px',
+              borderRadius: '12px',
+              border: `1px solid ${pain.color}2e`,
+              background: pain.bg,
+              textAlign: 'left',
+              cursor: 'pointer',
+              transition: 'all 0.2s ease',
+              gridColumn: pain.id === 'all' ? 'span 2' : undefined,
+            }}
+          >
+            <div style={{
+              width: '8px', height: '8px', borderRadius: '50%',
+              background: pain.color,
+              marginBottom: '8px',
+              boxShadow: `0 0 8px ${pain.color}`,
+            }} />
+            <div style={{ fontSize: '13px', fontWeight: '600', color: '#e2e8f0' }}>
+              {pain.label}
+            </div>
+          </button>
+        ))}
+      </div>
+      <button
+        onClick={onBack}
+        style={{
+          marginTop: '20px', background: 'none', border: 'none',
+          color: '#475569', fontSize: '13px', cursor: 'pointer',
+          display: 'flex', alignItems: 'center', gap: '6px', padding: 0,
+        }}
+      >
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <line x1="19" y1="12" x2="5" y2="12" /><polyline points="12 19 5 12 12 5" />
+        </svg>
+        Back
+      </button>
+    </div>
+  );
+}
+
+// ── Generating screen ─────────────────────────────────────────────────────────
+function GeneratingStep() {
+  return (
+    <div style={{ padding: '52px 24px 60px', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '36px' }}>
+      <div style={{ position: 'relative', width: '120px', height: '120px' }}>
+        {[0, 1, 2].map(i => (
+          <div key={i} style={{
+            position: 'absolute',
+            inset: `${-(i + 1) * 16}px`,
+            borderRadius: '50%',
+            border: `1px solid rgba(14,165,233,${0.28 - i * 0.07})`,
+            animation: `rudraPulse ${1.6 + i * 0.55}s ease-in-out ${i * 0.22}s infinite`,
+          }} />
+        ))}
+        <div style={{
+          position: 'absolute', inset: 0,
+          borderRadius: '50%',
+          background: 'linear-gradient(135deg, #0ea5e9 0%, #6366f1 50%, #8b5cf6 100%)',
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
+          fontSize: '36px',
+          boxShadow: '0 0 50px rgba(14,165,233,0.55)',
+        }}>ॐ</div>
+      </div>
+      <div style={{ textAlign: 'center' }}>
+        <div style={{ fontSize: '15px', fontWeight: '600', color: '#e2e8f0', marginBottom: '10px' }}>
+          Synthesizing your briefing
+        </div>
+        <div style={{ display: 'flex', gap: '7px', justifyContent: 'center' }}>
+          {[0, 1, 2].map(i => (
+            <div key={i} style={{
+              width: '8px', height: '8px', borderRadius: '50%', background: '#0ea5e9',
+              animation: `rudraDot 1.4s ${i * 0.2}s ease-in-out infinite`,
+            }} />
+          ))}
+        </div>
+        <div style={{ fontSize: '12.5px', color: '#334155', marginTop: '14px' }}>
+          RUDRA is analyzing your revenue cycle context…
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ── Individual chat message (RUDRA or user) ───────────────────────────────────
+function ChatMessage({ msg, isCurrentlyPlaying, words, wordIndex }) {
+  if (msg.role === 'user') {
+    return (
+      <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: '16px' }}>
+        <div style={{
+          maxWidth: '82%', padding: '10px 15px',
+          borderRadius: '18px 18px 4px 18px',
+          background: 'linear-gradient(135deg, #0ea5e9 0%, #6366f1 100%)',
+          fontSize: '13.5px', color: '#fff', lineHeight: '1.6',
+          wordBreak: 'break-word',
+        }}>
+          {msg.content}
+        </div>
+      </div>
+    );
+  }
+
+  // RUDRA assistant message
+  const displayWords = words || msg.content.split(' ');
+  return (
+    <div style={{ marginBottom: '22px' }}>
+      {/* Speaker row */}
+      <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '9px' }}>
+        <div style={{
+          width: '24px', height: '24px', borderRadius: '50%', flexShrink: 0,
+          background: 'linear-gradient(135deg, #0ea5e9, #6366f1)',
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
+          fontSize: '10px',
+          boxShadow: isCurrentlyPlaying ? '0 0 10px rgba(14,165,233,0.5)' : 'none',
+          transition: 'box-shadow 0.4s',
+        }}>ॐ</div>
+        <span style={{ fontSize: '9.5px', fontWeight: '700', color: '#38bdf8', letterSpacing: '2px', fontFamily: 'Sora, sans-serif' }}>
+          RUDRA
+        </span>
+        {isCurrentlyPlaying && (
+          <span style={{ display: 'flex', gap: '3px', alignItems: 'center', marginLeft: '2px' }}>
+            {[0, 1, 2].map(i => (
+              <span key={i} style={{
+                display: 'block', width: '3px', height: '3px', borderRadius: '50%',
+                background: '#38bdf8',
+                animation: `rudraDot 1.2s ${i * 0.15}s ease-in-out infinite`,
+              }} />
+            ))}
+          </span>
+        )}
+      </div>
+
+      {/* Visual tool card — embedded inline per message */}
+      {msg.visual && (
+        <div style={{
+          marginBottom: '8px', padding: '14px',
+          borderRadius: '14px',
+          border: '1px solid rgba(14,165,233,0.1)',
+          background: 'rgba(0,0,0,0.28)',
+          animation: 'rudraFadeIn 0.4s ease',
+        }}>
+          <ToolOutput tool={msg.visual} />
+        </div>
+      )}
+
+      {/* Message text — karaoke when currently playing */}
+      <div style={{
+        padding: '11px 15px',
+        borderRadius: '4px 18px 18px 18px',
+        background: 'rgba(255,255,255,0.04)',
+        border: '1px solid rgba(255,255,255,0.05)',
+        fontSize: '13.5px', lineHeight: '1.75', color: '#94a3b8',
+        wordBreak: 'break-word',
+      }}>
+        {isCurrentlyPlaying ? (
+          displayWords.map((word, i) => (
+            <span key={i} style={{
+              color: i <= wordIndex ? '#e2e8f0' : '#475569',
+              fontWeight: i === wordIndex ? '600' : '400',
+              transition: 'color 0.1s ease',
+              borderBottom: i === wordIndex ? '1px solid rgba(14,165,233,0.55)' : 'none',
+            }}>{word}{' '}</span>
+          ))
+        ) : (
+          msg.content
+        )}
+      </div>
+    </div>
+  );
+}
+
+// ── Audio player / chat interface ─────────────────────────────────────────────
+function PlayingStep({
+  words, wordIndex, isPlaying, muted, progress,
+  analyserRef, briefingAudio,
+  onPlay, onStop, onMute, onRestart, onReset,
+  chatMessages, chatInput, chatLoading, onChatInput, onChatSend,
+  isTour, tourStep,
+  visual, visualPhase,
+  toolOutput,
+}) {
+  const chatEndRef = useRef(null);
+  useEffect(() => {
+    chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  }, [chatMessages, chatLoading]);
+
+  // Last assistant message index — receives karaoke highlighting
+  const lastAssistantIdx = chatMessages.reduce((acc, m, i) => m.role === 'assistant' ? i : acc, -1);
+
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column', flex: 1, minHeight: 0 }}>
+
+      {/* ── Compact audio strip — visible whenever there's audio ── */}
+      {briefingAudio && (
+        <div style={{ padding: '10px 20px 0', flexShrink: 0 }}>
+          <div style={{
+            borderRadius: '12px',
+            background: 'rgba(0,0,0,0.32)',
+            border: '1px solid rgba(14,165,233,0.08)',
+            padding: '7px 12px 5px',
+          }}>
+            <EQCanvas analyserRef={analyserRef} isPlaying={isPlaying} />
+            {/* Progress + controls inline */}
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginTop: '5px' }}>
+              <div style={{ flex: 1, height: '2px', borderRadius: '2px', background: 'rgba(14,165,233,0.1)', overflow: 'hidden' }}>
+                <div style={{ height: '100%', borderRadius: '2px', background: 'linear-gradient(90deg,#00cba8,#4d8aff)', width: `${progress * 100}%`, transition: 'width 0.1s linear' }} />
+              </div>
+              <span style={{ fontSize: '10px', color: '#334155', flexShrink: 0, fontVariantNumeric: 'tabular-nums' }}>
+                {Math.round(progress * 100)}%
+              </span>
+              {/* Play/Pause */}
+              <button onClick={isPlaying ? onStop : onPlay} style={{
+                width: '28px', height: '28px', borderRadius: '50%', border: 'none', flexShrink: 0,
+                background: 'linear-gradient(135deg,#0ea5e9,#6366f1)', color: '#fff', cursor: 'pointer',
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+              }}>
+                {isPlaying
+                  ? <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="4" width="4" height="16" rx="1"/><rect x="14" y="4" width="4" height="16" rx="1"/></svg>
+                  : <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+                }
+              </button>
+              {/* Restart */}
+              <button onClick={onRestart} title="Replay" style={{
+                width: '26px', height: '26px', borderRadius: '50%', border: '1px solid rgba(14,165,233,0.2)',
+                background: 'rgba(14,165,233,0.06)', color: '#38bdf8', cursor: 'pointer', flexShrink: 0,
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+              }}>
+                <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/>
+                </svg>
+              </button>
+              {/* Mute */}
+              <button onClick={onMute} title={muted ? 'Unmute' : 'Mute'} style={{
+                width: '26px', height: '26px', borderRadius: '50%',
+                border: `1px solid ${muted ? 'rgba(239,68,68,0.3)' : 'rgba(14,165,233,0.2)'}`,
+                background: muted ? 'rgba(239,68,68,0.08)' : 'rgba(14,165,233,0.06)',
+                color: muted ? '#f87171' : '#38bdf8', cursor: 'pointer', flexShrink: 0,
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+              }}>
+                {muted
+                  ? <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><line x1="23" y1="9" x2="17" y2="15"/><line x1="17" y1="9" x2="23" y2="15"/></svg>
+                  : <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>
+                }
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ── Tour phase indicator ── */}
+      {isTour && tourStep && (
+        <div style={{
+          margin: '8px 20px 0', padding: '8px 14px', borderRadius: '10px', flexShrink: 0,
+          background: 'rgba(99,102,241,0.06)', border: '1px solid rgba(99,102,241,0.18)',
+          display: 'flex', alignItems: 'center', gap: '10px',
+        }}>
+          <span style={{ fontSize: '8.5px', fontWeight: '700', color: '#6366f1', letterSpacing: '2px', fontFamily: 'Sora, sans-serif', flexShrink: 0 }}>
+            GUIDED TOUR
+          </span>
+          <div style={{ display: 'flex', gap: '5px', alignItems: 'center' }}>
+            {Array.from({ length: tourStep.total }).map((_, i) => (
+              <div key={i} style={{
+                width: '7px', height: '7px', borderRadius: '50%',
+                background: i + 1 <= tourStep.current ? TOUR_PHASE_COLORS[i] : 'rgba(255,255,255,0.08)',
+                boxShadow: i + 1 === tourStep.current ? `0 0 8px ${TOUR_PHASE_COLORS[i]}` : 'none',
+                transition: 'all 0.4s ease',
+              }} />
+            ))}
+          </div>
+          <span style={{ fontSize: '10.5px', color: TOUR_PHASE_COLORS[tourStep.current - 1], fontWeight: '600' }}>
+            {TOUR_PHASE_LABELS[tourStep.current - 1]}
+          </span>
+        </div>
+      )}
+
+      {/* ── Tour visual (phase flow — separate from chat messages) ── */}
+      {isTour && toolOutput && (
+        <div style={{ margin: '10px 20px 0', padding: '14px', borderRadius: '14px', flexShrink: 0, border: '1px solid rgba(14,165,233,0.1)', background: 'rgba(0,0,0,0.28)' }}>
+          <ToolOutput tool={toolOutput} />
+        </div>
+      )}
+
+      {/* ── Chat message list ── */}
+      <div
+        className="rudra-scroll"
+        style={{ flex: 1, overflowY: 'auto', padding: '16px 20px 8px', minHeight: 0 }}
+      >
+        {chatMessages.map((msg, i) => (
+          <ChatMessage
+            key={i}
+            msg={msg}
+            isCurrentlyPlaying={isPlaying && i === lastAssistantIdx}
+            words={i === lastAssistantIdx ? words : undefined}
+            wordIndex={wordIndex}
+          />
+        ))}
+
+        {chatLoading && (
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '16px' }}>
+            <div style={{
+              width: '24px', height: '24px', borderRadius: '50%',
+              background: 'linear-gradient(135deg,#0ea5e9,#6366f1)',
+              display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '10px',
+            }}>ॐ</div>
+            <div style={{ display: 'flex', gap: '5px', padding: '8px 12px', borderRadius: '4px 14px 14px 14px', background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.05)' }}>
+              {[0, 1, 2].map(i => (
+                <div key={i} style={{ width: '6px', height: '6px', borderRadius: '50%', background: '#0ea5e9', animation: `rudraDot 1.4s ${i * 0.2}s ease-in-out infinite` }} />
+              ))}
+            </div>
+          </div>
+        )}
+        <div ref={chatEndRef} />
+      </div>
+
+      {/* ── Write-back input — prominent ── */}
+      <div style={{ padding: '10px 20px 16px', borderTop: '1px solid rgba(255,255,255,0.05)', flexShrink: 0 }}>
+        <div style={{ position: 'relative' }}>
+          <textarea
+            className="rudra-input"
+            value={chatInput}
+            onChange={e => onChatInput(e.target.value)}
+            onKeyDown={e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); onChatSend(); } }}
+            placeholder="Ask anything — I'm reading the whole platform with you…"
+            rows={2}
+            style={{
+              width: '100%', boxSizing: 'border-box',
+              background: 'rgba(255,255,255,0.04)',
+              border: '1px solid rgba(14,165,233,0.18)',
+              borderRadius: '14px', padding: '11px 52px 11px 15px',
+              color: '#e2e8f0', fontSize: '13.5px', lineHeight: '1.55',
+              resize: 'none', fontFamily: 'Inter, sans-serif',
+              transition: 'border-color 0.2s',
+            }}
+          />
+          <button
+            onClick={onChatSend}
+            disabled={!chatInput.trim() || chatLoading}
+            style={{
+              position: 'absolute', right: '10px', bottom: '10px',
+              width: '34px', height: '34px', borderRadius: '10px', border: 'none',
+              background: chatInput.trim() && !chatLoading
+                ? 'linear-gradient(135deg,#0ea5e9,#6366f1)'
+                : 'rgba(14,165,233,0.08)',
+              color: '#fff', cursor: chatInput.trim() ? 'pointer' : 'default',
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              transition: 'background 0.2s',
+            }}
+          >
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+              <line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/>
+            </svg>
+          </button>
+        </div>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: '9px' }}>
+          <button onClick={onReset} style={{
+            background: 'none', border: 'none', color: '#334155', fontSize: '12px',
+            cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '5px', padding: 0,
+          }}>
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/>
+            </svg>
+            New briefing
+          </button>
+          <span style={{ fontSize: '10px', color: '#1e3a5f' }}>
+            <span style={{ background: 'linear-gradient(90deg,#4285F4,#EA4335,#FBBC04,#34A853)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text', fontWeight: '600' }}>Gemini</span>
+            {' · Docstribe AI © 2026'}
+          </span>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ── Main component ────────────────────────────────────────────────────────────
+export default function ExplainerAgent() {
+  const [step, setStep] = useState('idle');        // idle | role | pain | generating | playing
+  const [selectedRole, setSelectedRole] = useState(null);
+  const [selectedPain, setSelectedPain] = useState(null);
+  const [briefingText, setBriefingText] = useState('');
+  const [briefingAudio, setBriefingAudio] = useState(null);
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [muted, setMuted] = useState(false);
+  const [progress, setProgress] = useState(0);
+  const [wordIndex, setWordIndex] = useState(-1);
+  const [chatMessages, setChatMessages] = useState([]);
+  const [chatInput, setChatInput] = useState('');
+  const [chatLoading, setChatLoading] = useState(false);
+  const [isTour, setIsTour] = useState(false);
+  const [tourStep, setTourStep] = useState(null); // { current: 1, total: 3 }
+  const [visual, setVisual] = useState(null);       // null | 'outcomes' | 'phase-flow' | 'phase-0' | 'phase-1' | 'phase-2'
+  const [visualPhase, setVisualPhase] = useState(null); // null | 0 | 1 | 2 (for tour)
+  const [toolOutput, setToolOutput] = useState(null); // AI-chosen visual tool: { type, data }
+
+  // Refs for audio engine
+  const audioCtxRef     = useRef(null);
+  const sourceRef       = useRef(null);
+  const analyserRef     = useRef(null);
+  const rafRef          = useRef(null);
+  const startTimeRef    = useRef(null);
+  const durationRef     = useRef(0);
+  const briefingTextRef = useRef('');   // for RAF closure (avoids stale state)
+  const mutedRef        = useRef(false);
+  const tourCancelRef   = useRef(false);
+
+  useEffect(() => { mutedRef.current = muted; }, [muted]);
+  useEffect(() => { briefingTextRef.current = briefingText; }, [briefingText]);
+
+  // ── AudioContext ─────────────────────────────────────────────────────────
+  const ensureCtx = useCallback(async () => {
+    if (!audioCtxRef.current) {
+      audioCtxRef.current = new (window.AudioContext || window.webkitAudioContext)();
+    }
+    if (audioCtxRef.current.state === 'suspended') await audioCtxRef.current.resume();
+    return audioCtxRef.current;
+  }, []);
+
+  // ── Stop audio ───────────────────────────────────────────────────────────
+  const stopAudio = useCallback(() => {
+    tourCancelRef.current = true; // cancel any running tour
+    if (sourceRef.current) { try { sourceRef.current.stop(); } catch {} sourceRef.current = null; }
+    if (rafRef.current) { cancelAnimationFrame(rafRef.current); rafRef.current = null; }
+    setIsPlaying(false);
+    setProgress(0);
+    setWordIndex(-1);
+    emitPhase(null); // clear Shakti highlight
+  }, []);
+
+  // ── Run guided visual tour (3 phases, sequential audio + Shakti highlight) ──
+  const runTour = useCallback(async (segments, roleLabel) => {
+    tourCancelRef.current = false;
+    setIsTour(true);
+    setStep('playing');
+    setVisual('phase-flow');
+    setChatMessages([]);
+
+    for (let i = 0; i < segments.length; i++) {
+      if (tourCancelRef.current) break;
+      const seg = segments[i];
+      setTourStep({ current: i + 1, total: segments.length });
+      setVisualPhase(seg.phase);         // highlight phase INSIDE the panel
+      briefingTextRef.current = seg.text;
+      setBriefingText(seg.text);
+      setBriefingAudio(seg.audio);
+      emitPhase(seg.phase); // also sync Shakti page section (if visible)
+
+      await new Promise(async (resolve) => {
+        if (!seg.audio || mutedRef.current) {
+          setTimeout(resolve, 3500);
+          return;
+        }
+        try {
+          const ctx = await ensureCtx();
+          if (sourceRef.current) { try { sourceRef.current.stop(); } catch {} sourceRef.current = null; }
+          if (rafRef.current) { cancelAnimationFrame(rafRef.current); rafRef.current = null; }
+
+          const bytes = atob(seg.audio);
+          const buf = new ArrayBuffer(bytes.length);
+          const view = new Uint8Array(buf);
+          for (let j = 0; j < bytes.length; j++) view[j] = bytes.charCodeAt(j);
+          const audioBuffer = await ctx.decodeAudioData(buf);
+          durationRef.current = audioBuffer.duration;
+
+          const analyser = ctx.createAnalyser();
+          analyser.fftSize = 256;
+          analyserRef.current = analyser;
+
+          const source = ctx.createBufferSource();
+          source.buffer = audioBuffer;
+          source.connect(analyser);
+          analyser.connect(ctx.destination);
+          sourceRef.current = source;
+          startTimeRef.current = ctx.currentTime;
+
+          setIsPlaying(true);
+          setProgress(0);
+          setWordIndex(0);
+
+          const track = () => {
+            if (!audioCtxRef.current || !startTimeRef.current) return;
+            const elapsed = audioCtxRef.current.currentTime - startTimeRef.current;
+            const p = Math.min(elapsed / durationRef.current, 1);
+            setProgress(p);
+            const wds = briefingTextRef.current.split(' ');
+            setWordIndex(Math.floor(p * wds.length));
+            if (p < 1) rafRef.current = requestAnimationFrame(track);
+          };
+
+          source.onended = () => {
+            setIsPlaying(false);
+            setProgress(1);
+            cancelAnimationFrame(rafRef.current);
+            setTimeout(resolve, 600); // pause between phases
+          };
+          source.start();
+          rafRef.current = requestAnimationFrame(track);
+        } catch (err) {
+          console.warn('Tour segment error:', err);
+          resolve();
+        }
+      });
+    }
+
+    emitPhase(null);
+    setIsTour(false);
+    setTourStep(null);
+    setVisualPhase(null);
+  }, [ensureCtx]);
+
+  // ── Play WAV base64 ──────────────────────────────────────────────────────
+  const playAudio = useCallback(async (wavBase64) => {
+    if (!wavBase64 || mutedRef.current) return;
+    try {
+      const ctx = await ensureCtx();
+      stopAudio();
+
+      const bytes = atob(wavBase64);
+      const buf = new ArrayBuffer(bytes.length);
+      const view = new Uint8Array(buf);
+      for (let i = 0; i < bytes.length; i++) view[i] = bytes.charCodeAt(i);
+      const audioBuffer = await ctx.decodeAudioData(buf);
+      durationRef.current = audioBuffer.duration;
+
+      const analyser = ctx.createAnalyser();
+      analyser.fftSize = 256;
+      analyserRef.current = analyser;
+
+      const source = ctx.createBufferSource();
+      source.buffer = audioBuffer;
+      source.connect(analyser);
+      analyser.connect(ctx.destination);
+      sourceRef.current = source;
+      startTimeRef.current = ctx.currentTime;
+
+      setIsPlaying(true);
+      setProgress(0);
+      setWordIndex(0);
+
+      let lastPhase = undefined;
+      const track = () => {
+        if (!audioCtxRef.current || !startTimeRef.current) return;
+        const elapsed = audioCtxRef.current.currentTime - startTimeRef.current;
+        const p = Math.min(elapsed / durationRef.current, 1);
+        setProgress(p);
+        const wds = briefingTextRef.current.split(' ');
+        const wi = Math.floor(p * wds.length);
+        setWordIndex(wi);
+        // Drive Shakti diagram highlight
+        const phase = detectPhase(wds, wi);
+        if (phase !== lastPhase) { lastPhase = phase; emitPhase(phase); }
+        if (p < 1) rafRef.current = requestAnimationFrame(track);
+      };
+
+      source.onended = () => {
+        setIsPlaying(false);
+        setProgress(1);
+        cancelAnimationFrame(rafRef.current);
+        emitPhase(null); // clear Shakti highlight
+      };
+      source.start();
+      rafRef.current = requestAnimationFrame(track);
+    } catch (err) {
+      console.warn('Playback error:', err);
+      setIsPlaying(false);
+    }
+  }, [ensureCtx, stopAudio]);
+
+  // ── Fetch personalized briefing ──────────────────────────────────────────
+  const fetchBriefing = useCallback(async (roleId, painId) => {
+    setStep('generating');
+    const role      = ROLES.find(r => r.id === roleId)?.label  || roleId;
+    const painPoint = PAINS.find(p => p.id === painId)?.label  || painId;
+
+    // "Show Me Everything" → full guided visual tour
+    if (painId === 'all') {
+      try {
+        const res = await fetch('/api/tour', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ role }),
+        });
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        const { segments } = await res.json();
+        await ensureCtx();
+        runTour(segments, role);
+      } catch (err) {
+        console.error('Tour failed:', err);
+        setStep('pain');
+      }
+      return;
+    }
+
+    // Map pain → visual type
+    const painVisualMap = {
+      auth:     'phase-0',
+      cdi:      'phase-1',
+      drg:      'phase-1',
+      denials:  'phase-2',
+      underpay: 'phase-2',
+      exploring: 'outcomes',
+    };
+    const painVisual = painVisualMap[painId] || 'outcomes';
+    setVisual(painVisual);
+
+    try {
+      const res = await fetch('/api/briefing', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ role, painPoint }),
+      });
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const { text, audio, visual: toolVis } = await res.json();
+      briefingTextRef.current = text;
+      setBriefingText(text);
+      setBriefingAudio(audio);
+      if (toolVis) setToolOutput(toolVis);
+      // Briefing becomes first chat message — visual embedded inline
+      setChatMessages([{ role: 'assistant', content: text, audio, visual: toolVis || null }]);
+      setStep('playing');
+      setTimeout(() => playAudio(audio), 80);
+    } catch (err) {
+      console.error('Briefing fetch failed:', err);
+      setStep('pain');
+    }
+  }, [playAudio, runTour, ensureCtx]);
+
+  // ── Follow-up chat ───────────────────────────────────────────────────────
+  const sendFollowUp = useCallback(async () => {
+    const trimmed = chatInput.trim();
+    if (!trimmed || chatLoading) return;
+    setChatInput('');
+
+    // Detect tour intent — trigger visual guided tour instead of text response
+    if (TOUR_RE.test(trimmed)) {
+      setChatLoading(true);
+      const role = ROLES.find(r => r.id === selectedRole)?.label || 'healthcare professional';
+      try {
+        const res = await fetch('/api/tour', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ role }),
+        });
+        const { segments } = await res.json();
+        setChatLoading(false);
+        await ensureCtx();
+        runTour(segments, role);
+      } catch (err) {
+        console.error('Tour failed:', err);
+        setChatLoading(false);
+      }
+      return;
+    }
+
+    setChatLoading(true);
+    setChatMessages(prev => [...prev, { role: 'user', content: trimmed }]);
+
+    const history = chatMessages.map(m => ({ role: m.role, content: m.content }));
+
+    try {
+      const res = await fetch('/api/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          message: trimmed,
+          history,
+          pageContext: `Visitor role: ${selectedRole}, focus: ${selectedPain}`,
+        }),
+      });
+      const { text, audio, visual: toolVis } = await res.json();
+      setChatMessages(prev => [...prev, { role: 'assistant', content: text, audio, visual: toolVis || null }]);
+      setChatLoading(false);
+      if (toolVis) setToolOutput(toolVis);
+      if (audio && !mutedRef.current) {
+        briefingTextRef.current = text;
+        setBriefingText(text);
+        stopAudio();
+        setTimeout(() => playAudio(audio), 80);
+      }
+    } catch {
+      setChatMessages(prev => [...prev, {
+        role: 'assistant',
+        content: "Let me connect you with our team directly — email akash@docstribe.com",
+      }]);
+      setChatLoading(false);
+    }
+  }, [chatInput, chatLoading, chatMessages, selectedRole, selectedPain, stopAudio, playAudio]);
+
+  // ── Reset wizard ─────────────────────────────────────────────────────────
+  const reset = useCallback(() => {
+    tourCancelRef.current = true;
+    stopAudio();
+    setStep('idle');
+    setSelectedRole(null);
+    setSelectedPain(null);
+    setBriefingText('');
+    briefingTextRef.current = '';
+    setBriefingAudio(null);
+    setChatMessages([]);
+    setChatInput('');
+    setProgress(0);
+    setWordIndex(-1);
+    setIsTour(false);
+    setTourStep(null);
+    setVisual(null);
+    setVisualPhase(null);
+    setToolOutput(null);
+    emitPhase(null);
+  }, [stopAudio]);
+
+  useEffect(() => () => stopAudio(), [stopAudio]);
+
+  const words = briefingText.split(' ');
+  const open  = step !== 'idle';
+
+  return (
+    <>
+      <style>{`
+        @keyframes fabPulse {
+          0%, 100% { box-shadow: 0 4px 28px rgba(14,165,233,0.5), 0 0 0 0 rgba(14,165,233,0.35); }
+          50%       { box-shadow: 0 4px 28px rgba(14,165,233,0.5), 0 0 0 12px rgba(14,165,233,0); }
+        }
+        @keyframes rudraPulse {
+          0%, 100% { opacity: 0.85; transform: scale(1); }
+          50%       { opacity: 0.3;  transform: scale(1.06); }
+        }
+        @keyframes rudraDot {
+          0%, 80%, 100% { transform: scale(0.55); opacity: 0.35; }
+          40%           { transform: scale(1);    opacity: 1;    }
+        }
+        @keyframes overlayIn {
+          from { opacity: 0; }
+          to   { opacity: 1; }
+        }
+        @keyframes panelIn {
+          from { opacity: 0; transform: scale(0.93) translateY(14px); }
+          to   { opacity: 1; transform: scale(1)    translateY(0);    }
+        }
+        @keyframes rudraFadeIn {
+          from { opacity: 0; transform: translateY(4px); }
+          to   { opacity: 1; transform: translateY(0); }
+        }
+        .rudra-card  { transform: translateY(0); }
+        .rudra-card:hover  { border-color: rgba(14,165,233,0.45) !important; background: rgba(14,165,233,0.07) !important; transform: translateY(-2px) !important; }
+        .rudra-chip  { transform: translateY(0); }
+        .rudra-chip:hover  { transform: translateY(-2px) !important; filter: brightness(1.15); }
+        .rudra-input:focus { border-color: rgba(14,165,233,0.45) !important; outline: none; box-shadow: 0 0 0 3px rgba(14,165,233,0.07); }
+        .rudra-scroll::-webkit-scrollbar       { width: 3px; }
+        .rudra-scroll::-webkit-scrollbar-thumb { background: rgba(14,165,233,0.18); border-radius: 3px; }
+      `}</style>
+
+      {/* ── FAB ── */}
+      {!open && (
+        <button
+          onClick={() => { ensureCtx(); setStep('role'); }}
+          style={{
+            position: 'fixed', bottom: '28px', right: '28px', zIndex: 9999,
+            display: 'flex', alignItems: 'center', gap: '10px',
+            padding: '0 22px 0 9px', height: '56px',
+            borderRadius: '100px',
+            background: 'linear-gradient(135deg, #0ea5e9 0%, #6366f1 100%)',
+            border: 'none', cursor: 'pointer',
+            animation: 'fabPulse 3s ease-in-out infinite',
+          }}
+        >
+          <div style={{
+            width: '38px', height: '38px', borderRadius: '50%',
+            background: 'rgba(255,255,255,0.18)',
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            fontSize: '18px', color: '#fff',
+          }}>ॐ</div>
+          <span style={{ fontSize: '14px', fontWeight: '700', color: '#fff', letterSpacing: '0.5px' }}>
+            Ask RUDRA
+          </span>
+        </button>
+      )}
+
+      {/* ── Overlay ── */}
+      {open && (
+        <div
+          style={{
+            position: 'fixed', inset: 0, zIndex: 9999,
+            background: 'rgba(2,5,12,0.78)',
+            backdropFilter: 'blur(10px)',
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            padding: '16px',
+            animation: 'overlayIn 0.22s ease',
+          }}
+          onClick={e => { if (e.target === e.currentTarget) reset(); }}
+        >
+          {/* Panel */}
+          <div
+            style={{
+              width: '100%', maxWidth: '560px',
+              height: 'calc(100vh - 48px)',
+              maxHeight: '760px',
+              borderRadius: '24px',
+              background: 'rgba(6,10,18,0.98)',
+              border: '1px solid rgba(14,165,233,0.16)',
+              boxShadow: '0 48px 130px rgba(0,0,0,0.88), 0 0 0 1px rgba(14,165,233,0.03), 0 0 80px rgba(14,165,233,0.04)',
+              backdropFilter: 'blur(24px)',
+              display: 'flex', flexDirection: 'column',
+              animation: 'panelIn 0.3s cubic-bezier(0.34,1.4,0.64,1)',
+            }}
+          >
+            {/* Header */}
+            <div style={{
+              padding: '20px 24px 16px',
+              borderBottom: '1px solid rgba(14,165,233,0.07)',
+              display: 'flex', alignItems: 'center', gap: '14px',
+              flexShrink: 0,
+            }}>
+              <div style={{
+                width: '46px', height: '46px', borderRadius: '50%',
+                background: 'linear-gradient(135deg, #0ea5e9, #6366f1, #8b5cf6)',
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                fontSize: '20px', flexShrink: 0,
+                boxShadow: '0 0 22px rgba(14,165,233,0.38)',
+              }}>ॐ</div>
+              <div style={{ flex: 1 }}>
+                <div style={{
+                  fontSize: '14px', fontWeight: '800', color: '#f0f9ff',
+                  letterSpacing: '3.5px', fontFamily: 'Sora, sans-serif',
+                }}>RUDRA</div>
+                <div style={{ fontSize: '11px', color: '#1e3a5f', marginTop: '3px' }}>
+                  Docstribe AI Intelligence · Powered by Gemini
+                </div>
+              </div>
+              <button
+                onClick={reset}
+                style={{
+                  width: '32px', height: '32px', borderRadius: '8px', border: 'none',
+                  background: 'rgba(255,255,255,0.04)',
+                  borderWidth: '1px', borderStyle: 'solid', borderColor: 'rgba(255,255,255,0.06)',
+                  color: '#475569', cursor: 'pointer',
+                  display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  transition: 'all 0.2s',
+                }}
+              >
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
+                  <line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" />
+                </svg>
+              </button>
+            </div>
+
+            {/* Step content — fills remaining panel height */}
+            <div style={{ flex: 1, minHeight: 0, display: 'flex', flexDirection: 'column', overflowY: step === 'playing' ? 'hidden' : 'auto' }}>
+            {step === 'role' && (
+              <RoleStep onSelect={id => { setSelectedRole(id); setStep('pain'); }} />
+            )}
+            {step === 'pain' && (
+              <PainStep
+                onSelect={id => {
+                  setSelectedPain(id);
+                  fetchBriefing(selectedRole, id);
+                }}
+                onBack={() => setStep('role')}
+              />
+            )}
+            {step === 'generating' && <GeneratingStep />}
+            {step === 'playing' && (
+              <PlayingStep
+                briefingText={briefingText}
+                words={words}
+                wordIndex={wordIndex}
+                isPlaying={isPlaying}
+                muted={muted}
+                progress={progress}
+                analyserRef={analyserRef}
+                briefingAudio={briefingAudio}
+                onPlay={() => playAudio(briefingAudio)}
+                onStop={stopAudio}
+                onMute={() => { setMuted(m => !m); if (isPlaying) stopAudio(); }}
+                onRestart={() => { stopAudio(); setTimeout(() => playAudio(briefingAudio), 80); }}
+                onReset={reset}
+                chatMessages={chatMessages}
+                chatInput={chatInput}
+                chatLoading={chatLoading}
+                onChatInput={setChatInput}
+                onChatSend={sendFollowUp}
+                isTour={isTour}
+                tourStep={tourStep}
+                visual={visual}
+                visualPhase={visualPhase}
+                toolOutput={toolOutput}
+              />
+            )}
+            </div>
+          </div>
+        </div>
+      )}
+    </>
+  );
+}
