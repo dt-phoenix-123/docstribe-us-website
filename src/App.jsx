@@ -212,9 +212,9 @@ function HeroSVG() {
 
       {/* Three data nodes */}
       {[
-        { label: 'Contract', color: '#00cba8', dimColor: 'rgba(0,203,168,0.1)', borderColor: 'rgba(0,203,168,0.25)' },
-        { label: 'Chart',    color: '#4d8aff', dimColor: 'rgba(77,138,255,0.1)', borderColor: 'rgba(77,138,255,0.25)' },
-        { label: 'Claim',    color: '#ff7b4a', dimColor: 'rgba(255,123,74,0.1)', borderColor: 'rgba(255,123,74,0.25)' },
+        { label: 'H&P',       color: '#00cba8', dimColor: 'rgba(0,203,168,0.1)', borderColor: 'rgba(0,203,168,0.25)' },
+        { label: 'DRG AI',   color: '#4d8aff', dimColor: 'rgba(77,138,255,0.1)', borderColor: 'rgba(77,138,255,0.25)' },
+        { label: 'Clean Claim', color: '#ff7b4a', dimColor: 'rgba(255,123,74,0.1)', borderColor: 'rgba(255,123,74,0.25)' },
       ].map((node, i) => {
         const nx = cx - 82 + i * 82;
         return (
@@ -231,30 +231,30 @@ function HeroSVG() {
       <g>
         <circle cx={cx - 8} cy={cy + 60} r="4" fill="#00cba8" filter="url(#glow)" />
         <text x={cx + 4} y={cy + 64} fill="rgba(240,247,244,0.6)"
-          fontSize="10" fontWeight="600" fontFamily="Inter">All edits live</text>
+          fontSize="10" fontWeight="600" fontFamily="Inter">DRG recomputed</text>
       </g>
 
       {/* ── FLOATING CARDS ── */}
 
-      {/* Top-left — INPUT */}
+      {/* Top-left — H&P INPUT */}
       <g style={{ animation: 'float-y 6s ease-in-out infinite' }}>
         <rect x="22" y="118" width="158" height="76" rx="14"
           fill="rgba(10,20,16,0.92)" stroke="rgba(0,203,168,0.22)" strokeWidth="1.5" />
         <text x="40" y="143" fill="rgba(0,203,168,0.75)"
-          fontSize="9" fontWeight="700" fontFamily="Inter" letterSpacing="2">INPUT</text>
+          fontSize="9" fontWeight="700" fontFamily="Inter" letterSpacing="2">INPUT — DAY 0</text>
         <text x="40" y="165" fill="rgba(240,247,244,0.95)"
-          fontSize="14" fontWeight="800" fontFamily="Sora">Payor Contracts</text>
+          fontSize="14" fontWeight="800" fontFamily="Sora">H&P Documents</text>
         <circle cx="148" cy="138" r="6" fill="#00cba8" filter="url(#glow)" />
       </g>
 
-      {/* Top-right — RECOVERY stat */}
+      {/* Top-right — CMI UPLIFT stat */}
       <g style={{ animation: 'float-y 9s ease-in-out 2s infinite' }}>
         <rect x="444" y="104" width="152" height="70" rx="14"
           fill="rgba(10,20,16,0.92)" stroke="rgba(77,138,255,0.22)" strokeWidth="1.5" />
         <text x="462" y="128" fill="rgba(77,138,255,0.75)"
-          fontSize="9" fontWeight="700" fontFamily="Inter" letterSpacing="2">RECOVERY</text>
+          fontSize="9" fontWeight="700" fontFamily="Inter" letterSpacing="2">CMI UPLIFT</text>
         <text x="462" y="154" fill="rgba(240,247,244,0.95)"
-          fontSize="20" fontWeight="800" fontFamily="Sora">$28M+</text>
+          fontSize="20" fontWeight="800" fontFamily="Sora">+0.05</text>
       </g>
 
       {/* Bottom-right — OUTPUT */}
@@ -275,7 +275,7 @@ function HeroSVG() {
         <text x="40" y="456" fill="rgba(0,203,168,0.75)"
           fontSize="9" fontWeight="700" fontFamily="Inter" letterSpacing="2">CLEAN RATE</text>
         <text x="40" y="482" fill="rgba(240,247,244,0.95)"
-          fontSize="20" fontWeight="800" fontFamily="Sora">98%</text>
+          fontSize="20" fontWeight="800" fontFamily="Sora">99%</text>
       </g>
 
       {/* Connecting dotted lines from floating cards to central area */}
@@ -308,23 +308,23 @@ function ContractMockupSVG() {
       ))}
       {/* App title */}
       <text x="155" y="84" textAnchor="middle" fill="rgba(255,255,255,0.95)"
-        fontSize="17" fontWeight="700" fontFamily="Sora">Contract Analysis</text>
-      {/* Payer chip */}
+        fontSize="17" fontWeight="700" fontFamily="Sora">H&P Analysis</text>
+      {/* Patient chip */}
       <rect x="28" y="96" width="254" height="42" rx="11"
         fill="rgba(0,203,168,0.1)" stroke="rgba(0,203,168,0.28)" strokeWidth="1"/>
       <text x="46" y="114" fill="rgba(0,203,168,0.75)"
-        fontSize="8.5" fontWeight="700" fontFamily="Inter" letterSpacing="1.8">PAYOR CONTRACT</text>
+        fontSize="8.5" fontWeight="700" fontFamily="Inter" letterSpacing="1.8">H&P DOCUMENT — DAY 0</text>
       <text x="46" y="130" fill="rgba(255,255,255,0.92)"
-        fontSize="11" fontWeight="600" fontFamily="Inter">Aetna PPO 2024 — Inpatient</text>
+        fontSize="11" fontWeight="600" fontFamily="Inter">Jane Doe · Admit: Chest Pain / SOB</text>
       <circle cx="260" cy="117" r="9" fill="rgba(0,203,168,0.15)" stroke="rgba(0,203,168,0.4)" strokeWidth="1"/>
       <path d="M256 117 L259 120 L265 113" stroke="#00cba8" strokeWidth="1.5"
         strokeLinecap="round" strokeLinejoin="round"/>
-      {/* Contract document card */}
+      {/* H&P document card */}
       <rect x="28" y="148" width="254" height="196" rx="13"
         fill="rgba(255,255,255,0.025)" stroke="rgba(255,255,255,0.07)" strokeWidth="1"/>
       <text x="40" y="170" fill="rgba(255,255,255,0.28)"
-        fontSize="8" fontFamily="Inter" letterSpacing="1.2">SECTION 4.2 — AUTH REQUIREMENTS</text>
-      {/* Text lines — 3 highlighted */}
+        fontSize="8" fontFamily="Inter" letterSpacing="1.2">ASSESSMENT & PLAN — PRINCIPAL DX</text>
+      {/* Text lines — highlighted lines = ICD-10 codes extracted */}
       {[
         {w:208, hi:true},  {w:168, hi:false},
         {w:216, hi:false}, {w:188, hi:true},
@@ -343,31 +343,32 @@ function ContractMockupSVG() {
           </g>
         );
       })}
-      {/* Extracted rules panel */}
+      {/* DRG computed panel */}
       <rect x="28" y="356" width="254" height="168" rx="13"
         fill="rgba(8,18,14,0.9)" stroke="rgba(0,203,168,0.18)" strokeWidth="1"/>
       <text x="44" y="376" fill="rgba(0,203,168,0.7)"
-        fontSize="8.5" fontWeight="700" fontFamily="Inter" letterSpacing="1.6">EXTRACTED RULES</text>
+        fontSize="8.5" fontWeight="700" fontFamily="Inter" letterSpacing="1.6">DRG COMPUTED — DELTA SURFACED</text>
       {[
-        'Prior auth required >3 days',
-        'Peer-to-peer within 5 days',
-        'Step therapy: 2 prior agents',
-        'Appeal window: 120 days',
+        'DRG 195  →  $8,600  (baseline)',
+        'DRG 871  →  $16,600  (if AKI coded) ✓',
+        'CDI Query: AKI — creatinine 3.2 elevated',
+        'Query sent to Dr. Smith · Day 0',
       ].map((rule, i) => (
         <g key={i}>
           <rect x="40" y={386 + i * 32} width="230" height="25" rx="7"
-            fill="rgba(0,203,168,0.05)" stroke="rgba(0,203,168,0.12)" strokeWidth="0.8"/>
-          <circle cx="52" cy={398.5 + i * 32} r="3.5" fill="#00cba8"/>
-          <text x="63" y={402.5 + i * 32} fill="rgba(255,255,255,0.72)"
+            fill={i === 1 ? 'rgba(0,203,168,0.1)' : 'rgba(0,203,168,0.05)'}
+            stroke={i === 1 ? 'rgba(0,203,168,0.3)' : 'rgba(0,203,168,0.12)'} strokeWidth="0.8"/>
+          <circle cx="52" cy={398.5 + i * 32} r="3.5" fill={i === 1 ? '#00cba8' : 'rgba(0,203,168,0.5)'}/>
+          <text x="63" y={402.5 + i * 32} fill={i === 1 ? 'rgba(255,255,255,0.92)' : 'rgba(255,255,255,0.72)'}
             fontSize="10" fontFamily="Inter">{rule}</text>
         </g>
       ))}
       {/* Bottom stat pill */}
-      <rect x="28" y="536" width="160" height="26" rx="8"
+      <rect x="28" y="536" width="180" height="26" rx="8"
         fill="rgba(0,203,168,0.1)" stroke="rgba(0,203,168,0.2)" strokeWidth="0.8"/>
       <circle cx="44" cy="549" r="4" fill="#00cba8"/>
       <text x="54" y="553" fill="rgba(255,255,255,0.82)"
-        fontSize="10.5" fontWeight="600" fontFamily="Inter">42 rules extracted</text>
+        fontSize="10.5" fontWeight="600" fontFamily="Inter">DRG delta: +$8,000 identified</text>
       {/* Home bar */}
       <rect x="113" y="566" width="84" height="4" rx="2" fill="rgba(255,255,255,0.18)"/>
     </svg>
@@ -475,25 +476,25 @@ function ClinicalMockupSVG() {
 /* ─── DENIAL MOCKUP (Back End dashboard) ─── */
 function DenialMockupSVG() {
   const rows = [
-    { cpt: '99213', amt: '$125.00' },
-    { cpt: '20610', amt: '$100.00' },
-    { cpt: '45378', amt: '$85.00'  },
-    { cpt: '72148', amt: '$80.00'  },
-    { cpt: '80053', amt: '$75.00'  },
-    { cpt: '97110', amt: '$65.00'  },
-    { cpt: '97010', amt: '$25.00'  },
+    { condition: 'AKI — Acute Kidney Injury',   source: 'Lab: Creatinine 3.2',  delta: '+$4,200' },
+    { condition: 'Protein Malnutrition',         source: 'Consult Note (Dietitian)', delta: '+$2,800' },
+    { condition: 'CHF Acute Exacerbation',       source: 'Echo Report Day 2',    delta: '+$3,100' },
+    { condition: 'Hypertensive Crisis',          source: 'Progress Note Day 3',  delta: '+$1,900' },
+    { condition: 'Septicemia — Blood Culture +', source: 'Micro Report Day 1',   delta: '+$8,000' },
   ];
   return (
     <svg viewBox="0 0 540 448" fill="none" xmlns="http://www.w3.org/2000/svg"
       style={{ width: '100%', maxWidth: 540 }}>
-      {/* Notification banner */}
-      <rect x="48" y="12" width="372" height="54" rx="14"
-        fill="rgba(0,203,168,0.1)" stroke="rgba(0,203,168,0.3)" strokeWidth="1.5"/>
-      <circle cx="76" cy="39" r="12" fill="rgba(0,203,168,0.18)" stroke="rgba(0,203,168,0.45)" strokeWidth="1"/>
-      <path d="M71 39 L75 43 L82 35" stroke="#00cba8" strokeWidth="2"
-        strokeLinecap="round" strokeLinejoin="round"/>
-      <text x="97" y="44" fill="rgba(255,255,255,0.92)"
-        fontSize="15" fontWeight="700" fontFamily="Sora">48 Underpayments Identified!</text>
+      {/* Alert banner */}
+      <rect x="48" y="12" width="400" height="54" rx="14"
+        fill="rgba(255,123,74,0.1)" stroke="rgba(255,123,74,0.3)" strokeWidth="1.5"/>
+      <circle cx="76" cy="39" r="12" fill="rgba(255,123,74,0.18)" stroke="rgba(255,123,74,0.45)" strokeWidth="1"/>
+      <text x="73" y="44" textAnchor="middle" fill="rgba(255,123,74,0.9)"
+        fontSize="13" fontWeight="700" fontFamily="Sora">!</text>
+      <text x="97" y="36" fill="rgba(255,255,255,0.92)"
+        fontSize="13" fontWeight="700" fontFamily="Sora">5 Conditions Found — Not Listed</text>
+      <text x="97" y="53" fill="rgba(255,123,74,0.75)"
+        fontSize="10" fontFamily="Inter">Discharge summary omits treated diagnoses · DRG impact: +$20,000</text>
 
       {/* Main card */}
       <rect x="12" y="76" width="516" height="360" rx="18"
@@ -501,35 +502,30 @@ function DenialMockupSVG() {
       {/* Table header stripe */}
       <rect x="12" y="76" width="516" height="44" rx="18" fill="rgba(255,255,255,0.04)"/>
       <rect x="12" y="98" width="516" height="22" fill="rgba(255,255,255,0.03)"/>
-      <text x="52" y="115" fill="rgba(255,255,255,0.32)" fontSize="11" fontWeight="600" fontFamily="Inter">CPT Code</text>
-      <text x="238" y="115" fill="rgba(255,255,255,0.32)" fontSize="11" fontWeight="600" fontFamily="Inter">Status</text>
-      <text x="498" y="115" textAnchor="end" fill="rgba(255,255,255,0.32)" fontSize="11" fontWeight="600" fontFamily="Inter">Dollar Amount ↑</text>
+      <text x="52" y="115" fill="rgba(255,255,255,0.32)" fontSize="10" fontWeight="600" fontFamily="Inter">Condition (Treated — Not Listed)</text>
+      <text x="310" y="115" fill="rgba(255,255,255,0.32)" fontSize="10" fontWeight="600" fontFamily="Inter">Evidence Source</text>
+      <text x="500" y="115" textAnchor="end" fill="rgba(255,123,74,0.6)" fontSize="10" fontWeight="600" fontFamily="Inter">DRG Impact ↑</text>
       {/* Data rows */}
       {rows.map((row, i) => (
         <g key={i}>
           <rect x="12" y={122 + i * 42} width="516" height="42"
             fill={i % 2 === 0 ? 'rgba(255,255,255,0.012)' : 'transparent'}/>
-          {/* Checkbox */}
-          <rect x="22" y={132 + i * 42} width="18" height="18" rx="4"
-            fill="rgba(77,138,255,0.2)" stroke="rgba(77,138,255,0.45)" strokeWidth="1"/>
-          <path d={`M${26} ${132+i*42+9} L${30} ${132+i*42+13} L${37} ${132+i*42+6}`}
-            stroke="#4d8aff" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-          <text x="52" y={146 + i * 42} fill="rgba(255,255,255,0.82)"
-            fontSize="14" fontFamily="Inter">{row.cpt}</text>
-          {/* Denied badge */}
-          <rect x="224" y={130 + i * 42} width="72" height="22" rx="6"
-            fill="rgba(255,50,50,0.1)" stroke="rgba(255,50,50,0.24)" strokeWidth="0.8"/>
-          <circle cx="237" cy={141 + i * 42} r="4" fill="rgba(255,50,50,0.8)"/>
-          <text x="248" y={145 + i * 42} fill="rgba(255,50,50,0.9)"
-            fontSize="11" fontWeight="600" fontFamily="Inter">Denied</text>
-          <text x="498" y={146 + i * 42} textAnchor="end" fill="rgba(255,255,255,0.7)"
-            fontSize="13" fontFamily="Inter">{row.amt}</text>
+          {/* Flag dot */}
+          <circle cx="30" cy={143 + i * 42} r="5" fill="rgba(255,123,74,0.85)"/>
+          <text x="44" y={147 + i * 42} fill="rgba(255,255,255,0.88)"
+            fontSize="11" fontFamily="Inter">{row.condition}</text>
+          <text x="310" y={147 + i * 42} fill="rgba(255,255,255,0.45)"
+            fontSize="10" fontFamily="Inter">{row.source}</text>
+          <text x="500" y={147 + i * 42} textAnchor="end" fill="#4ade80"
+            fontSize="12" fontWeight="700" fontFamily="Sora">{row.delta}</text>
         </g>
       ))}
-      {/* Bulk resubmit button */}
-      <rect x="352" y="408" width="172" height="44" rx="12" fill="#3d4aff"/>
-      <text x="438" y="435" textAnchor="middle" fill="white"
-        fontSize="14" fontWeight="700" fontFamily="Sora">Bulk Resubmit →</text>
+      {/* Lock Final DRG button */}
+      <rect x="340" y="408" width="184" height="44" rx="12"
+        fill="linear-gradient(135deg,#ff7b4a,#ff5722)" stroke="none"/>
+      <rect x="340" y="408" width="184" height="44" rx="12" fill="#ff7b4a"/>
+      <text x="432" y="435" textAnchor="middle" fill="white"
+        fontSize="13" fontWeight="700" fontFamily="Sora">Lock Final DRG →</text>
       {/* Cursor */}
       <path d="M504 426 L504 450 L510 443 L515 453 L518 451 L513 441 L521 441 Z"
         fill="white" stroke="rgba(0,0,0,0.35)" strokeWidth="1"/>
