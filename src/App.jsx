@@ -13,73 +13,73 @@ const NAV_LINKS = [
 ];
 
 const PROOF_STATS = [
-  { value: '100+',    label: 'Hospitals deployed' },
-  { value: '10M+',    label: 'Lives managed' },
-  { value: '18×',     label: 'Average ROI' },
-  { value: '60-Day',  label: 'Pilot to live rulebook' },
+  { value: '99%',    label: 'Clean claim rate' },
+  { value: '+10%',   label: 'Charge capture uplift' },
+  { value: '+0.05',  label: 'CMI uplift per discharge' },
+  { value: '$8–14M', label: 'Projected annual impact' },
 ];
 
 const SIGNALS = [
-  'Managed care', 'Utilization review', 'CDI & coding',
-  'Claims', 'Denials', 'Underpayments', 'Prior auth',
-  'Charge capture', 'Payment integrity', 'RCM operations',
-  'Managed care', 'Utilization review', 'CDI & coding',
-  'Claims', 'Denials', 'Underpayments', 'Prior auth',
-  'Charge capture', 'Payment integrity', 'RCM operations',
+  'DRG optimization', 'CC/MCC capture', 'CDI workflows', 'Pre-bill defense',
+  'Payer contracts', 'HCC recapture', 'Charge capture', 'Clinical documentation',
+  'Inpatient coding', 'LOS monitoring', 'Discharge summary AI', 'DRG downgrade defense',
+  'DRG optimization', 'CC/MCC capture', 'CDI workflows', 'Pre-bill defense',
+  'Payer contracts', 'HCC recapture', 'Charge capture', 'Clinical documentation',
+  'Inpatient coding', 'LOS monitoring', 'Discharge summary AI', 'DRG downgrade defense',
 ];
 
 const JOURNEY_STAGES = [
   {
     id: 'front-end',
     accentColor: '#00cba8',
-    title: 'Front End: Payor Setup & Authorization',
-    desc: 'The rulebook starts before the first bill exists. Docstribe reads every payor contract, normalizes the language, and builds plan-specific prior auth, medical necessity, and intake logic — customized by plan and specialty.',
+    title: 'H&P & Day 0 CDI — The Revenue Clock Starts Here',
+    desc: 'The physician writes for clinical communication. The DRG grouper reads for financial classification. That gap is where all revenue leakage lives. Docstribe reads every H&P within minutes — extracting ICD-10 codes, computing the baseline DRG, and firing CDI queries on Day 0, not Day 3.',
     pills: [
-      'Contract intake & normalization',
-      'Policy mapping & versioning',
-      'Prior auth rules by plan',
-      'Medical necessity criteria',
-      'Fee schedule alignment',
+      'H&P ingested within minutes of signing',
+      'Baseline DRG computed via grouper',
+      'CDI queries fired Day 0 — not Day 3',
+      'ICD-10 extraction & MDC mapping',
+      'DRG delta surfaced: e.g. $8.6K → $16.6K',
     ],
     products: [
-      { label: 'CONTRACT INTAKE' },
-      { label: 'AUTH ENGINE' },
+      { label: 'CDI ENGINE' },
+      { label: 'DRG GROUPER' },
     ],
     layout: 'text-left',
   },
   {
     id: 'mid-cycle',
     accentColor: '#4d8aff',
-    title: 'Mid Cycle: Clinical Intelligence',
-    desc: 'Compare every clinical note, order, and coded claim against the living rulebook before it leaves the building. Route every gap as a precise work packet — with the payer rationale already attached.',
+    title: 'Daily Rounding — DRG Recomputed Every 24 Hours',
+    desc: 'Every progress note, lab result, and consult order is a revenue signal. Docstribe recomputes the DRG on every new clinical event — mapping labs to undocumented diagnoses, detecting LOS paradox when your patient outlasts GMLOS, and escalating documentation gaps before the window closes.',
     pills: [
-      'Note & order validation',
-      'CPT / DRG / modifier edits',
-      'Claim risk scoring pre-drop',
-      'Charge capture & CDI',
-      'Routing to UM, CDI, coding, billing',
+      'DRG recomputed on every clinical signal',
+      'Labs & orders mapped to undocumented DX',
+      'LOS vs. GMLOS paradox detection',
+      'Revenue delta tracked daily: e.g. +$4,200',
+      'CDI query escalation before rounds close',
     ],
     products: [
-      { label: 'CDI WORKBENCH' },
-      { label: 'CODING ASSIST' },
-      { label: 'ROUTE ENGINE' },
+      { label: 'LOS MONITOR' },
+      { label: 'QUERY ENGINE' },
     ],
     layout: 'text-right',
   },
   {
     id: 'back-end',
     accentColor: '#ff7b4a',
-    title: 'Back End: Revenue Integrity',
-    desc: 'Reconcile what was paid against what the contract says you were owed. Surface underpayments, automate denial appeals, and feed every variance back into the rulebook — so the same problem never happens twice.',
+    title: 'Discharge & Coding — Where 40–60% of DRG Value Is Lost',
+    desc: 'Forty to sixty percent of DRG revenue is abandoned at the discharge summary. Physicians omit treated conditions. Confirmed diagnoses go unlisted. Docstribe cross-references the entire chart — every note, consult, order, and result — locks the final DRG, and generates a pre-bill defense brief before the claim drops.',
     pills: [
-      'ERA reconciliation & matching',
-      'Underpayment detection',
-      'Denial appeal automation',
-      'Recovery workflow & tracking',
-      'Closed-loop rule updates',
+      'Entire chart cross-referenced at discharge',
+      'Conditions treated but not listed — flagged',
+      'Final DRG locked pre-submission',
+      'Payer-specific pre-bill defense brief',
+      'Per-physician CDI profile built over time',
     ],
     products: [
-      { label: 'REMIT MATCH' },
+      { label: 'DISCHARGE AI' },
+      { label: 'PRE-BILL BRIEF' },
     ],
     layout: 'text-left',
   },
@@ -87,30 +87,31 @@ const JOURNEY_STAGES = [
 
 const FOUNDATION_CARDS = [
   {
-    title: 'Read every source of payor truth',
-    body: 'Contracts, fee schedules, carve-outs, medical necessity policies, remits, and denial history all land in one normalized layer.',
+    title: 'Reads every clinical document the moment it is signed',
+    body: 'H&P, progress notes, consults, labs, imaging orders — all ingested in real time. DRG recomputed on every new signal, not at the end of the stay.',
   },
   {
-    title: 'Turn contract language into operating logic',
-    body: 'Docstribe converts payer language into a custom rulebook with versioning, exceptions, and service-line-specific edits.',
+    title: 'Fires CDI queries on Day 0 — not Day 3',
+    body: 'Traditional CDI reviews happen too late. Docstribe catches documentation gaps at admission — when the physician can still clarify, not after discharge when the DRG is already locked.',
   },
   {
-    title: 'Push that rulebook across the revenue path',
-    body: 'The same payer logic powers front-end checks, mid-cycle review, pre-bill edits, and back-end recovery.',
+    title: 'Prevents 40–60% of revenue lost at the discharge summary',
+    body: 'Physicians omit treated conditions. Confirmed diagnoses go unlisted. Docstribe cross-references the entire chart at discharge and locks the correct DRG before the claim drops.',
   },
 ];
 
 const OUTCOME_CARDS = [
-  { value: '25%',  title: 'Revenue leakage recovered',         body: 'Charge capture gaps and payment variance surfaced fast enough to act on.' },
-  { value: '50%',  title: 'Avoidable denial dollars reduced',  body: 'Authorization, eligibility, and medical necessity issues intercepted upstream.' },
-  { value: '20%',  title: 'Fewer DRG and OBS downgrades',      body: 'Clinical and coding edits aligned to what payors actually reimburse.' },
-  { value: '98%',  title: 'Clean claim rate',                  body: 'Payer-ready claims reach the release queue with fewer avoidable defects.' },
+  { value: 'Day 0',  title: 'First CDI query fired',           body: 'Not Day 3. Not at discharge. The revenue clock starts the moment the H&P is signed.' },
+  { value: '24h',    title: 'DRG refresh cycle',               body: 'Every progress note, lab, and consult triggers a fresh DRG computation. Revenue delta tracked daily.' },
+  { value: '100%',   title: 'Chart coverage at discharge',     body: 'Every note, consult, order, and result cross-referenced before the final DRG is locked.' },
+  { value: '40–60%', title: 'Revenue loss prevented at DC',    body: 'The discharge summary is where DRG value dies. Docstribe closes that gap — systematically.' },
 ];
 
 const CHECKPOINTS = [
-  'Days 1–14: Contract ingestion, rulebook draft, and payer logic mapped',
-  'Days 15–45: Live across UM, CDI, coding, and billing with real claims',
-  'Day 60: First recovery report — guaranteed or we extend at no cost',
+  'Week 1: Epic connect, payer contract ingestion, baseline charge capture established',
+  'Week 2: AI agents on live charts — missed charges, DRG gaps, HCC opportunities flagged',
+  'Week 3: Side-by-side DRG accuracy comparison — charge capture delta per encounter',
+  'Week 4: CCR, CMI, and charge capture deltas quantified — go/no-go recommendation',
 ];
 
 /* ──────────────────────────────────────────────
@@ -821,7 +822,7 @@ export default function App() {
           <div className="brand-mark">D</div>
           <div>
             <span className="brand-name">Docstribe</span>
-            <span className="brand-sub">Payor intelligence</span>
+            <span className="brand-sub">Dynamic DRG Intelligence</span>
           </div>
         </a>
 
@@ -849,20 +850,20 @@ export default function App() {
           <div className="hero-copy">
             <div className="announce-badge">
               <span className="announce-badge-dot" />
-              AI Agent Workforce for Health Systems
+              Dynamic DRG Intelligence · Skilled AI for Inpatient Revenue
             </div>
 
             <h1>
-              The{' '}
-              <span className="hero-highlight">skilled AI agent workforce</span>
-              {' '}that earns{' '}
-              <span className="grad">every dollar you deserve.</span>
+              The AI layer between{' '}
+              <span className="hero-highlight">your chart</span>
+              {' '}and{' '}
+              <span className="grad">your clean claim.</span>
             </h1>
 
-            <p className="hero-tagline">Clinical Intelligence. Revenue Integrity.</p>
+            <p className="hero-tagline">Documentation AI is deployed. Denial AI is deployed against you.</p>
 
             <p className="hero-desc">
-              Guaranteed by outcomes. Live across 100+ hospitals.
+              Revenue integrity AI is the answer. 99% clean claim rate — guaranteed by outcomes.
             </p>
 
             <div className="hero-actions">
@@ -917,14 +918,14 @@ export default function App() {
 
           {/* ── Centered header ── */}
           <div className="journey-header">
-            <div className="section-eyebrow">The journey</div>
+            <div className="section-eyebrow">Dynamic DRG Intelligence</div>
             <h2 className="journey-section-title">
-              One Data Model.{' '}
-              <span className="title-grad">End-to-End Revenue Automation.</span>
+              AI reads every clinical document.{' '}
+              <span className="title-grad">DRG recomputed in real time.</span>
             </h2>
             <p className="journey-section-sub">
-              Understand the payer, create the custom rulebook, compare the chart to that logic,
-              route the right work, stop denials before submission, and reconcile what got paid.
+              The physician writes for clinical communication. The DRG grouper reads for financial classification.
+              That gap is where all revenue leakage lives. Docstribe sits exactly in that gap — from H&P to clean claim.
             </p>
           </div>
 
@@ -1012,10 +1013,10 @@ export default function App() {
         <div className="wrap">
           <div className="section-eyebrow">Platform</div>
           <h2 className="section-title" style={{ maxWidth: 680 }}>
-            From contract language to operational logic, without breaking the flow.
+            From H&P to clean claim — without a single documentation gap.
           </h2>
           <p className="section-sub">
-            The goal is not another RCM dashboard. The goal is to make the payer contract executable so every team is working from the same rule set.
+            The goal is not another CDI dashboard. The goal is to make every clinical document work for the DRG grouper — automatically, from the moment the physician signs.
           </p>
 
           <div className="foundation-grid">
@@ -1023,19 +1024,19 @@ export default function App() {
             <div className="statement-card">
               <div>
                 <span style={{ fontSize: '0.7rem', fontWeight: 700, letterSpacing: '0.14em', textTransform: 'uppercase', color: 'var(--teal)' }}>
-                  Why this changes the workflow
+                  Why this changes the DRG
                 </span>
-                <h3>One rulebook sits between the contract and the ledger.</h3>
-                <p>Instead of asking every team to interpret payer language on its own, Docstribe centralizes that logic once, versions it, and pushes it into the workflows where financial mistakes actually happen.</p>
+                <h3>AI sits in the gap between the physician and the grouper.</h3>
+                <p>Every clinical document carries DRG revenue that physicians never intended to leave behind. Docstribe reads those documents in real time, computes the DRG impact, and fires the right CDI query before the window closes.</p>
               </div>
               <div className="before-after">
                 <div className="ba-item">
                   <span className="ba-label ba-label-before">Before</span>
-                  <strong>Policy in PDFs, edits in silos, recovery after the fact</strong>
+                  <strong>CDI review on Day 3+, discharge summaries with omitted diagnoses, DRG locked too late</strong>
                 </div>
                 <div className="ba-item">
                   <span className="ba-label ba-label-after">After</span>
-                  <strong>Custom rulebook, routed work, closed-loop cash intelligence</strong>
+                  <strong>Day 0 CDI queries, 24h DRG refresh, 100% chart coverage at discharge</strong>
                 </div>
               </div>
             </div>
@@ -1080,10 +1081,10 @@ export default function App() {
         <div className="wrap">
           <div className="section-eyebrow">Outcomes</div>
           <h2 className="section-title" style={{ maxWidth: 600 }}>
-            The rulebook is only useful if it changes the financial result.
+            The DRG you deserved — but never got — until now.
           </h2>
           <p className="section-sub">
-            These are the operating outcomes the Docstribe story is built around. The same payer logic that fires the edit powers the financial result.
+            These are the operating outcomes Docstribe delivers. The same AI that reads the H&P fires the CDI query, tracks the LOS paradox, and locks the final DRG at discharge.
           </p>
 
           <div className="outcomes-grid">
@@ -1099,7 +1100,7 @@ export default function App() {
           <div className="quote-block">
             <span className="quote-mark">"</span>
             <p>
-              Do not let every team interpret the payor on its own. Make the contract executable once, then let the workflow follow it.
+              The physician writes for clinical communication. The DRG grouper reads for financial classification. That gap is where all revenue leakage lives. Docstribe sits exactly in that gap.
             </p>
           </div>
         </div>
@@ -1109,10 +1110,10 @@ export default function App() {
       <section className="cta-section" id="contact">
         <div className="wrap">
           <div className="cta-shell">
-            <div className="section-eyebrow" style={{ margin: '0 auto 0' }}>60-Day Pilot</div>
-            <h2>Live rulebook. Real claims. Guaranteed results in 60 days.</h2>
+            <div className="section-eyebrow" style={{ margin: '0 auto 0' }}>4-Week Pilot</div>
+            <h2>Real charts. Real DRGs. Measured impact in 4 weeks.</h2>
             <p>
-              Pick one payer, one service line, or one facility. In 60 days you'll have a custom living rulebook deployed across your revenue team — with a first recovery report in hand. If we don't deliver, we extend at no cost.
+              Connect Epic, ingest payer contracts, deploy AI agents on live charts. In 4 weeks you get CCR, CMI, and charge capture deltas — quantified to the dollar, per encounter. Zero cost. Outcome-driven decision. If we don't deliver, there's nothing to pay.
             </p>
 
             <div className="cta-checkpoints">
@@ -1141,7 +1142,7 @@ export default function App() {
         <div className="wrap footer-inner">
           <div className="footer-brand">
             <strong>Docstribe</strong>
-            <span>Payor intelligence built for revenue teams.</span>
+            <span>Dynamic DRG Intelligence. Built for inpatient revenue teams.</span>
           </div>
 
           <div className="footer-links">

@@ -4,54 +4,54 @@ import { useEffect, useRef, useState, useCallback } from 'react';
 const PHASES = [
   {
     num: '01',
-    tag: 'FRONT END',
-    title: 'Payor Intelligence',
-    sub: 'Authorization',
+    tag: 'H&P — DAY 0',
+    title: 'Dynamic DRG Intelligence',
+    sub: 'CDI Queries at Admission',
     color: '#00cba8',
     dim: 'rgba(0,203,168,0.08)',
     border: 'rgba(0,203,168,0.28)',
     glow: 'rgba(0,203,168,0.5)',
     steps: [
-      'Read and normalize every payor contract',
-      'Build plan-specific prior auth rules by specialty',
-      'Map medical necessity criteria across all plans',
-      'Align fee schedules before the first claim drops',
+      'Ingest H&P within minutes of physician signature',
+      'Extract ICD-10 codes; compute baseline DRG via grouper',
+      'Fire CDI queries Day 0 — not Day 3 like traditional CDI',
+      'Surface DRG delta: e.g. $8.6K → $16.6K if AKI documented',
     ],
-    products: ['CONTRACT INTAKE', 'AUTH ENGINE'],
+    products: ['CDI ENGINE', 'DRG GROUPER'],
   },
   {
     num: '02',
-    tag: 'MID CYCLE',
-    title: 'Clinical Intelligence',
-    sub: 'CDI and Coding',
+    tag: 'DAILY ROUNDING',
+    title: '24-Hour DRG Refresh',
+    sub: 'LOS & Revenue Delta Tracking',
     color: '#4d8aff',
     dim: 'rgba(77,138,255,0.08)',
     border: 'rgba(77,138,255,0.28)',
     glow: 'rgba(77,138,255,0.5)',
     steps: [
-      'Validate every note and order against the rulebook',
-      'Edit CPT, DRG, and modifiers before the bill drops',
-      'Score claim risk pre-drop — stop denials before they start',
-      'Route precise work packets to UM, CDI, coding, billing',
+      'Recompute DRG on every clinical signal — notes, labs, consults',
+      'Map lab values to undocumented diagnoses (e.g. AKI, malnutrition)',
+      'Detect LOS paradox when patient outlasts GMLOS — alert fired',
+      'Track revenue delta in real time: e.g. +$4,200 from new CC/MCC',
     ],
-    products: ['CDI WORKBENCH', 'CODING ASSIST', 'ROUTE ENGINE'],
+    products: ['LOS MONITOR', 'QUERY ENGINE'],
   },
   {
     num: '03',
-    tag: 'BACK END',
-    title: 'Revenue Integrity',
-    sub: 'Denial Recovery',
+    tag: 'DISCHARGE',
+    title: 'Final DRG Locked',
+    sub: '40–60% Revenue Loss Prevented',
     color: '#ff7b4a',
     dim: 'rgba(255,123,74,0.08)',
     border: 'rgba(255,123,74,0.28)',
     glow: 'rgba(255,123,74,0.5)',
     steps: [
-      'Reconcile every ERA against what the contract owed',
-      'Surface underpayments automatically, dollar by dollar',
-      'Auto-generate denial appeal letters with payer evidence',
-      'Feed every variance back into the Living Rulebook',
+      'Cross-reference entire chart — every note, consult, lab, order',
+      'Surface conditions treated but not listed in discharge summary',
+      'Lock final DRG with full clinical picture — maximum reimbursement',
+      'Generate payer-specific pre-bill defense brief before claim drops',
     ],
-    products: ['REMIT MATCH'],
+    products: ['DISCHARGE AI', 'PRE-BILL BRIEF'],
   },
 ];
 
@@ -294,13 +294,13 @@ export default function Shakti() {
             color: '#f1f5f9', margin: '0 0 14px',
             fontFamily: 'Sora, sans-serif', letterSpacing: '-0.5px',
           }}>
-            Patient Revenue Workflow
+            DRG Lifecycle — H&P to Clean Claim
           </h2>
           <p style={{
             fontSize: '15px', color: '#475569', maxWidth: '460px', margin: '0 auto',
             lineHeight: '1.7',
           }}>
-            Every claim, from first contact to final payment, moving through a single Living Rulebook.
+            AI reads every clinical document the moment it is signed. DRG recomputed in real time. CDI queries on Day 0.
           </p>
         </div>
 

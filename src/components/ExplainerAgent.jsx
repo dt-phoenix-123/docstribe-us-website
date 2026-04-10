@@ -2,15 +2,16 @@ import { useState, useRef, useEffect, useCallback } from 'react';
 
 // ── Phase keyword detection (drives Shakti highlight on the page) ─────────────
 const PHASE_KEYWORDS = [
-  // Phase 0 — Front End
-  ['contract', 'auth', 'authorization', 'prior auth', 'payor', 'medical necessity',
-   'fee schedule', 'intake', 'eligibility', 'front end', 'rulebook', 'plan-specific'],
-  // Phase 1 — Mid Cycle
-  ['cdi', 'coding', 'clinical', 'drg', 'cpt', 'modifier', 'charge capture',
-   'claim risk', 'mid cycle', 'documentation', 'routing', 'workbench', 'pre-bill'],
-  // Phase 2 — Back End
-  ['denial', 'appeal', 'era', 'reconcil', 'underpayment', 'recovery', 'remit',
-   'variance', 'back end', 'integrity', 'payment variance', 'collected'],
+  // Phase 0 — H&P & Day 0 CDI
+  ['h&p', 'admission', 'day 0', 'day zero', 'icd-10', 'icd10', 'mdc', 'principal dx',
+   'principal diagnosis', 'baseline drg', 'cdi query', 'grouper', 'h and p'],
+  // Phase 1 — Daily Rounding & LOS
+  ['daily round', 'rounding', '24h', '24 hour', 'progress note', 'soap', 'los',
+   'gmlos', 'los paradox', 'lab', 'creatinine', 'aki', 'revenue delta', 'signal',
+   'cdi', 'coding', 'drg', 'cc mcc', 'hcc', 'charge capture', 'documentation'],
+  // Phase 2 — Discharge & Coding
+  ['discharge', 'discharge summary', 'pre-bill', 'pre bill', 'final drg', 'coding',
+   'claim', 'pre-bill brief', 'denial', 'appeal', 'clean claim', 'physician profile'],
 ];
 
 function detectPhase(words, index) {
@@ -26,10 +27,10 @@ function emitPhase(phase) {
 }
 
 // ── Tour trigger detection ────────────────────────────────────────────────────
-const TOUR_RE = /\b(walk me through|show me (how|the|all|it)|the (whole |full |patient |revenue )(workflow|journey|cycle|process)|how does it (all |)work|full overview|explain (everything|the process|how it all)|give me (an |the )(overview|tour))\b/i;
+const TOUR_RE = /\b(walk me through|show me (how|the|all|it)|the (whole |full |patient |revenue |drg )(workflow|journey|cycle|process|lifecycle)|how does it (all |)work|full overview|explain (everything|the process|how it all|the drg|the lifecycle)|give me (an |the )(overview|tour)|drg lifecycle|h&p to (claim|discharge|coding))\b/i;
 
 const TOUR_PHASE_COLORS = ['#00cba8', '#4d8aff', '#ff7b4a'];
-const TOUR_PHASE_LABELS = ['Front End', 'Mid Cycle', 'Back End'];
+const TOUR_PHASE_LABELS = ['H&P & Day 0 CDI', 'Daily Rounding', 'Discharge & Coding'];
 
 // ── Constants ─────────────────────────────────────────────────────────────────
 const ROLES = [
@@ -41,12 +42,12 @@ const ROLES = [
 ];
 
 const PAINS = [
-  { id: 'denials',  label: 'Rising Denial Rates',     color: '#f87171', bg: 'rgba(248,113,113,0.08)'  },
-  { id: 'cdi',      label: 'CDI & Coding Gaps',       color: '#fbbf24', bg: 'rgba(251,191,36,0.08)'   },
-  { id: 'auth',     label: 'Prior Auth Delays',       color: '#a78bfa', bg: 'rgba(167,139,250,0.08)'  },
-  { id: 'underpay', label: 'Contract Underpayments',  color: '#60a5fa', bg: 'rgba(96,165,250,0.08)'   },
-  { id: 'drg',      label: 'DRG Downgrades',          color: '#34d399', bg: 'rgba(52,211,153,0.08)'   },
-  { id: 'all',      label: 'Show Me Everything',      color: '#38bdf8', bg: 'rgba(56,189,248,0.08)'   },
+  { id: 'drg',      label: 'DRG Downgrades',           color: '#00cba8', bg: 'rgba(0,203,168,0.08)'    },
+  { id: 'cdi',      label: 'CDI & CC/MCC Gaps',        color: '#fbbf24', bg: 'rgba(251,191,36,0.08)'   },
+  { id: 'discharge', label: 'Discharge Summary Losses', color: '#ff7b4a', bg: 'rgba(255,123,74,0.08)'  },
+  { id: 'los',      label: 'LOS vs. GMLOS Paradox',    color: '#a78bfa', bg: 'rgba(167,139,250,0.08)'  },
+  { id: 'charge',   label: 'Charge Capture Gaps',      color: '#60a5fa', bg: 'rgba(96,165,250,0.08)'   },
+  { id: 'all',      label: 'Walk Me Through Everything', color: '#38bdf8', bg: 'rgba(56,189,248,0.08)' },
 ];
 
 // ── EQ Canvas visualizer ──────────────────────────────────────────────────────
@@ -118,10 +119,10 @@ function EQCanvas({ analyserRef, isPlaying }) {
 // ── Outcomes visual (4-stat grid — shown for intro / general questions) ───────
 function OutcomesVisual({ visible }) {
   const stats = [
-    { value: '18×',   label: 'Average ROI',        color: '#00cba8' },
-    { value: '$100M+', label: 'Revenue Recovered',  color: '#4d8aff' },
-    { value: '60 Days', label: 'Pilot to Live',     color: '#ff7b4a' },
-    { value: '100+',  label: 'Hospitals Deployed',  color: '#a78bfa' },
+    { value: 'Day 0',  label: 'First CDI query fired',        color: '#00cba8' },
+    { value: '24h',    label: 'DRG refresh cycle',            color: '#4d8aff' },
+    { value: '100%',   label: 'Chart coverage at discharge',  color: '#ff7b4a' },
+    { value: '40–60%', label: 'Revenue loss prevented at DC', color: '#a78bfa' },
   ];
   return (
     <div style={{ padding: '4px 24px 4px' }}>
@@ -149,9 +150,9 @@ function OutcomesVisual({ visible }) {
 // ── Phase flow visual (3-phase animated diagram — shown during tour) ───────────
 function PhaseFlowVisual({ activePhase, visible }) {
   const phases = [
-    { label: 'Front End',  sub: 'Payor Intelligence',    color: '#00cba8', steps: ['Contract Parsing', 'Prior Auth Rules', 'Eligibility Checks', 'Fee Schedules'] },
-    { label: 'Mid Cycle',  sub: 'Clinical Intelligence', color: '#4d8aff', steps: ['CDI & Coding', 'DRG / CPT Edit', 'Claim Risk Score', 'Work Routing'] },
-    { label: 'Back End',   sub: 'Revenue Integrity',     color: '#ff7b4a', steps: ['ERA Reconcile', 'Underpayment Flag', 'Denial Appeals', 'Rulebook Update'] },
+    { label: 'H&P & Day 0 CDI',    sub: 'Revenue Clock Starts',      color: '#00cba8', steps: ['H&P Ingested in Minutes', 'ICD-10 Extracted', 'Baseline DRG Set', 'CDI Query Day 0'] },
+    { label: 'Daily Rounding',      sub: '24-Hour DRG Refresh',       color: '#4d8aff', steps: ['DRG Recomputed on Signal', 'Lab-to-DX Mapping', 'LOS Paradox Alert', 'Revenue Delta Tracked'] },
+    { label: 'Discharge & Coding',  sub: '40–60% Value Locked Here',  color: '#ff7b4a', steps: ['Full Chart Cross-Referenced', 'Omitted DX Surfaced', 'Final DRG Locked', 'Pre-Bill Brief Generated'] },
   ];
   return (
     <div style={{ padding: '4px 24px 4px', opacity: visible ? 1 : 0, transition: 'opacity 0.4s ease' }}>
@@ -565,6 +566,7 @@ function PlayingStep({
   analyserRef, briefingAudio,
   onPlay, onStop, onMute, onRestart, onReset,
   chatMessages, chatInput, chatLoading, onChatInput, onChatSend,
+  onVoiceStart, voiceActive,
   isTour, tourStep,
   visual, visualPhase,
   toolOutput,
@@ -710,18 +712,41 @@ function PlayingStep({
             value={chatInput}
             onChange={e => onChatInput(e.target.value)}
             onKeyDown={e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); onChatSend(); } }}
-            placeholder="Ask anything — I'm reading the whole platform with you…"
+            placeholder={voiceActive ? 'Listening… speak now' : 'Ask about DRG phases, CDI workflow, or pilot structure…'}
             rows={2}
             style={{
               width: '100%', boxSizing: 'border-box',
-              background: 'rgba(255,255,255,0.04)',
-              border: '1px solid rgba(14,165,233,0.18)',
-              borderRadius: '14px', padding: '11px 52px 11px 15px',
+              background: voiceActive ? 'rgba(0,203,168,0.04)' : 'rgba(255,255,255,0.04)',
+              border: `1px solid ${voiceActive ? 'rgba(0,203,168,0.4)' : 'rgba(14,165,233,0.18)'}`,
+              borderRadius: '14px', padding: '11px 90px 11px 15px',
               color: '#e2e8f0', fontSize: '13.5px', lineHeight: '1.55',
               resize: 'none', fontFamily: 'Inter, sans-serif',
-              transition: 'border-color 0.2s',
+              transition: 'border-color 0.2s, background 0.2s',
             }}
           />
+          {/* Mic button */}
+          <button
+            onClick={onVoiceStart}
+            title={voiceActive ? 'Stop listening' : 'Speak to RUDRA'}
+            style={{
+              position: 'absolute', right: '50px', bottom: '10px',
+              width: '34px', height: '34px', borderRadius: '10px', border: 'none',
+              background: voiceActive
+                ? 'rgba(0,203,168,0.18)'
+                : 'rgba(14,165,233,0.08)',
+              color: voiceActive ? '#00cba8' : '#38bdf8',
+              cursor: 'pointer',
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              transition: 'all 0.2s',
+              animation: voiceActive ? 'rudraPulse 1.2s ease-in-out infinite' : 'none',
+            }}
+          >
+            {voiceActive
+              ? <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><rect x="4" y="9" width="4" height="12" rx="1"/><rect x="10" y="5" width="4" height="16" rx="1"/><rect x="16" y="7" width="4" height="14" rx="1"/></svg>
+              : <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>
+            }
+          </button>
+          {/* Send button */}
           <button
             onClick={onChatSend}
             disabled={!chatInput.trim() || chatLoading}
@@ -780,6 +805,8 @@ export default function ExplainerAgent() {
   const [visual, setVisual] = useState(null);       // null | 'outcomes' | 'phase-flow' | 'phase-0' | 'phase-1' | 'phase-2'
   const [visualPhase, setVisualPhase] = useState(null); // null | 0 | 1 | 2 (for tour)
   const [toolOutput, setToolOutput] = useState(null); // AI-chosen visual tool: { type, data }
+  const [voiceActive, setVoiceActive] = useState(false);
+  const recognitionRef = useRef(null);
 
   // Refs for audio engine
   const audioCtxRef     = useRef(null);
@@ -813,6 +840,26 @@ export default function ExplainerAgent() {
     setProgress(0);
     setWordIndex(-1);
     emitPhase(null); // clear Shakti highlight
+  }, []);
+
+  // ── Voice input (Web Speech API) ─────────────────────────────────────────
+  const startVoice = useCallback(() => {
+    const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (!SR) return;
+    if (recognitionRef.current) { recognitionRef.current.stop(); recognitionRef.current = null; setVoiceActive(false); return; }
+    const rec = new SR();
+    rec.continuous = false;
+    rec.interimResults = true;
+    rec.lang = 'en-US';
+    rec.onstart = () => setVoiceActive(true);
+    rec.onresult = (e) => {
+      const transcript = Array.from(e.results).map(r => r[0].transcript).join('');
+      setChatInput(transcript);
+    };
+    rec.onerror = () => { setVoiceActive(false); recognitionRef.current = null; };
+    rec.onend = () => { setVoiceActive(false); recognitionRef.current = null; };
+    recognitionRef.current = rec;
+    rec.start();
   }, []);
 
   // ── Run guided visual tour (3 phases, sequential audio + Shakti highlight) ──
@@ -960,7 +1007,7 @@ export default function ExplainerAgent() {
     const role      = ROLES.find(r => r.id === roleId)?.label  || roleId;
     const painPoint = PAINS.find(p => p.id === painId)?.label  || painId;
 
-    // "Show Me Everything" → full guided visual tour
+    // "Walk Me Through Everything" → full DRG lifecycle guided visual tour
     if (painId === 'all') {
       try {
         const res = await fetch('/api/tour', {
@@ -981,11 +1028,11 @@ export default function ExplainerAgent() {
 
     // Map pain → visual type
     const painVisualMap = {
-      auth:     'phase-0',
-      cdi:      'phase-1',
-      drg:      'phase-1',
-      denials:  'phase-2',
-      underpay: 'phase-2',
+      drg:       'phase-0',
+      cdi:       'phase-0',
+      los:       'phase-1',
+      discharge: 'phase-2',
+      charge:    'phase-1',
       exploring: 'outcomes',
     };
     const painVisual = painVisualMap[painId] || 'outcomes';
@@ -1211,7 +1258,7 @@ export default function ExplainerAgent() {
                   letterSpacing: '3.5px', fontFamily: 'Sora, sans-serif',
                 }}>RUDRA</div>
                 <div style={{ fontSize: '11px', color: '#1e3a5f', marginTop: '3px' }}>
-                  Docstribe AI Intelligence · Powered by Gemini
+                  Dynamic DRG Intelligence · Powered by Gemini
                 </div>
               </div>
               <button
@@ -1266,6 +1313,8 @@ export default function ExplainerAgent() {
                 chatLoading={chatLoading}
                 onChatInput={setChatInput}
                 onChatSend={sendFollowUp}
+                onVoiceStart={startVoice}
+                voiceActive={voiceActive}
                 isTour={isTour}
                 tourStep={tourStep}
                 visual={visual}

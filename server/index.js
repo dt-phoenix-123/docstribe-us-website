@@ -21,32 +21,43 @@ RUDRA stands for Revenue Understanding & Decision-support Reasoning Agent — bu
 Named after Shiva's fierce, transformative aspect, you cut through complexity and reveal truth.
 
 PERSONA:
-- You are a senior healthcare technology strategist with 10+ years in revenue cycle transformation
-- Tone: incisive, confident, warm — you've seen hospitals hemorrhage revenue and you know exactly how to stop it
-- Natural, direct — like a trusted advisor who respects the visitor's time
+- You are a senior healthcare technology strategist with deep expertise in DRG optimization, CDI workflows, and inpatient revenue integrity
+- You understand the physician-documentation gap at a clinical level: you know what a CC/MCC means for DRG weight, what LOS paradox looks like, and why discharge summaries are where 40–60% of DRG value dies
+- Tone: incisive, confident, warm — you've seen hospitals lose millions in DRG downgrades and you know exactly how to stop it
+- Natural, direct — like a trusted revenue integrity advisor who respects the visitor's time
 - Never sound like a call center script or a product brochure read aloud
 - Never use hollow phrases like "absolutely!", "great question!", "certainly!"
-- Keep responses concise: 2-4 sentences max unless the visitor asks for detail
-- Always end with a natural conversation hook — a question, or an offer to go deeper
+- When explaining processes, be specific and thorough — walk through the mechanism, the clinical signal, and the revenue impact
+- Always end with a natural conversation hook — a question, or an offer to go deeper on a specific phase
+
+CORE NARRATIVE (lead with this when relevant):
+"Documentation AI is deployed. Denial AI is deployed against you. Revenue integrity AI — the layer that converts clinical documentation into the correct DRG — is what's missing. That's exactly what Docstribe delivers."
+
+THE PHYSICIAN-GROUPER GAP:
+The physician writes for clinical communication. The DRG grouper reads for financial classification.
+That gap is where all revenue leakage lives. Docstribe sits exactly in that gap — reading every clinical document at the moment it is signed, recomputing the DRG in real time, firing CDI queries on Day 0.
 
 KNOWLEDGE BASE (only cite from this — never hallucinate metrics or features):
 ${KNOWLEDGE_BASE}
 
 CURRENT PAGE CONTEXT:
-${pageContext || 'Visitor is on the Docstribe AI website homepage.'}
+${pageContext || 'Visitor is on the Docstribe Dynamic DRG Intelligence website.'}
 
 CONVERSATION RULES:
-1. Start broad (what brings you here?), then tailor as you learn more
-2. Adapt depth: elevator pitch → detailed → technical based on signals
-3. When someone asks about pricing: explain the pay-only-on-success model, 60-day free pilot
-4. When someone is skeptical: use proof points (100+ hospitals, 18x ROI, $100M+ revenue growth)
-5. When someone asks for a demo or meeting: tell them to email akash@docstribe.com or rishav@docstribe.com
-6. If you don't know something: say "I'd connect you with our team for that — they'll have the specifics"
-7. NEVER fabricate features, metrics, or case study details not in the knowledge base
+1. Lead with the DRG gap narrative when someone asks what Docstribe does
+2. When explaining the DRG lifecycle, walk through phases: H&P → Daily Rounding → LOS Monitor → Discharge → Coding — be specific about what Docstribe does at each phase
+3. When someone asks about CDI: explain Day 0 queries, 24h DRG refresh, physician pattern learning
+4. When someone asks about the pilot: explain the 4-week structure — Epic connect, live charts, DRG accuracy comparison, quantified delta
+5. When someone asks about pricing: zero cost pilot, pay only on measurable financial improvement
+6. When someone is skeptical: use specific proof — Day 0 CDI queries catch what Day 3 misses, discharge cross-reference prevents 40–60% value loss
+7. When someone asks for a demo or meeting: tell them to email akash@docstribe.com or rishav@docstribe.com
+8. If you don't know something: say "I'd connect you with our team for that — they'll have the specifics"
+9. NEVER fabricate features, metrics, or case study details not in the knowledge base
 
 RESPONSE FORMAT:
 Plain conversational text only. No markdown headers, no bullet lists, no asterisks.
 Speak like a human, not like a document.
+Explain processes fully — don't truncate your answer mid-thought. If a process has multiple steps, walk through all of them.
 `.trim();
 
 // ── PCM → WAV conversion ───────────────────────────────────────────────────────
@@ -94,7 +105,7 @@ async function generateText(message, history, pageContext) {
       body: JSON.stringify({
         systemInstruction: { parts: [{ text: buildSystemPrompt(pageContext) }] },
         contents,
-        generationConfig: { temperature: 0.75, maxOutputTokens: 700 },
+        generationConfig: { temperature: 0.75, maxOutputTokens: 1500 },
       }),
     }
   );
@@ -183,75 +194,106 @@ async function generateVisualTool(spokenText, context) {
   const ctx      = ctxOnly + ' ' + textOnly;       // combined for fallback matching
   let type, data;
 
-  // Priority order: auth → CDI/DRG → denial/underpay → ROI → default
-  // Auth checked BEFORE denial because denial text often mentions "auth" incidentally
-  if (/prior auth|auth delay|eligib|front.?end|payor|intake/i.test(ctxOnly) ||
-      (/prior auth|authorization|eligib/i.test(textOnly) && !/denial|underpay|back.?end/i.test(ctxOnly))) {
+  // Priority: DRG/H&P/CDI → Daily Rounding/LOS → Discharge/Coding → Outcomes/Pilot → default
+  if (/h&p|admission|day 0|cdi query|day zero|h&p phase|baseline drg|icd.?10|principal dx|mdc/i.test(ctxOnly) ||
+      /h&p|day 0|cdi query|baseline drg/i.test(textOnly)) {
     type = 'phase_breakdown';
     data = {
-      phase: 0, phaseName: 'Front End — Payor Intelligence',
-      problem: 'Authorization failures and eligibility gaps block revenue before the encounter even begins.',
+      phase: 0, phaseName: 'H&P & Day 0 CDI — Revenue Clock Starts',
+      problem: 'The physician writes for clinical communication. The DRG grouper reads for financial classification. That gap costs hospitals millions per year.',
       steps: [
-        'Parse every payor contract into plan-specific prior auth rule sets',
-        'Validate medical necessity criteria per visit type before admission',
-        'Real-time eligibility verification at scheduling and check-in',
-        'Fee schedule loaded per payer — no write-off surprises at payment',
+        'H&P ingested within minutes of physician signature',
+        'Provisional ICD-10 codes extracted; MDC and DRG family locked',
+        'Baseline DRG computed via grouper — revenue baseline established',
+        'CDI queries fired Day 0 — not Day 3 like traditional CDI workflows',
+        'DRG delta surfaced immediately: e.g. DRG 195 ($8.6K) → DRG 871 ($16.6K) if AKI documented',
       ],
-      tags: ['Living Rulebook', 'Prior Auth Engine', 'Eligibility Check', 'Contract Parser'],
-      outcome: 'Auth-related denials drop 60%+ in the first 60 days of deployment.',
+      tags: ['Day 0 CDI', 'DRG Grouper', 'ICD-10 Extraction', 'CDI Query Engine'],
+      outcome: 'First DRG baseline set on admission day. Revenue opportunity identified before the next rounds.',
     };
-  } else if (/cdi|coding|drg|cpt|modifier|mid.?cycle|documentation|charge|claim/i.test(ctxOnly) ||
-             /cdi|drg|coding gap|cpt|modifier/i.test(textOnly)) {
+  } else if (/daily round|24h|24.hour|rounding|los|gmlos|los paradox|progress note|soap|signal/i.test(ctxOnly) ||
+             /daily round|rounding|24h|los paradox|gmlos/i.test(textOnly)) {
     type = 'phase_breakdown';
     data = {
-      phase: 1, phaseName: 'Mid Cycle — Clinical Intelligence',
-      problem: 'Coding gaps and DRG downgrades leave significant revenue on the table at every encounter.',
+      phase: 1, phaseName: 'Daily Rounding — 24-Hour DRG Refresh',
+      problem: 'Every clinical event that goes undocumented is revenue left behind. DRG accuracy compounds daily across the entire stay.',
       steps: [
-        'Validate every clinical note against ICD-10, CPT, DRG rules before bill drops',
-        'Auto-suggest CDI queries to physicians for missing diagnoses',
-        'Flag high-risk DRG pairs likely to trigger auditor scrutiny',
-        'Route work packets to UM, CDI, Coding & Billing queues with context',
+        'DRG recomputed on every new clinical signal — progress notes, labs, consults',
+        'Delta ICD codes compared vs. prior day — new diagnoses surfaced automatically',
+        'Lab values mapped to undocumented diagnoses (e.g. creatinine 3.2 → AKI query)',
+        'Revenue delta tracked in real time — e.g. +$4,200 today from newly documented CC',
+        'LOS Paradox Detection: if LOS > GMLOS, alert fired — document complexity or expedite discharge',
       ],
-      tags: ['CDI Engine', 'DRG Optimizer', 'CPT / Modifier Edit', 'Charge Capture'],
-      outcome: 'Case mix index improves 0.15–0.25 points; coding accuracy hits 98%+.',
+      tags: ['24h DRG Refresh', 'LOS Monitor', 'Lab-to-DX Mapping', 'CDI Escalation'],
+      outcome: 'DRG recomputed daily. Revenue delta visible. No more end-of-stay surprises.',
     };
-  } else if (/denial|appeal|remit|underpay|reconcil|back.?end|recovery/i.test(ctxOnly) ||
+  } else if (/discharge|coding|pre.bill|cdi profile|chart coverage|discharge summary|final drg/i.test(ctxOnly) ||
+             /discharge|discharge summary|pre.bill|final drg/i.test(textOnly)) {
+    type = 'phase_breakdown';
+    data = {
+      phase: 2, phaseName: 'Discharge & Coding — Locking the Final DRG',
+      problem: '40–60% of DRG value is lost at the discharge summary. Physicians omit treated conditions. Confirmed diagnoses go unlisted. Docstribe closes this gap.',
+      steps: [
+        'Entire chart cross-referenced at discharge: all notes, consults, orders, results',
+        'Conditions treated but not listed surfaced — e.g. 5 diagnoses treated, 3 documented',
+        'Final DRG computed with full clinical picture — maximum defensible reimbursement',
+        'Payer-specific pre-bill defense brief generated before claim drops',
+        'Per-physician CDI profile built — accuracy improves with every admission',
+      ],
+      tags: ['Discharge AI', 'Pre-Bill Brief', 'CDI Profile', '100% Chart Coverage'],
+      outcome: '40–60% of DRG revenue loss at discharge prevented. 99% clean claim rate.',
+    };
+  } else if (/cdi|coding|drg downgrade|cmr|cc.mcc|hcc|charge capture|coding gap/i.test(ctxOnly) ||
+             /cdi|drg downgrade|cc.mcc|hcc|charge capture/i.test(textOnly)) {
+    type = 'phase_breakdown';
+    data = {
+      phase: 1, phaseName: 'CDI & DRG Optimization — Mid-Stay',
+      problem: 'DRG downgrades and CC/MCC capture gaps represent the single largest avoidable revenue loss in inpatient settings.',
+      steps: [
+        'Real-time CDI query generation — targeted to physician, diagnosis, and payer',
+        'CC/MCC gap detection across every active inpatient encounter',
+        'DRG weight prediction per documentation scenario presented to CDI team',
+        'HCC recapture for Medicare Advantage lives — RAF score optimization',
+        'Charge capture validation: missed charges, under-coded E&M, bundling errors caught pre-bill',
+      ],
+      tags: ['CDI Engine', 'CC/MCC Capture', 'HCC Recapture', 'DRG Optimizer'],
+      outcome: '+0.05 CMI uplift per discharge. +10% charge capture. 57% reduction in DRG downgrades.',
+    };
+  } else if (/denial|appeal|underpay|reconcil|payer ai|payer recovery/i.test(ctxOnly) ||
              /denial|appeal|underpayment|reconcil/i.test(textOnly)) {
-    type = 'phase_breakdown';
+    type = 'comparison_table';
     data = {
-      phase: 2, phaseName: 'Back End — Revenue Integrity',
-      problem: 'Denials and underpayments silently erode collected revenue every month.',
-      steps: [
-        'ERA reconciliation vs. contract-owed amounts',
-        'Auto-flag underpayments with contract clause citations',
-        'AI-generated denial appeal letters with payer evidence attached',
-        'Variance fed back to Living Rulebook — same leak never recurs',
+      title: 'Docstribe vs. Payer AI — Who Wins',
+      rows: [
+        { metric: 'DRG Defense',         before: 'Payer AI challenges at adjudication', after: 'Pre-bill brief defends before claim drops' },
+        { metric: 'CDI Timing',          before: 'Day 3+ CDI review (too late)',         after: 'Day 0 CDI queries — physician still available' },
+        { metric: 'Discharge Summary',   before: '40–60% of DRG value abandoned',        after: '100% chart cross-reference, full DRG locked' },
+        { metric: 'Denial Rate',         before: '15.1% industry average',               after: '99% clean claim rate target' },
+        { metric: 'CMI Uplift',          before: 'Baseline',                             after: '+0.05 per discharge at scale' },
       ],
-      tags: ['Living Rulebook', 'ERA Reconcile', 'Denial Appeals', 'Underpayment Recovery'],
-      outcome: 'Hospitals recover $100M+ in previously lost revenue within 12 months.',
     };
-  } else if (/roi|return|invest|18x|outcome|result|pilot|60.?day/i.test(ctx)) {
+  } else if (/roi|outcome|result|pilot|4.week|cmi|ccr|charge capture|impact|8.14m|projected/i.test(ctx)) {
     type = 'stats_grid';
     data = {
-      title: 'Guaranteed Outcomes',
+      title: 'Pilot Outcome Commitments',
       stats: [
-        { label: 'Average ROI',          value: '18×',    delta: 'vs. cost of deployment', color: '#00cba8' },
-        { label: 'Revenue Recovered',    value: '$100M+', delta: 'across live deployments', color: '#4d8aff' },
-        { label: 'Pilot to Live',        value: '60 Days', delta: 'no long implementation', color: '#ff7b4a' },
-        { label: 'Hospitals Deployed',   value: '100+',   delta: 'live production systems', color: '#a78bfa' },
+        { label: 'Clean Claim Rate',    value: '99%',    delta: 'all payers, all care settings', color: '#00cba8' },
+        { label: 'Charge Capture',      value: '+10%',   delta: 'outpatient — missed charges caught', color: '#4d8aff' },
+        { label: 'CMI Uplift',          value: '+0.05',  delta: 'per discharge — CC/MCC gaps closed', color: '#ff7b4a' },
+        { label: 'Annual Impact',       value: '$8–14M', delta: 'conservative estimate at HM scale',  color: '#a78bfa' },
       ],
     };
   } else {
-    // Default: before/after comparison
+    // Default: DRG lifecycle comparison
     type = 'comparison_table';
     data = {
-      title: 'Before vs. After Docstribe',
+      title: 'Before vs. After Docstribe DRG Intelligence',
       rows: [
-        { metric: 'Denial Rate',          before: '12–18%',  after: '<4%'       },
-        { metric: 'Days to First Payment', before: '45–60d',  after: '18–22d'    },
-        { metric: 'Coding Accuracy',       before: '82%',     after: '98%+'      },
-        { metric: 'Auth Approval Rate',    before: '71%',     after: '94%+'      },
-        { metric: 'Net Revenue Uplift',    before: 'baseline', after: '+18× ROI' },
+        { metric: 'CDI Timing',          before: 'Day 3+ (too late to fix)',    after: 'Day 0 — H&P ingested within minutes' },
+        { metric: 'DRG Refresh',         before: 'Once at discharge',           after: 'Every 24 hours on every new signal'   },
+        { metric: 'Discharge Summary',   before: '40–60% revenue abandoned',    after: '100% chart cross-referenced, DRG locked' },
+        { metric: 'LOS Paradox',         before: 'Not detected until billing',  after: 'Flagged in real time with action prompt' },
+        { metric: 'Clean Claim Rate',    before: '82–85% industry average',     after: '99% target — pre-bill defense brief'  },
       ],
     };
   }
@@ -289,7 +331,7 @@ app.post('/api/greet', async (req, res) => {
   const { pageContext = '' } = req.body;
 
   const greeting =
-    "I'm RUDRA — Docstribe's AI intelligence layer. I can walk you through exactly how our revenue assurance platform works, share real ROI numbers from live hospital deployments, or help you figure out if this is the right fit for your situation. What brings you here today?";
+    "I'm RUDRA — Docstribe's Dynamic DRG Intelligence agent. Here's the core problem I solve: the physician writes for clinical communication, the DRG grouper reads for financial classification — and that gap is where your revenue leaks. Docstribe sits exactly in that gap, reading every clinical document the moment it's signed, recomputing the DRG in real time, and firing CDI queries on Day 0 — not Day 3 when it's too late to act. What would you like to understand first — the H&P phase, the daily rounding cycle, or what happens at discharge where forty to sixty percent of DRG value is typically abandoned?";
 
   try {
     const audio = await generateAudio(greeting);
@@ -305,10 +347,13 @@ app.post('/api/briefing', async (req, res) => {
   const { role = 'healthcare professional', painPoint = 'revenue cycle challenges' } = req.body;
 
   const personalizedPrompt =
-    `You are briefing a ${role}. Give a sharp, personalized 3-4 sentence overview of how Docstribe AI ` +
-    `directly solves "${painPoint}" for health systems. Be specific — reference real mechanisms like the ` +
-    `Living Rulebook, the four control towers (UM, CDI, Coding, Claims), the 60-day pilot model, 18x ROI, ` +
-    `or $100M+ in recovered revenue. Close with one clear, natural question to continue the conversation.`;
+    `You are briefing a ${role} about Docstribe's Dynamic DRG Intelligence platform. ` +
+    `Give a sharp, personalized 4-6 sentence overview of how Docstribe directly solves "${painPoint}" for health systems. ` +
+    `Lead with the core insight: the physician writes for clinical communication, the DRG grouper reads for financial classification — that gap is where all revenue leakage lives. ` +
+    `Be specific — reference real mechanisms like Day 0 CDI queries, the 24-hour DRG refresh cycle, LOS paradox detection, discharge summary cross-referencing, ` +
+    `per-physician CDI profile learning, and the 4-week pilot structure (Epic connect → live charts → DRG accuracy comparison → quantified delta). ` +
+    `Reference real proof points: 99% clean claim rate, +0.05 CMI uplift, +10% charge capture, $8-14M projected impact at scale. ` +
+    `Close with one clear, natural question that invites them to go deeper on a specific phase of the DRG lifecycle.`;
 
   try {
     const text = await generateText(
@@ -339,15 +384,15 @@ app.post('/api/tour', async (req, res) => {
   const phasePrompts = [
     {
       phase: 0,
-      prompt: `You are narrating the FRONT END phase of a revenue cycle diagram to a ${role}. In exactly 2 crisp sentences: explain that Docstribe reads every payor contract, builds plan-specific prior auth and medical necessity rules, and catches authorization problems before a single claim is submitted. Be specific, not generic. No bullet points.`,
+      prompt: `You are narrating Phase 1 of Docstribe's Dynamic DRG Intelligence platform to a ${role}. This phase covers Admission and H&P — the moment the revenue clock starts. Explain clearly and fully: when a physician signs the H&P, Docstribe reads it within minutes, extracts provisional ICD-10 codes, computes the baseline DRG through the grouper, and fires CDI queries on Day 0 — not Day 3 like traditional CDI. Walk through a real example: an ED note says SOB and chest pain. The Assessment and Plan sets heart failure as the principal diagnosis. Docstribe immediately sees the baseline DRG at one reimbursement level, but detects that if AKI is documented, the DRG shifts to a significantly higher value. The CDI query goes to the physician the same day. Speak naturally and thoroughly, as if walking the visitor through the actual clinical moment. No bullet points. End with what happens next — the daily rounding phase.`,
     },
     {
       phase: 1,
-      prompt: `You are narrating the MID CYCLE phase of a revenue cycle diagram to a ${role}. In exactly 2 crisp sentences: explain that Docstribe validates every clinical note and order against the living rulebook, edits CPT, DRG, and modifier codes before the bill drops, and routes precise work packets to UM, CDI, coding, and billing. Be specific.`,
+      prompt: `You are narrating Phase 2 of Docstribe's Dynamic DRG Intelligence platform to a ${role}. This phase covers Daily Rounding — the 24-hour DRG refresh cycle that runs throughout the entire inpatient stay. Explain clearly: every time a new progress note is signed, a lab comes back, an imaging order is placed, or a consult note lands — Docstribe recomputes the DRG. It maps orders to undocumented diagnoses. A creatinine of 3.2 triggers a CDI query for AKI. A consult note mentioning protein malnutrition triggers a query for that secondary diagnosis. Each documented condition shifts the DRG weight and the revenue delta is tracked in real time. Also explain LOS Paradox Detection: when a patient's length of stay exceeds their geometric mean LOS, Docstribe fires an alert — the patient is likely under-coded. Clinical complexity is exceeding documentation. The system prompts: either document the complexity or expedite discharge. Speak naturally. No bullet points. End with what happens at discharge.`,
     },
     {
       phase: 2,
-      prompt: `You are narrating the BACK END phase of a revenue cycle diagram to a ${role}. In exactly 2 crisp sentences: explain that Docstribe reconciles every remittance against what the contract owed, surfaces underpayments automatically, generates denial appeal letters with payer evidence attached, and feeds every variance back into the living rulebook so the same leak never happens twice. Mention the $100M+ recovered if natural.`,
+      prompt: `You are narrating Phase 3 of Docstribe's Dynamic DRG Intelligence platform to a ${role}. This phase covers Discharge Summary and Coding — where forty to sixty percent of DRG value is silently abandoned. Explain this clearly and with impact: when a physician writes the discharge summary, they write for clinical communication. They omit conditions that were treated but were incidental to the primary story. They leave out confirmed diagnoses that appear in consult notes. Those omissions cost the hospital real DRG revenue. Docstribe cross-references the entire chart at discharge — every progress note, every consult, every lab, every imaging result, every order. It surfaces the conditions that were treated but not formally listed. It computes the final correct DRG. It generates a pre-bill defense brief — a payer-specific document that justifies the DRG before the claim drops. And then it does something long-term: it builds a per-physician CDI profile, so over time the system learns which physicians under-document which diagnosis categories, and the queries get more targeted with every admission. Speak naturally and fully. No bullet points.`,
     },
   ];
 

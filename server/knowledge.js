@@ -4,11 +4,29 @@ DOCSTRIBE AI — PRODUCT KNOWLEDGE BASE (Grounded Context for Agent)
 ═══════════════════════════════════════
 OVERVIEW
 ═══════════════════════════════════════
-Docstribe AI is the AI Operating System for Revenue Assurance — Guaranteed by Outcomes.
-Tagline: "Revenue Cycle. On Autopilot."
+Docstribe AI is the Skilled AI Workforce for Revenue Integrity — Guaranteed by Outcomes.
+Core product: Dynamic DRG Intelligence — AI reads every clinical document at the moment it is signed. DRG recomputed in real time. CDI queries on Day 0.
 Website: www.docstribe.health | India · USA · UAE
 Scale: 100+ hospitals deployed, 10M+ lives managed
-Compliance: HITRUST Certified · HIPAA Compliant · SOC 2 Type II
+US market proposition: Prepared for health systems like Houston Methodist, Tenet, HCA
+Compliance: HITRUST Certified · HIPAA Compliant · SOC 2 Type II · Epic-native connector
+
+═══════════════════════════════════════
+THE CORE INSIGHT — THE DOCUMENTATION GAP
+═══════════════════════════════════════
+"The physician writes for clinical communication. The DRG grouper reads for financial classification.
+That gap is where all revenue leakage lives. Docstribe sits exactly in that gap."
+
+Documentation AI is deployed. (Ambient AI, DAX, Nuance — note quality is solved.)
+Denial AI is deployed against you. (Payer AI systems are actively fighting your claims.)
+Revenue integrity AI — the layer that converts clinical documentation into correct DRG assignment — is the missing piece.
+
+US hospital payer landscape:
+- 15.1% average denial rate at major health systems
+- 57% DRG downgrade surge year-over-year
+- $4.7B payer AI recovery (payers using AI to challenge your DRGs)
+- 65% of denials are never reworked
+- $44 cost per denial appeal
 
 ═══════════════════════════════════════
 THE PROBLEM WE SOLVE
@@ -23,6 +41,42 @@ US hospitals lose 3-5% of net revenue annually to preventable RCM failures —
 that's $42-70 billion across a $1.4 trillion hospital market.
 
 The problem was never a lack of effort. It was a lack of connection.
+
+═══════════════════════════════════════
+DYNAMIC DRG INTELLIGENCE — 6-PHASE LIFECYCLE
+═══════════════════════════════════════
+Docstribe operates in real time across the entire inpatient encounter, not just at discharge.
+
+PHASE 0–1: ADMISSION & H&P (Day 0)
+CLINICAL EVENT: Admission & H&P signed. ED note often vague — SOB, chest pain. Assessment & Plan sets principal diagnosis. Principal DX locks MDC and DRG family.
+DOCSTRIBE ACTION: Reads H&P within minutes. Extracts provisional ICD-10 codes. Computes baseline DRG via grouper. Fires CDI queries on Day 0 (not Day 3). Shows delta: e.g. DRG 195 ($8.6K) → DRG 871 ($16.6K) if AKI is documented.
+MILESTONE: First DRG baseline set.
+
+PHASE 2–3: DAILY ROUNDING CYCLE (24-hour refresh)
+CLINICAL EVENT: Progress note signed (SOAP). New orders: labs, imaging, consults. Results return throughout the day. CDI queries answered by physician.
+DOCSTRIBE ACTION: Recomputes DRG on every new signal. Delta ICD codes vs. yesterday. Maps orders to undocumented diagnoses. Example: Lab creatinine 3.2 → AKI? Document it. Revenue delta tracked: e.g. +$4,200 today.
+MILESTONE: DRG recomputed daily — revenue visibility in real time.
+
+PHASE 4: LOS vs. GMLOS MONITOR
+CLINICAL EVENT: If LOS > GMLOS → patient is likely under-coded. Clinical complexity exceeds documentation.
+DOCSTRIBE ACTION: LOS Paradox Detection. Day 4 / GMLOS 2.5 — 1.5 days past. Alert: document complexity or expedite discharge to protect margin.
+MILESTONE: Documentation gap alert fired before the stay becomes a loss.
+
+PHASE 5: DISCHARGE SUMMARY (Where 40–60% of DRG value is lost)
+CLINICAL EVENT: Discharge summary signed. 40–60% of DRG value is lost here. Physicians omit treated conditions. Confirmed diagnoses never formally listed.
+DOCSTRIBE ACTION: Cross-references entire chart — all notes, consults, orders, results. Surfaces conditions treated but not documented. Computes final DRG. Generates pre-bill defense brief.
+MILESTONE: Final DRG locked. Clean claim ready.
+
+PHASE 6: CODING & CLAIM SUBMISSION
+CLINICAL EVENT: Clean chart → clean code → clean claim.
+DOCSTRIBE ACTION: Physician pattern learning. Per-physician CDI profile built. Accuracy improves with every admission. System learns which physicians under-document which DX categories.
+MILESTONE: 99% clean claim rate. CMI improves over time.
+
+KEY STATS FROM THE DRG LIFECYCLE:
+- Day 0: First CDI query fired (vs. industry standard Day 3+)
+- 24h: DRG refresh cycle
+- 100%: Chart coverage at discharge
+- 40–60%: Revenue loss prevented at discharge summary
 
 ═══════════════════════════════════════
 THE SOLUTION — 4 CONTROL TOWERS ON ONE DATA MODEL
@@ -81,14 +135,28 @@ Docstribe's single data model connects all four — so a flag raised in Phase 1
 automatically informs Phase 3 coding and Phase 4 auditing.
 
 ═══════════════════════════════════════
-GUARANTEED OUTCOMES IN 60 DAYS
+GUARANTEED OUTCOMES — 4-WEEK PILOT COMMITMENT
 ═══════════════════════════════════════
-These are not aspirational targets. They are contractual commitments:
+These are not aspirational targets. They are measurable commitments proven in production.
+
+DRG-specific outcomes:
+- 99%  Clean Claim Rate (all care settings, all payers — first-pass)
+- +10% Charge Capture Uplift (outpatient — missed charges, under-coded E&M, bundling errors caught)
+- +0.05 CMI Uplift per discharge (inpatient — CC/MCC gaps, DRG weight optimization)
+- $8–14M Projected annual impact at major health system scale (conservative estimate)
+
+Legacy outcomes (India/UAE deployments):
 - 25%  Revenue Leakage Recovered (charge capture + underpayments)
 - 50%  Reduction in Avoidable Denial Dollars
 - 20%  Reduction in DRG & OBS Downgrades
-- 98%  Clean Claim Rate (near-perfect first-pass submission)
 - 18x  Average ROI across all hospital deployments
+
+4-WEEK PILOT STRUCTURE:
+Week 1: Epic staging connect, payer contract ingestion, baseline charge capture rate
+Week 2: AI agents on live charts — missed charges, DRG gaps, HCC recapture flagged
+Week 3: Side-by-side comparison — DRG accuracy on IP sample, charge capture delta
+Week 4: CCR, CMI, and charge capture deltas quantified — go/no-go recommendation
+Cost: Zero. Outcome-driven decision. What HM provides: Epic staging access + chart samples + payer contract data.
 
 ═══════════════════════════════════════
 COMMERCIAL MODEL — PAY ONLY ON SUCCESS
