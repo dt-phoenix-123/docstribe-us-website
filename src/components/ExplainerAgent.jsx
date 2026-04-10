@@ -34,21 +34,14 @@ const TOUR_PHASE_LABELS = ['H&P & Day 0 CDI', 'Daily Rounding', 'Discharge & Cod
 
 // ── Constants ─────────────────────────────────────────────────────────────────
 const ROLES = [
-  { id: 'cfo',       label: 'Hospital CFO / CEO',  sub: 'Revenue & financial strategy',  abbr: 'CFO' },
-  { id: 'rcm',       label: 'RCM Director',         sub: 'Revenue cycle operations',       abbr: 'RCM' },
-  { id: 'physician', label: 'Physician / CMO',       sub: 'Clinical documentation',         abbr: 'MD'  },
-  { id: 'investor',  label: 'Investor / Partner',    sub: 'Market opportunity & growth',    abbr: '$'   },
-  { id: 'exploring', label: 'Just Exploring',        sub: 'Give me the full picture',       abbr: '?'   },
+  { id: 'cfo',       label: 'CFO / CEO',          sub: 'Revenue, margin & financial strategy',    abbr: 'CFO' },
+  { id: 'cdi',       label: 'CDI Director',        sub: 'Documentation quality & DRG optimization', abbr: 'CDI' },
+  { id: 'rcm',       label: 'RCM Director',        sub: 'Revenue cycle operations',                 abbr: 'RCM' },
+  { id: 'physician', label: 'Physician / CMO',     sub: 'Clinical documentation workflow',          abbr: 'MD'  },
+  { id: 'coder',     label: 'Coding / HIM Manager', sub: 'DRG accuracy & claim integrity',          abbr: 'HIM' },
+  { id: 'investor',  label: 'Investor / Partner',  sub: 'Market opportunity & growth thesis',       abbr: '$'   },
 ];
 
-const PAINS = [
-  { id: 'drg',      label: 'DRG Downgrades',           color: '#00cba8', bg: 'rgba(0,203,168,0.08)'    },
-  { id: 'cdi',      label: 'CDI & CC/MCC Gaps',        color: '#fbbf24', bg: 'rgba(251,191,36,0.08)'   },
-  { id: 'discharge', label: 'Discharge Summary Losses', color: '#ff7b4a', bg: 'rgba(255,123,74,0.08)'  },
-  { id: 'los',      label: 'LOS vs. GMLOS Paradox',    color: '#a78bfa', bg: 'rgba(167,139,250,0.08)'  },
-  { id: 'charge',   label: 'Charge Capture Gaps',      color: '#60a5fa', bg: 'rgba(96,165,250,0.08)'   },
-  { id: 'all',      label: 'Walk Me Through Everything', color: '#38bdf8', bg: 'rgba(56,189,248,0.08)' },
-];
 
 // ── EQ Canvas visualizer ──────────────────────────────────────────────────────
 function EQCanvas({ analyserRef, isPlaying }) {
@@ -315,12 +308,148 @@ function PhaseBreakdown({ data }) {
   );
 }
 
+// ── Tool: Workflow (step-by-step process) ─────────────────────────────────────
+function WorkflowArtifact({ data }) {
+  const steps = data?.steps || [];
+  return (
+    <div>
+      {data?.title && (
+        <div style={{ fontSize: '9px', fontWeight: '700', letterSpacing: '2.5px', color: '#334155', marginBottom: '12px', fontFamily: 'Sora, sans-serif' }}>
+          {data.title.toUpperCase()}
+        </div>
+      )}
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '0' }}>
+        {steps.map((step, i) => (
+          <div key={i} style={{ display: 'flex', gap: '0', animation: `rudraFadeIn 0.35s ${i * 0.1}s both ease` }}>
+            {/* Left: number + connecting line */}
+            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', width: '32px', flexShrink: 0 }}>
+              <div style={{
+                width: '26px', height: '26px', borderRadius: '50%',
+                background: `${step.color || '#00cba8'}18`,
+                border: `1.5px solid ${step.color || '#00cba8'}50`,
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                fontSize: '9px', fontWeight: '800', color: step.color || '#00cba8',
+                fontFamily: 'Sora, sans-serif', flexShrink: 0,
+              }}>{step.num}</div>
+              {i < steps.length - 1 && (
+                <div style={{ width: '1.5px', flex: 1, minHeight: '12px', background: `${step.color || '#00cba8'}25` }} />
+              )}
+            </div>
+            {/* Right: content */}
+            <div style={{ paddingLeft: '10px', paddingBottom: i < steps.length - 1 ? '14px' : 0 }}>
+              <div style={{ fontSize: '12px', fontWeight: '700', color: step.color || '#00cba8', lineHeight: 1, marginBottom: '3px' }}>{step.label}</div>
+              <div style={{ fontSize: '11px', color: '#64748b', lineHeight: '1.5' }}>{step.detail}</div>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+// ── Tool: DRG Delta (before → after DRG with conditions) ──────────────────────
+function DRGDeltaArtifact({ data }) {
+  const conditions = data?.conditions || [];
+  return (
+    <div>
+      {data?.title && (
+        <div style={{ fontSize: '9px', fontWeight: '700', letterSpacing: '2.5px', color: '#334155', marginBottom: '12px', fontFamily: 'Sora, sans-serif' }}>
+          {data.title.toUpperCase()}
+        </div>
+      )}
+      {/* DRG before → after */}
+      <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '12px' }}>
+        <div style={{ flex: 1, padding: '10px 12px', borderRadius: '10px', background: 'rgba(248,113,113,0.06)', border: '1px solid rgba(248,113,113,0.2)' }}>
+          <div style={{ fontSize: '8px', fontWeight: '700', color: 'rgba(248,113,113,0.7)', letterSpacing: '1.5px', marginBottom: '4px' }}>BASELINE</div>
+          <div style={{ fontSize: '13px', fontWeight: '800', color: '#f87171', fontFamily: 'Sora, sans-serif' }}>{data?.baseline?.drg}</div>
+          <div style={{ fontSize: '10px', color: '#94a3b8', marginTop: '2px', lineHeight: '1.3' }}>{data?.baseline?.label}</div>
+          <div style={{ fontSize: '15px', fontWeight: '800', color: '#cbd5e1', marginTop: '5px', fontFamily: 'Sora, sans-serif' }}>{data?.baseline?.value}</div>
+        </div>
+        <div style={{ fontSize: '18px', color: '#334155' }}>→</div>
+        <div style={{ flex: 1, padding: '10px 12px', borderRadius: '10px', background: 'rgba(0,203,168,0.08)', border: '1.5px solid rgba(0,203,168,0.3)' }}>
+          <div style={{ fontSize: '8px', fontWeight: '700', color: 'rgba(0,203,168,0.8)', letterSpacing: '1.5px', marginBottom: '4px' }}>OPTIMIZED</div>
+          <div style={{ fontSize: '13px', fontWeight: '800', color: '#00cba8', fontFamily: 'Sora, sans-serif' }}>{data?.optimized?.drg}</div>
+          <div style={{ fontSize: '10px', color: '#94a3b8', marginTop: '2px', lineHeight: '1.3' }}>{data?.optimized?.label}</div>
+          <div style={{ fontSize: '15px', fontWeight: '800', color: '#4ade80', marginTop: '5px', fontFamily: 'Sora, sans-serif' }}>{data?.optimized?.value}</div>
+        </div>
+      </div>
+      {/* Conditions that caused the shift */}
+      {conditions.length > 0 && (
+        <div>
+          <div style={{ fontSize: '8.5px', fontWeight: '700', color: '#475569', letterSpacing: '1.5px', marginBottom: '6px' }}>CONDITIONS DOCUMENTED</div>
+          {conditions.map((c, i) => (
+            <div key={i} style={{
+              display: 'flex', justifyContent: 'space-between', alignItems: 'center',
+              padding: '6px 10px', borderRadius: '7px', marginBottom: '4px',
+              background: 'rgba(0,203,168,0.04)', border: '1px solid rgba(0,203,168,0.12)',
+              animation: `rudraFadeIn 0.3s ${i * 0.08}s both ease`,
+            }}>
+              <div>
+                <div style={{ fontSize: '11px', fontWeight: '600', color: '#cbd5e1' }}>{c.name}</div>
+                <div style={{ fontSize: '9.5px', color: '#475569' }}>{c.source}</div>
+              </div>
+              <div style={{ fontSize: '12px', fontWeight: '800', color: '#4ade80', fontFamily: 'Sora, sans-serif', flexShrink: 0, marginLeft: '8px' }}>{c.delta}</div>
+            </div>
+          ))}
+          {data?.totalDelta && (
+            <div style={{ marginTop: '8px', padding: '8px 12px', borderRadius: '9px', background: 'rgba(74,222,128,0.08)', border: '1px solid rgba(74,222,128,0.25)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <span style={{ fontSize: '11px', fontWeight: '700', color: '#94a3b8' }}>Total DRG Uplift</span>
+              <span style={{ fontSize: '16px', fontWeight: '800', color: '#4ade80', fontFamily: 'Sora, sans-serif' }}>{data.totalDelta}</span>
+            </div>
+          )}
+        </div>
+      )}
+    </div>
+  );
+}
+
+// ── Tool: Lifecycle (full H&P → discharge overview) ───────────────────────────
+function LifecycleArtifact({ data }) {
+  const phases = data?.phases || [];
+  return (
+    <div>
+      {data?.title && (
+        <div style={{ fontSize: '9px', fontWeight: '700', letterSpacing: '2.5px', color: '#334155', marginBottom: '12px', fontFamily: 'Sora, sans-serif' }}>
+          {data.title.toUpperCase()}
+        </div>
+      )}
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+        {phases.map((phase, i) => (
+          <div key={i} style={{ display: 'flex', gap: '0', animation: `rudraFadeIn 0.4s ${i * 0.12}s both ease` }}>
+            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', width: '30px', flexShrink: 0 }}>
+              <div style={{ width: '8px', height: '8px', borderRadius: '50%', background: phase.color, boxShadow: `0 0 8px ${phase.color}`, flexShrink: 0 }} />
+              {i < phases.length - 1 && <div style={{ width: '1.5px', flex: 1, minHeight: '14px', background: `${phase.color}35`, marginTop: '3px' }} />}
+            </div>
+            <div style={{ paddingLeft: '8px', paddingBottom: i < phases.length - 1 ? '10px' : 0, flex: 1 }}>
+              <div style={{ fontSize: '11.5px', fontWeight: '700', color: phase.color, marginBottom: '5px', lineHeight: 1 }}>{phase.label}</div>
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '4px' }}>
+                {(phase.steps || []).map((step, j) => (
+                  <span key={j} style={{
+                    fontSize: '9px', padding: '2px 7px', borderRadius: '20px',
+                    background: `${phase.color}12`, border: `1px solid ${phase.color}25`,
+                    color: phase.color, fontWeight: '500',
+                  }}>{step}</span>
+                ))}
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 // ── Tool router — renders the right component from AI tool call ────────────────
 function ToolOutput({ tool }) {
-  if (!tool?.type || !tool?.data) return null;
-  if (tool.type === 'stats_grid')       return <StatsGrid       data={tool.data} />;
-  if (tool.type === 'comparison_table') return <ComparisonTable data={tool.data} />;
-  if (tool.type === 'phase_breakdown')  return <PhaseBreakdown  data={tool.data} />;
+  if (!tool?.type) return null;
+  const d = tool.data;
+  if (!d) return null;
+  if (tool.type === 'workflow')          return <WorkflowArtifact  data={d} />;
+  if (tool.type === 'drg_delta')         return <DRGDeltaArtifact  data={d} />;
+  if (tool.type === 'lifecycle')         return <LifecycleArtifact data={d} />;
+  if (tool.type === 'stats_grid')        return <StatsGrid         data={d} />;
+  if (tool.type === 'comparison_table')  return <ComparisonTable   data={d} />;
+  if (tool.type === 'phase_breakdown')   return <PhaseBreakdown    data={d} />;
   return null;
 }
 
@@ -329,10 +458,10 @@ function RoleStep({ onSelect }) {
   return (
     <div style={{ padding: '28px 24px 32px' }}>
       <h2 style={{ fontSize: '21px', fontWeight: '700', color: '#f1f5f9', margin: '0 0 8px', letterSpacing: '-0.3px' }}>
-        Who are you?
+        Now — who are you?
       </h2>
       <p style={{ fontSize: '13.5px', color: '#64748b', margin: '0 0 24px' }}>
-        I'll tailor your briefing in under 60 seconds.
+        I'll show you exactly what this means for your work.
       </p>
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
         {ROLES.map(role => (
@@ -805,6 +934,7 @@ export default function ExplainerAgent() {
   const [visual, setVisual] = useState(null);       // null | 'outcomes' | 'phase-flow' | 'phase-0' | 'phase-1' | 'phase-2'
   const [visualPhase, setVisualPhase] = useState(null); // null | 0 | 1 | 2 (for tour)
   const [toolOutput, setToolOutput] = useState(null); // AI-chosen visual tool: { type, data }
+  const onAudioEndRef = useRef(null); // called when current audio playback finishes
   const [voiceActive, setVoiceActive] = useState(false);
   const recognitionRef = useRef(null);
 
@@ -992,6 +1122,7 @@ export default function ExplainerAgent() {
         setProgress(1);
         cancelAnimationFrame(rafRef.current);
         emitPhase(null); // clear Shakti highlight
+        if (onAudioEndRef.current) { onAudioEndRef.current(); onAudioEndRef.current = null; }
       };
       source.start();
       rafRef.current = requestAnimationFrame(track);
@@ -1060,6 +1191,56 @@ export default function ExplainerAgent() {
     }
   }, [playAudio, runTour, ensureCtx]);
 
+  // ── Fetch powerful intro (plays immediately on widget open) ───────────────
+  const fetchIntro = useCallback(async () => {
+    setStep('intro');
+    try {
+      const res = await fetch('/api/intro', { method: 'POST', headers: { 'Content-Type': 'application/json' } });
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const { text, audio, artifact } = await res.json();
+      briefingTextRef.current = text;
+      setBriefingText(text);
+      setBriefingAudio(audio);
+      if (artifact) setToolOutput(artifact);
+      setChatMessages([{ role: 'assistant', content: text, audio, visual: artifact || null }]);
+      // After intro audio ends → show who-are-you
+      onAudioEndRef.current = () => setStep('who-are-you');
+      await ensureCtx();
+      setTimeout(() => playAudio(audio), 80);
+    } catch (err) {
+      console.error('Intro fetch failed:', err);
+      setStep('who-are-you');
+    }
+  }, [playAudio, ensureCtx]);
+
+  // ── Fetch role-specific greeting after user identifies themselves ──────────
+  const fetchRoleGreeting = useCallback(async (roleId) => {
+    setSelectedRole(roleId);
+    setStep('generating');
+    const roleLabel = ROLES.find(r => r.id === roleId)?.label || roleId;
+
+    try {
+      const res = await fetch('/api/role-greeting', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ role: roleLabel }),
+      });
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const { text, audio, artifact } = await res.json();
+      briefingTextRef.current = text;
+      setBriefingText(text);
+      setBriefingAudio(audio);
+      if (artifact) setToolOutput(artifact);
+      // Append role greeting as new RUDRA message (after intro)
+      setChatMessages(prev => [...prev, { role: 'assistant', content: text, audio, visual: artifact || null }]);
+      setStep('playing');
+      setTimeout(() => playAudio(audio), 80);
+    } catch (err) {
+      console.error('Role greeting failed:', err);
+      setStep('playing');
+    }
+  }, [playAudio]);
+
   // ── Follow-up chat ───────────────────────────────────────────────────────
   const sendFollowUp = useCallback(async () => {
     const trimmed = chatInput.trim();
@@ -1126,6 +1307,7 @@ export default function ExplainerAgent() {
     tourCancelRef.current = true;
     stopAudio();
     setStep('idle');
+    onAudioEndRef.current = null;
     setSelectedRole(null);
     setSelectedPain(null);
     setBriefingText('');
@@ -1187,7 +1369,7 @@ export default function ExplainerAgent() {
       {/* ── FAB ── */}
       {!open && (
         <button
-          onClick={() => { ensureCtx(); setStep('role'); }}
+          onClick={() => { ensureCtx(); fetchIntro(); }}
           style={{
             position: 'fixed', bottom: '28px', right: '28px', zIndex: 9999,
             display: 'flex', alignItems: 'center', gap: '10px',
@@ -1280,17 +1462,40 @@ export default function ExplainerAgent() {
 
             {/* Step content — fills remaining panel height */}
             <div style={{ flex: 1, minHeight: 0, display: 'flex', flexDirection: 'column', overflowY: step === 'playing' ? 'hidden' : 'auto' }}>
-            {step === 'role' && (
-              <RoleStep onSelect={id => { setSelectedRole(id); setStep('pain'); }} />
+            {step === 'intro' && (
+              <div style={{ flex: 1, minHeight: 0, display: 'flex', flexDirection: 'column', padding: '16px 20px' }}>
+                {/* Intro artifact — lifecycle shown large */}
+                {toolOutput && (
+                  <div style={{ padding: '16px', borderRadius: '14px', border: '1px solid rgba(14,165,233,0.1)', background: 'rgba(0,0,0,0.28)', marginBottom: '12px', flex: 1, overflowY: 'auto' }}>
+                    <ToolOutput tool={toolOutput} />
+                  </div>
+                )}
+                {/* EQ + karaoke text */}
+                <div style={{ flexShrink: 0 }}>
+                  <div style={{ marginBottom: '8px' }}>
+                    <EQCanvas analyserRef={analyserRef} isPlaying={isPlaying} />
+                  </div>
+                  <div style={{ fontSize: '12px', color: '#475569', lineHeight: '1.7', maxHeight: '80px', overflow: 'hidden' }}>
+                    {briefingText.split(' ').map((word, i) => (
+                      <span key={i} style={{
+                        color: i <= wordIndex ? '#94a3b8' : '#1e3a5f',
+                        transition: 'color 0.1s ease',
+                      }}>{word}{' '}</span>
+                    ))}
+                  </div>
+                </div>
+                <button onClick={() => setStep('who-are-you')} style={{
+                  marginTop: '12px', alignSelf: 'flex-end',
+                  background: 'rgba(14,165,233,0.08)', border: '1px solid rgba(14,165,233,0.2)',
+                  color: '#38bdf8', fontSize: '12px', padding: '7px 16px', borderRadius: '8px',
+                  cursor: 'pointer', flexShrink: 0,
+                }}>
+                  Skip intro →
+                </button>
+              </div>
             )}
-            {step === 'pain' && (
-              <PainStep
-                onSelect={id => {
-                  setSelectedPain(id);
-                  fetchBriefing(selectedRole, id);
-                }}
-                onBack={() => setStep('role')}
-              />
+            {step === 'who-are-you' && (
+              <RoleStep onSelect={id => fetchRoleGreeting(id)} />
             )}
             {step === 'generating' && <GeneratingStep />}
             {step === 'playing' && (

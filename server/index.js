@@ -105,7 +105,7 @@ async function generateText(message, history, pageContext) {
       body: JSON.stringify({
         systemInstruction: { parts: [{ text: buildSystemPrompt(pageContext) }] },
         contents,
-        generationConfig: { temperature: 0.75, maxOutputTokens: 1500 },
+        generationConfig: { temperature: 0.75 },
       }),
     }
   );
@@ -181,124 +181,74 @@ async function generateAudio(text) {
   }
 }
 
-// ── Visual tool-call generator ─────────────────────────────────────────────────
-// Asks Gemini to pick the best visual widget and populate its data from the spoken text.
-// Runs in parallel with TTS so it adds zero perceived latency.
-async function generateVisualTool(spokenText, context) {
+// ── LLM-powered artifact generator ────────────────────────────────────────────
+// Asks Gemini to pick the best visual artifact type AND populate it from the KB.
+// Runs in parallel with TTS — zero added latency.
+async function generateArtifact(question, spokenText, role) {
   if (!GEMINI_API_KEY) return null;
 
-  // Use explicit pain-point context as primary signal (high confidence),
-  // fall back to keyword scanning the spoken text for chat responses.
-  const ctxOnly  = context.toLowerCase();          // "Pain point: Prior Auth Delays" etc.
-  const textOnly = spokenText.toLowerCase();
-  const ctx      = ctxOnly + ' ' + textOnly;       // combined for fallback matching
-  let type, data;
+  const prompt = `Based on this exchange, generate the BEST visual artifact to accompany RUDRA's explanation.
 
-  // Priority: DRG/H&P/CDI → Daily Rounding/LOS → Discharge/Coding → Outcomes/Pilot → default
-  if (/h&p|admission|day 0|cdi query|day zero|h&p phase|baseline drg|icd.?10|principal dx|mdc/i.test(ctxOnly) ||
-      /h&p|day 0|cdi query|baseline drg/i.test(textOnly)) {
-    type = 'phase_breakdown';
-    data = {
-      phase: 0, phaseName: 'H&P & Day 0 CDI — Revenue Clock Starts',
-      problem: 'The physician writes for clinical communication. The DRG grouper reads for financial classification. That gap costs hospitals millions per year.',
-      steps: [
-        'H&P ingested within minutes of physician signature',
-        'Provisional ICD-10 codes extracted; MDC and DRG family locked',
-        'Baseline DRG computed via grouper — revenue baseline established',
-        'CDI queries fired Day 0 — not Day 3 like traditional CDI workflows',
-        'DRG delta surfaced immediately: e.g. DRG 195 ($8.6K) → DRG 871 ($16.6K) if AKI documented',
-      ],
-      tags: ['Day 0 CDI', 'DRG Grouper', 'ICD-10 Extraction', 'CDI Query Engine'],
-      outcome: 'First DRG baseline set on admission day. Revenue opportunity identified before the next rounds.',
-    };
-  } else if (/daily round|24h|24.hour|rounding|los|gmlos|los paradox|progress note|soap|signal/i.test(ctxOnly) ||
-             /daily round|rounding|24h|los paradox|gmlos/i.test(textOnly)) {
-    type = 'phase_breakdown';
-    data = {
-      phase: 1, phaseName: 'Daily Rounding — 24-Hour DRG Refresh',
-      problem: 'Every clinical event that goes undocumented is revenue left behind. DRG accuracy compounds daily across the entire stay.',
-      steps: [
-        'DRG recomputed on every new clinical signal — progress notes, labs, consults',
-        'Delta ICD codes compared vs. prior day — new diagnoses surfaced automatically',
-        'Lab values mapped to undocumented diagnoses (e.g. creatinine 3.2 → AKI query)',
-        'Revenue delta tracked in real time — e.g. +$4,200 today from newly documented CC',
-        'LOS Paradox Detection: if LOS > GMLOS, alert fired — document complexity or expedite discharge',
-      ],
-      tags: ['24h DRG Refresh', 'LOS Monitor', 'Lab-to-DX Mapping', 'CDI Escalation'],
-      outcome: 'DRG recomputed daily. Revenue delta visible. No more end-of-stay surprises.',
-    };
-  } else if (/discharge|coding|pre.bill|cdi profile|chart coverage|discharge summary|final drg/i.test(ctxOnly) ||
-             /discharge|discharge summary|pre.bill|final drg/i.test(textOnly)) {
-    type = 'phase_breakdown';
-    data = {
-      phase: 2, phaseName: 'Discharge & Coding — Locking the Final DRG',
-      problem: '40–60% of DRG value is lost at the discharge summary. Physicians omit treated conditions. Confirmed diagnoses go unlisted. Docstribe closes this gap.',
-      steps: [
-        'Entire chart cross-referenced at discharge: all notes, consults, orders, results',
-        'Conditions treated but not listed surfaced — e.g. 5 diagnoses treated, 3 documented',
-        'Final DRG computed with full clinical picture — maximum defensible reimbursement',
-        'Payer-specific pre-bill defense brief generated before claim drops',
-        'Per-physician CDI profile built — accuracy improves with every admission',
-      ],
-      tags: ['Discharge AI', 'Pre-Bill Brief', 'CDI Profile', '100% Chart Coverage'],
-      outcome: '40–60% of DRG revenue loss at discharge prevented. 99% clean claim rate.',
-    };
-  } else if (/cdi|coding|drg downgrade|cmr|cc.mcc|hcc|charge capture|coding gap/i.test(ctxOnly) ||
-             /cdi|drg downgrade|cc.mcc|hcc|charge capture/i.test(textOnly)) {
-    type = 'phase_breakdown';
-    data = {
-      phase: 1, phaseName: 'CDI & DRG Optimization — Mid-Stay',
-      problem: 'DRG downgrades and CC/MCC capture gaps represent the single largest avoidable revenue loss in inpatient settings.',
-      steps: [
-        'Real-time CDI query generation — targeted to physician, diagnosis, and payer',
-        'CC/MCC gap detection across every active inpatient encounter',
-        'DRG weight prediction per documentation scenario presented to CDI team',
-        'HCC recapture for Medicare Advantage lives — RAF score optimization',
-        'Charge capture validation: missed charges, under-coded E&M, bundling errors caught pre-bill',
-      ],
-      tags: ['CDI Engine', 'CC/MCC Capture', 'HCC Recapture', 'DRG Optimizer'],
-      outcome: '+0.05 CMI uplift per discharge. +10% charge capture. 57% reduction in DRG downgrades.',
-    };
-  } else if (/denial|appeal|underpay|reconcil|payer ai|payer recovery/i.test(ctxOnly) ||
-             /denial|appeal|underpayment|reconcil/i.test(textOnly)) {
-    type = 'comparison_table';
-    data = {
-      title: 'Docstribe vs. Payer AI — Who Wins',
-      rows: [
-        { metric: 'DRG Defense',         before: 'Payer AI challenges at adjudication', after: 'Pre-bill brief defends before claim drops' },
-        { metric: 'CDI Timing',          before: 'Day 3+ CDI review (too late)',         after: 'Day 0 CDI queries — physician still available' },
-        { metric: 'Discharge Summary',   before: '40–60% of DRG value abandoned',        after: '100% chart cross-reference, full DRG locked' },
-        { metric: 'Denial Rate',         before: '15.1% industry average',               after: '99% clean claim rate target' },
-        { metric: 'CMI Uplift',          before: 'Baseline',                             after: '+0.05 per discharge at scale' },
-      ],
-    };
-  } else if (/roi|outcome|result|pilot|4.week|cmi|ccr|charge capture|impact|8.14m|projected/i.test(ctx)) {
-    type = 'stats_grid';
-    data = {
-      title: 'Pilot Outcome Commitments',
-      stats: [
-        { label: 'Clean Claim Rate',    value: '99%',    delta: 'all payers, all care settings', color: '#00cba8' },
-        { label: 'Charge Capture',      value: '+10%',   delta: 'outpatient — missed charges caught', color: '#4d8aff' },
-        { label: 'CMI Uplift',          value: '+0.05',  delta: 'per discharge — CC/MCC gaps closed', color: '#ff7b4a' },
-        { label: 'Annual Impact',       value: '$8–14M', delta: 'conservative estimate at HM scale',  color: '#a78bfa' },
-      ],
-    };
-  } else {
-    // Default: DRG lifecycle comparison
-    type = 'comparison_table';
-    data = {
-      title: 'Before vs. After Docstribe DRG Intelligence',
-      rows: [
-        { metric: 'CDI Timing',          before: 'Day 3+ (too late to fix)',    after: 'Day 0 — H&P ingested within minutes' },
-        { metric: 'DRG Refresh',         before: 'Once at discharge',           after: 'Every 24 hours on every new signal'   },
-        { metric: 'Discharge Summary',   before: '40–60% revenue abandoned',    after: '100% chart cross-referenced, DRG locked' },
-        { metric: 'LOS Paradox',         before: 'Not detected until billing',  after: 'Flagged in real time with action prompt' },
-        { metric: 'Clean Claim Rate',    before: '82–85% industry average',     after: '99% target — pre-bill defense brief'  },
-      ],
-    };
+QUESTION / CONTEXT: "${question}"
+RUDRA'S RESPONSE: "${spokenText.slice(0, 800)}"
+VISITOR ROLE: ${role || 'healthcare professional'}
+
+RESPOND WITH ONLY VALID JSON — no markdown code fences, no explanation, just the raw JSON object.
+
+Choose ONE artifact type and populate it with SPECIFIC, ACCURATE data from the Docstribe DRG knowledge base:
+
+TYPE "workflow" — for step-by-step process explanations (how Day 0 CDI works, rounding cycle, etc.)
+{"type":"workflow","data":{"title":"...","steps":[{"num":"01","label":"...","detail":"...","color":"#00cba8"},{"num":"02","label":"...","detail":"...","color":"#4d8aff"},{"num":"03","label":"...","detail":"...","color":"#ff7b4a"},{"num":"04","label":"...","detail":"...","color":"#a78bfa"}]}}
+
+TYPE "drg_delta" — for DRG computation examples with revenue impact (specific dollar amounts)
+{"type":"drg_delta","data":{"title":"...","baseline":{"drg":"DRG XXX","label":"...","value":"$X,XXX"},"optimized":{"drg":"DRG XXX","label":"...","value":"$X,XXX"},"conditions":[{"name":"...","source":"...","delta":"+$X,XXX"},{"name":"...","source":"...","delta":"+$X,XXX"}],"totalDelta":"+$X,XXX"}}
+
+TYPE "stats_grid" — for outcome metrics (CCR, CMI, charge capture, ROI questions)
+{"type":"stats_grid","data":{"title":"...","stats":[{"label":"...","value":"...","delta":"...","color":"#00cba8"},{"label":"...","value":"...","delta":"...","color":"#4d8aff"},{"label":"...","value":"...","delta":"...","color":"#ff7b4a"},{"label":"...","value":"...","delta":"...","color":"#a78bfa"}]}}
+
+TYPE "comparison_table" — for before/after or Docstribe vs current state questions
+{"type":"comparison_table","data":{"title":"...","rows":[{"metric":"...","before":"...","after":"..."},{"metric":"...","before":"...","after":"..."},{"metric":"...","before":"...","after":"..."},{"metric":"...","before":"...","after":"..."},{"metric":"...","before":"...","after":"..."}]}}
+
+TYPE "phase_breakdown" — for deep-diving ONE specific DRG lifecycle phase
+{"type":"phase_breakdown","data":{"phase":0,"phaseName":"...","problem":"...","steps":["...","...","...","...","..."],"tags":["...","...","...","..."],"outcome":"..."}}
+
+TYPE "lifecycle" — for full DRG overview (H&P to discharge, how it all works questions)
+{"type":"lifecycle","data":{"title":"Dynamic DRG Intelligence","phases":[{"label":"H&P & Day 0 CDI","color":"#00cba8","steps":["...","...","...","..."]},{"label":"Daily Rounding","color":"#4d8aff","steps":["...","...","...","..."]},{"label":"Discharge & Coding","color":"#ff7b4a","steps":["...","...","...","..."]}]}}
+
+SELECTION RULES:
+- workflow → explaining HOW a process works step by step
+- drg_delta → questions about DRG examples, specific revenue numbers, CC/MCC impact
+- stats_grid → outcomes, ROI, pilot metrics, what will we measure
+- comparison_table → before/after, what changes, competitive positioning
+- phase_breakdown → deep dive on one specific phase of the lifecycle
+- lifecycle → overview questions, intro-level, "how does it all work", "walk me through"
+
+Use SPECIFIC numbers from the knowledge base. Never use placeholder text like "Step 1 description here". Populate every field with real, compelling DRG intelligence content.`;
+
+  try {
+    const res = await fetch(
+      `${GEMINI_BASE}/${GEMINI_TEXT_MODEL}:generateContent?key=${GEMINI_API_KEY}`,
+      {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          contents: [{ role: 'user', parts: [{ text: prompt }] }],
+          generationConfig: { temperature: 0.25, maxOutputTokens: 2500 },
+        }),
+      }
+    );
+    const json = await res.json();
+    let raw = json?.candidates?.[0]?.content?.parts?.[0]?.text || '';
+    // Strip markdown code fences if model wraps output
+    raw = raw.replace(/^```(?:json)?\s*/m, '').replace(/\s*```$/m, '').trim();
+    // Extract JSON object if there's surrounding text
+    const match = raw.match(/\{[\s\S]*\}/);
+    if (match) raw = match[0];
+    return JSON.parse(raw);
+  } catch (err) {
+    console.warn('Artifact generation failed (non-fatal):', err.message);
+    return null;
   }
-
-  return { type, data };
 }
 
 // ── /api/chat ──────────────────────────────────────────────────────────────────
@@ -313,12 +263,12 @@ app.post('/api/chat', async (req, res) => {
     const text = await generateText(message, history, pageContext);
 
     // Audio + visual tool call in parallel — zero extra latency
-    const [audio, visual] = await Promise.all([
+    const [audio, artifact] = await Promise.all([
       generateAudio(text).catch(() => null),
-      generateVisualTool(text, `Chat: "${message}" | Context: ${pageContext}`).catch(() => null),
+      generateArtifact(message, text, pageContext).catch(() => null),
     ]);
 
-    res.json({ text, audio, visual });
+    res.json({ text, audio, visual: artifact });
   } catch (err) {
     console.error('Chat error:', err.message);
     res.status(500).json({ error: err.message });
@@ -338,6 +288,56 @@ app.post('/api/greet', async (req, res) => {
     res.json({ text: greeting, audio });
   } catch {
     res.json({ text: greeting, audio: null });
+  }
+});
+
+// ── /api/intro ────────────────────────────────────────────────────────────────
+// Powerful opening statement played immediately on widget open — no LLM needed
+app.post('/api/intro', async (req, res) => {
+  const introText = `Here's the problem no ambient AI has solved. The physician writes for clinical communication. The DRG grouper reads for financial classification. That gap — between what the doctor documents and what the payer pays — is where hospitals lose billions every year. Forty to sixty percent of DRG revenue evaporates at the discharge summary alone. Conditions treated but never listed. Diagnoses confirmed but never formally documented. Docstribe is the AI that sits exactly in that gap. Reading every H&P the moment it is signed. Recomputing the DRG every twenty-four hours on every new clinical signal. Firing CDI queries on Day 0, not Day 3 when the physician has already moved on. And at discharge, cross-referencing the entire chart — every note, every consult, every lab result — to lock the final DRG before the claim drops. The result: ninety-nine percent clean claim rate, point-zero-five CMI uplift per discharge, ten percent more charge capture. That is Dynamic DRG Intelligence. Live across a hundred-plus hospitals. Guaranteed by outcomes.`;
+
+  const artifact = {
+    type: 'lifecycle',
+    data: {
+      title: 'Dynamic DRG Intelligence',
+      phases: [
+        { label: 'H&P & Day 0 CDI',   color: '#00cba8', steps: ['H&P ingested within minutes', 'Baseline DRG computed via grouper', 'CDI queries fired Day 0 — not Day 3', 'ICD-10 extraction & MDC mapping'] },
+        { label: 'Daily Rounding',     color: '#4d8aff', steps: ['DRG recomputed every 24 hours', 'Labs mapped to undocumented diagnoses', 'LOS paradox detection vs. GMLOS', 'Revenue delta tracked per signal'] },
+        { label: 'Discharge & Coding', color: '#ff7b4a', steps: ['Entire chart cross-referenced', 'Omitted diagnoses surfaced', 'Final DRG locked pre-submission', 'Pre-bill defense brief generated'] },
+      ],
+    },
+  };
+
+  try {
+    const audio = await generateAudio(introText);
+    res.json({ text: introText, audio, artifact });
+  } catch (err) {
+    res.json({ text: introText, audio: null, artifact });
+  }
+});
+
+// ── /api/role-greeting ────────────────────────────────────────────────────────
+// Tailored greeting after user identifies their role — leads directly into chat
+app.post('/api/role-greeting', async (req, res) => {
+  const { role = 'healthcare professional' } = req.body;
+
+  const greetingPrompt = `A ${role} just watched Docstribe's Dynamic DRG Intelligence intro. ` +
+    `In 3-5 sentences, speak directly to them. Acknowledge what DRG intelligence means for their specific role. ` +
+    `Reference one specific mechanism that is most relevant to their work — for a CDI Director it might be Day 0 queries and physician pattern learning; ` +
+    `for a CFO it might be the CMI uplift and charge capture delta; for a physician it might be how the CDI query arrives before rounds and specifically what triggers it. ` +
+    `Close with one sharp open question about their current situation or biggest challenge. ` +
+    `Speak like a peer, not a vendor. No filler phrases.`;
+
+  try {
+    const text = await generateText(greetingPrompt, [], `New visitor: ${role}`);
+    const [audio, artifact] = await Promise.all([
+      generateAudio(text).catch(() => null),
+      generateArtifact(`${role} role introduction`, text, role).catch(() => null),
+    ]);
+    res.json({ text, audio, artifact });
+  } catch (err) {
+    console.error('Role greeting error:', err.message);
+    res.status(500).json({ error: err.message });
   }
 });
 
@@ -363,12 +363,12 @@ app.post('/api/briefing', async (req, res) => {
     );
 
     // Audio + visual tool call in parallel
-    const [audio, visual] = await Promise.all([
+    const [audio, artifact] = await Promise.all([
       generateAudio(text).catch(() => null),
-      generateVisualTool(text, `Role: ${role} | Pain point: ${painPoint}`).catch(() => null),
+      generateArtifact(painPoint, text, role).catch(() => null),
     ]);
 
-    res.json({ text, audio, visual });
+    res.json({ text, audio, visual: artifact });
   } catch (err) {
     console.error('Briefing error:', err.message);
     res.status(500).json({ error: err.message });
@@ -400,11 +400,11 @@ app.post('/api/tour', async (req, res) => {
     const segments = await Promise.all(
       phasePrompts.map(async ({ phase, prompt }) => {
         const text = await generateText(prompt, [], `Visitor is a ${role}`);
-        let audio = null;
-        try { audio = await generateAudio(text); } catch (e) {
-          console.warn(`Tour phase ${phase} TTS failed:`, e.message);
-        }
-        return { phase, text, audio };
+        const [audio, artifact] = await Promise.all([
+          generateAudio(text).catch(e => { console.warn(`Tour phase ${phase} TTS failed:`, e.message); return null; }),
+          generateArtifact(`DRG phase ${phase} explanation`, text, role).catch(() => null),
+        ]);
+        return { phase, text, audio, artifact };
       })
     );
     res.json({ segments });
