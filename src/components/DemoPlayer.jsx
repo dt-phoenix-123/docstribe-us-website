@@ -77,7 +77,7 @@ function splitSentences(text) {
 function highlightCaption(text) {
   if (!text) return null;
   // Split on key terms — capturing group keeps the matched parts at odd indices
-  const pattern = /(twelve to eighteen|sixty to seventy|thirty percent|twenty-five percent|zero point fifteen|sixty days|one point four million|eighteen thousand four hundred|two hundred fourteen|zero point nine four|one point three four|zero leakage|ICD-10-CM|NABIDH|DHA licensed|DHA|IR-DRG|CMI|Docstribe|guaranteed|\d+(?:\.\d+)?%)/gi;
+  const pattern = /(twelve to eighteen|sixty to seventy|thirty percent|twenty-five percent|zero point fifteen|sixty.?day|one point four million|eighteen thousand four hundred|two hundred fourteen|four hundred twenty|one thousand nine hundred|twenty-eight thousand five hundred|zero point nine four|one point three four|zero leakage|one click|order entry|ICD-10-CM|NABIDH|DHA|IR-DRG|CMI|Docstribe|guaranteed|\d+(?:\.\d+)?%)/gi;
   const parts = text.split(pattern);
   return parts.map((part, i) =>
     i % 2 === 1
@@ -87,122 +87,134 @@ function highlightCaption(text) {
 }
 
 /* ══════════════════ SCENE DATA ═════════════════════════════════ */
+// VOs crafted by Gemini 2.5 Flash Lite — board-level, screen-precise
 const SCENES = [
   {
     id: 1, type: 'stat', color: TEAL,
     title: 'The Revenue Gap',
-    vo: 'In UAE hospitals, twelve to eighteen percent of claims are denied first-pass — sixty to seventy percent preventably. Not clinical failures. Documentation gaps. That\'s where revenue disappears. Docstribe closes it before it opens.',
+    // S1:12w S2:7w S3:2w S4:4w = 25w — beat fracs 0.48 0.76 0.84 1.00
+    vo: "In the UAE, twelve to eighteen percent of claims are denied. Sixty to seventy percent of those? Entirely preventable. Docstribe closes that gap.",
     beats: [
       { at: 0.04, stat: '12–18%',        sub: 'UAE claims denied on first submission' },
-      { at: 0.32, stat: '60–70%',        sub: 'of those denials are entirely preventable' },
-      { at: 0.82, stat: 'Zero leakage.', sub: 'Docstribe closes the gap before it opens' },
+      { at: 0.49, stat: '60–70%',        sub: 'of those denials are entirely preventable' },
+      { at: 0.85, stat: 'Zero leakage.', sub: 'Docstribe closes the gap before it opens' },
     ],
   },
   {
     id: 2, type: 'kpi', color: TEAL,
     title: 'Introducing Docstribe',
-    vo: 'Docstribe is a skilled AI agentic workforce — purpose-built for UAE. It listens to every clinical and financial signal, and acts in real time. Sixty days from go-live, guaranteed: thirty percent fewer denials. Twenty-five percent more revenue. CMI up zero point fifteen.',
+    // S1:11w S2:16w S3:7w = 34w — beat fracs 0.32 0.79 1.00
+    vo: "Meet Docstribe — an AI agentic workforce built for UAE healthcare. Denials drop thirty percent, revenue goes up twenty-five percent, CMI improves by zero point fifteen. We guarantee it within sixty days.",
     beats: [
-      { at: 0.04, stat: 'Docstribe',   sub: 'AI agentic workforce — UAE healthcare' },
-      { at: 0.58, stat: '60 days',     sub: 'Guaranteed from go-live · contractual SLA' },
-      { at: 0.70, stat: '↓30%',        sub: 'Fewer denials on first submission' },
-      { at: 0.80, stat: '+25%',        sub: 'Revenue capture uplift' },
-      { at: 0.90, stat: '+0.15 CMI',   sub: 'Case mix index uplift per discharge' },
+      { at: 0.04, stat: 'Docstribe',  sub: 'AI agentic workforce — UAE healthcare' },
+      { at: 0.38, stat: '↓30%',       sub: 'Fewer denials on first submission' },
+      { at: 0.54, stat: '+25%',       sub: 'Revenue capture uplift' },
+      { at: 0.70, stat: '+0.15 CMI',  sub: 'Case mix index uplift per discharge' },
+      { at: 0.80, stat: '60 days',    sub: 'Guaranteed from go-live · contractual SLA' },
     ],
   },
   {
     id: 3, type: 'product', color: TEAL,
     title: 'One Unified Workspace',
     breadcrumb: 'Cases Workbench',
-    vo: 'OPD, IPD, emergency — one workspace. Clinical and financial context, same view. Every encounter tracked from first appointment to final payment. Nothing falls through.',
+    // S1:15w S2:8w = 23w — beat fracs 0.65 1.00; zero leakage at word 14 = 0.61
+    vo: "Here you can see two hundred live cases — OPD, IPD, Emergency — with zero leakage. Every encounter tracked from diagnosis to final payment.",
     beats: [
-      { at: 0.10, stat: '200 active cases', sub: 'OPD · IPD · Emergency — unified' },
-      { at: 0.88, stat: 'Zero leakage',     sub: 'every encounter tracked end-to-end' },
+      { at: 0.06, stat: '200 active cases', sub: 'OPD · IPD · Emergency — unified' },
+      { at: 0.62, stat: 'Zero leakage',     sub: 'every encounter tracked end-to-end' },
     ],
   },
   {
     id: 4, type: 'product', color: GREEN,
     title: 'Pre-Visit Intelligence',
     breadcrumb: 'Eligibility & Pre-Authorisation',
-    vo: 'Eligibility confirmed. Pre-auth triggered at order entry — not at discharge. Approved before the patient arrives. Zero write-offs.',
+    // S1:4w S2:11w S3:18w = 33w — beat fracs 0.12 0.45 1.00; Daman at S2 word 6 = 0.30
+    vo: "Watch what happens here. Before the OPD patient arrives, Daman eligibility is confirmed automatically. For this IPD admission, Thiqa pre-approval for AED twenty-eight thousand five hundred fires at order entry, not discharge.",
     beats: [
-      { at: 0.14, stat: 'Auth at order entry', sub: 'not at discharge — OPD and IPD' },
-      { at: 0.58, stat: '✅ PA APPROVED',       sub: 'Zero front-door write-off risk' },
+      { at: 0.14, stat: 'Daman eligible',  sub: 'OPD · confirmed before arrival' },
+      { at: 0.46, stat: '✅ PA APPROVED',   sub: 'AED 28,500 · Thiqa · order entry not discharge' },
     ],
   },
   {
     id: 5, type: 'product', color: INDIGO,
     title: 'Ambient Clinical Intelligence',
     breadcrumb: 'Ambient Scribe — OPD & IPD',
-    vo: 'Every encounter — one structured note. ICD-10-CM coded, NABIDH compliant, DHA licensed. Physicians stay in care. Documentation done.',
+    // S1:18w S2:13w = 31w — beat fracs 0.58 1.00; NABIDH at S2 word 5 = 0.74
+    vo: "As the physician talks, our AI builds the structured note in real time — vital signs, diagnoses, ICD codes. It connects directly to NABIDH and DHA, so the doctor stays focused on care.",
     beats: [
       { at: 0.06, stat: 'OPD note built live', sub: 'DM · HTN · auto-coded from voice' },
-      { at: 0.36, stat: 'NABIDH ✓  DHA ✓',    sub: 'compliant · structured · exchange-ready' },
-      { at: 0.60, stat: 'IPD H&P complete',    sub: 'Pneumonia · COPD · ward round done' },
+      { at: 0.60, stat: 'NABIDH ✓  DHA ✓',    sub: 'compliant · structured · exchange-ready' },
+      { at: 0.84, stat: 'Physicians in care',  sub: 'documentation automated · zero burden' },
     ],
   },
   {
     id: 6, type: 'product', color: AMBER,
     title: 'CDI — Closing the Gap',
     breadcrumb: 'Clinical Documentation Intelligence',
-    vo: 'Medical necessity confirmed OPD — one tap. IR-DRG gap closed IPD before discharge. E-signed. DHA-defensible.',
+    // S1:16w S2:13w = 29w — beat fracs 0.55 1.00; AED at word 13 = 0.45; Pneumonia at S2 word 5 = 0.72
+    vo: "One tap from the physician confirms medical necessity — that's AED four hundred twenty captured right there. Here for the IPD patient, confirming Pneumonia closes the IR-DRG gap before discharge.",
     beats: [
-      { at: 0.08, stat: 'OPD — Medical Necessity',     sub: 'physician confirms with one tap' },
-      { at: 0.44, stat: 'IPD — IR-DRG gap closed',     sub: 'diagnosis sequence locked at admission' },
-      { at: 0.88, stat: 'DHA Compliant · Audit Ready', sub: 'e-signed · timestamped · defensible' },
+      { at: 0.06, stat: 'OPD — Medical Necessity', sub: 'physician confirms with one tap' },
+      { at: 0.42, stat: '+AED 420',                sub: 'medical necessity captured · billed' },
+      { at: 0.60, stat: 'IPD — IR-DRG gap closed', sub: 'Pneumonia confirmed · DRG optimised' },
     ],
   },
   {
     id: 7, type: 'product', color: PURPLE,
     title: 'AI-Powered Coding',
     breadcrumb: 'ICD-10-CM · Smart Coding Engine',
-    vo: 'Notes to ICD-10-CM codes — instantly. IR-DRG weight from zero point nine four to one point three four. AED eighteen thousand four hundred recovered per case.',
+    // S1:11w S2:25w = 36w — beat fracs 0.31 1.00; IR-DRG at S2 word 3 = 0.36; AED at S2 word 18 = 0.81
+    vo: "The AI reads clinical notes and surfaces ranked ICD codes instantly. Watch the IR-DRG weight move from zero point nine four to one point three four — that jump alone recovers AED eighteen thousand four hundred per case.",
     beats: [
       { at: 0.06, stat: 'Notes → ICD-10-CM',   sub: 'diagnoses ranked · symptoms suppressed' },
-      { at: 0.22, stat: 'IR-DRG 0.94 → 1.34', sub: 'weight maximised · revenue recovered' },
-      { at: 0.70, stat: '+AED 18,400',          sub: 'per case · zero manual backlog' },
+      { at: 0.34, stat: 'IR-DRG 0.94 → 1.34', sub: 'weight maximised · revenue recovered' },
+      { at: 0.80, stat: '+AED 18,400',          sub: 'per case · zero manual backlog' },
     ],
   },
   {
     id: 8, type: 'product', color: RED,
     title: 'Denial Intelligence',
     breadcrumb: 'Payor Contract Intelligence',
-    vo: 'Claims scored pre-submission. Four denial drivers flagged. AED two hundred fourteen thousand surfaced. Denial rate down thirty percent — prevention, not appeals.',
+    // S1:2w S2:12w S3:15w = 29w — beat fracs 0.07 0.48 1.00; AED at S2 word 2 = 0.14; 30% at S3 word 8 = 0.76
+    vo: "See this? That AED two hundred fourteen thousand six hundred is recoverable, right now. This is why our denial rate drops thirty percent — before a single claim is sent.",
     beats: [
-      { at: 0.14, stat: '4 denial drivers',   sub: 'flagged and resolved pre-submission' },
-      { at: 0.35, stat: 'AED 214,600',         sub: 'recoverable revenue — pre-submission' },
-      { at: 0.62, stat: 'Denial rate ↓ 30%', sub: 'systemic prevention, not one-off fixes' },
+      { at: 0.10, stat: 'AED 214,600',        sub: 'recoverable · pre-submission · act now' },
+      { at: 0.50, stat: 'Denial rate ↓ 30%', sub: 'pre-submission prevention · systemic' },
     ],
   },
   {
     id: 9, type: 'product', color: TEAL,
     title: 'One-Click Recovery',
     breadcrumb: 'Claim Recovery — Bundling Dispute',
-    vo: 'Denial arrives. One click — contract appeal ready. Policy terms cited. Three weeks to thirty seconds.',
+    // S1:16w S2:14w S3:5w = 35w — beat fracs 0.46 0.86 1.00; AED at S1 word 10 = 0.29; one click at S2 word 3 = 0.54
+    vo: "A denied claim used to mean weeks of follow-up — AED one thousand nine hundred at risk. Now, one click pulls the contract, cites the right clauses, and fires the appeal. Three weeks becomes thirty seconds.",
     beats: [
-      { at: 0.08, stat: 'AED 1,900 denied', sub: 'OPD · bundling · CARC 97 · recoverable' },
-      { at: 0.50, stat: '1-click appeal',   sub: 'contract clauses cited · recovery underway' },
+      { at: 0.06, stat: 'AED 1,900 denied',   sub: 'OPD · bundling · CARC 97 · recoverable' },
+      { at: 0.46, stat: '1-click appeal',      sub: 'contract clauses cited · recovery underway' },
+      { at: 0.86, stat: '3 weeks → 30 sec',   sub: 'AI-automated dispute resolution' },
     ],
   },
   {
     id: 10, type: 'product', color: INDIGO,
     title: '30-Day Revenue Pipeline',
     breadcrumb: 'Case Management Control Tower',
-    vo: 'Live thirty-day revenue forecast — clinical signals, not averages. AED one point four million. Predicted at admission, not month end.',
+    // S1:16w S2:5w S3:4w = 25w — beat fracs 0.64 0.84 1.00; AED at S1 word 9 = 0.36; clinical at S3 = 0.84
+    vo: "This is your live thirty-day pipeline — AED one point four million, IR-DRG weighted, from today's admissions. Not a month-end report. Clinical signals, right now.",
     beats: [
-      { at: 0.28, stat: 'Clinical signals',   sub: 'not averages — predictive from admission' },
-      { at: 0.46, stat: 'AED 1.4M forecast', sub: 'next 30 days · IR-DRG weighted · live' },
+      { at: 0.36, stat: 'AED 1.4M forecast', sub: 'next 30 days · IR-DRG weighted · live' },
+      { at: 0.84, stat: 'Clinical signals',   sub: 'not averages — predictive from admission' },
     ],
   },
   {
     id: 11, type: 'dashboard', color: TEAL,
     title: 'One Platform. Zero Leakage.',
     breadcrumb: 'Executive Revenue Dashboard',
-    vo: 'Thirty percent fewer denials. Twenty-five percent more revenue. CMI up zero point fifteen. Zero leakage — contractually guaranteed within sixty days of go-live. One platform. Docstribe.',
+    // S1:22w S2:6w S3:3w = 31w — fracs 0.71 0.90 1.00; 30% at word 8 = 0.26; 25% at word 13 = 0.42; CMI at word 16 = 0.52
+    vo: "And here's the sixty-day guarantee in numbers — denials down thirty percent, revenue up twenty-five percent, CMI up zero point fifteen. Payor rates strong across the board. This is Docstribe.",
     beats: [
-      { at: 0.16, stat: '↓30% · +25%',               sub: 'denial reduction · revenue capture — guaranteed' },
-      { at: 0.34, stat: '+0.15 CMI',                  sub: 'case mix index uplift — within 60 days' },
-      { at: 0.90, stat: 'One platform. Zero leakage.', sub: 'Clinical Intelligence · Financial Integrity' },
+      { at: 0.26, stat: '↓30% · +25%',       sub: 'denial reduction · revenue capture — guaranteed' },
+      { at: 0.54, stat: '+0.15 CMI',          sub: 'case mix index uplift — within 60 days' },
+      { at: 0.90, stat: 'This is Docstribe.', sub: 'Clinical Intelligence · Financial Integrity' },
     ],
   },
 ];
@@ -267,10 +279,10 @@ function StatScene({ scene, progress }) {
 
 /* Scene 2 — Intro Docstribe (p<0.46), then KPI outcomes (p>=0.48) */
 function KPIScene({ scene, progress }) {
-  // intro fades out 0.46→0.56, kpis fade in 0.48→0.58
-  // VO word-count: sentences 1+2 = 25w/48w ≈ p=0.52 → "sixty days" fires at p=0.54
-  const introOpacity = progress < 0.46 ? 1 : progress > 0.56 ? 0 : 1 - (progress - 0.46) / 0.10;
-  const kpiOpacity   = progress < 0.48 ? 0 : progress > 0.58 ? 1 : (progress - 0.48) / 0.10;
+  // intro fades out 0.30→0.40, kpis fade in 0.32→0.42
+  // VO: "thirty percent" at fraction 0.35 — KPI phase aligns with ↓30% beat
+  const introOpacity = progress < 0.30 ? 1 : progress > 0.40 ? 0 : 1 - (progress - 0.30) / 0.10;
+  const kpiOpacity   = progress < 0.32 ? 0 : progress > 0.42 ? 1 : (progress - 0.32) / 0.10;
   const kpiBeats = scene.beats.slice(1); // skip first beat (Docstribe) — shown in intro phase
   const colors = [TEAL, GREEN, AMBER, INDIGO, PURPLE];
 
@@ -1128,15 +1140,16 @@ function TowerScreen({ progress }) {
 /* Scene 11 — Executive Dashboard: 60-day guarantee front and centre */
 function DashboardScreen({ progress }) {
   const guaranteeShow = progress >= 0.04;
-  const kpiTimes = [0.06, 0.16, 0.34];
+  // S11 VO fracs: 0.71 0.90 1.00 — KPI cards timed to when spoken: 30% at word 8 (0.26), 25% at word 13 (0.42), CMI at word 16 (0.52)
+  const kpiTimes = [0.06, 0.26, 0.52];
   const guaranteeKPIs = [
     { val: '↓30%',   label: 'First-submission denials', sub: 'vs. pre-integration baseline', col: TEAL },
     { val: '+25%',   label: 'Net revenue capture',       sub: 'incremental · measurable',     col: GREEN },
     { val: '+0.15',  label: 'CMI per discharge',         sub: 'complexity-adjusted uplift',   col: INDIGO },
   ];
-  const timelineShow = progress >= 0.52;
-  const payorShow = progress >= 0.62;
-  const brandShow = progress >= 0.78;
+  const timelineShow = progress >= 0.56;
+  const payorShow = progress >= 0.72;
+  const brandShow = progress >= 0.90;
 
   return (
     <ProductShell breadcrumb="Executive Revenue Dashboard" color={TEAL}>
