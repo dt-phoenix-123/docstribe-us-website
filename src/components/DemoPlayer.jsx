@@ -101,14 +101,15 @@ const SCENES = [
   {
     id: 2, type: 'kpi', color: TEAL,
     title: 'Introducing Docstribe',
-    vo: 'Docstribe is a skilled AI agentic workforce — purpose-built for UAE healthcare. It listens to every clinical signal, every financial trigger, and every insurer pattern, then acts on them in real time. The result? Within sixty days of going live — guaranteed: thirty percent fewer claim denials. Twenty-five percent more revenue captured. CMI up by zero point fifteen. Accounts receivable down from forty-five to thirty-two days.',
+    vo: 'Docstribe is a skilled AI agentic workforce — purpose-built for UAE healthcare. It listens to every clinical signal, every financial trigger, and every insurer pattern, then acts on them in real time. Within sixty days of going live — guaranteed: thirty percent fewer claim denials. Twenty-five percent more revenue captured. CMI up by zero point fifteen. Accounts receivable down from forty-five to thirty-two days.',
     beats: [
       { at: 0.04, stat: 'Docstribe',  sub: 'AI agentic workforce — UAE healthcare' },
-      { at: 0.30, stat: '60 days',    sub: 'Guaranteed from go-live · contractual SLA' },
-      { at: 0.44, stat: '↓30%',       sub: 'Fewer denials on first submission' },
-      { at: 0.58, stat: '+25%',       sub: 'Revenue capture uplift' },
-      { at: 0.72, stat: '+0.15',      sub: 'CMI uplift per discharge' },
-      { at: 0.86, stat: '32 days',    sub: 'AR days — down from 45' },
+      // VO word-count timing: sentences 1+2 cover p=0–0.51, then outcomes begin
+      { at: 0.51, stat: '60 days',    sub: 'Guaranteed from go-live · contractual SLA' },
+      { at: 0.62, stat: '↓30%',       sub: 'Fewer denials on first submission' },
+      { at: 0.73, stat: '+25%',       sub: 'Revenue capture uplift' },
+      { at: 0.82, stat: '+0.15',      sub: 'CMI uplift per discharge' },
+      { at: 0.90, stat: '32 days',    sub: 'AR days — down from 45' },
     ],
   },
   {
@@ -266,11 +267,12 @@ function StatScene({ scene, progress }) {
   );
 }
 
-/* Scene 2 — Intro Docstribe (p<0.30), then KPI outcomes (p>=0.28) */
+/* Scene 2 — Intro Docstribe (p<0.46), then KPI outcomes (p>=0.48) */
 function KPIScene({ scene, progress }) {
-  // intro fades out 0.24→0.34, kpis fade in 0.26→0.36
-  const introOpacity = progress < 0.24 ? 1 : progress > 0.34 ? 0 : 1 - (progress - 0.24) / 0.10;
-  const kpiOpacity   = progress < 0.26 ? 0 : progress > 0.36 ? 1 : (progress - 0.26) / 0.10;
+  // intro fades out 0.46→0.56, kpis fade in 0.48→0.58
+  // Aligned to word-count timing: VO says "sixty days" at p≈0.51
+  const introOpacity = progress < 0.46 ? 1 : progress > 0.56 ? 0 : 1 - (progress - 0.46) / 0.10;
+  const kpiOpacity   = progress < 0.48 ? 0 : progress > 0.58 ? 1 : (progress - 0.48) / 0.10;
   const kpiBeats = scene.beats.slice(1); // skip first beat (Docstribe) — shown in intro phase
   const colors = [TEAL, GREEN, AMBER, INDIGO, PURPLE];
 
@@ -520,131 +522,262 @@ function EligibilityScreen({ progress }) {
   );
 }
 
-/* Scene 5 — Ambient Scribe: concise snippets — voice → AI → structured note */
+/* Scene 5 — Ambient Scribe: realistic product screen with live transcript, entity extraction, ICD coding */
 function AmbientScreen({ progress }) {
-  const nabidh = progress >= 0.80;
+  const p = progress;
 
-  // OPD phases (snippets only)
-  const opdVoice      = progress >= 0.06 && progress < 0.40;
-  const opdProcessing = progress >= 0.38 && progress < 0.48;
-  const opdNote       = progress >= 0.46;
+  // OPD phases
+  const opdListening   = p >= 0.06 && p < 0.42;
+  const opdStructuring = p >= 0.40 && p < 0.50;
+  const opdComplete    = p >= 0.48;
+  const opdPhaseLabel  = opdListening ? 'LISTENING' : opdStructuring ? 'STRUCTURING' : opdComplete ? 'NOTE READY' : 'STANDBY';
+  const opdPhaseColor  = opdListening ? RED : opdStructuring ? AMBER : opdComplete ? GREEN : MUTED;
 
-  // IPD phases (snippets only)
-  const ipdVoice      = progress >= 0.50 && progress < 0.68;
-  const ipdProcessing = progress >= 0.66 && progress < 0.73;
-  const ipdNote       = progress >= 0.71;
+  // IPD phases
+  const ipdListening   = p >= 0.50 && p < 0.70;
+  const ipdStructuring = p >= 0.68 && p < 0.76;
+  const ipdComplete    = p >= 0.74;
+  const ipdPhaseLabel  = ipdListening ? 'LISTENING' : ipdStructuring ? 'STRUCTURING' : ipdComplete ? 'NOTE READY' : p < 0.50 ? 'QUEUED' : 'STANDBY';
+  const ipdPhaseColor  = ipdListening ? RED : ipdStructuring ? AMBER : ipdComplete ? GREEN : MUTED;
 
-  // Snippet text — just one key line, not the full transcript
-  const opdSnippet = '"HbA1c nine point one — uncontrolled. BP one forty two over eighty eight. eGFR sixty eight..."';
-  const ipdSnippet = '"Sats ninety one on room air. Bilateral crackles. CRP one forty eight. Query COPD on pneumonia..."';
+  // OPD transcript lines — appear one at a time
+  const opdLines = [
+    { text: '"HbA1c nine point one — definitely uncontrolled."', show: 0.08 },
+    { text: 'Polydipsia and polyuria reported. BP one forty two over eighty eight today.', show: 0.17 },
+    { text: 'eGFR sixty eight on recent labs — CKD Stage 3 territory.', show: 0.27 },
+    { text: 'Adjusting Metformin, adding Jardiance ten mg. Nephrology referral flagged.', show: 0.36 },
+  ];
 
-  const opdEntities = ['HbA1c 9.1% ↑', 'BP 142/88', 'eGFR 68', 'E11.65'];
-  const ipdEntities = ['SpO₂ 91% ↓', 'CRP 148', 'Bilateral crackles', 'J18.9'];
+  // OPD AI entities extracted progressively
+  const opdEntities = [
+    { label: 'HbA1c', value: '9.1% ↑', col: RED,    show: 0.12 },
+    { label: 'BP', value: '142/88 ↑',  col: AMBER,  show: 0.20 },
+    { label: 'eGFR', value: '68 ↓',    col: INDIGO, show: 0.29 },
+    { label: 'Sx', value: 'Polydipsia · Polyuria', col: TEAL, show: 0.37 },
+  ];
 
+  // OPD ICD codes
   const opdCodes = [
-    { code: 'E11.65', desc: 'Type 2 DM with hyperglycemia', col: RED,   show: 0.48 },
-    { code: 'I10',    desc: 'Essential hypertension',        col: AMBER, show: 0.54 },
-    { code: 'N18.3',  desc: 'CKD Stage 3 (eGFR 68)',        col: INDIGO,show: 0.60 },
+    { code: 'E11.65', desc: 'Type 2 DM with hyperglycaemia', col: RED,    show: 0.50 },
+    { code: 'I10',    desc: 'Essential hypertension',         col: AMBER,  show: 0.56 },
+    { code: 'N18.3',  desc: 'Chronic Kidney Disease Stage 3', col: INDIGO, show: 0.62 },
   ];
+
+  // IPD transcript lines
+  const ipdLines = [
+    { text: '"Sats ninety one on room air. Bilateral crackles at both bases."', show: 0.52 },
+    { text: 'CRP one forty eight. Temperature thirty eight point six. Chest X-ray: consolidation left base.', show: 0.58 },
+    { text: 'Known COPD — this is pneumonia on top. qSOFA score two, query sepsis.', show: 0.63 },
+    { text: 'Starting Tazocin IV. Sepsis bundle initiated. Respiratory review requested.', show: 0.68 },
+  ];
+
+  // IPD AI entities
+  const ipdEntities = [
+    { label: 'SpO₂', value: '91% ↓',            col: RED,    show: 0.54 },
+    { label: 'CRP',  value: '148 mg/L ↑',        col: AMBER,  show: 0.60 },
+    { label: 'CXR',  value: 'L-base consolidation', col: INDIGO, show: 0.64 },
+    { label: 'qSOFA', value: 'Score 2 · Sepsis risk', col: PURPLE, show: 0.68 },
+  ];
+
+  // IPD ICD codes
   const ipdCodes = [
-    { code: 'J18.9', desc: 'Pneumonia, unspecified',          col: RED,   show: 0.73 },
-    { code: 'J44.1', desc: 'COPD with acute exacerbation',    col: AMBER, show: 0.78 },
-    { code: 'E11.9', desc: 'Type 2 DM without complications', col: TEAL,  show: 0.83 },
+    { code: 'J18.9', desc: 'Pneumonia, unspecified organism',  col: RED,    show: 0.74 },
+    { code: 'J44.1', desc: 'COPD with acute exacerbation',     col: AMBER,  show: 0.79 },
+    { code: 'A41.9', desc: 'Sepsis, unspecified organism',     col: PURPLE, show: 0.83 },
   ];
 
-  const AmbientCol = ({ tag, color, name, voiceActive, processingActive, noteActive, snippet, entities, codes }) => (
-    <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 8 }}>
-      {/* Header */}
-      <div style={{ display: 'flex', gap: 6, alignItems: 'center' }}>
-        <Pill text={tag} color={color} />
-        <span style={{ fontSize: 10, fontWeight: 700, color: TXT }}>{name}</span>
-        {voiceActive && (
-          <div style={{ display: 'flex', gap: 4, alignItems: 'center', marginLeft: 4 }}>
-            <div style={{ width: 6, height: 6, borderRadius: '50%', background: RED, animation: 'dpPulse 1s ease infinite' }} />
-            <span style={{ fontSize: 7, color: RED, fontWeight: 800, letterSpacing: 0.5 }}>LISTENING</span>
-          </div>
-        )}
-        {processingActive && <Badge text="⚙ STRUCTURING" color={color} />}
-        {noteActive && <Badge text="✓ NOTE READY" color={GREEN} />}
-      </div>
-
-      {/* Voice snippet card */}
-      {(voiceActive || processingActive) && (
-        <div style={{ background: `${color}0b`, border: `1px solid ${processingActive ? color : BORDER}55`, borderRadius: 10, padding: '12px 14px', transition: 'border-color 0.4s ease', animation: 'dpBeatIn 0.4s ease both' }}>
-          {/* Mini waveform */}
-          <div style={{ display: 'flex', gap: 2, alignItems: 'flex-end', height: 14, marginBottom: 10 }}>
-            {Array.from({ length: 22 }, (_, i) => (
-              <div key={i} style={{ flex: 1, background: color, borderRadius: 2, opacity: voiceActive ? 0.65 : 0.25, height: voiceActive ? `${28 + Math.sin(i * 1.3 + progress * 38) * 55}%` : '25%', transition: 'height 0.12s ease, opacity 0.5s' }} />
-            ))}
-          </div>
-          {/* One-line voice snippet */}
-          <div style={{ fontSize: 9, color: DIM, lineHeight: 1.5, fontStyle: 'italic', marginBottom: processingActive ? 10 : 0 }}>
-            {snippet}
-          </div>
-          {/* Entity tags appear when processing */}
-          {processingActive && (
-            <div style={{ display: 'flex', gap: 5, flexWrap: 'wrap', animation: 'dpBeatIn 0.4s ease both' }}>
-              <span style={{ fontSize: 7, color: MUTED }}>AI extracting →</span>
-              {entities.map(t => (
-                <span key={t} style={{ fontSize: 7, fontWeight: 700, color, background: `${color}18`, border: `1px solid ${color}30`, borderRadius: 10, padding: '2px 7px' }}>{t}</span>
-              ))}
-            </div>
-          )}
-        </div>
-      )}
-
-      {/* Structured note snippet */}
-      {noteActive && (
-        <div style={{ animation: 'dpEnterScene 0.5s ease-out both' }}>
-          <div style={{ fontSize: 7, fontWeight: 800, color: MUTED, letterSpacing: 0.5, marginBottom: 6 }}>ICD-10-CM AUTO-CODED · CLAIM READY</div>
-          {codes.map((c, i) => (
-            progress >= c.show && (
-              <div key={i} style={{ display: 'flex', gap: 8, alignItems: 'center', padding: '6px 10px', marginBottom: 4, borderRadius: 8, background: `${c.col}0e`, border: `1px solid ${c.col}25`, animation: 'dpBeatIn 0.4s ease both' }}>
-                <span style={{ fontSize: 11, fontWeight: 900, color: c.col, fontFamily: 'Sora', width: 46, flexShrink: 0 }}>{c.code}</span>
-                <span style={{ fontSize: 9, color: TXT, flex: 1 }}>{c.desc}</span>
-                <span style={{ fontSize: 8, color: GREEN, fontWeight: 800 }}>✓</span>
-              </div>
-            )
-          ))}
-        </div>
-      )}
-    </div>
-  );
+  const sessionLive = p >= 0.06 && p < 0.72;
 
   return (
-    <ProductShell breadcrumb="Ambient Scribe — OPD & IPD" color={INDIGO}>
-      <div style={{ padding: '12px 14px', height: '100%', display: 'flex', flexDirection: 'column', gap: 12 }}>
+    <ProductShell breadcrumb="Ambient Scribe — Live Session" color={INDIGO}>
+      <div style={{ padding: '9px 12px', height: '100%', display: 'flex', flexDirection: 'column', gap: 8, overflow: 'hidden' }}>
 
-        {/* How it works — brief label */}
-        <div style={{ display: 'flex', gap: 6, alignItems: 'center', justifyContent: 'center', animation: 'dpRowIn 0.4s ease both' }}>
-          {[['🎤 Voice', INDIGO], ['→', MUTED], ['🧠 AI processes', TEAL], ['→', MUTED], ['📋 Structured Note', GREEN]].map(([t, c], i) => (
-            <span key={i} style={{ fontSize: 9, fontWeight: i % 2 === 0 ? 700 : 400, color: c }}>{t}</span>
-          ))}
+        {/* ── Session bar ── */}
+        <div style={{ display: 'flex', gap: 8, alignItems: 'center', flexShrink: 0, paddingBottom: 6, borderBottom: `1px solid ${BORDER}` }}>
+          <div style={{ display: 'flex', gap: 4, alignItems: 'center' }}>
+            <div style={{ width: 6, height: 6, borderRadius: '50%', background: sessionLive ? RED : p >= 0.72 ? GREEN : MUTED, animation: sessionLive ? 'dpPulse 1.1s ease infinite' : 'none', boxShadow: sessionLive ? `0 0 7px ${RED}` : 'none', transition: 'background 0.4s' }} />
+            <span style={{ fontSize: 8, fontWeight: 800, color: sessionLive ? RED : p >= 0.72 ? GREEN : MUTED, letterSpacing: 0.5 }}>
+              {sessionLive ? 'SESSION LIVE' : p >= 0.72 ? 'SESSION COMPLETE' : 'READY'}
+            </span>
+          </div>
+          <div style={{ flex: 1 }} />
+          <span style={{ fontSize: 7, color: MUTED }}>19 Apr 2025 · 09:14 GST</span>
+          <div style={{ fontSize: 7, fontWeight: 700, color: INDIGO, background: `${INDIGO}14`, border: `1px solid ${INDIGO}28`, borderRadius: 4, padding: '2px 6px' }}>NABIDH ✓</div>
+          <div style={{ fontSize: 7, fontWeight: 700, color: TEAL, background: `${TEAL}14`, border: `1px solid ${TEAL}28`, borderRadius: 4, padding: '2px 6px' }}>DHA Licensed</div>
         </div>
 
-        {/* OPD + IPD columns */}
-        <div style={{ display: 'flex', gap: 12, flex: 1 }}>
-          <AmbientCol
-            tag="OPD" color={INDIGO} name="F.H. · Endocrinology"
-            voiceActive={opdVoice} processingActive={opdProcessing} noteActive={opdNote}
-            snippet={opdSnippet} entities={opdEntities} codes={opdCodes}
-          />
+        {/* ── Two columns: OPD | IPD ── */}
+        <div style={{ display: 'flex', gap: 10, flex: 1, overflow: 'hidden', minHeight: 0 }}>
+
+          {/* ── OPD Column ── */}
+          <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 7, overflow: 'hidden' }}>
+
+            {/* Patient card — always visible from p=0 */}
+            <div style={{ background: `${INDIGO}10`, border: `1px solid ${INDIGO}${opdListening ? '55' : opdStructuring ? '40' : opdComplete ? '28' : '1a'}`, borderRadius: 9, padding: '8px 11px', flexShrink: 0, transition: 'border-color 0.5s ease' }}>
+              <div style={{ display: 'flex', alignItems: 'center', marginBottom: 5, gap: 6 }}>
+                <Pill text="OPD" color={INDIGO} />
+                <span style={{ fontSize: 10, fontWeight: 700, color: TXT }}>F.H. · Fatima Hassan</span>
+                <div style={{ flex: 1 }} />
+                <div style={{ display: 'flex', gap: 3, alignItems: 'center', background: `${opdPhaseColor}15`, border: `1px solid ${opdPhaseColor}30`, borderRadius: 10, padding: '2px 8px', transition: 'all 0.4s' }}>
+                  {opdListening && <div style={{ width: 4, height: 4, borderRadius: '50%', background: RED, animation: 'dpPulse 1s ease infinite' }} />}
+                  <span style={{ fontSize: 7, fontWeight: 800, color: opdPhaseColor, letterSpacing: 0.3 }}>{opdPhaseLabel}</span>
+                </div>
+              </div>
+              <div style={{ display: 'flex', gap: 14 }}>
+                {[['Specialty','Endocrinology'],['Physician','Dr. Al-Rashid'],['Enc ID','OPD-0891']].map(([k,v]) => (
+                  <div key={k}>
+                    <div style={{ fontSize: 7, color: MUTED }}>{k}</div>
+                    <div style={{ fontSize: 8, fontWeight: 700, color: DIM }}>{v}</div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Live transcript panel — always visible, waveform activates with voice */}
+            <div style={{ background: 'rgba(0,0,0,0.28)', border: `1px solid ${opdListening ? `${INDIGO}40` : BORDER}`, borderRadius: 8, padding: '8px 10px', flexShrink: 0, transition: 'border-color 0.5s' }}>
+              <div style={{ fontSize: 7, fontWeight: 700, color: MUTED, letterSpacing: 0.4, marginBottom: 6 }}>LIVE TRANSCRIPT</div>
+              {/* Animated waveform */}
+              <div style={{ display: 'flex', gap: 1.5, alignItems: 'flex-end', height: 14, marginBottom: 7 }}>
+                {Array.from({ length: 26 }, (_, i) => (
+                  <div key={i} style={{ flex: 1, background: INDIGO, borderRadius: 1, opacity: opdListening ? 0.72 : 0.18, height: opdListening ? `${20 + Math.sin(i * 1.2 + p * 42) * 68}%` : '18%', transition: 'height 0.1s ease, opacity 0.5s' }} />
+                ))}
+              </div>
+              {/* Transcript lines — appear progressively */}
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 3, minHeight: 36 }}>
+                {opdLines.map((line, i) => (
+                  <div key={i} style={{ fontSize: 8, color: p >= line.show ? (p >= line.show + 0.12 ? `${TXT}99` : TXT) : 'transparent', lineHeight: 1.45, fontStyle: 'italic', transition: 'color 0.5s ease' }}>
+                    {p >= line.show ? line.text : ' '}
+                  </div>
+                ))}
+                {opdListening && <span style={{ display: 'inline-block', width: 2, height: 11, background: INDIGO, borderRadius: 1, animation: 'dpPulse 0.75s step-end infinite', verticalAlign: 'bottom' }} />}
+              </div>
+            </div>
+
+            {/* AI entity tags */}
+            {p >= 0.12 && (
+              <div style={{ animation: 'dpEnterScene 0.45s ease-out both', flexShrink: 0 }}>
+                <div style={{ fontSize: 7, fontWeight: 700, color: MUTED, letterSpacing: 0.4, marginBottom: 5 }}>AI-EXTRACTED ENTITIES</div>
+                <div style={{ display: 'flex', flexWrap: 'wrap', gap: 4 }}>
+                  {opdEntities.map((e, i) => p >= e.show && (
+                    <div key={i} style={{ display: 'flex', gap: 4, alignItems: 'center', background: `${e.col}12`, border: `1px solid ${e.col}30`, borderRadius: 8, padding: '3px 9px', animation: 'dpBeatIn 0.4s ease both' }}>
+                      <span style={{ fontSize: 7, color: MUTED }}>{e.label}:</span>
+                      <span style={{ fontSize: 8, fontWeight: 800, color: e.col }}>{e.value}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* ICD-10-CM coded note */}
+            {opdComplete && (
+              <div style={{ animation: 'dpEnterScene 0.5s ease-out both', flex: 1, overflow: 'hidden' }}>
+                <div style={{ fontSize: 7, fontWeight: 800, color: `${GREEN}cc`, letterSpacing: 0.4, marginBottom: 5 }}>✓ ICD-10-CM AUTO-CODED · CLAIM READY</div>
+                {opdCodes.map((c, i) => p >= c.show && (
+                  <div key={i} style={{ display: 'flex', gap: 8, alignItems: 'center', padding: '6px 10px', marginBottom: 4, borderRadius: 8, background: `${c.col}0d`, border: `1px solid ${c.col}28`, animation: 'dpBeatIn 0.4s ease both' }}>
+                    <span style={{ fontSize: 12, fontWeight: 900, color: c.col, fontFamily: 'Sora', width: 46, flexShrink: 0 }}>{c.code}</span>
+                    <span style={{ fontSize: 9, color: TXT, flex: 1, lineHeight: 1.3 }}>{c.desc}</span>
+                    <span style={{ fontSize: 9, color: GREEN, fontWeight: 800 }}>✓</span>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+
+          {/* ── Divider ── */}
           <div style={{ width: 1, background: BORDER, flexShrink: 0 }} />
-          <AmbientCol
-            tag="IPD" color={TEAL} name="K.A. · Respiratory"
-            voiceActive={ipdVoice} processingActive={ipdProcessing} noteActive={ipdNote}
-            snippet={ipdSnippet} entities={ipdEntities} codes={ipdCodes}
-          />
+
+          {/* ── IPD Column ── */}
+          <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 7, overflow: 'hidden' }}>
+
+            {/* Patient card — always visible */}
+            <div style={{ background: `${TEAL}0d`, border: `1px solid ${TEAL}${ipdListening ? '50' : ipdStructuring ? '38' : ipdComplete ? '28' : '18'}`, borderRadius: 9, padding: '8px 11px', flexShrink: 0, transition: 'border-color 0.5s ease' }}>
+              <div style={{ display: 'flex', alignItems: 'center', marginBottom: 5, gap: 6 }}>
+                <Pill text="IPD" color={TEAL} />
+                <span style={{ fontSize: 10, fontWeight: 700, color: TXT }}>K.A. · Khalid Al-Mansoori</span>
+                <div style={{ flex: 1 }} />
+                <div style={{ display: 'flex', gap: 3, alignItems: 'center', background: `${ipdPhaseColor}15`, border: `1px solid ${ipdPhaseColor}30`, borderRadius: 10, padding: '2px 8px', transition: 'all 0.4s' }}>
+                  {ipdListening && <div style={{ width: 4, height: 4, borderRadius: '50%', background: RED, animation: 'dpPulse 1s ease infinite' }} />}
+                  <span style={{ fontSize: 7, fontWeight: 800, color: ipdPhaseColor, letterSpacing: 0.3 }}>{ipdPhaseLabel}</span>
+                </div>
+              </div>
+              <div style={{ display: 'flex', gap: 14 }}>
+                {[['Ward','Respiratory · Bay 4'],['Physician','Dr. Farooqi'],['Enc ID','IPD-0234']].map(([k,v]) => (
+                  <div key={k}>
+                    <div style={{ fontSize: 7, color: MUTED }}>{k}</div>
+                    <div style={{ fontSize: 8, fontWeight: 700, color: DIM }}>{v}</div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Live transcript / queued state */}
+            <div style={{ background: 'rgba(0,0,0,0.28)', border: `1px solid ${ipdListening ? `${TEAL}40` : BORDER}`, borderRadius: 8, padding: '8px 10px', flexShrink: 0, transition: 'border-color 0.5s' }}>
+              <div style={{ fontSize: 7, fontWeight: 700, color: MUTED, letterSpacing: 0.4, marginBottom: 6 }}>
+                {p < 0.50 ? 'NEXT SESSION — WARD ROUND 09:28 GST' : 'LIVE TRANSCRIPT'}
+              </div>
+              {/* Waveform */}
+              <div style={{ display: 'flex', gap: 1.5, alignItems: 'flex-end', height: 14, marginBottom: 7 }}>
+                {Array.from({ length: 26 }, (_, i) => (
+                  <div key={i} style={{ flex: 1, background: TEAL, borderRadius: 1, opacity: ipdListening ? 0.72 : 0.16, height: ipdListening ? `${20 + Math.sin(i * 1.35 + p * 40) * 68}%` : '16%', transition: 'height 0.1s ease, opacity 0.5s' }} />
+                ))}
+              </div>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 3, minHeight: 36 }}>
+                {p < 0.50 ? (
+                  <div style={{ fontSize: 8, color: MUTED, fontStyle: 'italic', lineHeight: 1.45 }}>
+                    Ambient session queued · Dr. Farooqi completing ward round...
+                  </div>
+                ) : (
+                  <>
+                    {ipdLines.map((line, i) => (
+                      <div key={i} style={{ fontSize: 8, color: p >= line.show ? (p >= line.show + 0.12 ? `${TXT}99` : TXT) : 'transparent', lineHeight: 1.45, fontStyle: 'italic', transition: 'color 0.5s ease' }}>
+                        {p >= line.show ? line.text : ' '}
+                      </div>
+                    ))}
+                    {ipdListening && <span style={{ display: 'inline-block', width: 2, height: 11, background: TEAL, borderRadius: 1, animation: 'dpPulse 0.75s step-end infinite', verticalAlign: 'bottom' }} />}
+                  </>
+                )}
+              </div>
+            </div>
+
+            {/* AI entity tags */}
+            {p >= 0.54 && (
+              <div style={{ animation: 'dpEnterScene 0.45s ease-out both', flexShrink: 0 }}>
+                <div style={{ fontSize: 7, fontWeight: 700, color: MUTED, letterSpacing: 0.4, marginBottom: 5 }}>AI-EXTRACTED ENTITIES</div>
+                <div style={{ display: 'flex', flexWrap: 'wrap', gap: 4 }}>
+                  {ipdEntities.map((e, i) => p >= e.show && (
+                    <div key={i} style={{ display: 'flex', gap: 4, alignItems: 'center', background: `${e.col}12`, border: `1px solid ${e.col}30`, borderRadius: 8, padding: '3px 9px', animation: 'dpBeatIn 0.4s ease both' }}>
+                      <span style={{ fontSize: 7, color: MUTED }}>{e.label}:</span>
+                      <span style={{ fontSize: 8, fontWeight: 800, color: e.col }}>{e.value}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* ICD-10-CM coded note */}
+            {ipdComplete && (
+              <div style={{ animation: 'dpEnterScene 0.5s ease-out both', flex: 1, overflow: 'hidden' }}>
+                <div style={{ fontSize: 7, fontWeight: 800, color: `${GREEN}cc`, letterSpacing: 0.4, marginBottom: 5 }}>✓ ICD-10-CM AUTO-CODED · CLAIM READY</div>
+                {ipdCodes.map((c, i) => p >= c.show && (
+                  <div key={i} style={{ display: 'flex', gap: 8, alignItems: 'center', padding: '6px 10px', marginBottom: 4, borderRadius: 8, background: `${c.col}0d`, border: `1px solid ${c.col}28`, animation: 'dpBeatIn 0.4s ease both' }}>
+                    <span style={{ fontSize: 12, fontWeight: 900, color: c.col, fontFamily: 'Sora', width: 46, flexShrink: 0 }}>{c.code}</span>
+                    <span style={{ fontSize: 9, color: TXT, flex: 1, lineHeight: 1.3 }}>{c.desc}</span>
+                    <span style={{ fontSize: 9, color: GREEN, fontWeight: 800 }}>✓</span>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
         </div>
 
-        {/* NABIDH / DHA compliance banner */}
-        {nabidh && (
-          <div style={{ background: `linear-gradient(90deg,${INDIGO}14,${TEAL}14)`, border: `1px solid ${TEAL}40`, borderRadius: 9, padding: '10px 14px', display: 'flex', gap: 20, alignItems: 'center', animation: 'dpBeatIn 0.6s cubic-bezier(0.34,1.4,0.64,1) both', flexShrink: 0 }}>
-            {[['NABIDH ✓', INDIGO, 'National Unified Medical Record'], ['DHA Licensed ✓', TEAL, 'Dubai Health Authority'], ['HL7 FHIR ✓', GREEN, 'Structured data exchange']].map(([label, c, sub]) => (
-              <div key={label} style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
-                <div style={{ width: 8, height: 8, borderRadius: '50%', background: c, boxShadow: `0 0 8px ${c}` }} />
+        {/* ── Compliance banner ── */}
+        {p >= 0.80 && (
+          <div style={{ background: `linear-gradient(90deg,${INDIGO}12,${TEAL}12)`, border: `1px solid ${TEAL}38`, borderRadius: 8, padding: '8px 14px', display: 'flex', gap: 22, alignItems: 'center', animation: 'dpBeatIn 0.6s cubic-bezier(0.34,1.4,0.64,1) both', flexShrink: 0 }}>
+            {[['NABIDH ✓', INDIGO, 'Unified Medical Record'],['DHA Licensed ✓', TEAL, 'Dubai Health Authority'],['HL7 FHIR ✓', GREEN, 'Exchange-ready structured note']].map(([label, c, sub]) => (
+              <div key={label} style={{ display: 'flex', gap: 7, alignItems: 'center' }}>
+                <div style={{ width: 7, height: 7, borderRadius: '50%', background: c, boxShadow: `0 0 8px ${c}`, flexShrink: 0 }} />
                 <div>
-                  <div style={{ fontSize: 10, fontWeight: 800, color: c }}>{label}</div>
+                  <div style={{ fontSize: 9, fontWeight: 800, color: c }}>{label}</div>
                   <div style={{ fontSize: 7, color: DIM }}>{sub}</div>
                 </div>
               </div>
@@ -1163,24 +1296,24 @@ function Splash({ onPlay }) {
   );
 }
 
-/* ─── Scene stat strip (bottom pill — shows latest fired beat) ── */
+/* ─── Scene stat strip — centered, sits just above the caption ── */
 function SceneStatStrip({ scene, progress }) {
   if (scene.type === 'stat' || scene.type === 'kpi') return null;
   const fired = (scene.beats || []).slice().reverse().find(b => progress >= b.at);
   if (!fired) return null;
   return (
-    <div key={fired.stat} style={{ position: 'absolute', bottom: 8, left: '50%', transform: 'translateX(-50%)', zIndex: 15, display: 'flex', gap: 8, alignItems: 'center', background: 'rgba(3,7,20,0.90)', backdropFilter: 'blur(14px)', borderRadius: 20, padding: '5px 16px', border: `1px solid ${scene.color}38`, pointerEvents: 'none', animation: 'dpBeatIn 0.45s ease both', maxWidth: '78%' }}>
-      <div style={{ width: 7, height: 7, borderRadius: '50%', background: scene.color, boxShadow: `0 0 8px ${scene.color}`, flexShrink: 0 }} />
-      <span style={{ fontSize: 13, fontWeight: 900, color: scene.color, fontFamily: 'Sora', whiteSpace: 'nowrap', letterSpacing: -0.3 }}>{fired.stat}</span>
-      {fired.sub && <span style={{ fontSize: 8, color: DIM, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>· {fired.sub}</span>}
+    <div key={fired.stat} style={{ position: 'absolute', bottom: 44, left: '50%', transform: 'translateX(-50%)', zIndex: 15, display: 'flex', gap: 8, alignItems: 'center', background: 'rgba(3,7,20,0.92)', backdropFilter: 'blur(14px)', borderRadius: 20, padding: '6px 18px', border: `1px solid ${scene.color}45`, pointerEvents: 'none', animation: 'dpBeatIn 0.45s ease both', maxWidth: '76%', whiteSpace: 'nowrap' }}>
+      <div style={{ width: 7, height: 7, borderRadius: '50%', background: scene.color, boxShadow: `0 0 10px ${scene.color}`, flexShrink: 0 }} />
+      <span style={{ fontSize: 13, fontWeight: 900, color: scene.color, fontFamily: 'Sora', letterSpacing: -0.3 }}>{fired.stat}</span>
+      {fired.sub && <span style={{ fontSize: 8, color: DIM, overflow: 'hidden', textOverflow: 'ellipsis' }}>· {fired.sub}</span>}
     </div>
   );
 }
 
-/* ─── Sentence caption with teal key-term highlights ─────────── */
+/* ─── Sentence caption — sits at very bottom, above nav ─────── */
 function Caption({ sentence }) {
   return (
-    <div key={sentence} style={{ position: 'absolute', bottom: 46, left: '6%', right: '6%', zIndex: 12, textAlign: 'center', fontSize: 11, fontFamily: 'Sora', color: 'rgba(255,255,255,0.55)', fontStyle: 'italic', lineHeight: 1.5, textShadow: '0 1px 10px rgba(0,0,0,1)', animation: 'dpFadeCaption 0.4s ease both' }}>
+    <div key={sentence} style={{ position: 'absolute', bottom: 10, left: '6%', right: '6%', zIndex: 12, textAlign: 'center', fontSize: 11, fontFamily: 'Sora', color: 'rgba(255,255,255,0.52)', fontStyle: 'italic', lineHeight: 1.5, textShadow: '0 1px 10px rgba(0,0,0,1)', animation: 'dpFadeCaption 0.4s ease both' }}>
       {highlightCaption(sentence)}
     </div>
   );
@@ -1281,11 +1414,24 @@ export default function DemoPlayer() {
       setIsPlaying(true);
 
       const scSentences = splitSentences(s.vo);
+      // Pre-compute cumulative word-count fractions so each sentence
+      // gets screen time proportional to how long it takes to speak
+      const scWordCounts = scSentences.map(s => s.split(/\s+/).length);
+      const scTotalWords = scWordCounts.reduce((a, b) => a + b, 0);
+      const scCumFracs   = scWordCounts.reduce((acc, wc) => {
+        acc.push((acc[acc.length - 1] || 0) + wc / scTotalWords);
+        return acc;
+      }, []);
+
       const tick = () => {
         const elapsed = audioCtxRef.current.currentTime - t0Ref.current;
         const p = Math.min(elapsed / durRef.current, 1);
         setProgress(p);
-        const si = Math.min(Math.floor(p * scSentences.length), scSentences.length - 1);
+        // Find which sentence p falls into using word-count fractions
+        let si = scSentences.length - 1;
+        for (let j = 0; j < scCumFracs.length; j++) {
+          if (p <= scCumFracs[j]) { si = j; break; }
+        }
         setSentIdx(si);
         if (p < 1) rafRef.current = requestAnimationFrame(tick);
         else { setIsPlaying(false); autoAdvance(); }
