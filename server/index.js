@@ -400,12 +400,12 @@ const UAE_DEMO_SCENES = [
   {
     id: 1, timecode: '0:00–0:12', journeyStage: 'opening',
     title: 'The Opening Stat',
-    voText: 'Too much earned revenue never reaches your accounts. In UAE hospitals, first-submission denials are a persistent, largely preventable drain — documentation written for care, read by payers for compliance. That gap is where the money disappears. Docstribe sits precisely there, closing it before it opens.',
+    voText: 'In UAE hospitals, twelve to eighteen percent of all claims are denied on first submission. Sixty to seventy percent of those denials are entirely preventable — not clinical failures, but documentation gaps. What physicians write for care is read by payers for compliance. That gap is where your revenue disappears. Docstribe closes it before it opens.',
   },
   {
     id: 2, timecode: '0:12–0:28', journeyStage: 'outcomes',
     title: 'Outcomes Upfront — The KPI Promise',
-    voText: 'Within sixty days of going live, hospitals see a measurable drop in first-submission denials. A significant uplift in revenue capture. A Case Mix Index that rises to reflect the full clinical complexity of your patients. And accounts receivable days that fall to where they should have been all along. These are auditable, contractually committed outcomes — delivered inside two months.',
+    voText: 'Within sixty days of integration — guaranteed. Thirty percent fewer claim denials on first submission. Twenty-five percent uplift in net revenue capture. A Case Mix Index improvement of zero point fifteen per discharge. Accounts receivable days falling from forty-five to thirty-two. Not projections — contractually committed, auditable outcomes, delivered in two months.',
   },
   {
     id: 3, timecode: '0:28–0:38', journeyStage: 'platform',
@@ -450,7 +450,7 @@ const UAE_DEMO_SCENES = [
   {
     id: 11, timecode: '2:15–2:30', journeyStage: 'dashboard',
     title: 'One Platform. Zero Leakage.',
-    voText: 'Everything your board needs in one view. Denial trends, IR-DRG movement, payer variance, recovery pipeline. Every dirham accounted for. Docstribe: one platform, built for UAE healthcare, delivering measurable financial outcomes within sixty days of going live. arcus@docstribe.com — let\'s begin.',
+    voText: 'Everything your board needs in one view. Thirty percent fewer denials. Twenty-five percent more revenue captured. CMI up by zero point fifteen. Accounts receivable at thirty-two days. Zero leakage. These outcomes are guaranteed within sixty days of going live. One platform. Docstribe. arcus@docstribe.com — let\'s begin.',
   },
 ];
 
