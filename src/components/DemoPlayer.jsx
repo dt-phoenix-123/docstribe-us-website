@@ -77,7 +77,7 @@ function splitSentences(text) {
 function highlightCaption(text) {
   if (!text) return null;
   // Split on key terms — capturing group keeps the matched parts at odd indices
-  const pattern = /(twelve to eighteen percent|sixty to seventy percent|thirty percent|twenty-five percent|zero point fifteen|twenty percent|sixty days|thirty-two days|forty-five days|zero leakage|ICD-10-CM|NABIDH|DHA licensed|DHA|IR-DRG|CMI|Docstribe|guaranteed|\d+(?:\.\d+)?%|arcus@docstribe\.com)/gi;
+  const pattern = /(twelve to eighteen|sixty to seventy|thirty percent|twenty-five percent|zero point fifteen|sixty days|one point four million|eighteen thousand four hundred|two hundred fourteen|zero point nine four|one point three four|zero leakage|ICD-10-CM|NABIDH|DHA licensed|DHA|IR-DRG|CMI|Docstribe|guaranteed|\d+(?:\.\d+)?%)/gi;
   const parts = text.split(pattern);
   return parts.map((part, i) =>
     i % 2 === 1
@@ -91,120 +91,118 @@ const SCENES = [
   {
     id: 1, type: 'stat', color: TEAL,
     title: 'The Revenue Gap',
-    vo: 'In UAE hospitals, twelve to eighteen percent of all claims are denied on first submission. Sixty to seventy percent of those denials are entirely preventable — not clinical failures, but documentation gaps. What physicians write for care is read by payers for compliance. That gap is where your revenue disappears. Docstribe closes it before it opens.',
+    vo: 'In UAE hospitals, twelve to eighteen percent of claims are denied first-pass — sixty to seventy percent preventably. Not clinical failures. Documentation gaps. That\'s where revenue disappears. Docstribe closes it before it opens.',
     beats: [
-      { at: 0.04, stat: '12–18%',         sub: 'UAE claims denied on first submission' },
-      { at: 0.22, stat: '60–70%',         sub: 'of those denials are entirely preventable' },
-      { at: 0.78, stat: 'Zero leakage.',  sub: 'Docstribe closes the gap before it opens' },
+      { at: 0.04, stat: '12–18%',        sub: 'UAE claims denied on first submission' },
+      { at: 0.30, stat: '60–70%',        sub: 'of those denials are entirely preventable' },
+      { at: 0.75, stat: 'Zero leakage.', sub: 'Docstribe closes the gap before it opens' },
     ],
   },
   {
     id: 2, type: 'kpi', color: TEAL,
     title: 'Introducing Docstribe',
-    vo: 'Docstribe is a skilled AI agentic workforce — purpose-built for UAE healthcare. It listens to every clinical signal, every financial trigger, and every insurer pattern, then acts on them in real time. Within sixty days of going live — guaranteed: thirty percent fewer claim denials. Twenty-five percent more revenue captured. CMI up by zero point fifteen. Accounts receivable down from forty-five to thirty-two days.',
+    vo: 'Docstribe is a skilled AI agentic workforce — purpose-built for UAE. It listens to every clinical and financial signal, and acts in real time. Sixty days from go-live, guaranteed: thirty percent fewer denials. Twenty-five percent more revenue. CMI up zero point fifteen.',
     beats: [
-      { at: 0.04, stat: 'Docstribe',  sub: 'AI agentic workforce — UAE healthcare' },
-      // VO word-count timing: sentences 1+2 cover p=0–0.51, then outcomes begin
-      { at: 0.51, stat: '60 days',    sub: 'Guaranteed from go-live · contractual SLA' },
-      { at: 0.62, stat: '↓30%',       sub: 'Fewer denials on first submission' },
-      { at: 0.73, stat: '+25%',       sub: 'Revenue capture uplift' },
-      { at: 0.82, stat: '+0.15',      sub: 'CMI uplift per discharge' },
-      { at: 0.90, stat: '32 days',    sub: 'AR days — down from 45' },
+      { at: 0.04, stat: 'Docstribe',   sub: 'AI agentic workforce — UAE healthcare' },
+      { at: 0.54, stat: '60 days',     sub: 'Guaranteed from go-live · contractual SLA' },
+      { at: 0.68, stat: '↓30%',        sub: 'Fewer denials on first submission' },
+      { at: 0.80, stat: '+25%',        sub: 'Revenue capture uplift' },
+      { at: 0.91, stat: '+0.15 CMI',   sub: 'Case mix index uplift per discharge' },
     ],
   },
   {
     id: 3, type: 'product', color: TEAL,
     title: 'One Unified Workspace',
     breadcrumb: 'Cases Workbench',
-    vo: 'Every patient encounter — outpatient, inpatient, emergency — flows into one unified workspace. Clinical context and financial status in the same view. From first appointment to final payment, every gap is visible and every action is trackable.',
+    vo: 'OPD, IPD, emergency — one workspace. Clinical and financial context, same view. Every encounter tracked from first appointment to final payment. Nothing falls through.',
     beats: [
-      { at: 0.12, stat: '200 active cases',   sub: 'OPD · IPD · Emergency — unified' },
-      { at: 0.52, stat: 'Zero leakage',        sub: 'every encounter tracked end-to-end' },
+      { at: 0.10, stat: '200 active cases', sub: 'OPD · IPD · Emergency — unified' },
+      { at: 0.56, stat: 'Zero leakage',     sub: 'every encounter tracked end-to-end' },
     ],
   },
   {
     id: 4, type: 'product', color: GREEN,
     title: 'Pre-Visit Intelligence',
     breadcrumb: 'Eligibility & Pre-Authorisation',
-    vo: 'By the time a patient arrives, every coverage decision is already made. Eligibility verified. Pre-authorisation triggered at order entry — not at discharge — across all UAE insurance partners. No chasing. No write-offs. No surprises.',
+    vo: 'Coverage is settled before the patient arrives. Eligibility verified. Pre-auth triggered at order entry — not at discharge. No chasing. No write-offs.',
     beats: [
       { at: 0.18, stat: 'Auth at order entry', sub: 'not at discharge — OPD and IPD' },
-      { at: 0.72, stat: '✅ PA APPROVED',       sub: 'Zero front-door write-off risk' },
+      { at: 0.76, stat: '✅ PA APPROVED',       sub: 'Zero front-door write-off risk' },
     ],
   },
   {
     id: 5, type: 'product', color: INDIGO,
     title: 'Ambient Clinical Intelligence',
     breadcrumb: 'Ambient Scribe — OPD & IPD',
-    vo: 'The platform builds a complete structured clinical note from every encounter automatically — ICD-10-CM coded, compliance-stamped, and ready for billing. Fully NABIDH-compliant and DHA licensed. Physicians focus entirely on care. The documentation is simply done.',
+    vo: 'The platform writes the clinical note from every encounter — ICD-10-CM coded, NABIDH compliant, DHA licensed, billing-ready. Physicians focus on care. Documentation is simply done.',
     beats: [
-      { at: 0.12, stat: 'OPD note built live',    sub: 'DM · HTN · auto-coded from voice' },
-      { at: 0.50, stat: 'IPD H&P complete',        sub: 'Pneumonia · COPD · ward round done' },
-      { at: 0.78, stat: 'NABIDH ✓  DHA ✓',        sub: 'compliant · structured · exchange-ready' },
+      { at: 0.12, stat: 'OPD note built live', sub: 'DM · HTN · auto-coded from voice' },
+      { at: 0.56, stat: 'IPD H&P complete',    sub: 'Pneumonia · COPD · ward round done' },
+      { at: 0.82, stat: 'NABIDH ✓  DHA ✓',    sub: 'compliant · structured · exchange-ready' },
     ],
   },
   {
     id: 6, type: 'product', color: AMBER,
     title: 'CDI — Closing the Gap',
     breadcrumb: 'Clinical Documentation Intelligence',
-    vo: 'Clinical documentation intelligence fires in real time. For outpatients, medical necessity is confirmed before the claim is built. For inpatients, it closes the IR-DRG gap while the patient is still admitted. Every physician response is e-signed and timestamped — every query is an audit trail.',
+    vo: 'CDI fires in real time — medical necessity confirmed for OPD, IR-DRG gap closed for IPD while the patient is still admitted. Every physician response e-signed. DHA-defensible.',
     beats: [
-      { at: 0.10, stat: 'OPD — Medical Necessity',    sub: 'physician confirms with one tap' },
-      { at: 0.52, stat: 'IPD — IR-DRG gap closed',    sub: 'diagnosis sequence locked at admission' },
-      { at: 0.84, stat: 'DHA Compliant · Audit Ready', sub: 'e-signed · timestamped · defensible' },
+      { at: 0.08, stat: 'OPD — Medical Necessity',     sub: 'physician confirms with one tap' },
+      { at: 0.54, stat: 'IPD — IR-DRG gap closed',     sub: 'diagnosis sequence locked at admission' },
+      { at: 0.86, stat: 'DHA Compliant · Audit Ready', sub: 'e-signed · timestamped · defensible' },
     ],
   },
   {
     id: 7, type: 'product', color: PURPLE,
     title: 'AI-Powered Coding',
     breadcrumb: 'ICD-10-CM · Smart Coding Engine',
-    vo: 'Clinical notes are converted into the most defensible, highest-weight ICD-10-CM codes the documentation supports. Comorbidities are captured and ranked. Symptom-only codes are suppressed. The IR-DRG weight — and the revenue it carries — reflects what your team actually delivered.',
+    vo: 'Clinical notes convert to the highest-weight defensible ICD-10-CM codes. IR-DRG weight: zero point nine four to one point three four. AED eighteen thousand four hundred recovered — per case.',
     beats: [
-      { at: 0.14, stat: 'Notes → ICD-10-CM',    sub: 'diagnoses ranked · symptoms suppressed' },
-      { at: 0.52, stat: 'IR-DRG 0.94 → 1.34',  sub: 'weight maximised · revenue recovered' },
-      { at: 0.82, stat: '+AED 18,400',           sub: 'per case · zero manual backlog' },
+      { at: 0.10, stat: 'Notes → ICD-10-CM',   sub: 'diagnoses ranked · symptoms suppressed' },
+      { at: 0.54, stat: 'IR-DRG 0.94 → 1.34', sub: 'weight maximised · revenue recovered' },
+      { at: 0.84, stat: '+AED 18,400',          sub: 'per case · zero manual backlog' },
     ],
   },
   {
     id: 8, type: 'product', color: RED,
     title: 'Denial Intelligence',
     breadcrumb: 'Payor Contract Intelligence',
-    vo: 'Before any claim is submitted, denial risk is scored against each insurer\'s specific patterns. Recoverable revenue surfaces before it disappears. Four denial drivers are flagged and resolved pre-submission. The denial rate drops by thirty percent — not through appeals, but through prevention.',
+    vo: 'Every claim is scored against each insurer\'s patterns before submission. Four denial drivers flagged and resolved. AED two hundred fourteen thousand surfaced. Denial rate down thirty percent — prevention, not appeals.',
     beats: [
-      { at: 0.12, stat: 'AED 214,600',       sub: 'recoverable revenue identified' },
-      { at: 0.48, stat: '4 denial drivers',   sub: 'flagged and resolved pre-submission' },
-      { at: 0.80, stat: 'Denial rate ↓ 30%', sub: 'systemic prevention, not one-off fixes' },
+      { at: 0.08, stat: 'AED 214,600',       sub: 'recoverable revenue — pre-submission' },
+      { at: 0.54, stat: '4 denial drivers',   sub: 'flagged and resolved pre-submission' },
+      { at: 0.82, stat: 'Denial rate ↓ 30%', sub: 'systemic prevention, not one-off fixes' },
     ],
   },
   {
     id: 9, type: 'product', color: TEAL,
     title: 'One-Click Recovery',
     breadcrumb: 'Claim Recovery — Bundling Dispute',
-    vo: 'When a denial does arrive, a contract-grounded appeal is assembled and ready in one click — policy terms cited, clinical evidence attached. What used to take your team three weeks takes the platform thirty seconds. Revenue that was lost is found.',
+    vo: 'When a denial lands, a contract-grounded appeal is ready in one click — policy terms cited, clinical evidence attached. Three weeks. Thirty seconds.',
     beats: [
-      { at: 0.20, stat: 'AED 1,900 denied', sub: 'OPD · bundling · CARC 97 · recoverable' },
-      { at: 0.68, stat: '1-click appeal',   sub: 'contract clauses cited · recovery underway' },
+      { at: 0.16, stat: 'AED 1,900 denied', sub: 'OPD · bundling · CARC 97 · recoverable' },
+      { at: 0.72, stat: '1-click appeal',   sub: 'contract clauses cited · recovery underway' },
     ],
   },
   {
     id: 10, type: 'product', color: INDIGO,
     title: '30-Day Revenue Pipeline',
     breadcrumb: 'Case Management Control Tower',
-    vo: 'Finance gains a rolling thirty-day revenue forecast by service line — driven by live clinical signals from the moment of admission. Surgical candidates identified early. Revenue predicted at admission, not estimated at month end.',
+    vo: 'Finance gets a live thirty-day revenue forecast by service line, driven by clinical signals at admission. AED one point four million predicted on day one. Not estimated at month end.',
     beats: [
-      { at: 0.15, stat: 'AED 1.4M forecast',    sub: 'next 30 days · IR-DRG weighted · live' },
-      { at: 0.60, stat: 'Clinical signals',      sub: 'not averages — predictive from admission' },
+      { at: 0.10, stat: 'AED 1.4M forecast', sub: 'next 30 days · IR-DRG weighted · live' },
+      { at: 0.64, stat: 'Clinical signals',   sub: 'not averages — predictive from admission' },
     ],
   },
   {
     id: 11, type: 'dashboard', color: TEAL,
     title: 'One Platform. Zero Leakage.',
     breadcrumb: 'Executive Revenue Dashboard',
-    vo: 'Everything your board needs in one view. Thirty percent fewer denials. Twenty-five percent more revenue captured. CMI up by zero point fifteen. Accounts receivable at thirty-two days. Zero leakage. These outcomes are guaranteed within sixty days of going live. One platform. Docstribe.',
+    vo: 'Thirty percent fewer denials. Twenty-five percent more revenue. CMI up zero point fifteen. Zero leakage — contractually guaranteed within sixty days of go-live. One platform. Docstribe.',
     beats: [
-      { at: 0.10, stat: '↓30% · +25%',               sub: 'denial reduction · revenue capture — guaranteed' },
-      { at: 0.48, stat: '+0.15 CMI · 32d AR',          sub: 'complexity uplift · AR days — within 60 days' },
-      { at: 0.80, stat: 'One platform. Zero leakage.', sub: 'Clinical Intelligence · Financial Integrity' },
+      { at: 0.08, stat: '↓30% · +25%',               sub: 'denial reduction · revenue capture — guaranteed' },
+      { at: 0.50, stat: '+0.15 CMI',                  sub: 'case mix index uplift — within 60 days' },
+      { at: 0.82, stat: 'One platform. Zero leakage.', sub: 'Clinical Intelligence · Financial Integrity' },
     ],
   },
 ];
@@ -255,7 +253,7 @@ function StatScene({ scene, progress }) {
         const active = spot(progress, b.at, b.at + 0.28);
         return (
           <div key={i} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8, opacity: show ? 1 : 0, transform: show ? 'none' : 'translateY(24px)', transition: 'all 0.9s cubic-bezier(0.34,1.2,0.64,1)', filter: show && !active && i < 2 ? 'brightness(0.5)' : 'brightness(1)' }}>
-            <div style={{ fontSize: i === 0 ? 96 : i === 1 ? 76 : 20, fontWeight: 900, letterSpacing: -2, fontFamily: 'Sora', lineHeight: 1.0, color: i === 2 ? DIM : '#fff', textShadow: active ? `0 0 80px ${TEAL}80` : i < 2 ? `0 0 40px ${TEAL}30` : 'none', transition: 'text-shadow 0.5s ease' }}>
+            <div style={{ fontSize: i === 0 ? 96 : i === 1 ? 76 : 28, fontWeight: 900, letterSpacing: i < 2 ? -2 : -0.5, fontFamily: 'Sora', lineHeight: 1.0, color: i === 2 ? TEAL : '#fff', textShadow: active ? `0 0 80px ${TEAL}80` : i < 2 ? `0 0 40px ${TEAL}30` : 'none', transition: 'text-shadow 0.5s ease', background: i === 2 && active ? `linear-gradient(135deg,${TEAL},${INDIGO})` : 'none', WebkitBackgroundClip: i === 2 && active ? 'text' : 'unset', WebkitTextFillColor: i === 2 && active ? 'transparent' : 'unset' }}>
               {show ? <CountUp value={b.stat} duration={900} key={`${i}-${show}`} /> : b.stat}
             </div>
             <div style={{ fontSize: i === 2 ? 14 : 11, color: i === 2 ? TXT : DIM, fontFamily: 'Sora', textAlign: 'center', maxWidth: 480, letterSpacing: 0.2, fontWeight: i === 2 ? 500 : 400 }}>{b.sub}</div>
@@ -270,7 +268,7 @@ function StatScene({ scene, progress }) {
 /* Scene 2 — Intro Docstribe (p<0.46), then KPI outcomes (p>=0.48) */
 function KPIScene({ scene, progress }) {
   // intro fades out 0.46→0.56, kpis fade in 0.48→0.58
-  // Aligned to word-count timing: VO says "sixty days" at p≈0.51
+  // VO word-count: sentences 1+2 = 25w/48w ≈ p=0.52 → "sixty days" fires at p=0.54
   const introOpacity = progress < 0.46 ? 1 : progress > 0.56 ? 0 : 1 - (progress - 0.46) / 0.10;
   const kpiOpacity   = progress < 0.48 ? 0 : progress > 0.58 ? 1 : (progress - 0.48) / 0.10;
   const kpiBeats = scene.beats.slice(1); // skip first beat (Docstribe) — shown in intro phase
@@ -318,8 +316,8 @@ function KPIScene({ scene, progress }) {
             const active = spot(progress, b.at, b.at + 0.16);
             const c = colors[i];
             return (
-              <div key={i} style={{ background: `linear-gradient(135deg,${c}14,${c}07)`, border: `1px solid ${c}${active ? '55' : show ? '25' : '10'}`, borderRadius: 14, padding: '18px 20px', minWidth: 120, flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6, opacity: show ? 1 : 0, transform: show ? `scale(${active ? 1.07 : 1})` : 'translateY(28px) scale(0.82)', transition: 'all 0.55s cubic-bezier(0.34,1.4,0.64,1)', boxShadow: active ? `0 0 36px ${c}28` : 'none', filter: show && !active ? 'brightness(0.7)' : 'brightness(1)' }}>
-                <div style={{ fontSize: 36, fontWeight: 900, color: c, fontFamily: 'Sora', lineHeight: 1, letterSpacing: -0.5 }}>
+              <div key={i} style={{ background: `linear-gradient(135deg,${c}18,${c}08)`, border: `1px solid ${c}${active ? '65' : show ? '28' : '10'}`, borderRadius: 16, padding: '22px 20px', minWidth: 130, flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8, opacity: show ? 1 : 0, transform: show ? `scale(${active ? 1.09 : 1})` : 'translateY(32px) scale(0.78)', transition: 'all 0.55s cubic-bezier(0.34,1.4,0.64,1)', boxShadow: active ? `0 0 48px ${c}35, 0 8px 32px rgba(0,0,0,0.4)` : '0 2px 12px rgba(0,0,0,0.3)', filter: show && !active ? 'brightness(0.65)' : 'brightness(1)' }}>
+                <div style={{ fontSize: 40, fontWeight: 900, color: c, fontFamily: 'Sora', lineHeight: 1, letterSpacing: -1 }}>
                   {show ? <CountUp value={b.stat} duration={700} key={`k${i}-${show}`} /> : b.stat}
                 </div>
                 <div style={{ width: 22, height: 2, borderRadius: 1, background: c }} />
@@ -341,8 +339,6 @@ function KPIScene({ scene, progress }) {
 
 /* Scene 3 — Cases Workbench: opens with "agentic workforce" card, then encounter rows */
 function CasesScreen({ progress }) {
-  const agentCardShow = progress < 0.14;
-  const workbenchShow = progress >= 0.08;
   const encounters = [
     { init: 'F.H.', tag: 'OPD', dept: 'Endocrinology', dx: 'Type 2 DM + Hypertension', risk: 'HIGH', fin: 'AED 2,450', status: 'CDI Pending', statusCol: AMBER, col: INDIGO, show: 0.10 },
     { init: 'K.A.', tag: 'IPD', dept: 'Respiratory', dx: 'Pneumonia + COPD exacerbation', risk: 'CRITICAL', fin: 'AED 28,500', status: 'PA Approved', statusCol: GREEN, col: TEAL, show: 0.24 },
@@ -353,25 +349,6 @@ function CasesScreen({ progress }) {
   return (
     <ProductShell breadcrumb="Cases Workbench" color={TEAL}>
       <div style={{ padding: '10px 12px', height: '100%', display: 'flex', flexDirection: 'column', gap: 8 }}>
-
-        {/* Agentic workforce opening card — fades out as workbench loads */}
-        {agentCardShow && (
-          <div style={{ position: 'absolute', inset: 0, zIndex: 10, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 16, background: BLUE, padding: 32, animation: progress > 0.08 ? 'dpExitScene 0.5s ease-in both' : 'dpEnterScene 0.5s ease-out both' }}>
-            <div style={{ fontSize: 9, fontWeight: 800, color: `${TEAL}80`, letterSpacing: 3, textTransform: 'uppercase' }}>Docstribe Intelligence</div>
-            <div style={{ fontSize: 22, fontWeight: 900, color: '#fff', textAlign: 'center', lineHeight: 1.3, maxWidth: 480 }}>
-              A skilled <span style={{ color: TEAL }}>AI agentic workforce</span> that listens to every clinical and financial signal
-            </div>
-            <div style={{ fontSize: 11, color: DIM, textAlign: 'center', maxWidth: 420, lineHeight: 1.7 }}>
-              Every patient signal · Every insurer pattern · Every documentation gap —<br />
-              captured, processed, and acted on in real time. <span style={{ color: TEAL, fontWeight: 700 }}>Putting you ahead in the RCM game.</span>
-            </div>
-            <div style={{ display: 'flex', gap: 10, marginTop: 4 }}>
-              {[['📋 Clinical', INDIGO], ['💰 Financial', TEAL], ['🧠 Predictive', PURPLE]].map(([l, c]) => (
-                <div key={l} style={{ fontSize: 9, fontWeight: 700, color: c, background: `${c}16`, border: `1px solid ${c}30`, borderRadius: 20, padding: '5px 14px' }}>{l}</div>
-              ))}
-            </div>
-          </div>
-        )}
 
         {/* Summary strip */}
         <div style={{ display: 'flex', gap: 8 }}>
@@ -534,10 +511,10 @@ function AmbientScreen({ progress }) {
   const opdPhaseColor  = opdListening ? RED : opdStructuring ? AMBER : opdComplete ? GREEN : MUTED;
 
   // IPD phases
-  const ipdListening   = p >= 0.50 && p < 0.70;
-  const ipdStructuring = p >= 0.68 && p < 0.76;
-  const ipdComplete    = p >= 0.74;
-  const ipdPhaseLabel  = ipdListening ? 'LISTENING' : ipdStructuring ? 'STRUCTURING' : ipdComplete ? 'NOTE READY' : p < 0.50 ? 'QUEUED' : 'STANDBY';
+  const ipdListening   = p >= 0.46 && p < 0.68;
+  const ipdStructuring = p >= 0.66 && p < 0.74;
+  const ipdComplete    = p >= 0.72;
+  const ipdPhaseLabel  = ipdListening ? 'LISTENING' : ipdStructuring ? 'STRUCTURING' : ipdComplete ? 'NOTE READY' : p < 0.46 ? 'QUEUED' : 'STANDBY';
   const ipdPhaseColor  = ipdListening ? RED : ipdStructuring ? AMBER : ipdComplete ? GREEN : MUTED;
 
   // OPD transcript lines — appear one at a time
@@ -565,25 +542,25 @@ function AmbientScreen({ progress }) {
 
   // IPD transcript lines
   const ipdLines = [
-    { text: '"Sats ninety one on room air. Bilateral crackles at both bases."', show: 0.52 },
-    { text: 'CRP one forty eight. Temperature thirty eight point six. Chest X-ray: consolidation left base.', show: 0.58 },
-    { text: 'Known COPD — this is pneumonia on top. qSOFA score two, query sepsis.', show: 0.63 },
-    { text: 'Starting Tazocin IV. Sepsis bundle initiated. Respiratory review requested.', show: 0.68 },
+    { text: '"Sats ninety one on room air. Bilateral crackles at both bases."', show: 0.48 },
+    { text: 'CRP one forty eight. Temperature thirty eight point six. Chest X-ray: consolidation left base.', show: 0.54 },
+    { text: 'Known COPD — this is pneumonia on top. qSOFA score two, query sepsis.', show: 0.60 },
+    { text: 'Starting Tazocin IV. Sepsis bundle initiated. Respiratory review requested.', show: 0.65 },
   ];
 
   // IPD AI entities
   const ipdEntities = [
-    { label: 'SpO₂', value: '91% ↓',            col: RED,    show: 0.54 },
-    { label: 'CRP',  value: '148 mg/L ↑',        col: AMBER,  show: 0.60 },
-    { label: 'CXR',  value: 'L-base consolidation', col: INDIGO, show: 0.64 },
-    { label: 'qSOFA', value: 'Score 2 · Sepsis risk', col: PURPLE, show: 0.68 },
+    { label: 'SpO₂', value: '91% ↓',               col: RED,    show: 0.50 },
+    { label: 'CRP',  value: '148 mg/L ↑',           col: AMBER,  show: 0.56 },
+    { label: 'CXR',  value: 'L-base consolidation', col: INDIGO, show: 0.61 },
+    { label: 'qSOFA', value: 'Score 2 · Sepsis risk', col: PURPLE, show: 0.65 },
   ];
 
   // IPD ICD codes
   const ipdCodes = [
-    { code: 'J18.9', desc: 'Pneumonia, unspecified organism',  col: RED,    show: 0.74 },
-    { code: 'J44.1', desc: 'COPD with acute exacerbation',     col: AMBER,  show: 0.79 },
-    { code: 'A41.9', desc: 'Sepsis, unspecified organism',     col: PURPLE, show: 0.83 },
+    { code: 'J18.9', desc: 'Pneumonia, unspecified organism', col: RED,    show: 0.72 },
+    { code: 'J44.1', desc: 'COPD with acute exacerbation',    col: AMBER,  show: 0.77 },
+    { code: 'A41.9', desc: 'Sepsis, unspecified organism',    col: PURPLE, show: 0.82 },
   ];
 
   const sessionLive = p >= 0.06 && p < 0.72;
@@ -713,7 +690,7 @@ function AmbientScreen({ progress }) {
             {/* Live transcript / queued state */}
             <div style={{ background: 'rgba(0,0,0,0.28)', border: `1px solid ${ipdListening ? `${TEAL}40` : BORDER}`, borderRadius: 8, padding: '8px 10px', flexShrink: 0, transition: 'border-color 0.5s' }}>
               <div style={{ fontSize: 7, fontWeight: 700, color: MUTED, letterSpacing: 0.4, marginBottom: 6 }}>
-                {p < 0.50 ? 'NEXT SESSION — WARD ROUND 09:28 GST' : 'LIVE TRANSCRIPT'}
+                {p < 0.46 ? 'NEXT SESSION — WARD ROUND 09:28 GST' : 'LIVE TRANSCRIPT'}
               </div>
               {/* Waveform */}
               <div style={{ display: 'flex', gap: 1.5, alignItems: 'flex-end', height: 14, marginBottom: 7 }}>
@@ -722,7 +699,7 @@ function AmbientScreen({ progress }) {
                 ))}
               </div>
               <div style={{ display: 'flex', flexDirection: 'column', gap: 3, minHeight: 36 }}>
-                {p < 0.50 ? (
+                {p < 0.46 ? (
                   <div style={{ fontSize: 8, color: MUTED, fontStyle: 'italic', lineHeight: 1.45 }}>
                     Ambient session queued · Dr. Farooqi completing ward round...
                   </div>
@@ -740,7 +717,7 @@ function AmbientScreen({ progress }) {
             </div>
 
             {/* AI entity tags */}
-            {p >= 0.54 && (
+            {p >= 0.50 && (
               <div style={{ animation: 'dpEnterScene 0.45s ease-out both', flexShrink: 0 }}>
                 <div style={{ fontSize: 7, fontWeight: 700, color: MUTED, letterSpacing: 0.4, marginBottom: 5 }}>AI-EXTRACTED ENTITIES</div>
                 <div style={{ display: 'flex', flexWrap: 'wrap', gap: 4 }}>
@@ -1067,8 +1044,16 @@ function ClaimScreen({ progress }) {
             )}
           </div>
         </div>
-        <div style={{ textAlign: 'center', fontSize: 9, color: DIM }}>
-          Denial to appeal: <span style={{ color: TEAL, fontWeight: 700 }}>seconds, not weeks</span>
+        <div style={{ display: 'flex', gap: 16, alignItems: 'center', justifyContent: 'center', animation: 'dpBeatIn 0.4s ease both' }}>
+          <div style={{ textAlign: 'center' }}>
+            <div style={{ fontSize: 11, fontWeight: 900, color: RED, fontFamily: 'Sora' }}>3 weeks</div>
+            <div style={{ fontSize: 7, color: MUTED }}>manual chase · without platform</div>
+          </div>
+          <div style={{ fontSize: 18, color: TEAL, fontWeight: 900 }}>→</div>
+          <div style={{ textAlign: 'center' }}>
+            <div style={{ fontSize: 11, fontWeight: 900, color: TEAL, fontFamily: 'Sora' }}>30 seconds</div>
+            <div style={{ fontSize: 7, color: MUTED }}>Docstribe · one click · done</div>
+          </div>
         </div>
       </div>
     </ProductShell>
@@ -1153,12 +1138,11 @@ function TowerScreen({ progress }) {
 /* Scene 11 — Executive Dashboard: 60-day guarantee front and centre */
 function DashboardScreen({ progress }) {
   const guaranteeShow = progress >= 0.04;
-  const kpiTimes = [0.14, 0.28, 0.42, 0.57];
+  const kpiTimes = [0.10, 0.26, 0.44];
   const guaranteeKPIs = [
-    { val: '↓30%', label: 'First-submission denials', sub: 'vs. pre-integration baseline', col: TEAL },
-    { val: '+25%', label: 'Net revenue capture', sub: 'incremental · measurable', col: GREEN },
-    { val: '+0.15', label: 'CMI per discharge', sub: 'complexity-adjusted uplift', col: INDIGO },
-    { val: '32d', label: 'Accounts receivable', sub: 'down from 45 days', col: PURPLE },
+    { val: '↓30%',   label: 'First-submission denials', sub: 'vs. pre-integration baseline', col: TEAL },
+    { val: '+25%',   label: 'Net revenue capture',       sub: 'incremental · measurable',     col: GREEN },
+    { val: '+0.15',  label: 'CMI per discharge',         sub: 'complexity-adjusted uplift',   col: INDIGO },
   ];
   const timelineShow = progress >= 0.68;
   const payorShow = progress >= 0.76;
@@ -1239,10 +1223,18 @@ function DashboardScreen({ progress }) {
 
         {/* Brand close */}
         {brandShow && (
-          <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', animation: 'dpBeatIn 0.9s cubic-bezier(0.34,1.2,0.64,1) both' }}>
-            <div style={{ fontSize: 26, fontWeight: 900, fontFamily: 'Sora', background: `linear-gradient(135deg,${TEAL},${INDIGO})`, WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', letterSpacing: -0.5 }}>Docstribe</div>
-            <div style={{ fontSize: 9, color: DIM, marginTop: 4, textAlign: 'center' }}>One platform · Zero leakage · UAE healthcare</div>
-            <div style={{ fontSize: 10, color: TXT, marginTop: 6, textAlign: 'center', lineHeight: 1.5, maxWidth: 320 }}>A skilled AI agentic workforce — delivering measurable financial outcomes, <span style={{ color: TEAL, fontWeight: 700 }}>guaranteed within 60 days</span></div>
+          <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 8, animation: 'dpBeatIn 0.9s cubic-bezier(0.34,1.2,0.64,1) both' }}>
+            <div style={{ fontSize: 36, fontWeight: 900, fontFamily: 'Sora', background: `linear-gradient(135deg,#fff 30%,${TEAL} 60%,${INDIGO})`, WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', letterSpacing: -1.5, lineHeight: 1 }}>Docstribe</div>
+            <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
+              {['Clinical Intelligence', 'Financial Integrity', 'Zero Leakage'].map((t, i) => (
+                <span key={i} style={{ fontSize: 8, fontWeight: 700, color: [TEAL, INDIGO, GREEN][i], background: `${[TEAL, INDIGO, GREEN][i]}14`, border: `1px solid ${[TEAL, INDIGO, GREEN][i]}30`, borderRadius: 20, padding: '3px 10px' }}>{t}</span>
+              ))}
+            </div>
+            <div style={{ background: `linear-gradient(135deg,${TEAL}1a,${INDIGO}10)`, border: `1px solid ${TEAL}40`, borderRadius: 10, padding: '8px 20px', marginTop: 4 }}>
+              <div style={{ fontSize: 11, fontWeight: 800, color: TXT, textAlign: 'center' }}>
+                Measurable outcomes — <span style={{ color: TEAL }}>contractually guaranteed within 60 days</span>
+              </div>
+            </div>
           </div>
         )}
       </div>
