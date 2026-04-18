@@ -405,7 +405,7 @@ const UAE_DEMO_SCENES = [
   {
     id: 2, timecode: '0:12–0:28', journeyStage: 'outcomes',
     title: 'Outcomes Upfront — The KPI Promise',
-    voText: 'Within sixty days of integration — guaranteed. Thirty percent fewer claim denials on first submission. Twenty-five percent uplift in net revenue capture. A Case Mix Index improvement of zero point fifteen per discharge. Accounts receivable days falling from forty-five to thirty-two. Not projections — contractually committed, auditable outcomes, delivered in two months.',
+    voText: 'Docstribe is a skilled AI agentic workforce — purpose-built for UAE healthcare. It listens to every clinical signal, every financial trigger, and every insurer pattern, then acts on them in real time. The result? Within sixty days of going live — guaranteed: thirty percent fewer claim denials. Twenty-five percent more revenue captured. CMI up by zero point fifteen. Accounts receivable down from forty-five to thirty-two days.',
   },
   {
     id: 3, timecode: '0:28–0:38', journeyStage: 'platform',
