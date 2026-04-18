@@ -206,7 +206,7 @@ function PhaseFlowVisual({ activePhase, visible }) {
 }
 
 // ── Tool: Stats Grid ─────────────────────────────────────────────────────────
-function StatsGrid({ data }) {
+function StatsGrid({ data, progress = 0, playing = false }) {
   const stats = data?.stats || [];
   return (
     <div>
@@ -216,25 +216,35 @@ function StatsGrid({ data }) {
         </div>
       )}
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px' }}>
-        {stats.map(({ label, value, delta, color }, i) => (
-          <div key={i} style={{
-            padding: '11px 13px', borderRadius: '11px',
-            border: `1px solid ${color || '#00cba8'}30`,
-            background: `${color || '#00cba8'}0d`,
-            animation: `rudraFadeIn 0.4s ${i * 0.09}s both ease`,
-          }}>
-            <div style={{ fontSize: '20px', fontWeight: '800', color: color || '#00cba8', fontFamily: 'Sora, sans-serif', letterSpacing: '-0.5px', lineHeight: 1 }}>{value}</div>
-            <div style={{ fontSize: '10px', color: '#475569', marginTop: '3px', lineHeight: '1.3' }}>{label}</div>
-            {delta && <div style={{ fontSize: '9.5px', color: '#4ade80', marginTop: '4px', fontWeight: '700' }}>{delta}</div>}
-          </div>
-        ))}
+        {stats.map(({ label, value, delta, color }, i) => {
+          const state    = getItemState(i, stats.length, progress, playing);
+          const isActive = state === 'active';
+          const isPast   = state === 'past';
+          const c        = color || '#00cba8';
+          return (
+            <div key={i} style={{
+              padding: '11px 13px', borderRadius: '11px',
+              border: `1px solid ${isActive ? c + '60' : c + '30'}`,
+              background: isActive ? `${c}18` : `${c}0d`,
+              boxShadow: isActive ? `0 0 14px ${c}40` : 'none',
+              opacity: playing && state === 'future' ? 0.15 : isPast ? 0.6 : 1,
+              transform: isActive ? 'scale(1.03)' : 'scale(1)',
+              transition: 'all 0.35s ease',
+              animation: !playing ? `rudraFadeIn 0.4s ${i * 0.09}s both ease` : 'none',
+            }}>
+              <div style={{ fontSize: '20px', fontWeight: '800', color: isActive ? c : isPast ? c + 'aa' : c + '55', fontFamily: 'Sora, sans-serif', letterSpacing: '-0.5px', lineHeight: 1, transition: 'color 0.3s ease' }}>{value}</div>
+              <div style={{ fontSize: '10px', color: isActive ? '#94a3b8' : '#475569', marginTop: '3px', lineHeight: '1.3' }}>{label}</div>
+              {delta && <div style={{ fontSize: '9.5px', color: '#4ade80', marginTop: '4px', fontWeight: '700' }}>{delta}</div>}
+            </div>
+          );
+        })}
       </div>
     </div>
   );
 }
 
 // ── Tool: Comparison Table ────────────────────────────────────────────────────
-function ComparisonTable({ data }) {
+function ComparisonTable({ data, progress = 0, playing = false }) {
   const rows = data?.rows || [];
   return (
     <div>
@@ -249,29 +259,37 @@ function ComparisonTable({ data }) {
           <span style={{ fontSize: '9px', color: '#f87171', fontWeight: '700', letterSpacing: '1px', textAlign: 'center' }}>BEFORE</span>
           <span style={{ fontSize: '9px', color: '#4ade80', fontWeight: '700', letterSpacing: '1px', textAlign: 'center' }}>AFTER</span>
         </div>
-        {rows.map((row, i) => (
-          <div key={i} style={{
-            display: 'grid', gridTemplateColumns: '2fr 1fr 1fr',
-            padding: '7px 12px',
-            borderBottom: i < rows.length - 1 ? '1px solid rgba(255,255,255,0.04)' : 'none',
-            animation: `rudraFadeIn 0.35s ${i * 0.07}s both ease`,
-          }}>
-            <span style={{ fontSize: '11px', color: '#94a3b8', lineHeight: '1.3' }}>{row.metric}</span>
-            <span style={{ fontSize: '11px', color: '#f87171', textAlign: 'center', fontWeight: '600' }}>{row.before}</span>
-            <span style={{ fontSize: '11px', color: '#4ade80', textAlign: 'center', fontWeight: '600' }}>{row.after}</span>
-          </div>
-        ))}
+        {rows.map((row, i) => {
+          const state    = getItemState(i, rows.length, progress, playing);
+          const isActive = state === 'active';
+          const isPast   = state === 'past';
+          return (
+            <div key={i} style={{
+              display: 'grid', gridTemplateColumns: '2fr 1fr 1fr',
+              padding: '7px 12px',
+              borderBottom: i < rows.length - 1 ? '1px solid rgba(255,255,255,0.04)' : 'none',
+              background: isActive ? 'rgba(14,165,233,0.06)' : 'transparent',
+              opacity: playing && state === 'future' ? 0.15 : isPast ? 0.6 : 1,
+              transition: 'all 0.35s ease',
+              animation: !playing ? `rudraFadeIn 0.35s ${i * 0.07}s both ease` : 'none',
+            }}>
+              <span style={{ fontSize: '11px', color: isActive ? '#e2e8f0' : '#94a3b8', lineHeight: '1.3' }}>{row.metric}</span>
+              <span style={{ fontSize: '11px', color: '#f87171', textAlign: 'center', fontWeight: '600' }}>{row.before}</span>
+              <span style={{ fontSize: '11px', color: '#4ade80', textAlign: 'center', fontWeight: '600' }}>{row.after}</span>
+            </div>
+          );
+        })}
       </div>
     </div>
   );
 }
 
 // ── Tool: Phase Breakdown ─────────────────────────────────────────────────────
-function PhaseBreakdown({ data }) {
+function PhaseBreakdown({ data, progress = 0, playing = false }) {
   const phaseColors = ['#00cba8', '#4d8aff', '#ff7b4a'];
   const color = phaseColors[data?.phase] || '#00cba8';
   const steps = data?.steps || [];
-  const tags = data?.tags || [];
+  const tags  = data?.tags  || [];
   return (
     <div>
       <div style={{ fontSize: '9px', fontWeight: '700', letterSpacing: '2.5px', color: '#334155', marginBottom: '10px', fontFamily: 'Sora, sans-serif' }}>
@@ -284,12 +302,29 @@ function PhaseBreakdown({ data }) {
           </div>
         )}
         <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', marginBottom: steps.length ? '10px' : 0 }}>
-          {steps.map((step, i) => (
-            <div key={i} style={{ display: 'flex', alignItems: 'flex-start', gap: '8px', animation: `rudraFadeIn 0.3s ${i * 0.07}s both ease` }}>
-              <div style={{ width: '5px', height: '5px', borderRadius: '50%', background: color, marginTop: '5px', flexShrink: 0, boxShadow: `0 0 5px ${color}` }} />
-              <span style={{ fontSize: '11.5px', color: '#cbd5e1', lineHeight: '1.45' }}>{step}</span>
-            </div>
-          ))}
+          {steps.map((step, i) => {
+            const state    = getItemState(i, steps.length, progress, playing);
+            const isActive = state === 'active';
+            const isPast   = state === 'past';
+            return (
+              <div key={i} style={{
+                display: 'flex', alignItems: 'flex-start', gap: '8px',
+                opacity: playing && state === 'future' ? 0.15 : isPast ? 0.6 : 1,
+                transform: isActive ? 'translateX(4px)' : 'translateX(0)',
+                transition: 'all 0.35s ease',
+                animation: !playing ? `rudraFadeIn 0.3s ${i * 0.07}s both ease` : 'none',
+              }}>
+                <div style={{
+                  width: '5px', height: '5px', borderRadius: '50%',
+                  background: isActive ? color : isPast ? color + '88' : color + '30',
+                  marginTop: '5px', flexShrink: 0,
+                  boxShadow: isActive ? `0 0 8px ${color}` : 'none',
+                  transition: 'all 0.3s ease',
+                }} />
+                <span style={{ fontSize: '11.5px', color: isActive ? '#e2e8f0' : '#94a3b8', lineHeight: '1.45', transition: 'color 0.3s ease' }}>{step}</span>
+              </div>
+            );
+          })}
         </div>
         {tags.length > 0 && (
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: '5px', marginTop: '8px', marginBottom: data?.outcome ? '10px' : 0 }}>
@@ -309,7 +344,7 @@ function PhaseBreakdown({ data }) {
 }
 
 // ── Tool: Workflow (step-by-step process) ─────────────────────────────────────
-function WorkflowArtifact({ data }) {
+function WorkflowArtifact({ data, progress = 0, playing = false }) {
   const steps = data?.steps || [];
   return (
     <div>
@@ -319,37 +354,54 @@ function WorkflowArtifact({ data }) {
         </div>
       )}
       <div style={{ display: 'flex', flexDirection: 'column', gap: '0' }}>
-        {steps.map((step, i) => (
-          <div key={i} style={{ display: 'flex', gap: '0', animation: `rudraFadeIn 0.35s ${i * 0.1}s both ease` }}>
-            {/* Left: number + connecting line */}
-            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', width: '32px', flexShrink: 0 }}>
-              <div style={{
-                width: '26px', height: '26px', borderRadius: '50%',
-                background: `${step.color || '#00cba8'}18`,
-                border: `1.5px solid ${step.color || '#00cba8'}50`,
-                display: 'flex', alignItems: 'center', justifyContent: 'center',
-                fontSize: '9px', fontWeight: '800', color: step.color || '#00cba8',
-                fontFamily: 'Sora, sans-serif', flexShrink: 0,
-              }}>{step.num}</div>
-              {i < steps.length - 1 && (
-                <div style={{ width: '1.5px', flex: 1, minHeight: '12px', background: `${step.color || '#00cba8'}25` }} />
-              )}
+        {steps.map((step, i) => {
+          const state = getItemState(i, steps.length, progress, playing);
+          const color = step.color || '#00cba8';
+          const isActive = state === 'active';
+          const isPast   = state === 'past';
+          return (
+            <div key={i} style={{
+              display: 'flex', gap: '0',
+              opacity: state === 'future' ? 0.2 : 1,
+              transition: 'opacity 0.4s ease, transform 0.3s ease',
+              transform: isActive ? 'translateX(3px)' : 'translateX(0)',
+              animation: !playing ? `rudraFadeIn 0.35s ${i * 0.1}s both ease` : 'none',
+            }}>
+              <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', width: '32px', flexShrink: 0 }}>
+                <div style={{
+                  width: '26px', height: '26px', borderRadius: '50%',
+                  background: isActive ? `${color}30` : isPast ? `${color}10` : `${color}08`,
+                  border: `1.5px solid ${isActive ? color : color + '30'}`,
+                  display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  fontSize: '9px', fontWeight: '800', color: isActive ? color : isPast ? color + 'aa' : color + '44',
+                  fontFamily: 'Sora, sans-serif', flexShrink: 0,
+                  boxShadow: isActive ? `0 0 10px ${color}60` : 'none',
+                  transition: 'all 0.4s ease',
+                }}>{step.num}</div>
+                {i < steps.length - 1 && (
+                  <div style={{ width: '1.5px', flex: 1, minHeight: '12px', background: isPast ? `${color}60` : `${color}20`, transition: 'background 0.4s ease' }} />
+                )}
+              </div>
+              <div style={{ paddingLeft: '10px', paddingBottom: i < steps.length - 1 ? '14px' : 0 }}>
+                <div style={{ fontSize: '12px', fontWeight: '700', color: isActive ? color : isPast ? color + 'aa' : '#334155', lineHeight: 1, marginBottom: '3px', transition: 'color 0.3s ease' }}>{step.label}</div>
+                <div style={{ fontSize: '11px', color: isActive ? '#94a3b8' : '#475569', lineHeight: '1.5', transition: 'color 0.3s ease' }}>{step.detail}</div>
+              </div>
             </div>
-            {/* Right: content */}
-            <div style={{ paddingLeft: '10px', paddingBottom: i < steps.length - 1 ? '14px' : 0 }}>
-              <div style={{ fontSize: '12px', fontWeight: '700', color: step.color || '#00cba8', lineHeight: 1, marginBottom: '3px' }}>{step.label}</div>
-              <div style={{ fontSize: '11px', color: '#64748b', lineHeight: '1.5' }}>{step.detail}</div>
-            </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
     </div>
   );
 }
 
 // ── Tool: DRG Delta (before → after DRG with conditions) ──────────────────────
-function DRGDeltaArtifact({ data }) {
+function DRGDeltaArtifact({ data, progress = 0, playing = false }) {
   const conditions = data?.conditions || [];
+  // Sequence: baseline(0) → conditions(1..N) → optimized(N+1)
+  const totalSlots = conditions.length + 2;
+  const baseState  = getItemState(0, totalSlots, progress, playing);
+  const optState   = getItemState(totalSlots - 1, totalSlots, progress, playing);
+
   return (
     <div>
       {data?.title && (
@@ -359,38 +411,64 @@ function DRGDeltaArtifact({ data }) {
       )}
       {/* DRG before → after */}
       <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '12px' }}>
-        <div style={{ flex: 1, padding: '10px 12px', borderRadius: '10px', background: 'rgba(248,113,113,0.06)', border: '1px solid rgba(248,113,113,0.2)' }}>
+        {/* Baseline */}
+        <div style={{
+          flex: 1, padding: '10px 12px', borderRadius: '10px',
+          background: baseState === 'active' ? 'rgba(248,113,113,0.12)' : 'rgba(248,113,113,0.06)',
+          border: `1px solid ${baseState === 'active' ? 'rgba(248,113,113,0.5)' : 'rgba(248,113,113,0.2)'}`,
+          boxShadow: baseState === 'active' ? '0 0 14px rgba(248,113,113,0.3)' : 'none',
+          opacity: playing && baseState === 'future' ? 0.2 : 1,
+          transition: 'all 0.4s ease',
+        }}>
           <div style={{ fontSize: '8px', fontWeight: '700', color: 'rgba(248,113,113,0.7)', letterSpacing: '1.5px', marginBottom: '4px' }}>BASELINE</div>
           <div style={{ fontSize: '13px', fontWeight: '800', color: '#f87171', fontFamily: 'Sora, sans-serif' }}>{data?.baseline?.drg}</div>
           <div style={{ fontSize: '10px', color: '#94a3b8', marginTop: '2px', lineHeight: '1.3' }}>{data?.baseline?.label}</div>
           <div style={{ fontSize: '15px', fontWeight: '800', color: '#cbd5e1', marginTop: '5px', fontFamily: 'Sora, sans-serif' }}>{data?.baseline?.value}</div>
         </div>
         <div style={{ fontSize: '18px', color: '#334155' }}>→</div>
-        <div style={{ flex: 1, padding: '10px 12px', borderRadius: '10px', background: 'rgba(0,203,168,0.08)', border: '1.5px solid rgba(0,203,168,0.3)' }}>
+        {/* Optimized */}
+        <div style={{
+          flex: 1, padding: '10px 12px', borderRadius: '10px',
+          background: optState === 'active' ? 'rgba(0,203,168,0.14)' : 'rgba(0,203,168,0.08)',
+          border: `${optState === 'active' ? '1.5px' : '1px'} solid ${optState === 'active' ? 'rgba(0,203,168,0.6)' : 'rgba(0,203,168,0.3)'}`,
+          boxShadow: optState === 'active' ? '0 0 18px rgba(0,203,168,0.4)' : 'none',
+          opacity: playing && optState === 'future' ? 0.2 : 1,
+          transition: 'all 0.4s ease',
+        }}>
           <div style={{ fontSize: '8px', fontWeight: '700', color: 'rgba(0,203,168,0.8)', letterSpacing: '1.5px', marginBottom: '4px' }}>OPTIMIZED</div>
           <div style={{ fontSize: '13px', fontWeight: '800', color: '#00cba8', fontFamily: 'Sora, sans-serif' }}>{data?.optimized?.drg}</div>
           <div style={{ fontSize: '10px', color: '#94a3b8', marginTop: '2px', lineHeight: '1.3' }}>{data?.optimized?.label}</div>
           <div style={{ fontSize: '15px', fontWeight: '800', color: '#4ade80', marginTop: '5px', fontFamily: 'Sora, sans-serif' }}>{data?.optimized?.value}</div>
         </div>
       </div>
-      {/* Conditions that caused the shift */}
+      {/* Conditions */}
       {conditions.length > 0 && (
         <div>
           <div style={{ fontSize: '8.5px', fontWeight: '700', color: '#475569', letterSpacing: '1.5px', marginBottom: '6px' }}>CONDITIONS DOCUMENTED</div>
-          {conditions.map((c, i) => (
-            <div key={i} style={{
-              display: 'flex', justifyContent: 'space-between', alignItems: 'center',
-              padding: '6px 10px', borderRadius: '7px', marginBottom: '4px',
-              background: 'rgba(0,203,168,0.04)', border: '1px solid rgba(0,203,168,0.12)',
-              animation: `rudraFadeIn 0.3s ${i * 0.08}s both ease`,
-            }}>
-              <div>
-                <div style={{ fontSize: '11px', fontWeight: '600', color: '#cbd5e1' }}>{c.name}</div>
-                <div style={{ fontSize: '9.5px', color: '#475569' }}>{c.source}</div>
+          {conditions.map((c, i) => {
+            const cState = getItemState(i + 1, totalSlots, progress, playing);
+            const isActive = cState === 'active';
+            const isPast   = cState === 'past';
+            return (
+              <div key={i} style={{
+                display: 'flex', justifyContent: 'space-between', alignItems: 'center',
+                padding: '6px 10px', borderRadius: '7px', marginBottom: '4px',
+                background: isActive ? 'rgba(0,203,168,0.1)' : 'rgba(0,203,168,0.04)',
+                border: `1px solid ${isActive ? 'rgba(0,203,168,0.35)' : 'rgba(0,203,168,0.12)'}`,
+                boxShadow: isActive ? '0 0 10px rgba(0,203,168,0.2)' : 'none',
+                opacity: playing && cState === 'future' ? 0.15 : isPast ? 0.6 : 1,
+                transform: isActive ? 'translateX(3px)' : 'translateX(0)',
+                transition: 'all 0.35s ease',
+                animation: !playing ? `rudraFadeIn 0.3s ${i * 0.08}s both ease` : 'none',
+              }}>
+                <div>
+                  <div style={{ fontSize: '11px', fontWeight: '600', color: isActive ? '#e2e8f0' : '#cbd5e1' }}>{c.name}</div>
+                  <div style={{ fontSize: '9.5px', color: '#475569' }}>{c.source}</div>
+                </div>
+                <div style={{ fontSize: '12px', fontWeight: '800', color: isActive ? '#4ade80' : '#4ade8088', fontFamily: 'Sora, sans-serif', flexShrink: 0, marginLeft: '8px' }}>{c.delta}</div>
               </div>
-              <div style={{ fontSize: '12px', fontWeight: '800', color: '#4ade80', fontFamily: 'Sora, sans-serif', flexShrink: 0, marginLeft: '8px' }}>{c.delta}</div>
-            </div>
-          ))}
+            );
+          })}
           {data?.totalDelta && (
             <div style={{ marginTop: '8px', padding: '8px 12px', borderRadius: '9px', background: 'rgba(74,222,128,0.08)', border: '1px solid rgba(74,222,128,0.25)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
               <span style={{ fontSize: '11px', fontWeight: '700', color: '#94a3b8' }}>Total DRG Uplift</span>
@@ -404,7 +482,7 @@ function DRGDeltaArtifact({ data }) {
 }
 
 // ── Tool: Lifecycle (full H&P → discharge overview) ───────────────────────────
-function LifecycleArtifact({ data }) {
+function LifecycleArtifact({ data, progress = 0, playing = false }) {
   const phases = data?.phases || [];
   return (
     <div>
@@ -414,43 +492,74 @@ function LifecycleArtifact({ data }) {
         </div>
       )}
       <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-        {phases.map((phase, i) => (
-          <div key={i} style={{ display: 'flex', gap: '0', animation: `rudraFadeIn 0.4s ${i * 0.12}s both ease` }}>
-            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', width: '30px', flexShrink: 0 }}>
-              <div style={{ width: '8px', height: '8px', borderRadius: '50%', background: phase.color, boxShadow: `0 0 8px ${phase.color}`, flexShrink: 0 }} />
-              {i < phases.length - 1 && <div style={{ width: '1.5px', flex: 1, minHeight: '14px', background: `${phase.color}35`, marginTop: '3px' }} />}
-            </div>
-            <div style={{ paddingLeft: '8px', paddingBottom: i < phases.length - 1 ? '10px' : 0, flex: 1 }}>
-              <div style={{ fontSize: '11.5px', fontWeight: '700', color: phase.color, marginBottom: '5px', lineHeight: 1 }}>{phase.label}</div>
-              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '4px' }}>
-                {(phase.steps || []).map((step, j) => (
-                  <span key={j} style={{
-                    fontSize: '9px', padding: '2px 7px', borderRadius: '20px',
-                    background: `${phase.color}12`, border: `1px solid ${phase.color}25`,
-                    color: phase.color, fontWeight: '500',
-                  }}>{step}</span>
-                ))}
+        {phases.map((phase, i) => {
+          const state    = getItemState(i, phases.length, progress, playing);
+          const isActive = state === 'active';
+          const isPast   = state === 'past';
+          return (
+            <div key={i} style={{
+              display: 'flex', gap: '0',
+              opacity: state === 'future' && playing ? 0.15 : 1,
+              transition: 'opacity 0.4s ease',
+              animation: !playing ? `rudraFadeIn 0.4s ${i * 0.12}s both ease` : 'none',
+            }}>
+              <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', width: '30px', flexShrink: 0 }}>
+                <div style={{
+                  width: '10px', height: '10px', borderRadius: '50%',
+                  background: isActive ? phase.color : isPast ? phase.color + '88' : phase.color + '30',
+                  boxShadow: isActive ? `0 0 12px ${phase.color}, 0 0 24px ${phase.color}60` : 'none',
+                  flexShrink: 0,
+                  transition: 'all 0.4s ease',
+                }} />
+                {i < phases.length - 1 && <div style={{ width: '1.5px', flex: 1, minHeight: '14px', background: isPast ? `${phase.color}60` : `${phase.color}25`, marginTop: '3px', transition: 'background 0.4s ease' }} />}
+              </div>
+              <div style={{ paddingLeft: '8px', paddingBottom: i < phases.length - 1 ? '10px' : 0, flex: 1 }}>
+                <div style={{ fontSize: '11.5px', fontWeight: '700', color: isActive ? phase.color : isPast ? phase.color + 'aa' : '#334155', marginBottom: '5px', lineHeight: 1, transition: 'color 0.3s ease' }}>{phase.label}</div>
+                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '4px' }}>
+                  {(phase.steps || []).map((step, j) => (
+                    <span key={j} style={{
+                      fontSize: '9px', padding: '2px 7px', borderRadius: '20px',
+                      background: isActive ? `${phase.color}20` : `${phase.color}08`,
+                      border: `1px solid ${isActive ? phase.color + '50' : phase.color + '18'}`,
+                      color: isActive ? phase.color : phase.color + '55',
+                      fontWeight: isActive ? '600' : '400',
+                      transition: 'all 0.3s ease',
+                    }}>{step}</span>
+                  ))}
+                </div>
               </div>
             </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
     </div>
   );
 }
 
 // ── Tool router — renders the right component from AI tool call ────────────────
-function ToolOutput({ tool }) {
+function ToolOutput({ tool, progress = 0, playing = false }) {
   if (!tool?.type) return null;
   const d = tool.data;
   if (!d) return null;
-  if (tool.type === 'workflow')          return <WorkflowArtifact  data={d} />;
-  if (tool.type === 'drg_delta')         return <DRGDeltaArtifact  data={d} />;
-  if (tool.type === 'lifecycle')         return <LifecycleArtifact data={d} />;
-  if (tool.type === 'stats_grid')        return <StatsGrid         data={d} />;
-  if (tool.type === 'comparison_table')  return <ComparisonTable   data={d} />;
-  if (tool.type === 'phase_breakdown')   return <PhaseBreakdown    data={d} />;
+  const p = { progress, playing };
+  if (tool.type === 'workflow')          return <WorkflowArtifact  data={d} {...p} />;
+  if (tool.type === 'drg_delta')         return <DRGDeltaArtifact  data={d} {...p} />;
+  if (tool.type === 'lifecycle')         return <LifecycleArtifact data={d} {...p} />;
+  if (tool.type === 'stats_grid')        return <StatsGrid         data={d} {...p} />;
+  if (tool.type === 'comparison_table')  return <ComparisonTable   data={d} {...p} />;
+  if (tool.type === 'phase_breakdown')   return <PhaseBreakdown    data={d} {...p} />;
   return null;
+}
+
+// ── Audio-sync helper — determines how each artifact item should render ─────────
+// i: item index, total: total items, progress: 0–1 audio progress, playing: bool
+function getItemState(i, total, progress, playing) {
+  if (!playing || progress <= 0) return 'idle';
+  const start = i / total;
+  const end   = (i + 1) / total;
+  if (progress >= end)   return 'past';
+  if (progress >= start) return 'active';
+  return 'future';
 }
 
 // ── Role selection step ───────────────────────────────────────────────────────
@@ -603,7 +712,7 @@ function GeneratingStep() {
 }
 
 // ── Individual chat message (RUDRA or user) ───────────────────────────────────
-function ChatMessage({ msg, isCurrentlyPlaying, words, wordIndex }) {
+function ChatMessage({ msg, isCurrentlyPlaying, words, wordIndex, analyserRef, progress }) {
   if (msg.role === 'user') {
     return (
       <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: '16px' }}>
@@ -655,11 +764,18 @@ function ChatMessage({ msg, isCurrentlyPlaying, words, wordIndex }) {
         <div style={{
           marginBottom: '8px', padding: '14px',
           borderRadius: '14px',
-          border: '1px solid rgba(14,165,233,0.1)',
+          border: `1px solid ${isCurrentlyPlaying ? 'rgba(14,165,233,0.25)' : 'rgba(14,165,233,0.1)'}`,
           background: 'rgba(0,0,0,0.28)',
           animation: 'rudraFadeIn 0.4s ease',
+          boxShadow: isCurrentlyPlaying ? '0 0 20px rgba(14,165,233,0.08)' : 'none',
+          transition: 'border-color 0.4s ease, box-shadow 0.4s ease',
         }}>
-          <ToolOutput tool={msg.visual} />
+          {isCurrentlyPlaying && (
+            <div style={{ marginBottom: '10px' }}>
+              <EQCanvas analyserRef={analyserRef} isPlaying={isCurrentlyPlaying} />
+            </div>
+          )}
+          <ToolOutput tool={msg.visual} progress={progress} playing={isCurrentlyPlaying} />
         </div>
       )}
 
@@ -796,8 +912,13 @@ function PlayingStep({
 
       {/* ── Tour visual (phase flow — separate from chat messages) ── */}
       {isTour && toolOutput && (
-        <div style={{ margin: '10px 20px 0', padding: '14px', borderRadius: '14px', flexShrink: 0, border: '1px solid rgba(14,165,233,0.1)', background: 'rgba(0,0,0,0.28)' }}>
-          <ToolOutput tool={toolOutput} />
+        <div style={{ margin: '10px 20px 0', padding: '14px', borderRadius: '14px', flexShrink: 0, border: `1px solid ${isPlaying ? 'rgba(14,165,233,0.25)' : 'rgba(14,165,233,0.1)'}`, background: 'rgba(0,0,0,0.28)', transition: 'border-color 0.4s ease' }}>
+          {isPlaying && (
+            <div style={{ marginBottom: '10px' }}>
+              <EQCanvas analyserRef={analyserRef} isPlaying={isPlaying} />
+            </div>
+          )}
+          <ToolOutput tool={toolOutput} progress={progress} playing={isPlaying} />
         </div>
       )}
 
@@ -813,6 +934,8 @@ function PlayingStep({
             isCurrentlyPlaying={isPlaying && i === lastAssistantIdx}
             words={i === lastAssistantIdx ? words : undefined}
             wordIndex={wordIndex}
+            analyserRef={analyserRef}
+            progress={isPlaying && i === lastAssistantIdx ? progress : 0}
           />
         ))}
 
@@ -1217,26 +1340,28 @@ export default function ExplainerAgent() {
   const fetchRoleGreeting = useCallback(async (roleId) => {
     setSelectedRole(roleId);
     setStep('generating');
-    const roleLabel = ROLES.find(r => r.id === roleId)?.label || roleId;
+
+    const greetText = `Welcome! I am Rudra, and I can answer most of your questions about Dynamic DRG Intelligence. How may I help you today?`;
 
     try {
-      const res = await fetch('/api/role-greeting', {
+      // Generate TTS for the static greeting in parallel with no artifact needed
+      const res = await fetch('/api/tts', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ role: roleLabel }),
+        body: JSON.stringify({ text: greetText }),
       });
-      if (!res.ok) throw new Error(`HTTP ${res.status}`);
-      const { text, audio, artifact } = await res.json();
-      briefingTextRef.current = text;
-      setBriefingText(text);
+      const { audio } = res.ok ? await res.json() : { audio: null };
+      briefingTextRef.current = greetText;
+      setBriefingText(greetText);
       setBriefingAudio(audio);
-      if (artifact) setToolOutput(artifact);
-      // Append role greeting as new RUDRA message (after intro)
-      setChatMessages(prev => [...prev, { role: 'assistant', content: text, audio, visual: artifact || null }]);
+      setChatMessages(prev => [...prev, { role: 'assistant', content: greetText, audio, visual: null }]);
       setStep('playing');
-      setTimeout(() => playAudio(audio), 80);
+      if (audio) setTimeout(() => playAudio(audio), 80);
     } catch (err) {
-      console.error('Role greeting failed:', err);
+      console.error('Role greeting TTS failed:', err);
+      briefingTextRef.current = greetText;
+      setBriefingText(greetText);
+      setChatMessages(prev => [...prev, { role: 'assistant', content: greetText, audio: null, visual: null }]);
       setStep('playing');
     }
   }, [playAudio]);
@@ -1245,6 +1370,9 @@ export default function ExplainerAgent() {
   const sendFollowUp = useCallback(async () => {
     const trimmed = chatInput.trim();
     if (!trimmed || chatLoading) return;
+    // Stop any playing audio immediately — user is taking over
+    stopAudio();
+    onAudioEndRef.current = null;
     setChatInput('');
 
     // Detect tour intent — trigger visual guided tour instead of text response
@@ -1357,6 +1485,10 @@ export default function ExplainerAgent() {
           from { opacity: 0; transform: translateY(4px); }
           to   { opacity: 1; transform: translateY(0); }
         }
+        @keyframes pulse {
+          0%, 100% { opacity: 1; transform: scale(1); }
+          50%       { opacity: 0.4; transform: scale(1.5); }
+        }
         .rudra-card  { transform: translateY(0); }
         .rudra-card:hover  { border-color: rgba(14,165,233,0.45) !important; background: rgba(14,165,233,0.07) !important; transform: translateY(-2px) !important; }
         .rudra-chip  { transform: translateY(0); }
@@ -1463,32 +1595,104 @@ export default function ExplainerAgent() {
             {/* Step content — fills remaining panel height */}
             <div style={{ flex: 1, minHeight: 0, display: 'flex', flexDirection: 'column', overflowY: step === 'playing' ? 'hidden' : 'auto' }}>
             {step === 'intro' && (
-              <div style={{ flex: 1, minHeight: 0, display: 'flex', flexDirection: 'column', padding: '16px 20px' }}>
-                {/* Intro artifact — lifecycle shown large */}
-                {toolOutput && (
-                  <div style={{ padding: '16px', borderRadius: '14px', border: '1px solid rgba(14,165,233,0.1)', background: 'rgba(0,0,0,0.28)', marginBottom: '12px', flex: 1, overflowY: 'auto' }}>
-                    <ToolOutput tool={toolOutput} />
-                  </div>
-                )}
-                {/* EQ + karaoke text */}
+              <div style={{ flex: 1, minHeight: 0, display: 'flex', flexDirection: 'column', padding: '16px 20px', gap: '12px' }}>
+
+                {/* ── Outcome cards — highlight in sequence with audio ── */}
+                {(() => {
+                  // 3 paragraphs map to 3 progress bands
+                  // Para 1 (gap)    0.00 – 0.38
+                  // Para 2 (fix)    0.38 – 0.68
+                  // Para 3 (result) 0.68 – 1.00
+                  const band = progress < 0.38 ? 0 : progress < 0.68 ? 1 : 2;
+                  const spoken = progress > 0.01; // audio has started
+
+                  const CARDS = [
+                    {
+                      icon: '⚠️',
+                      stat: '$8–14M',
+                      label: 'Revenue lost per hospital / year',
+                      sub: 'Physician ↔ grouper language gap',
+                      color: '#f87171',
+                      glow: 'rgba(248,113,113,0.35)',
+                      border: 'rgba(248,113,113,0.5)',
+                    },
+                    {
+                      icon: '⚡',
+                      stat: 'Day 0 → 24h → DC',
+                      label: 'Three-point DRG intervention',
+                      sub: 'H&P · Rounding · Discharge lock',
+                      color: '#38bdf8',
+                      glow: 'rgba(56,189,248,0.35)',
+                      border: 'rgba(56,189,248,0.5)',
+                    },
+                    {
+                      icon: '✅',
+                      stat: '99% · +0.05 · +10%',
+                      label: 'Clean claim · CMI uplift · Charges',
+                      sub: 'Guaranteed by outcomes',
+                      color: '#4ade80',
+                      glow: 'rgba(74,222,128,0.35)',
+                      border: 'rgba(74,222,128,0.5)',
+                    },
+                  ];
+
+                  return (
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', flex: 1 }}>
+                      {CARDS.map((c, i) => {
+                        const isActive = spoken && band === i;
+                        const isPast   = spoken && band > i;
+                        return (
+                          <div key={i} style={{
+                            borderRadius: '12px',
+                            border: `1px solid ${isActive ? c.border : isPast ? 'rgba(255,255,255,0.08)' : 'rgba(255,255,255,0.04)'}`,
+                            background: isActive
+                              ? `radial-gradient(ellipse at left, ${c.glow} 0%, rgba(0,0,0,0.5) 70%)`
+                              : isPast ? 'rgba(255,255,255,0.03)' : 'rgba(0,0,0,0.2)',
+                            padding: '10px 14px',
+                            display: 'flex', alignItems: 'center', gap: '12px',
+                            transition: 'all 0.4s ease',
+                            transform: isActive ? 'scale(1.02)' : 'scale(1)',
+                            boxShadow: isActive ? `0 0 18px ${c.glow}` : 'none',
+                            opacity: !spoken ? 0.35 : isPast ? 0.5 : 1,
+                          }}>
+                            <div style={{ fontSize: '20px', flexShrink: 0 }}>{c.icon}</div>
+                            <div style={{ flex: 1, minWidth: 0 }}>
+                              <div style={{
+                                fontSize: '15px', fontWeight: 700, letterSpacing: '-0.3px',
+                                color: isActive ? c.color : isPast ? '#64748b' : '#334155',
+                                transition: 'color 0.3s ease',
+                                fontFamily: 'monospace',
+                              }}>{c.stat}</div>
+                              <div style={{ fontSize: '11px', color: isActive ? '#cbd5e1' : '#475569', marginTop: '1px' }}>{c.label}</div>
+                              <div style={{ fontSize: '10px', color: isActive ? '#64748b' : '#1e293b', marginTop: '1px' }}>{c.sub}</div>
+                            </div>
+                            {isActive && (
+                              <div style={{
+                                width: '6px', height: '6px', borderRadius: '50%',
+                                background: c.color,
+                                boxShadow: `0 0 8px ${c.color}`,
+                                animation: 'pulse 1s infinite',
+                                flexShrink: 0,
+                              }} />
+                            )}
+                          </div>
+                        );
+                      })}
+                    </div>
+                  );
+                })()}
+
+                {/* ── EQ visualizer ── */}
                 <div style={{ flexShrink: 0 }}>
-                  <div style={{ marginBottom: '8px' }}>
-                    <EQCanvas analyserRef={analyserRef} isPlaying={isPlaying} />
-                  </div>
-                  <div style={{ fontSize: '12px', color: '#475569', lineHeight: '1.7', maxHeight: '80px', overflow: 'hidden' }}>
-                    {briefingText.split(' ').map((word, i) => (
-                      <span key={i} style={{
-                        color: i <= wordIndex ? '#94a3b8' : '#1e3a5f',
-                        transition: 'color 0.1s ease',
-                      }}>{word}{' '}</span>
-                    ))}
-                  </div>
+                  <EQCanvas analyserRef={analyserRef} isPlaying={isPlaying} />
                 </div>
-                <button onClick={() => setStep('who-are-you')} style={{
-                  marginTop: '12px', alignSelf: 'flex-end',
+
+                {/* ── Skip ── */}
+                <button onClick={() => { stopAudio(); onAudioEndRef.current = null; setStep('who-are-you'); }} style={{
+                  alignSelf: 'flex-end', flexShrink: 0,
                   background: 'rgba(14,165,233,0.08)', border: '1px solid rgba(14,165,233,0.2)',
                   color: '#38bdf8', fontSize: '12px', padding: '7px 16px', borderRadius: '8px',
-                  cursor: 'pointer', flexShrink: 0,
+                  cursor: 'pointer',
                 }}>
                   Skip intro →
                 </button>

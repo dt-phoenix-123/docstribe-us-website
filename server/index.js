@@ -27,8 +27,8 @@ PERSONA:
 - Natural, direct — like a trusted revenue integrity advisor who respects the visitor's time
 - Never sound like a call center script or a product brochure read aloud
 - Never use hollow phrases like "absolutely!", "great question!", "certainly!"
-- When explaining processes, be specific and thorough — walk through the mechanism, the clinical signal, and the revenue impact
-- Always end with a natural conversation hook — a question, or an offer to go deeper on a specific phase
+- Be specific and data-forward — name the mechanism, name the number, stop
+- One idea per response. Say it sharp, say it once, then invite the next question
 
 CORE NARRATIVE (lead with this when relevant):
 "Documentation AI is deployed. Denial AI is deployed against you. Revenue integrity AI — the layer that converts clinical documentation into the correct DRG — is what's missing. That's exactly what Docstribe delivers."
@@ -45,19 +45,20 @@ ${pageContext || 'Visitor is on the Docstribe Dynamic DRG Intelligence website.'
 
 CONVERSATION RULES:
 1. Lead with the DRG gap narrative when someone asks what Docstribe does
-2. When explaining the DRG lifecycle, walk through phases: H&P → Daily Rounding → LOS Monitor → Discharge → Coding — be specific about what Docstribe does at each phase
-3. When someone asks about CDI: explain Day 0 queries, 24h DRG refresh, physician pattern learning
-4. When someone asks about the pilot: explain the 4-week structure — Epic connect, live charts, DRG accuracy comparison, quantified delta
-5. When someone asks about pricing: zero cost pilot, pay only on measurable financial improvement
-6. When someone is skeptical: use specific proof — Day 0 CDI queries catch what Day 3 misses, discharge cross-reference prevents 40–60% value loss
-7. When someone asks for a demo or meeting: tell them to email akash@docstribe.com or rishav@docstribe.com
-8. If you don't know something: say "I'd connect you with our team for that — they'll have the specifics"
+2. When explaining the DRG lifecycle, name the phase, state what Docstribe does, state the financial impact — then stop
+3. When someone asks about CDI: Day 0 queries, 24h DRG refresh, physician pattern learning — one crisp point each
+4. When someone asks about the pilot: 4 weeks, Epic connect, DRG delta measured, zero cost
+5. When someone asks about pricing: zero cost pilot, outcome-based only
+6. When someone is skeptical: one sharp proof point with a number, then offer to go deeper
+7. When someone asks for a demo or meeting: akash@docstribe.com or rishav@docstribe.com
+8. If you don't know something: "I'd connect you with our team for that"
 9. NEVER fabricate features, metrics, or case study details not in the knowledge base
 
 RESPONSE FORMAT:
-Plain conversational text only. No markdown headers, no bullet lists, no asterisks.
-Speak like a human, not like a document.
-Explain processes fully — don't truncate your answer mid-thought. If a process has multiple steps, walk through all of them.
+3–5 sentences maximum. Every sentence must carry a fact, a mechanism, or a number — no filler.
+Plain conversational text. No markdown, no bullets, no asterisks.
+Lead with the sharpest point. End with one question or offer to go deeper — not both.
+If the answer needs more than 5 sentences, it means you're covering too much — pick the most important thing and say that.
 `.trim();
 
 // ── PCM → WAV conversion ───────────────────────────────────────────────────────
@@ -291,28 +292,62 @@ app.post('/api/greet', async (req, res) => {
   }
 });
 
-// ── /api/intro ────────────────────────────────────────────────────────────────
-// Powerful opening statement played immediately on widget open — no LLM needed
-app.post('/api/intro', async (req, res) => {
-  const introText = `Here's the problem no ambient AI has solved. The physician writes for clinical communication. The DRG grouper reads for financial classification. That gap — between what the doctor documents and what the payer pays — is where hospitals lose billions every year. Forty to sixty percent of DRG revenue evaporates at the discharge summary alone. Conditions treated but never listed. Diagnoses confirmed but never formally documented. Docstribe is the AI that sits exactly in that gap. Reading every H&P the moment it is signed. Recomputing the DRG every twenty-four hours on every new clinical signal. Firing CDI queries on Day 0, not Day 3 when the physician has already moved on. And at discharge, cross-referencing the entire chart — every note, every consult, every lab result — to lock the final DRG before the claim drops. The result: ninety-nine percent clean claim rate, point-zero-five CMI uplift per discharge, ten percent more charge capture. That is Dynamic DRG Intelligence. Live across a hundred-plus hospitals. Guaranteed by outcomes.`;
-
-  const artifact = {
-    type: 'lifecycle',
-    data: {
-      title: 'Dynamic DRG Intelligence',
-      phases: [
-        { label: 'H&P & Day 0 CDI',   color: '#00cba8', steps: ['H&P ingested within minutes', 'Baseline DRG computed via grouper', 'CDI queries fired Day 0 — not Day 3', 'ICD-10 extraction & MDC mapping'] },
-        { label: 'Daily Rounding',     color: '#4d8aff', steps: ['DRG recomputed every 24 hours', 'Labs mapped to undocumented diagnoses', 'LOS paradox detection vs. GMLOS', 'Revenue delta tracked per signal'] },
-        { label: 'Discharge & Coding', color: '#ff7b4a', steps: ['Entire chart cross-referenced', 'Omitted diagnoses surfaced', 'Final DRG locked pre-submission', 'Pre-bill defense brief generated'] },
-      ],
-    },
-  };
-
+// ── /api/tts — lightweight TTS-only endpoint ──────────────────────────────────
+app.post('/api/tts', async (req, res) => {
+  const { text } = req.body;
+  if (!text) return res.status(400).json({ error: 'text required' });
   try {
-    const audio = await generateAudio(introText);
-    res.json({ text: introText, audio, artifact });
+    const audio = await generateAudio(text);
+    res.json({ audio });
   } catch (err) {
-    res.json({ text: introText, audio: null, artifact });
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// ── Static intro — pre-generated at startup ────────────────────────────────────
+const INTRO_TEXT = `Physicians document for clinical care. Payers pay based on DRG codes. That gap costs your hospital eight to fourteen million dollars a year — and payer AI is already exploiting it.
+
+Docstribe fixes it. DRG computed at H&P. Recomputed every twenty-four hours. Locked at discharge before the claim drops.
+
+Ninety-nine percent clean claim rate. Point-zero-five CMI uplift. Guaranteed by outcomes. That is Dynamic DRG Intelligence.`;
+
+const INTRO_ARTIFACT = {
+  type: 'lifecycle',
+  data: {
+    title: 'Dynamic DRG Intelligence',
+    phases: [
+      { label: 'H&P & Day 0 CDI',   color: '#00cba8', steps: ['H&P ingested within minutes', 'Baseline DRG computed via grouper', 'CDI queries fired Day 0 — not Day 3', 'ICD-10 extraction & MDC mapping'] },
+      { label: 'Daily Rounding',     color: '#4d8aff', steps: ['DRG recomputed every 24 hours', 'Labs mapped to undocumented diagnoses', 'LOS paradox detection vs. GMLOS', 'Revenue delta tracked per signal'] },
+      { label: 'Discharge & Coding', color: '#ff7b4a', steps: ['Entire chart cross-referenced', 'Omitted diagnoses surfaced', 'Final DRG locked pre-submission', 'Pre-bill defense brief generated'] },
+    ],
+  },
+};
+
+// Pre-generate intro audio once at startup so FAB click is instant
+let cachedIntroAudio = null;
+(async () => {
+  try {
+    console.log('🎙️  Pre-generating intro audio...');
+    cachedIntroAudio = await generateAudio(INTRO_TEXT);
+    console.log('✅  Intro audio cached and ready.');
+  } catch (err) {
+    console.warn('⚠️  Intro audio pre-generation failed, will generate on demand:', err.message);
+  }
+})();
+
+// ── /api/intro ────────────────────────────────────────────────────────────────
+app.post('/api/intro', async (req, res) => {
+  // Serve cached audio instantly — no wait on click
+  if (cachedIntroAudio) {
+    return res.json({ text: INTRO_TEXT, audio: cachedIntroAudio, artifact: INTRO_ARTIFACT });
+  }
+  // Fallback: generate on demand if cache missed (e.g. startup TTS failed)
+  try {
+    const audio = await generateAudio(INTRO_TEXT);
+    cachedIntroAudio = audio; // cache for next time
+    res.json({ text: INTRO_TEXT, audio, artifact: INTRO_ARTIFACT });
+  } catch (err) {
+    res.json({ text: INTRO_TEXT, audio: null, artifact: INTRO_ARTIFACT });
   }
 });
 
