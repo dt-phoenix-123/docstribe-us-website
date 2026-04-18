@@ -450,7 +450,7 @@ const UAE_DEMO_SCENES = [
   {
     id: 11, timecode: '2:15–2:30', journeyStage: 'dashboard',
     title: 'One Platform. Zero Leakage.',
-    voText: 'Everything your board needs in one view. Thirty percent fewer denials. Twenty-five percent more revenue captured. CMI up by zero point fifteen. Accounts receivable at thirty-two days. Zero leakage. These outcomes are guaranteed within sixty days of going live. One platform. Docstribe. arcus@docstribe.com — let\'s begin.',
+    voText: 'Everything your board needs in one view. Thirty percent fewer denials. Twenty-five percent more revenue captured. CMI up by zero point fifteen. Accounts receivable at thirty-two days. Zero leakage. These outcomes are guaranteed within sixty days of going live. One platform. Docstribe.',
   },
 ];
 
