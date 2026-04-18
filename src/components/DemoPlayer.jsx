@@ -94,8 +94,8 @@ const SCENES = [
     vo: 'In UAE hospitals, twelve to eighteen percent of claims are denied first-pass — sixty to seventy percent preventably. Not clinical failures. Documentation gaps. That\'s where revenue disappears. Docstribe closes it before it opens.',
     beats: [
       { at: 0.04, stat: '12–18%',        sub: 'UAE claims denied on first submission' },
-      { at: 0.30, stat: '60–70%',        sub: 'of those denials are entirely preventable' },
-      { at: 0.75, stat: 'Zero leakage.', sub: 'Docstribe closes the gap before it opens' },
+      { at: 0.32, stat: '60–70%',        sub: 'of those denials are entirely preventable' },
+      { at: 0.82, stat: 'Zero leakage.', sub: 'Docstribe closes the gap before it opens' },
     ],
   },
   {
@@ -104,10 +104,10 @@ const SCENES = [
     vo: 'Docstribe is a skilled AI agentic workforce — purpose-built for UAE. It listens to every clinical and financial signal, and acts in real time. Sixty days from go-live, guaranteed: thirty percent fewer denials. Twenty-five percent more revenue. CMI up zero point fifteen.',
     beats: [
       { at: 0.04, stat: 'Docstribe',   sub: 'AI agentic workforce — UAE healthcare' },
-      { at: 0.54, stat: '60 days',     sub: 'Guaranteed from go-live · contractual SLA' },
-      { at: 0.68, stat: '↓30%',        sub: 'Fewer denials on first submission' },
+      { at: 0.58, stat: '60 days',     sub: 'Guaranteed from go-live · contractual SLA' },
+      { at: 0.70, stat: '↓30%',        sub: 'Fewer denials on first submission' },
       { at: 0.80, stat: '+25%',        sub: 'Revenue capture uplift' },
-      { at: 0.91, stat: '+0.15 CMI',   sub: 'Case mix index uplift per discharge' },
+      { at: 0.90, stat: '+0.15 CMI',   sub: 'Case mix index uplift per discharge' },
     ],
   },
   {
@@ -117,81 +117,81 @@ const SCENES = [
     vo: 'OPD, IPD, emergency — one workspace. Clinical and financial context, same view. Every encounter tracked from first appointment to final payment. Nothing falls through.',
     beats: [
       { at: 0.10, stat: '200 active cases', sub: 'OPD · IPD · Emergency — unified' },
-      { at: 0.56, stat: 'Zero leakage',     sub: 'every encounter tracked end-to-end' },
+      { at: 0.88, stat: 'Zero leakage',     sub: 'every encounter tracked end-to-end' },
     ],
   },
   {
     id: 4, type: 'product', color: GREEN,
     title: 'Pre-Visit Intelligence',
     breadcrumb: 'Eligibility & Pre-Authorisation',
-    vo: 'Coverage is settled before the patient arrives. Eligibility verified. Pre-auth triggered at order entry — not at discharge. No chasing. No write-offs.',
+    vo: 'Eligibility confirmed. Pre-auth triggered at order entry — not at discharge. Approved before the patient arrives. Zero write-offs.',
     beats: [
-      { at: 0.18, stat: 'Auth at order entry', sub: 'not at discharge — OPD and IPD' },
-      { at: 0.76, stat: '✅ PA APPROVED',       sub: 'Zero front-door write-off risk' },
+      { at: 0.14, stat: 'Auth at order entry', sub: 'not at discharge — OPD and IPD' },
+      { at: 0.58, stat: '✅ PA APPROVED',       sub: 'Zero front-door write-off risk' },
     ],
   },
   {
     id: 5, type: 'product', color: INDIGO,
     title: 'Ambient Clinical Intelligence',
     breadcrumb: 'Ambient Scribe — OPD & IPD',
-    vo: 'The platform writes the clinical note from every encounter — ICD-10-CM coded, NABIDH compliant, DHA licensed, billing-ready. Physicians focus on care. Documentation is simply done.',
+    vo: 'Every encounter — one structured note. ICD-10-CM coded, NABIDH compliant, DHA licensed. Physicians stay in care. Documentation done.',
     beats: [
-      { at: 0.12, stat: 'OPD note built live', sub: 'DM · HTN · auto-coded from voice' },
-      { at: 0.56, stat: 'IPD H&P complete',    sub: 'Pneumonia · COPD · ward round done' },
-      { at: 0.82, stat: 'NABIDH ✓  DHA ✓',    sub: 'compliant · structured · exchange-ready' },
+      { at: 0.06, stat: 'OPD note built live', sub: 'DM · HTN · auto-coded from voice' },
+      { at: 0.36, stat: 'NABIDH ✓  DHA ✓',    sub: 'compliant · structured · exchange-ready' },
+      { at: 0.60, stat: 'IPD H&P complete',    sub: 'Pneumonia · COPD · ward round done' },
     ],
   },
   {
     id: 6, type: 'product', color: AMBER,
     title: 'CDI — Closing the Gap',
     breadcrumb: 'Clinical Documentation Intelligence',
-    vo: 'CDI fires in real time — medical necessity confirmed for OPD, IR-DRG gap closed for IPD while the patient is still admitted. Every physician response e-signed. DHA-defensible.',
+    vo: 'Medical necessity confirmed OPD — one tap. IR-DRG gap closed IPD before discharge. E-signed. DHA-defensible.',
     beats: [
       { at: 0.08, stat: 'OPD — Medical Necessity',     sub: 'physician confirms with one tap' },
-      { at: 0.54, stat: 'IPD — IR-DRG gap closed',     sub: 'diagnosis sequence locked at admission' },
-      { at: 0.86, stat: 'DHA Compliant · Audit Ready', sub: 'e-signed · timestamped · defensible' },
+      { at: 0.44, stat: 'IPD — IR-DRG gap closed',     sub: 'diagnosis sequence locked at admission' },
+      { at: 0.88, stat: 'DHA Compliant · Audit Ready', sub: 'e-signed · timestamped · defensible' },
     ],
   },
   {
     id: 7, type: 'product', color: PURPLE,
     title: 'AI-Powered Coding',
     breadcrumb: 'ICD-10-CM · Smart Coding Engine',
-    vo: 'Clinical notes convert to the highest-weight defensible ICD-10-CM codes. IR-DRG weight: zero point nine four to one point three four. AED eighteen thousand four hundred recovered — per case.',
+    vo: 'Notes to ICD-10-CM codes — instantly. IR-DRG weight from zero point nine four to one point three four. AED eighteen thousand four hundred recovered per case.',
     beats: [
-      { at: 0.10, stat: 'Notes → ICD-10-CM',   sub: 'diagnoses ranked · symptoms suppressed' },
-      { at: 0.54, stat: 'IR-DRG 0.94 → 1.34', sub: 'weight maximised · revenue recovered' },
-      { at: 0.84, stat: '+AED 18,400',          sub: 'per case · zero manual backlog' },
+      { at: 0.06, stat: 'Notes → ICD-10-CM',   sub: 'diagnoses ranked · symptoms suppressed' },
+      { at: 0.22, stat: 'IR-DRG 0.94 → 1.34', sub: 'weight maximised · revenue recovered' },
+      { at: 0.70, stat: '+AED 18,400',          sub: 'per case · zero manual backlog' },
     ],
   },
   {
     id: 8, type: 'product', color: RED,
     title: 'Denial Intelligence',
     breadcrumb: 'Payor Contract Intelligence',
-    vo: 'Every claim is scored against each insurer\'s patterns before submission. Four denial drivers flagged and resolved. AED two hundred fourteen thousand surfaced. Denial rate down thirty percent — prevention, not appeals.',
+    vo: 'Claims scored pre-submission. Four denial drivers flagged. AED two hundred fourteen thousand surfaced. Denial rate down thirty percent — prevention, not appeals.',
     beats: [
-      { at: 0.08, stat: 'AED 214,600',       sub: 'recoverable revenue — pre-submission' },
-      { at: 0.54, stat: '4 denial drivers',   sub: 'flagged and resolved pre-submission' },
-      { at: 0.82, stat: 'Denial rate ↓ 30%', sub: 'systemic prevention, not one-off fixes' },
+      { at: 0.14, stat: '4 denial drivers',   sub: 'flagged and resolved pre-submission' },
+      { at: 0.35, stat: 'AED 214,600',         sub: 'recoverable revenue — pre-submission' },
+      { at: 0.62, stat: 'Denial rate ↓ 30%', sub: 'systemic prevention, not one-off fixes' },
     ],
   },
   {
     id: 9, type: 'product', color: TEAL,
     title: 'One-Click Recovery',
     breadcrumb: 'Claim Recovery — Bundling Dispute',
-    vo: 'When a denial lands, a contract-grounded appeal is ready in one click — policy terms cited, clinical evidence attached. Three weeks. Thirty seconds.',
+    vo: 'Denial arrives. One click — contract appeal ready. Policy terms cited. Three weeks to thirty seconds.',
     beats: [
-      { at: 0.16, stat: 'AED 1,900 denied', sub: 'OPD · bundling · CARC 97 · recoverable' },
-      { at: 0.72, stat: '1-click appeal',   sub: 'contract clauses cited · recovery underway' },
+      { at: 0.08, stat: 'AED 1,900 denied', sub: 'OPD · bundling · CARC 97 · recoverable' },
+      { at: 0.50, stat: '1-click appeal',   sub: 'contract clauses cited · recovery underway' },
     ],
   },
   {
     id: 10, type: 'product', color: INDIGO,
     title: '30-Day Revenue Pipeline',
     breadcrumb: 'Case Management Control Tower',
-    vo: 'Finance gets a live thirty-day revenue forecast by service line, driven by clinical signals at admission. AED one point four million predicted on day one. Not estimated at month end.',
+    vo: 'Live thirty-day revenue forecast — clinical signals, not averages. AED one point four million. Predicted at admission, not month end.',
     beats: [
-      { at: 0.10, stat: 'AED 1.4M forecast', sub: 'next 30 days · IR-DRG weighted · live' },
-      { at: 0.64, stat: 'Clinical signals',   sub: 'not averages — predictive from admission' },
+      { at: 0.28, stat: 'Clinical signals',   sub: 'not averages — predictive from admission' },
+      { at: 0.46, stat: 'AED 1.4M forecast', sub: 'next 30 days · IR-DRG weighted · live' },
     ],
   },
   {
@@ -200,9 +200,9 @@ const SCENES = [
     breadcrumb: 'Executive Revenue Dashboard',
     vo: 'Thirty percent fewer denials. Twenty-five percent more revenue. CMI up zero point fifteen. Zero leakage — contractually guaranteed within sixty days of go-live. One platform. Docstribe.',
     beats: [
-      { at: 0.08, stat: '↓30% · +25%',               sub: 'denial reduction · revenue capture — guaranteed' },
-      { at: 0.50, stat: '+0.15 CMI',                  sub: 'case mix index uplift — within 60 days' },
-      { at: 0.82, stat: 'One platform. Zero leakage.', sub: 'Clinical Intelligence · Financial Integrity' },
+      { at: 0.16, stat: '↓30% · +25%',               sub: 'denial reduction · revenue capture — guaranteed' },
+      { at: 0.34, stat: '+0.15 CMI',                  sub: 'case mix index uplift — within 60 days' },
+      { at: 0.90, stat: 'One platform. Zero leakage.', sub: 'Clinical Intelligence · Financial Integrity' },
     ],
   },
 ];
@@ -409,19 +409,17 @@ function CasesScreen({ progress }) {
 
 /* Scene 4 — Eligibility: UAE payer names, step-by-step reveal */
 function EligibilityScreen({ progress }) {
-  const paApproved = progress >= 0.72;
-  const opdActive = spot(progress, 0.05, 0.46);
-  const ipdActive = spot(progress, 0.46, 0.95);
+  const paApproved = progress >= 0.58;
+  const opdActive = spot(progress, 0.05, 0.40);
+  const ipdActive = spot(progress, 0.40, 0.92);
   const opdSteps = [
-    { label: 'Member verified — Daman Enhanced', sub: 'Member ID: ***-4821 · Plan: Comprehensive Plus', show: 0.08 },
-    { label: 'Coverage active · AED 6,550 remaining', sub: 'Benefit limit: AED 15,000 · valid Dec 2025', show: 0.18 },
-    { label: 'No prior authorisation required', sub: 'DM + HTN consult — benefit included', show: 0.30 },
+    { label: 'Member verified — Daman Enhanced', sub: 'Member ID: ***-4821 · Comprehensive Plus · active', show: 0.08 },
+    { label: 'Coverage active · no auth required', sub: 'DM + HTN consult · AED 6,550 remaining · valid Dec 2025', show: 0.22 },
   ];
   const ipdSteps = [
-    { label: 'Admission trigger detected', sub: 'K.A. · Respiratory · IPD Day 1', show: 0.46 },
-    { label: 'Clinical docs auto-attached', sub: 'J18.9 Pneumonia · J44.1 COPD — uploaded', show: 0.56 },
-    { label: 'PA submitted to Thiqa / SEHA', sub: 'REF: THQ-2024-189234 · AED 28,500 requested', show: 0.64 },
-    { label: 'Pre-authorisation approved', sub: 'THQ-2024-189234 · AED 28,500 authorised ✓', show: 0.72, highlight: true },
+    { label: 'Admission trigger — docs auto-attached', sub: 'K.A. · Respiratory · J18.9 Pneumonia · J44.1 COPD', show: 0.40 },
+    { label: 'PA submitted to Thiqa / SEHA', sub: 'REF: THQ-2024-189234 · AED 28,500 requested', show: 0.50 },
+    { label: 'Pre-authorisation approved', sub: 'THQ-2024-189234 · AED 28,500 authorised ✓', show: 0.58, highlight: true },
   ];
   return (
     <ProductShell breadcrumb="Eligibility & Pre-Authorisation" color={GREEN}>
@@ -452,7 +450,7 @@ function EligibilityScreen({ progress }) {
               )
             ))}
           </div>
-          {progress >= 0.36 && (
+          {progress >= 0.28 && (
             <div style={{ background: `${GREEN}12`, border: `1px solid ${GREEN}35`, borderRadius: 9, padding: '12px 14px', textAlign: 'center', animation: 'dpBeatIn 0.5s cubic-bezier(0.34,1.4,0.64,1) both' }}>
               <div style={{ fontSize: 16, fontWeight: 900, color: GREEN, fontFamily: 'Sora' }}>✓ Visit Cleared</div>
               <div style={{ fontSize: 8, color: DIM, marginTop: 4 }}>No auth required · pre-validated · zero financial risk</div>
@@ -503,67 +501,61 @@ function EligibilityScreen({ progress }) {
 function AmbientScreen({ progress }) {
   const p = progress;
 
-  // OPD phases
-  const opdListening   = p >= 0.06 && p < 0.42;
-  const opdStructuring = p >= 0.40 && p < 0.50;
-  const opdComplete    = p >= 0.48;
+  // OPD phases (compressed for shorter VO)
+  const opdListening   = p >= 0.06 && p < 0.36;
+  const opdStructuring = p >= 0.34 && p < 0.44;
+  const opdComplete    = p >= 0.42;
   const opdPhaseLabel  = opdListening ? 'LISTENING' : opdStructuring ? 'STRUCTURING' : opdComplete ? 'NOTE READY' : 'STANDBY';
   const opdPhaseColor  = opdListening ? RED : opdStructuring ? AMBER : opdComplete ? GREEN : MUTED;
 
-  // IPD phases
-  const ipdListening   = p >= 0.46 && p < 0.68;
-  const ipdStructuring = p >= 0.66 && p < 0.74;
-  const ipdComplete    = p >= 0.72;
-  const ipdPhaseLabel  = ipdListening ? 'LISTENING' : ipdStructuring ? 'STRUCTURING' : ipdComplete ? 'NOTE READY' : p < 0.46 ? 'QUEUED' : 'STANDBY';
+  // IPD phases (compressed)
+  const ipdListening   = p >= 0.42 && p < 0.64;
+  const ipdStructuring = p >= 0.62 && p < 0.70;
+  const ipdComplete    = p >= 0.68;
+  const ipdPhaseLabel  = ipdListening ? 'LISTENING' : ipdStructuring ? 'STRUCTURING' : ipdComplete ? 'NOTE READY' : p < 0.42 ? 'QUEUED' : 'STANDBY';
   const ipdPhaseColor  = ipdListening ? RED : ipdStructuring ? AMBER : ipdComplete ? GREEN : MUTED;
 
-  // OPD transcript lines — appear one at a time
+  // OPD transcript lines — 3 lines, compressed
   const opdLines = [
     { text: '"HbA1c nine point one — definitely uncontrolled."', show: 0.08 },
-    { text: 'Polydipsia and polyuria reported. BP one forty two over eighty eight today.', show: 0.17 },
-    { text: 'eGFR sixty eight on recent labs — CKD Stage 3 territory.', show: 0.27 },
-    { text: 'Adjusting Metformin, adding Jardiance ten mg. Nephrology referral flagged.', show: 0.36 },
+    { text: 'BP one forty two over eighty eight. eGFR sixty eight — CKD Stage 3.', show: 0.17 },
+    { text: 'Adjusting Metformin, adding Jardiance. Nephrology referral flagged.', show: 0.28 },
   ];
 
-  // OPD AI entities extracted progressively
+  // OPD AI entities — 3 entities
   const opdEntities = [
-    { label: 'HbA1c', value: '9.1% ↑', col: RED,    show: 0.12 },
-    { label: 'BP', value: '142/88 ↑',  col: AMBER,  show: 0.20 },
-    { label: 'eGFR', value: '68 ↓',    col: INDIGO, show: 0.29 },
-    { label: 'Sx', value: 'Polydipsia · Polyuria', col: TEAL, show: 0.37 },
+    { label: 'HbA1c', value: '9.1% ↑', col: RED,    show: 0.10 },
+    { label: 'BP',    value: '142/88 ↑', col: AMBER, show: 0.18 },
+    { label: 'eGFR',  value: '68 ↓ CKD3', col: INDIGO, show: 0.28 },
   ];
 
-  // OPD ICD codes
+  // OPD ICD codes — 2 codes
   const opdCodes = [
-    { code: 'E11.65', desc: 'Type 2 DM with hyperglycaemia', col: RED,    show: 0.50 },
-    { code: 'I10',    desc: 'Essential hypertension',         col: AMBER,  show: 0.56 },
-    { code: 'N18.3',  desc: 'Chronic Kidney Disease Stage 3', col: INDIGO, show: 0.62 },
+    { code: 'E11.65', desc: 'Type 2 DM with hyperglycaemia', col: RED,   show: 0.42 },
+    { code: 'I10',    desc: 'Essential hypertension',         col: AMBER, show: 0.50 },
   ];
 
-  // IPD transcript lines
+  // IPD transcript lines — 3 lines, compressed
   const ipdLines = [
-    { text: '"Sats ninety one on room air. Bilateral crackles at both bases."', show: 0.48 },
-    { text: 'CRP one forty eight. Temperature thirty eight point six. Chest X-ray: consolidation left base.', show: 0.54 },
-    { text: 'Known COPD — this is pneumonia on top. qSOFA score two, query sepsis.', show: 0.60 },
-    { text: 'Starting Tazocin IV. Sepsis bundle initiated. Respiratory review requested.', show: 0.65 },
+    { text: '"Sats ninety one on room air. Bilateral crackles at both bases."', show: 0.44 },
+    { text: 'CRP one forty eight. Chest X-ray: consolidation left base. qSOFA two.', show: 0.52 },
+    { text: 'Pneumonia on COPD background. Tazocin IV. Sepsis bundle initiated.', show: 0.60 },
   ];
 
-  // IPD AI entities
+  // IPD AI entities — 3 entities
   const ipdEntities = [
-    { label: 'SpO₂', value: '91% ↓',               col: RED,    show: 0.50 },
-    { label: 'CRP',  value: '148 mg/L ↑',           col: AMBER,  show: 0.56 },
-    { label: 'CXR',  value: 'L-base consolidation', col: INDIGO, show: 0.61 },
-    { label: 'qSOFA', value: 'Score 2 · Sepsis risk', col: PURPLE, show: 0.65 },
+    { label: 'SpO₂',  value: '91% ↓',               col: RED,    show: 0.46 },
+    { label: 'CRP',   value: '148 mg/L ↑',           col: AMBER,  show: 0.54 },
+    { label: 'qSOFA', value: 'Score 2 · Sepsis risk', col: PURPLE, show: 0.62 },
   ];
 
-  // IPD ICD codes
+  // IPD ICD codes — 2 codes
   const ipdCodes = [
-    { code: 'J18.9', desc: 'Pneumonia, unspecified organism', col: RED,    show: 0.72 },
-    { code: 'J44.1', desc: 'COPD with acute exacerbation',    col: AMBER,  show: 0.77 },
-    { code: 'A41.9', desc: 'Sepsis, unspecified organism',    col: PURPLE, show: 0.82 },
+    { code: 'J18.9', desc: 'Pneumonia, unspecified organism', col: RED,   show: 0.68 },
+    { code: 'J44.1', desc: 'COPD with acute exacerbation',    col: AMBER, show: 0.74 },
   ];
 
-  const sessionLive = p >= 0.06 && p < 0.72;
+  const sessionLive = p >= 0.06 && p < 0.68;
 
   return (
     <ProductShell breadcrumb="Ambient Scribe — Live Session" color={INDIGO}>
@@ -748,7 +740,7 @@ function AmbientScreen({ progress }) {
         </div>
 
         {/* ── Compliance banner ── */}
-        {p >= 0.80 && (
+        {p >= 0.68 && (
           <div style={{ background: `linear-gradient(90deg,${INDIGO}12,${TEAL}12)`, border: `1px solid ${TEAL}38`, borderRadius: 8, padding: '8px 14px', display: 'flex', gap: 22, alignItems: 'center', animation: 'dpBeatIn 0.6s cubic-bezier(0.34,1.4,0.64,1) both', flexShrink: 0 }}>
             {[['NABIDH ✓', INDIGO, 'Unified Medical Record'],['DHA Licensed ✓', TEAL, 'Dubai Health Authority'],['HL7 FHIR ✓', GREEN, 'Exchange-ready structured note']].map(([label, c, sub]) => (
               <div key={label} style={{ display: 'flex', gap: 7, alignItems: 'center' }}>
@@ -768,16 +760,14 @@ function AmbientScreen({ progress }) {
 
 /* Scene 6 — CDI: one query at a time, physician taps answer */
 function CDIScreen({ progress }) {
-  const auditReady = progress >= 0.84;
+  const auditReady = progress >= 0.82;
   const opdQueries = [
-    { q: 'Is this DM follow-up medically necessary per DHA guidelines?', opts: ['Yes — medically necessary', 'Routine monitoring only'], answer: 0, show: 0.08, impact: '+AED 420 / claim with E11.65 vs E11.9' },
-    { q: 'HbA1c 9.1% — document DM as controlled or uncontrolled?', opts: ['Uncontrolled (HbA1c 9.1%)', 'Controlled (HbA1c < 7%)'], answer: 0, show: 0.24, impact: 'E11.65 unlocks higher-weight code set' },
-    { q: 'Is additional diagnostic workup clinically indicated?', opts: ['Clinically indicated — eGFR 68', 'Routine screening only'], answer: 0, show: 0.38, impact: 'N18.3 (CKD Stg 3) — billable comorbidity' },
+    { q: 'Is this DM follow-up medically necessary per DHA guidelines?', opts: ['Yes — medically necessary', 'Routine monitoring only'], answer: 0, show: 0.08, impact: '+AED 420 / claim · E11.65 unlocks higher code weight' },
+    { q: 'HbA1c 9.1% — document DM as controlled or uncontrolled?', opts: ['Uncontrolled (HbA1c 9.1%)', 'Controlled (HbA1c < 7%)'], answer: 0, show: 0.24, impact: 'E11.65 + N18.3 (CKD Stg 3) · both billable' },
   ];
   const ipdQueries = [
-    { q: 'Confirm admission status — Inpatient or Observation?', opts: ['Confirm inpatient admission', 'Maintain observation status'], answer: 0, show: 0.50, impact: 'Inpatient = full IR-DRG weight applied' },
-    { q: 'Does clinical picture meet Sepsis-3 criteria? qSOFA: 2', opts: ['Sepsis confirmed — Sepsis-3', 'Infection without organ dysfunction'], answer: 0, show: 0.64, impact: '+0.18 IR-DRG weight if Sepsis coded' },
-    { q: 'Principal diagnosis — Pneumonia or COPD exacerbation?', opts: ['J18.9 — Pneumonia (primary)', 'J44.1 — COPD exacerbation (primary)'], answer: 0, show: 0.74, impact: 'Sequencing determines IR-DRG assignment' },
+    { q: 'Confirm inpatient admission — Inpatient or Observation?', opts: ['Confirm inpatient admission', 'Maintain observation status'], answer: 0, show: 0.44, impact: 'Full IR-DRG weight applied · vs observation rate' },
+    { q: 'Principal diagnosis — Pneumonia or COPD exacerbation?', opts: ['J18.9 — Pneumonia (primary)', 'J44.1 — COPD exacerbation (primary)'], answer: 0, show: 0.62, impact: 'Sequencing locks IR-DRG · +0.18 weight' },
   ];
   return (
     <ProductShell breadcrumb="Clinical Documentation Intelligence" color={AMBER}>
@@ -849,15 +839,15 @@ function CDIScreen({ progress }) {
 
 /* Scene 7 — AI Coding: note → ranked ICD-10-CM → DRG weight */
 function CodingScreen({ progress }) {
-  const showCodes = progress >= 0.14;
-  const showIPD = progress >= 0.38;
-  const drgReveal = progress >= 0.52;
-  const drgAfter = progress >= 0.65;
-  const showImpact = progress >= 0.80;
+  const showCodes = progress >= 0.10;
+  const showIPD = progress >= 0.22;
+  const drgReveal = progress >= 0.38;
+  const drgAfter = progress >= 0.50;
+  const showImpact = progress >= 0.68;
   const opdCodes = [
-    { code: 'E11.65', desc: 'Type 2 DM with hyperglycemia', spec: 95, col: RED, show: 0.18 },
-    { code: 'I10', desc: 'Essential (primary) hypertension', spec: 90, col: AMBER, show: 0.26 },
-    { code: 'N18.3', desc: 'Chronic kidney disease — Stage 3', spec: 78, col: INDIGO, show: 0.34 },
+    { code: 'E11.65', desc: 'Type 2 DM with hyperglycemia', spec: 95, col: RED, show: 0.12 },
+    { code: 'I10', desc: 'Essential (primary) hypertension', spec: 90, col: AMBER, show: 0.18 },
+    { code: 'N18.3', desc: 'Chronic kidney disease — Stage 3', spec: 78, col: INDIGO, show: 0.24 },
   ];
   return (
     <ProductShell breadcrumb="ICD-10-CM · Smart Coding Engine" color={PURPLE}>
@@ -941,12 +931,12 @@ function CodingScreen({ progress }) {
 /* Scene 8 — Denial Intelligence: payer-specific, one driver at a time */
 function DenialScreen({ progress }) {
   const drivers = [
-    { label: 'Medical Necessity — Daman',  code: 'CARC 50', amt: 'AED 78,600', pct: '37%', col: RED,    show: 0.15 },
-    { label: 'Auth Required — Thiqa',      code: 'CARC 15', amt: 'AED 56,200', pct: '26%', col: AMBER,  show: 0.32 },
-    { label: 'Bundled Service — AXA Gulf', code: 'CARC 97', amt: 'AED 48,300', pct: '22%', col: AMBER,  show: 0.48 },
-    { label: 'Code Modifier — Oman Ins.',  code: 'CARC 4',  amt: 'AED 31,500', pct: '15%', col: GREEN,  show: 0.63 },
+    { label: 'Medical Necessity — Daman',  code: 'CARC 50', amt: 'AED 78,600', pct: '37%', col: RED,    show: 0.08 },
+    { label: 'Auth Required — Thiqa',      code: 'CARC 15', amt: 'AED 56,200', pct: '26%', col: AMBER,  show: 0.22 },
+    { label: 'Bundled Service — AXA Gulf', code: 'CARC 97', amt: 'AED 48,300', pct: '22%', col: AMBER,  show: 0.36 },
+    { label: 'Code Modifier — Oman Ins.',  code: 'CARC 4',  amt: 'AED 31,500', pct: '15%', col: GREEN,  show: 0.50 },
   ];
-  const bigNum = progress >= 0.12;
+  const bigNum = progress >= 0.06;
   return (
     <ProductShell breadcrumb="Payor Contract Intelligence" color={RED}>
       <div style={{ padding: '12px 14px', height: '100%', display: 'flex', flexDirection: 'column', gap: 10 }}>
@@ -979,7 +969,7 @@ function DenialScreen({ progress }) {
           );
         })}
 
-        {progress >= 0.80 && (
+        {progress >= 0.58 && (
           <div style={{ display: 'flex', alignItems: 'center', gap: 10, animation: 'dpBeatIn 0.4s ease both' }}>
             <span style={{ fontSize: 9, color: MUTED }}>Denial rate trend:</span>
             <div style={{ flex: 1, height: 22 }}>
@@ -998,8 +988,8 @@ function DenialScreen({ progress }) {
 
 /* Scene 9 — One-click recovery: denied → appeal → recovered */
 function ClaimScreen({ progress }) {
-  const letterGen = progress >= 0.62;
-  const recovered = progress >= 0.82;
+  const letterGen = progress >= 0.42;
+  const recovered = progress >= 0.62;
   return (
     <ProductShell breadcrumb="Claim Recovery — Bundling Dispute" color={TEAL}>
       <div style={{ padding: '12px 16px', height: '100%', display: 'flex', flexDirection: 'column', gap: 10 }}>
@@ -1065,21 +1055,21 @@ function TowerScreen({ progress }) {
   const signals = [
     {
       icon: '🫁', dept: 'Respiratory',
-      signal: '3 surgical candidates identified at ED admission',
-      detail: 'Pre-auth secured · theatre slot flagged',
-      forecast: 'AED 380K', col: TEAL, show: 0.18,
+      signal: '3 surgical candidates at ED admission',
+      detail: 'Pre-auth secured · theatre slot flagged · IR-DRG weighted',
+      forecast: 'AED 380K', col: TEAL, show: 0.10,
     },
     {
       icon: '❤️', dept: 'Cardiology',
-      signal: '2 cath lab bookings confirmed',
-      detail: 'Complex cases · PA pre-approved · IR-DRG weighted',
-      forecast: 'AED 290K', col: INDIGO, show: 0.42,
+      signal: '2 cath lab bookings · PA pre-approved',
+      detail: 'Complex cases · IR-DRG weighted · revenue locked at admission',
+      forecast: 'AED 290K', col: INDIGO, show: 0.30,
     },
     {
       icon: '⚡', dept: 'Cross-Specialty Pipeline',
-      signal: '6 service lines active · 45 inpatient cases',
-      detail: 'Each tracked from admission signal to discharge revenue',
-      forecast: 'AED 730K', col: PURPLE, show: 0.65,
+      signal: '6 service lines · 45 inpatient cases live',
+      detail: 'Tracked from admission signal to discharge revenue',
+      forecast: 'AED 730K', col: PURPLE, show: 0.50,
     },
   ];
 
@@ -1125,7 +1115,7 @@ function TowerScreen({ progress }) {
         </div>
 
         {/* Bottom tagline */}
-        {progress >= 0.88 && (
+        {progress >= 0.68 && (
           <div style={{ textAlign: 'center', fontSize: 9, color: DIM, animation: 'dpBeatIn 0.4s ease both' }}>
             Clinical signal → revenue forecast · at admission · <span style={{ color: INDIGO, fontWeight: 700 }}>not at month-end</span>
           </div>
@@ -1138,15 +1128,15 @@ function TowerScreen({ progress }) {
 /* Scene 11 — Executive Dashboard: 60-day guarantee front and centre */
 function DashboardScreen({ progress }) {
   const guaranteeShow = progress >= 0.04;
-  const kpiTimes = [0.10, 0.26, 0.44];
+  const kpiTimes = [0.06, 0.16, 0.34];
   const guaranteeKPIs = [
     { val: '↓30%',   label: 'First-submission denials', sub: 'vs. pre-integration baseline', col: TEAL },
     { val: '+25%',   label: 'Net revenue capture',       sub: 'incremental · measurable',     col: GREEN },
     { val: '+0.15',  label: 'CMI per discharge',         sub: 'complexity-adjusted uplift',   col: INDIGO },
   ];
-  const timelineShow = progress >= 0.68;
-  const payorShow = progress >= 0.76;
-  const brandShow = progress >= 0.88;
+  const timelineShow = progress >= 0.52;
+  const payorShow = progress >= 0.62;
+  const brandShow = progress >= 0.78;
 
   return (
     <ProductShell breadcrumb="Executive Revenue Dashboard" color={TEAL}>
