@@ -393,6 +393,67 @@ const INTRO_ARTIFACT = {
   },
 };
 
+// ── /api/demo — UAE 11-scene pre-curated demonstration ───────────────────────
+// Defined here (before the startup IIFE) so it is initialized before the async
+// startup code references it synchronously.
+const UAE_DEMO_SCENES = [
+  {
+    id: 1, timecode: '0:00–0:12', journeyStage: 'opening',
+    title: 'The Opening Stat',
+    voText: 'Too much earned revenue never reaches your accounts. In UAE hospitals, first-submission denials are a persistent, largely preventable drain — documentation written for care, read by payers for compliance. That gap is where the money disappears. Docstribe sits precisely there, closing it before it opens.',
+  },
+  {
+    id: 2, timecode: '0:12–0:28', journeyStage: 'outcomes',
+    title: 'Outcomes Upfront — The KPI Promise',
+    voText: 'Within sixty days of going live, hospitals see a measurable drop in first-submission denials. A significant uplift in revenue capture. A Case Mix Index that rises to reflect the full clinical complexity of your patients. And accounts receivable days that fall to where they should have been all along. These are auditable, contractually committed outcomes — delivered inside two months.',
+  },
+  {
+    id: 3, timecode: '0:28–0:38', journeyStage: 'platform',
+    title: 'One Unified Workspace',
+    voText: 'Every patient encounter — outpatient consultation, inpatient ward round, emergency presentation — flows into one unified workspace. Clinical context and financial status in the same view. Every gap visible. Every action trackable. From first appointment to final payment.',
+  },
+  {
+    id: 4, timecode: '0:38–0:52', journeyStage: 'pre-visit',
+    title: 'Pre-Visit — Eligibility & Pre-Auth',
+    voText: 'By the time a patient arrives, every coverage decision is already made. Eligibility verified. Pre-authorisation triggered — at order entry, not at discharge — across all UAE insurance partners. What used to be a weeks-long manual process becomes a background event your team never has to chase.',
+  },
+  {
+    id: 5, timecode: '0:52–1:10', journeyStage: 'in-visit',
+    title: 'Ambient Clinical Intelligence',
+    voText: 'The platform listens to every encounter and builds a complete, structured clinical note automatically — ICD-10-CM coded, compliance-stamped, and ready for data exchange. Fully compliant with NABIDH requirements and DHA-licensed. Your physicians focus entirely on care. The documentation is simply done.',
+  },
+  {
+    id: 6, timecode: '1:10–1:25', journeyStage: 'cdi',
+    title: 'CDI — Closing the Gap',
+    voText: 'For outpatient encounters, medical necessity is confirmed before a claim is built — one tap from the physician. For inpatients, it fires gap-closure queries while the patient is still admitted, securing the right clinical classification before discharge. Every response is e-signed. Every query is an audit trail.',
+  },
+  {
+    id: 7, timecode: '1:25–1:43', journeyStage: 'coding',
+    title: 'AI-Powered Coding',
+    voText: 'Clinical notes are converted into the most defensible, highest-weight ICD-10-CM codes the documentation supports. Symptom-only codes are suppressed. Comorbidities are captured and ranked. The IR-DRG weight — and the revenue attached to it — reflects what your clinical team actually delivered.',
+  },
+  {
+    id: 8, timecode: '1:43–1:51', journeyStage: 'denial-intel',
+    title: 'Denial Intelligence',
+    voText: 'Before any claim is submitted, denial risk is scored against each insurer\'s specific patterns. Substantial recoverable revenue surfaces that would otherwise have been lost quietly — denied, delayed, and never followed up. That cycle ends here.',
+  },
+  {
+    id: 9, timecode: '1:51–1:58', journeyStage: 'recovery',
+    title: 'One-Click Recovery',
+    voText: 'When a denial arrives, a contract-grounded appeal is assembled and ready in one click — citing the exact policy terms that support recovery. What used to take your team three weeks takes the platform thirty seconds. Revenue that was lost is found.',
+  },
+  {
+    id: 10, timecode: '1:58–2:15', journeyStage: 'pathway',
+    title: '30-Day Revenue Pipeline',
+    voText: 'Finance gains a rolling thirty-day revenue forecast by service line — driven not by historical averages, but by live clinical signals from the moment of admission. Surgical candidates identified early. Pre-auth holds tracked in real time. Revenue predicted at admission, not estimated at month end.',
+  },
+  {
+    id: 11, timecode: '2:15–2:30', journeyStage: 'dashboard',
+    title: 'One Platform. Zero Leakage.',
+    voText: 'Everything your board needs in one view. Denial trends, IR-DRG movement, payer variance, recovery pipeline. Every dirham accounted for. Docstribe: one platform, built for UAE healthcare, delivering measurable financial outcomes within sixty days of going live. arcus@docstribe.com — let\'s begin.',
+  },
+];
+
 // ── Audio cache — in-memory (loaded from disk on startup) ─────────────────────
 let cachedIntroAudio = null;
 const cachedDemoAudios = new Map(); // sceneId → base64 WAV
@@ -478,133 +539,6 @@ app.post('/api/intro', async (req, res) => {
   }
 });
 
-// ── /api/demo — UAE 11-scene pre-curated demonstration ───────────────────────
-const UAE_DEMO_SCENES = [
-  {
-    id: 1, timecode: '0:00–0:12', journeyStage: 'opening',
-    title: 'The Opening Stat',
-    voText: 'Too much earned revenue never reaches your accounts. In UAE hospitals, first-submission denials are a persistent, largely preventable drain — documentation written for care, read by payers for compliance. That gap is where the money disappears. Docstribe sits precisely there, closing it before it opens.',
-    onScreen: ['12–18% — UAE hospital claims denied on first submission', '60–70% of those denials are preventable', 'The revenue was earned. The system lost it.'],
-    artifact: { type: 'stats_grid', data: { title: 'UAE CLAIM DENIAL REALITY', stats: [
-      { label: 'Claims denied — first submission', value: '12–18%', color: '#f87171' },
-      { label: 'Denials that are preventable', value: '60–70%', color: '#fb923c' },
-      { label: 'Average revenue per prevented denial', value: '$1.9K+', color: '#4d8aff' },
-      { label: 'Hospitals addressed by Docstribe', value: '100+', color: '#00cba8' },
-    ]}}
-  },
-  {
-    id: 2, timecode: '0:12–0:28', journeyStage: 'outcomes',
-    title: 'Outcomes Upfront — The KPI Promise',
-    voText: 'Within sixty days of going live, hospitals see a measurable drop in first-submission denials. A significant uplift in revenue capture. A Case Mix Index that rises to reflect the full clinical complexity of your patients. And accounts receivable days that fall to where they should have been all along. These are auditable, contractually committed outcomes — delivered inside two months.',
-    onScreen: ['↓ 30% — Claim denial reduction', '+25% — Revenue capture', '+0.05 to +0.15 — CMI uplift', '↑ 20% — IR-DRG performance', '+10% — Inpatient pipeline accuracy'],
-    artifact: { type: 'stats_grid', data: { title: 'GUARANTEED OUTCOMES — UAE', stats: [
-      { label: 'Claim denial reduction', value: '↓ 30%', color: '#4ade80', delta: 'auditable' },
-      { label: 'Revenue capture uplift', value: '+25%', color: '#00cba8', delta: 'per facility' },
-      { label: 'CMI uplift per discharge', value: '+0.15', color: '#4d8aff', delta: 'guaranteed' },
-      { label: 'IR-DRG performance gain', value: '↑ 20%', color: '#a78bfa', delta: 'systematic' },
-    ]}}
-  },
-  {
-    id: 3, timecode: '0:28–0:38', journeyStage: 'platform',
-    title: 'Why It Works — One Unified Story',
-    voText: 'Every patient encounter — outpatient consultation, inpatient ward round, emergency presentation — flows into one unified workspace. Clinical context and financial status in the same view. Every gap visible. Every action trackable. From first appointment to final payment.',
-    onScreen: ['200 active cases — one workspace', '0 Pending · 47 In Progress · 153 Completed', 'Outpatient 139 · Inpatient 5 · Emergency 25 · Others 31'],
-    artifact: { type: 'comparison_table', data: { title: 'CASES WORKBENCH — LIVE', rows: [
-      { metric: 'Outpatient cases', before: 'Fragmented', after: '139 unified' },
-      { metric: 'Inpatient cases', before: 'Manual review', after: '5 AI-monitored' },
-      { metric: 'Emergency cases', before: 'No CDI', after: '25 flagged' },
-      { metric: 'Pending denials', before: '18%', after: '0 unaddressed' },
-    ]}}
-  },
-  {
-    id: 4, timecode: '0:38–0:52', journeyStage: 'pre-visit',
-    title: 'Pre-Visit — Eligibility & Pre-Auth',
-    voText: 'By the time a patient arrives, every coverage decision is already made. Eligibility verified. Pre-authorisation triggered — at order entry, not at discharge — across all UAE insurance partners. What used to be a weeks-long manual process becomes a background event your team never has to chase.',
-    onScreen: ['PA triggered at order entry — not at discharge', 'Daman ToB · AXA Gulf · Bupa Arabia — aligned', 'Coverage limits, exclusions, auth triggers — flagged instantly'],
-    artifact: { type: 'workflow', data: { title: 'PRE-VISIT ELIGIBILITY WORKFLOW', steps: [
-      { num: '1', label: 'Patient registration received', detail: 'HIS/EMR trigger → Docstribe pre-visit check initiated', color: '#00cba8' },
-      { num: '2', label: 'Payer ToB cross-referenced', detail: 'Daman · AXA Gulf · Bupa Arabia — coverage limits mapped', color: '#00cba8' },
-      { num: '3', label: 'PA triggered at order entry', detail: 'Not at discharge — auth initiated before service rendered', color: '#4d8aff' },
-      { num: '4', label: 'Flags issued to clinical team', detail: 'PA required · Exclusion detected · Coverage limit alert', color: '#4d8aff' },
-      { num: '5', label: 'PA Approved — case proceeds', detail: 'Green stamp. Zero front-door write-off risk.', color: '#4ade80' },
-    ]}}
-  },
-  {
-    id: 5, timecode: '0:52–1:10', journeyStage: 'in-visit',
-    title: 'In-Visit — Ambient Scribe',
-    voText: 'The platform listens to every encounter and builds a complete, structured clinical note automatically — ICD-10-CM coded, compliance-stamped, and ready for data exchange. Fully compliant with NABIDH requirements and DHA-licensed. Your physicians focus entirely on care. The documentation is simply done.',
-    onScreen: ['Ambient transcript captured instantly', 'HL7 payload: 4 touchpoints · 29 lines', 'Timeline replay: 100% complete', 'ICD-10-CM codes extracted automatically'],
-    artifact: { type: 'phase_breakdown', data: { phaseName: 'IN-VISIT — AMBIENT SCRIBE', phase: 0, problem: 'Physician documents manually → 40% of diagnosis context lost. Coding team codes from incomplete notes.', steps: ['Ambient microphone captures full consultation in real time', 'HL7 payload processed: 4 touchpoints, 29 clinical lines', 'Structured note auto-populates: chief complaint, HPI, ROS, medications', 'ICD-10-CM codes extracted automatically from clinical context', 'CDI review flag raised before patient leaves room'], tags: ['HL7 Integration', 'ICD-10-CM', 'Zero keyboard', 'DHA Compliant'], outcome: 'Documentation complete before patient leaves the room. CDI queries ready. IR-DRG baseline computed.' }}
-  },
-  {
-    id: 6, timecode: '1:10–1:25', journeyStage: 'cdi',
-    title: 'CDI — Close the Gap in Real Time',
-    voText: 'For outpatient encounters, medical necessity is confirmed before a claim is built — one tap from the physician. For inpatients, it fires gap-closure queries while the patient is still admitted, securing the right clinical classification before discharge. Every response is e-signed. Every query is an audit trail.',
-    onScreen: ['4 CDI queries pending — Mark Brown', 'CRITICAL tag: MOON workflow trigger', 'Source: Guideline · Documentation_REQ · Coding', 'Physician response + e-signature captured'],
-    artifact: { type: 'workflow', data: { title: 'CDI ENGINE — IR-DRG GAP CLOSURE', steps: [
-      { num: '1', label: 'Clinical note signed → CDI triggered', detail: 'AI reads note instantly. IR-DRG grouping criteria checked.', color: '#f87171' },
-      { num: '2', label: 'Gap identified — CRITICAL flag', detail: 'MOON workflow, sepsis classification, observation status flagged', color: '#fb923c' },
-      { num: '3', label: 'Guided query sent to physician', detail: 'Multiple-choice format. Compliant. Sent to physician device.', color: '#4d8aff' },
-      { num: '4', label: 'Physician responds + e-signs', detail: 'Response captured. IR-DRG weight updated immediately.', color: '#4d8aff' },
-      { num: '5', label: 'DHA Compliant — Audit Ready', detail: 'Full audit trail. e-signature stored. Claim defensible.', color: '#4ade80' },
-    ]}}
-  },
-  {
-    id: 7, timecode: '1:25–1:43', journeyStage: 'coding',
-    title: 'Coding + IR-DRG Optimisation',
-    voText: 'Clinical notes are converted into the most defensible, highest-weight ICD-10-CM codes the documentation supports. Symptom-only codes are suppressed. Comorbidities are captured and ranked. The IR-DRG weight — and the revenue attached to it — reflects what your clinical team actually delivered.',
-    onScreen: ['J18.9 — Pneumonia (Primary, CC, POA: Y)', 'E11.9 — Type 2 Diabetes · J44.9 — COPD', 'R50.9 Rejected — replaced by J18.9', 'CPT: 96374, 96365, 71045, 36415, J7620'],
-    artifact: { type: 'drg_delta', data: { title: 'IR-DRG OPTIMISATION — MARK BROWN', baseline: { drg: 'IR-DRG 193', label: 'Symptom-only: R50.9 Fever', value: 'Weight: 0.82' }, optimized: { drg: 'IR-DRG 177', label: 'J18.9 Pneumonia + CC/MCC', value: 'Weight: 1.34' }, conditions: [
-      { name: 'J18.9 — Community Pneumonia', source: 'Primary · CC · POA: Yes', delta: '+0.31 weight' },
-      { name: 'E11.9 — Type 2 Diabetes', source: 'Comorbidity · Mapped from labs', delta: '+0.12 weight' },
-      { name: 'J44.9 — COPD', source: 'Secondary · Clinical note confirmed', delta: '+0.09 weight' },
-      { name: 'R50.9 — Rejected', source: 'Symptom-only code suppressed', delta: '— replaced' },
-    ], totalDelta: '+0.52 IR-DRG weight' }}
-  },
-  {
-    id: 8, timecode: '1:43–1:51', journeyStage: 'denial-intel',
-    title: 'Denial Intelligence — Stop Denials Before They Happen',
-    voText: 'Before any claim is submitted, denial risk is scored against each insurer\'s specific patterns. Substantial recoverable revenue surfaces that would otherwise have been lost quietly — denied, delayed, and never followed up. That cycle ends here.',
-    onScreen: ['Total recoverable: $214.6K identified', 'BlueShield/Daman: $78.6K recoverable (17.7%)', 'Top driver: Auth gap $47.7K — Ortho/Spine + MRI', 'Denial rate trend: dropping'],
-    artifact: { type: 'stats_grid', data: { title: 'PAYOR CONTRACT INTELLIGENCE — UAE', stats: [
-      { label: 'Total recoverable identified', value: '$214.6K', color: '#4ade80' },
-      { label: 'Daman — auth gap recovery', value: '$47.7K', color: '#00cba8' },
-      { label: 'Denial rate trend', value: '↓ 30%', color: '#4d8aff', delta: 'system-wide' },
-      { label: 'Payers under live intelligence', value: '4', color: '#a78bfa', delta: 'Daman · AXA · Bupa · Neuron' },
-    ]}}
-  },
-  {
-    id: 9, timecode: '1:51–1:58', journeyStage: 'recovery',
-    title: 'Claim Recovery — Auto-Appeal in One Click',
-    voText: 'When a denial arrives, a contract-grounded appeal is assembled and ready in one click — citing the exact policy terms that support recovery. What used to take your team three weeks takes the platform thirty seconds. Revenue that was lost is found.',
-    onScreen: ['Claim BS-98245 — Fatima N. — Gap $1,900', 'Blocked: CARC 97 — Procedure bundled', 'Unblock: Confirm separate service + modifier -59', 'Appeal letter: Contract clauses C-3.2, C-5.4 cited'],
-    artifact: { type: 'workflow', data: { title: 'ONE-CLICK CLAIM RECOVERY', steps: [
-      { num: '1', label: 'Denial received — CARC 97', detail: 'Claim BS-98245 · Fatima N. · $1,900 gap · Bundled by payer', color: '#f87171' },
-      { num: '2', label: 'Unblock checklist generated', detail: 'Confirm separate and distinct service documentation · Modifier -59', color: '#fb923c' },
-      { num: '3', label: 'Contract clauses cited', detail: 'C-3.2 and C-5.4 · APC CF × 1.75 methodology applied', color: '#4d8aff' },
-      { num: '4', label: 'Appeal letter generated — 1 click', detail: 'Payer-specific · Contract-grounded · Sent instantly', color: '#4ade80' },
-    ]}}
-  },
-  {
-    id: 10, timecode: '1:58–2:15', journeyStage: 'pathway',
-    title: 'Pathway Intelligence — 30-Day Revenue Pipeline',
-    voText: 'Finance gains a rolling thirty-day revenue forecast by service line — driven not by historical averages, but by live clinical signals from the moment of admission. Surgical candidates identified early. Pre-auth holds tracked in real time. Revenue predicted at admission, not estimated at month end.',
-    onScreen: ['Mark Brown — IP admission packet — 4h left — HIGH', 'Pre-Auth hold — Sepsis/Pneumonia — OBS pathway', 'Ananya S. — MRI 72148 PA packet — 6h left', "Today's Focus: 8 urgent · 5 Pre-Auth holds · 9 audit risk"],
-    artifact: { type: 'phase_breakdown', data: { phaseName: 'CASE MANAGEMENT CONTROL TOWER', phase: 1, problem: 'Finance plans from historical averages. Clinical signals arrive too late for capacity or cash flow planning.', steps: ['Inpatient progression probability scored at first contact', 'Surgical/theatre candidate identified from ED assessment', 'LOS forecast under IR-DRG: Mark Brown (Pneumonia) → 4.2 days', 'Pre-Auth hold tracked: 5 active, Ananya S. MRI 72148 → 6h left', '30-day revenue pipeline by service line, payer, IR-DRG band'], tags: ['IR-DRG LOS Forecast', 'PA Tracking', 'Theatre Candidates', 'Revenue Pipeline'], outcome: 'Finance acts on clinical signals. $0 surprise variance. Pipeline accuracy +10%.' }}
-  },
-  {
-    id: 11, timecode: '2:15–2:30', journeyStage: 'dashboard',
-    title: 'The Management Dashboard — Everything in One View',
-    voText: 'Everything your board needs in one view. Denial trends, IR-DRG movement, payer variance, recovery pipeline. Every dirham accounted for. Docstribe: one platform, built for UAE healthcare, delivering measurable financial outcomes within sixty days of going live. arcus@docstribe.com — let\'s begin.',
-    onScreen: ['Expected: $1.4M · Paid: $1.1M', 'Variance: $296.4K · Recoverable: $214.6K', '4 payors under live contract intelligence', 'One dashboard. One platform. Zero leakage.'],
-    artifact: { type: 'comparison_table', data: { title: 'EXECUTIVE DASHBOARD — LIVE UAE NUMBERS', rows: [
-      { metric: 'Expected revenue', before: '$1.4M billed', after: '$1.4M tracked' },
-      { metric: 'Actual paid', before: '$1.1M received', after: 'Variance identified' },
-      { metric: 'Variance', before: '$296.4K lost', after: '$214.6K recoverable' },
-      { metric: 'Payers under intelligence', before: 'Manual', after: '4 live — Daman · AXA · Bupa · Neuron' },
-    ]}}
-  },
-];
 
 app.post('/api/demo', async (req, res) => {
   const { sceneId } = req.body;
