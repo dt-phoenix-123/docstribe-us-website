@@ -15,7 +15,7 @@ const PHASES = [
       'Ingest H&P within minutes of physician signature',
       'Extract ICD-10 codes; compute baseline DRG via grouper',
       'Fire CDI queries Day 0 — not Day 3 like traditional CDI',
-      'Surface DRG delta: e.g. $8.6K → $16.6K if AKI documented',
+      'Surface DRG delta: e.g. AED 8.6K → AED 16.6K if AKI documented',
     ],
     products: ['CDI ENGINE', 'DRG GROUPER'],
   },
@@ -32,7 +32,7 @@ const PHASES = [
       'Recompute DRG on every clinical signal — notes, labs, consults',
       'Map lab values to undocumented diagnoses (e.g. AKI, malnutrition)',
       'Detect LOS paradox when patient outlasts GMLOS — alert fired',
-      'Track revenue delta in real time: e.g. +$4,200 from new CC/MCC',
+      'Track revenue delta in real time: e.g. +AED 4,200 from new CC/MCC',
     ],
     products: ['LOS MONITOR', 'QUERY ENGINE'],
   },
@@ -457,7 +457,7 @@ export default function Shakti() {
         }}>
           {[
             { val: '18×', label: 'Average ROI', color: '#00cba8' },
-            { val: '$100M+', label: 'Revenue recovered', color: '#4d8aff' },
+            { val: 'AED 100M+', label: 'Revenue recovered', color: '#4d8aff' },
             { val: '60 days', label: 'Pilot to live rulebook', color: '#ff7b4a' },
           ].map(({ val, label, color }) => (
             <div key={label} style={{

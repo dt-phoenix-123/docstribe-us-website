@@ -65,7 +65,7 @@ export default function CTA() {
           }}>
             {[
               { val: '60', unit: 'Days', label: 'Free pilot period' },
-              { val: '$0', unit: 'Upfront', label: 'Zero cost to start' },
+              { val: '0', unit: 'Upfront', label: 'Zero cost to start' },
               { val: '18x', unit: 'Avg ROI', label: 'Average return' },
             ].map(item => (
               <div key={item.label} style={{ textAlign: 'center' }}>

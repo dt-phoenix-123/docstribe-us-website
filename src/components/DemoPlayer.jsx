@@ -56,14 +56,18 @@ const BORDER = 'rgba(255,255,255,0.07)';
 /* ─── Spotlight: is this element the current focal point? ────── */
 const spot = (p, from, to = Math.min(from + 0.20, 1)) => p >= from && p <= to;
 
-/* ─── Glow card style ────────────────────────────────────────── */
+/* ─── Glow card style — cinematic multi-layer ───────────────── */
 function glow(active, color, extra = {}) {
   return {
-    transition: 'all 0.5s cubic-bezier(0.34,1.2,0.64,1)',
-    transform: active ? 'scale(1.03)' : 'scale(1)',
-    border: active ? `1px solid ${color}70` : `1px solid rgba(255,255,255,0.07)`,
-    boxShadow: active ? `0 0 28px ${color}30, 0 4px 20px rgba(0,0,0,0.5)` : '0 2px 8px rgba(0,0,0,0.25)',
-    background: active ? `${color}16` : `${color}07`,
+    transition: 'all 0.55s cubic-bezier(0.34,1.2,0.64,1)',
+    transform: active ? 'scale(1.035)' : 'scale(1)',
+    border: active ? `1px solid ${color}80` : `1px solid rgba(255,255,255,0.07)`,
+    boxShadow: active
+      ? `0 0 0 1px ${color}20, 0 0 22px ${color}35, 0 0 60px ${color}18, 0 8px 32px rgba(0,0,0,0.55), inset 0 1px 0 ${color}25`
+      : '0 2px 8px rgba(0,0,0,0.25)',
+    background: active
+      ? `linear-gradient(135deg, ${color}18, ${color}08)`
+      : `${color}06`,
     ...extra,
   };
 }
@@ -103,14 +107,14 @@ const SCENES = [
   {
     id: 2, type: 'kpi', color: TEAL,
     title: 'Introducing Docstribe',
-    // S1:11w S2:16w S3:7w = 34w — beat fracs 0.32 0.79 1.00
-    vo: "Meet Docstribe — an AI agentic workforce built for UAE healthcare. Denials drop thirty percent, revenue goes up twenty-five percent, CMI improves by zero point fifteen. We guarantee it within sixty days.",
+    // S1:25w credentials S2:7w outcomes S3:1w = 33w — beat fracs 0.26 0.46 0.62 0.76 0.90
+    vo: "Docstribe is a clinical intelligence platform deployed across the US, UAE, and India — across one hundred hospitals, managing ten million lives, driven by clinicians with thirty years of experience. Denials drop thirty percent. Revenue goes up twenty-five percent. Guaranteed.",
     beats: [
-      { at: 0.04, stat: 'Docstribe',  sub: 'AI agentic workforce — UAE healthcare' },
-      { at: 0.38, stat: '↓30%',       sub: 'Fewer denials on first submission' },
-      { at: 0.54, stat: '+25%',       sub: 'Revenue capture uplift' },
-      { at: 0.70, stat: '+0.15 CMI',  sub: 'Case mix index uplift per discharge' },
-      { at: 0.80, stat: '60 days',    sub: 'Guaranteed from go-live · contractual SLA' },
+      { at: 0.04, stat: 'Docstribe',      sub: 'Clinical intelligence platform · clinician-built' },
+      { at: 0.26, stat: '100+ Hospitals',  sub: 'US · UAE · India · live deployments' },
+      { at: 0.46, stat: '10M+ Lives',      sub: 'Patient population managed across all deployments' },
+      { at: 0.62, stat: '30 Yrs Exp',      sub: 'Clinician-led · not a generic tech platform' },
+      { at: 0.76, stat: '↓30% denials',    sub: 'Guaranteed within 60 days from go-live' },
     ],
   },
   {
@@ -220,26 +224,41 @@ const SCENES = [
   },
 ];
 
-/* ─── ProductShell — SaaS chrome wrapper ─────────────────────── */
+/* ─── ProductShell — cinematic SaaS chrome ───────────────────── */
 function ProductShell({ breadcrumb, color, children }) {
   const nav = ['◉','⊞','◷','⚡','⚙'];
   return (
     <div style={{ position: 'absolute', inset: 0, display: 'flex', background: BLUE, fontFamily: 'Sora,sans-serif' }}>
-      <div style={{ width: 42, flexShrink: 0, background: '#060b14', borderRight: `1px solid ${BORDER}`, display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '10px 0', gap: 3 }}>
-        <div style={{ width: 24, height: 24, borderRadius: 7, marginBottom: 12, background: `linear-gradient(135deg,${color},${INDIGO})`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 11, fontWeight: 900, color: '#fff' }}>D</div>
+      {/* Sidebar — frosted glass with gradient */}
+      <div style={{ width: 42, flexShrink: 0, background: 'linear-gradient(180deg,rgba(4,8,20,0.98) 0%,rgba(6,10,22,0.95) 100%)', borderRight: `1px solid ${BORDER}`, display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '10px 0', gap: 3, backdropFilter: 'blur(20px)' }}>
+        {/* Logo with glow */}
+        <div style={{ width: 24, height: 24, borderRadius: 7, marginBottom: 12, background: `linear-gradient(135deg,${color},${INDIGO})`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 11, fontWeight: 900, color: '#fff', boxShadow: `0 0 14px ${color}50` }}>D</div>
         {nav.map((ic, i) => (
-          <div key={i} style={{ width: 26, height: 26, borderRadius: 6, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 11, opacity: i === 0 ? 1 : 0.22, background: i === 0 ? `${color}22` : 'transparent', color: i === 0 ? color : DIM }}>{ic}</div>
+          <div key={i} style={{ width: 26, height: 26, borderRadius: 6, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 11, opacity: i === 0 ? 1 : 0.22, background: i === 0 ? `${color}28` : 'transparent', color: i === 0 ? color : DIM, boxShadow: i === 0 ? `inset 2px 0 0 ${color}` : 'none', position: 'relative' }}>
+            {ic}
+            {/* Micro glow dot on active nav item */}
+            {i === 0 && <div style={{ position: 'absolute', right: 3, top: 3, width: 4, height: 4, borderRadius: '50%', background: color, boxShadow: `0 0 6px ${color}` }} />}
+          </div>
         ))}
       </div>
+      {/* Main panel */}
       <div style={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
-        <div style={{ height: 34, flexShrink: 0, borderBottom: `1px solid ${BORDER}`, display: 'flex', alignItems: 'center', padding: '0 12px', gap: 6, background: 'rgba(0,0,0,0.35)' }}>
+        {/* Header bar with chrome shimmer */}
+        <div style={{ height: 34, flexShrink: 0, borderBottom: `1px solid ${BORDER}`, display: 'flex', alignItems: 'center', padding: '0 12px', gap: 6, background: 'linear-gradient(180deg,rgba(4,8,20,0.92) 0%,rgba(8,14,32,0.82) 100%)', position: 'relative', overflow: 'hidden' }}>
+          {/* Shimmer sweep */}
+          <div style={{ position: 'absolute', top: 0, left: 0, bottom: 0, width: '30%', background: 'linear-gradient(90deg,transparent,rgba(255,255,255,0.04),transparent)', animation: 'dpChromeShimmer 3.5s ease-in-out infinite', pointerEvents: 'none' }} />
           <span style={{ fontSize: 8, color: MUTED }}>Docstribe</span>
           <span style={{ fontSize: 8, color: '#1e293b' }}>›</span>
           <span style={{ fontSize: 10, fontWeight: 700, color: TXT }}>{breadcrumb}</span>
           <div style={{ flex: 1 }} />
-          {[color, INDIGO, '#1e293b'].map((c, i) => <div key={i} style={{ width: 5, height: 5, borderRadius: '50%', background: c }} />)}
+          {/* Status dots */}
+          {[color, INDIGO, '#1e293b'].map((c, i) => <div key={i} style={{ width: 5, height: 5, borderRadius: '50%', background: c, boxShadow: i === 0 ? `0 0 6px ${c}` : 'none' }} />)}
         </div>
-        <div style={{ flex: 1, overflow: 'hidden', position: 'relative' }}>{children}</div>
+        {/* Content area with scan-line texture */}
+        <div style={{ flex: 1, overflow: 'hidden', position: 'relative' }}>
+          <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none', zIndex: 50, backgroundImage: 'repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,0.055) 2px,rgba(0,0,0,0.055) 4px)', backgroundSize: '100% 4px' }} />
+          {children}
+        </div>
       </div>
     </div>
   );
@@ -255,18 +274,30 @@ const Badge = ({ text, color }) => (
 
 /* ══════════════════ SCENE VISUALS ══════════════════════════════ */
 
-/* Scene 1 — Revenue gap: BIG numbers, one at a time */
+/* Scene 1 — Revenue gap: BIG numbers, one at a time — cinematic */
 function StatScene({ scene, progress }) {
+  const anyActive = scene.beats.some(b => spot(progress, b.at, b.at + 0.28));
   return (
-    <div style={{ position: 'absolute', inset: 0, background: 'radial-gradient(ellipse 80% 60% at 50% 45%,#040a18 0%,#000 70%)', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 28 }}>
-      <div style={{ position: 'absolute', inset: 0, opacity: 0.03, backgroundImage: 'linear-gradient(rgba(0,203,168,0.5) 1px,transparent 1px),linear-gradient(90deg,rgba(0,203,168,0.5) 1px,transparent 1px)', backgroundSize: '56px 56px' }} />
-      <div style={{ position: 'absolute', bottom: 14, right: 18, fontSize: 8, fontWeight: 800, color: `${TEAL}45`, letterSpacing: 2, fontFamily: 'Sora' }}>DOCSTRIBE</div>
+    <div style={{ position: 'absolute', inset: 0, background: 'radial-gradient(ellipse 90% 65% at 50% 45%,#030816 0%,#000 75%)', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 28 }}>
+      {/* Breathing ambient glow */}
+      <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none', background: `radial-gradient(ellipse 60% 50% at 50% 50%,${TEAL}08 0%,transparent 70%)`, animation: 'dpBreath 4s ease-in-out infinite' }} />
+      {/* Animated grid */}
+      <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none', backgroundImage: 'linear-gradient(rgba(0,203,168,0.5) 1px,transparent 1px),linear-gradient(90deg,rgba(0,203,168,0.5) 1px,transparent 1px)', backgroundSize: '56px 56px', animation: 'dpGridBreathe 6s ease-in-out infinite' }} />
+      {/* Beat bloom flash */}
+      {anyActive && (
+        <div key={`bloom-${progress.toFixed(1)}`} style={{ position: 'absolute', inset: 0, pointerEvents: 'none', background: `radial-gradient(ellipse 60% 40% at 50% 50%,${TEAL}18 0%,transparent 60%)`, animation: 'dpBloom 1.8s ease-out both', zIndex: 1 }} />
+      )}
+      <div style={{ position: 'absolute', bottom: 14, right: 18, fontSize: 8, fontWeight: 800, color: `${TEAL}45`, letterSpacing: 2, fontFamily: 'Sora', zIndex: 2 }}>DOCSTRIBE</div>
       {scene.beats.map((b, i) => {
         const show = progress >= b.at;
         const active = spot(progress, b.at, b.at + 0.28);
         return (
-          <div key={i} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8, opacity: show ? 1 : 0, transform: show ? 'none' : 'translateY(24px)', transition: 'all 0.9s cubic-bezier(0.34,1.2,0.64,1)', filter: show && !active && i < 2 ? 'brightness(0.5)' : 'brightness(1)' }}>
-            <div style={{ fontSize: i === 0 ? 96 : i === 1 ? 76 : 28, fontWeight: 900, letterSpacing: i < 2 ? -2 : -0.5, fontFamily: 'Sora', lineHeight: 1.0, color: i === 2 ? TEAL : '#fff', textShadow: active ? `0 0 80px ${TEAL}80` : i < 2 ? `0 0 40px ${TEAL}30` : 'none', transition: 'text-shadow 0.5s ease', background: i === 2 && active ? `linear-gradient(135deg,${TEAL},${INDIGO})` : 'none', WebkitBackgroundClip: i === 2 && active ? 'text' : 'unset', WebkitTextFillColor: i === 2 && active ? 'transparent' : 'unset' }}>
+          <div key={i} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8, opacity: show ? 1 : 0, animation: show ? `dpEmergeStat 0.9s cubic-bezier(0.34,1.2,0.64,1) both` : 'none', filter: show && !active && i < 2 ? 'brightness(0.5)' : 'brightness(1)', position: 'relative', zIndex: 2 }}>
+            {/* Emanating ring on active stat */}
+            {active && i < 2 && (
+              <div style={{ position: 'absolute', width: 140, height: 140, borderRadius: '50%', border: `2px solid ${TEAL}55`, animation: 'dpStatRing 1.4s ease-out infinite', pointerEvents: 'none', zIndex: 0 }} />
+            )}
+            <div style={{ fontSize: i === 0 ? 96 : i === 1 ? 76 : 28, fontWeight: 900, letterSpacing: i < 2 ? -2 : -0.5, fontFamily: 'Sora', lineHeight: 1.0, color: i === 2 ? TEAL : '#fff', textShadow: active ? `0 0 40px ${TEAL}cc, 0 0 100px ${TEAL}50, 0 0 180px ${TEAL}20` : i < 2 ? `0 0 40px ${TEAL}30` : 'none', transition: 'text-shadow 0.5s ease', background: i === 2 && active ? `linear-gradient(135deg,${TEAL},${INDIGO})` : 'none', WebkitBackgroundClip: i === 2 && active ? 'text' : 'unset', WebkitTextFillColor: i === 2 && active ? 'transparent' : 'unset', position: 'relative', zIndex: 1 }}>
               {show ? <CountUp value={b.stat} duration={900} key={`${i}-${show}`} /> : b.stat}
             </div>
             <div style={{ fontSize: i === 2 ? 14 : 11, color: i === 2 ? TXT : DIM, fontFamily: 'Sora', textAlign: 'center', maxWidth: 480, letterSpacing: 0.2, fontWeight: i === 2 ? 500 : 400 }}>{b.sub}</div>
@@ -293,27 +324,32 @@ function KPIScene({ scene, progress }) {
       {/* ── Phase 1: Introducing Docstribe ── */}
       <div style={{ position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 20, padding: '0 48px', opacity: introOpacity, transition: 'opacity 0.6s ease', pointerEvents: introOpacity < 0.1 ? 'none' : 'auto' }}>
 
-        <div style={{ fontSize: 9, fontWeight: 700, color: `${TEAL}80`, letterSpacing: 3, textTransform: 'uppercase' }}>The Solution</div>
+        <div style={{ fontSize: 9, fontWeight: 700, color: `${TEAL}80`, letterSpacing: 3, textTransform: 'uppercase' }}>Clinical Intelligence · Proven at Scale</div>
 
-        <div style={{ fontSize: 54, fontWeight: 900, background: `linear-gradient(135deg,#fff 35%,${TEAL} 65%,${INDIGO})`, WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', letterSpacing: -1.5, lineHeight: 1, animation: 'dpBeatIn 0.7s cubic-bezier(0.34,1.4,0.64,1) both' }}>
+        <div style={{ fontSize: 54, fontWeight: 900, background: `linear-gradient(135deg,#fff 35%,${TEAL} 65%,${INDIGO})`, WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', letterSpacing: -1.5, lineHeight: 1, animation: 'dpSpringIn 0.8s cubic-bezier(0.34,1.4,0.64,1) both' }}>
           Docstribe
         </div>
 
-        <div style={{ fontSize: 14, color: TXT, textAlign: 'center', maxWidth: 520, lineHeight: 1.7, fontWeight: 500, opacity: progress >= 0.08 ? 1 : 0, transition: 'opacity 0.6s ease' }}>
-          A skilled <span style={{ color: TEAL, fontWeight: 800 }}>AI agentic workforce</span> that listens to every clinical signal,<br />every financial trigger, and every insurer pattern — and acts in real time.
+        <div style={{ fontSize: 13, color: TXT, textAlign: 'center', maxWidth: 540, lineHeight: 1.75, fontWeight: 500, opacity: progress >= 0.06 ? 1 : 0, transition: 'opacity 0.7s ease' }}>
+          Clinical intelligence platform deployed across the{' '}
+          <span style={{ color: TEAL, fontWeight: 800 }}>US, UAE &amp; India</span>{' '}
+          — across <span style={{ color: AMBER, fontWeight: 800 }}>100+ hospitals</span>,
+          managing <span style={{ color: INDIGO, fontWeight: 800 }}>10M+ lives</span>,
+          driven by clinicians with{' '}
+          <span style={{ color: PURPLE, fontWeight: 800 }}>30+ years experience</span>.
         </div>
 
         {progress >= 0.14 && (
-          <div style={{ display: 'flex', gap: 12, animation: 'dpBeatIn 0.5s ease both', flexWrap: 'wrap', justifyContent: 'center' }}>
-            {[['📋 Clinical Intelligence', INDIGO], ['💰 Financial Signals', TEAL], ['🔒 Insurer Patterns', PURPLE]].map(([l, c]) => (
-              <div key={l} style={{ fontSize: 10, fontWeight: 700, color: c, background: `${c}16`, border: `1px solid ${c}30`, borderRadius: 20, padding: '6px 16px' }}>{l}</div>
+          <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap', justifyContent: 'center' }}>
+            {[['US · UAE · India', INDIGO], ['100+ Hospitals', TEAL], ['10M+ Lives', PURPLE], ['30 Yrs Clinical Exp', AMBER]].map(([l, c], i) => (
+              <div key={l} style={{ fontSize: 10, fontWeight: 700, color: c, background: `${c}16`, border: `1px solid ${c}30`, borderRadius: 20, padding: '6px 16px', animation: `dpSpringIn 0.6s cubic-bezier(0.34,1.4,0.64,1) ${i * 0.08}s both` }}>{l}</div>
             ))}
           </div>
         )}
 
-        {progress >= 0.20 && (
+        {progress >= 0.22 && (
           <div style={{ fontSize: 10, color: DIM, animation: 'dpBeatIn 0.5s ease both', textAlign: 'center' }}>
-            Built for UAE healthcare · NABIDH · DHA · IR-DRG · 60-day outcomes, <span style={{ color: TEAL, fontWeight: 700 }}>guaranteed</span>
+            NABIDH · DHA · IR-DRG · Per-patient AI profiling · 60-day outcomes, <span style={{ color: TEAL, fontWeight: 700 }}>guaranteed</span>
           </div>
         )}
       </div>
@@ -329,12 +365,16 @@ function KPIScene({ scene, progress }) {
             const active = spot(progress, b.at, b.at + 0.16);
             const c = colors[i];
             return (
-              <div key={i} style={{ background: `linear-gradient(135deg,${c}18,${c}08)`, border: `1px solid ${c}${active ? '65' : show ? '28' : '10'}`, borderRadius: 16, padding: '22px 20px', minWidth: 130, flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8, opacity: show ? 1 : 0, transform: show ? `scale(${active ? 1.09 : 1})` : 'translateY(32px) scale(0.78)', transition: 'all 0.55s cubic-bezier(0.34,1.4,0.64,1)', boxShadow: active ? `0 0 48px ${c}35, 0 8px 32px rgba(0,0,0,0.4)` : '0 2px 12px rgba(0,0,0,0.3)', filter: show && !active ? 'brightness(0.65)' : 'brightness(1)' }}>
-                <div style={{ fontSize: 40, fontWeight: 900, color: c, fontFamily: 'Sora', lineHeight: 1, letterSpacing: -1 }}>
+              <div key={i} style={{ background: `linear-gradient(135deg,${c}18,${c}08)`, border: `1px solid ${c}${active ? '70' : show ? '28' : '10'}`, borderRadius: 16, padding: '22px 20px', minWidth: 130, flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8, opacity: show ? 1 : 0, animation: show ? `dpSpringIn 0.65s cubic-bezier(0.34,1.4,0.64,1) both` : 'none', boxShadow: active ? `0 0 0 1px ${c}20, 0 0 48px ${c}40, 0 0 80px ${c}18, 0 8px 32px rgba(0,0,0,0.5), inset 0 1px 0 ${c}25` : '0 2px 12px rgba(0,0,0,0.3)', filter: show && !active ? 'brightness(0.65)' : 'brightness(1)', transform: active ? 'scale(1.07)' : 'scale(1)', transition: 'transform 0.4s ease, filter 0.4s ease, box-shadow 0.4s ease', position: 'relative', overflow: 'hidden' }}>
+                {/* Active bloom behind number */}
+                {active && (
+                  <div style={{ position: 'absolute', inset: -20, pointerEvents: 'none', background: `radial-gradient(ellipse 80% 80% at 50% 50%,${c}25 0%,transparent 70%)`, animation: 'dpBloom 1.5s ease-out both', borderRadius: 24, zIndex: 0 }} />
+                )}
+                <div style={{ fontSize: 48, fontWeight: 900, color: c, fontFamily: 'Sora', lineHeight: 1, letterSpacing: -2, position: 'relative', zIndex: 1, textShadow: active ? `0 0 30px ${c}80` : 'none' }}>
                   {show ? <CountUp value={b.stat} duration={700} key={`k${i}-${show}`} /> : b.stat}
                 </div>
-                <div style={{ width: 22, height: 2, borderRadius: 1, background: c }} />
-                <div style={{ fontSize: 8, color: DIM, textAlign: 'center', lineHeight: 1.5 }}>{b.sub}</div>
+                <div style={{ width: 22, height: 2, borderRadius: 1, background: c, position: 'relative', zIndex: 1 }} />
+                <div style={{ fontSize: 8, color: DIM, textAlign: 'center', lineHeight: 1.5, position: 'relative', zIndex: 1 }}>{b.sub}</div>
               </div>
             );
           })}
@@ -605,12 +645,10 @@ function AmbientScreen({ progress }) {
                   <span style={{ fontSize: 7, fontWeight: 800, color: opdPhaseColor, letterSpacing: 0.3 }}>{opdPhaseLabel}</span>
                 </div>
               </div>
-              <div style={{ display: 'flex', gap: 14 }}>
-                {[['Specialty','Endocrinology'],['Physician','Dr. Al-Rashid'],['Enc ID','OPD-0891']].map(([k,v]) => (
-                  <div key={k}>
-                    <div style={{ fontSize: 7, color: MUTED }}>{k}</div>
-                    <div style={{ fontSize: 8, fontWeight: 700, color: DIM }}>{v}</div>
-                  </div>
+              <div style={{ display: 'flex', gap: 6, alignItems: 'center', flexWrap: 'wrap' }}>
+                <div style={{ fontSize: 7, fontWeight: 700, color: `${INDIGO}90`, letterSpacing: 1, background: `${INDIGO}0e`, border: `1px solid ${INDIGO}25`, borderRadius: 4, padding: '2px 6px' }}>AI PROFILE</div>
+                {[['HbA1c trend: rising', AMBER], ['Prior auth: DM-2024-01 ✓', TEAL], ['DRG risk: HIGH', RED]].map(([t, c], i) => (
+                  <span key={i} style={{ fontSize: 7, color: c, background: `${c}10`, border: `1px solid ${c}22`, borderRadius: 4, padding: '1px 5px' }}>{t}</span>
                 ))}
               </div>
             </div>
@@ -682,12 +720,10 @@ function AmbientScreen({ progress }) {
                   <span style={{ fontSize: 7, fontWeight: 800, color: ipdPhaseColor, letterSpacing: 0.3 }}>{ipdPhaseLabel}</span>
                 </div>
               </div>
-              <div style={{ display: 'flex', gap: 14 }}>
-                {[['Ward','Respiratory · Bay 4'],['Physician','Dr. Farooqi'],['Enc ID','IPD-0234']].map(([k,v]) => (
-                  <div key={k}>
-                    <div style={{ fontSize: 7, color: MUTED }}>{k}</div>
-                    <div style={{ fontSize: 8, fontWeight: 700, color: DIM }}>{v}</div>
-                  </div>
+              <div style={{ display: 'flex', gap: 6, alignItems: 'center', flexWrap: 'wrap' }}>
+                <div style={{ fontSize: 7, fontWeight: 700, color: `${TEAL}90`, letterSpacing: 1, background: `${TEAL}0e`, border: `1px solid ${TEAL}25`, borderRadius: 4, padding: '2px 6px' }}>AI PROFILE</div>
+                {[['COPD hx: 3 admissions', AMBER], ['Prior auth: THQ-189234 ✓', TEAL], ['DRG risk: CRITICAL', RED]].map(([t, c], i) => (
+                  <span key={i} style={{ fontSize: 7, color: c, background: `${c}10`, border: `1px solid ${c}22`, borderRadius: 4, padding: '1px 5px' }}>{t}</span>
                 ))}
               </div>
             </div>
@@ -751,6 +787,15 @@ function AmbientScreen({ progress }) {
             )}
           </div>
         </div>
+
+        {/* ── Patient intelligence profile banner ── */}
+        {p >= 0.60 && (
+          <div style={{ background: `linear-gradient(90deg,${PURPLE}12,${INDIGO}0a)`, border: `1px solid ${PURPLE}30`, borderRadius: 7, padding: '6px 12px', display: 'flex', gap: 8, alignItems: 'center', flexShrink: 0, animation: 'dpBeatIn 0.4s ease both' }}>
+            <div style={{ width: 5, height: 5, borderRadius: '50%', background: PURPLE, boxShadow: `0 0 8px ${PURPLE}`, flexShrink: 0 }} />
+            <span style={{ fontSize: 8, fontWeight: 700, color: PURPLE }}>Patient Intelligence Profile</span>
+            <span style={{ fontSize: 7, color: DIM }}>Comorbidities · Medication history · Prior auth trail · DRG risk — built per patient, fed into every downstream decision</span>
+          </div>
+        )}
 
         {/* ── Compliance banner ── */}
         {p >= 0.68 && (
@@ -1120,10 +1165,10 @@ function ClaimScreen({ progress }) {
 /* Scene 10 — Service Line Growth: clinical deterioration signals → ops engagement queue */
 function TowerScreen({ progress }) {
   const patients = [
-    { init: 'D.K.', dept: 'Respiratory', signal: 'SpO₂ 94→88% over 4h · deteriorating',    opportunity: 'IR-DRG escalation window open',         action: 'CDI Alert',  actionCol: AMBER,  uplift: '+AED 18K', risk: 'HIGH',     col: TEAL,   show: 0.10 },
-    { init: 'N.M.', dept: 'Cardiology',  signal: 'BNP risen 3× — heart failure likely',     opportunity: 'Complex DRG candidate · MCC qualifies', action: 'Ops Engage', actionCol: RED,    uplift: '+AED 32K', risk: 'CRITICAL', col: RED,    show: 0.28 },
-    { init: 'A.R.', dept: 'Neurology',   signal: 'GCS change Day 2 — LOS extension likely', opportunity: 'CDI query pending · CC documentation',  action: 'CDI Query',  actionCol: INDIGO, uplift: '+AED 14K', risk: 'HIGH',     col: INDIGO, show: 0.46 },
-    { init: 'B.S.', dept: 'Oncology',   signal: 'ECOG progressing — chemo eligible',        opportunity: 'Pre-auth for systemic therapy ready',   action: 'PA Ready',   actionCol: GREEN,  uplift: '+AED 27K', risk: 'MED',      col: PURPLE, show: 0.62 },
+    { init: 'D.K.', dept: 'Respiratory', signal: 'SpO₂ 94→88% over 4h · deteriorating',    opportunity: 'IR-DRG escalation window open',         action: 'CDI Alert',  actionCol: AMBER,  uplift: '+AED 18K', risk: 'HIGH',     col: TEAL,   show: 0.10, profile: { referral: 'Pulm ICU consult',       next: 'Escalate IR-DRG',         guideline: 'ATS/ERS: SpO₂ <90% → ICU review' } },
+    { init: 'N.M.', dept: 'Cardiology',  signal: 'BNP risen 3× — heart failure likely',     opportunity: 'Complex DRG candidate · MCC qualifies', action: 'Ops Engage', actionCol: RED,    uplift: '+AED 32K', risk: 'CRITICAL', col: RED,    show: 0.28, profile: { referral: 'Cardiology specialist',  next: 'BNP-triggered CDI query', guideline: 'ACC/AHA HF: BNP >500 → specialist' } },
+    { init: 'A.R.', dept: 'Neurology',   signal: 'GCS change Day 2 — LOS extension likely', opportunity: 'CDI query pending · CC documentation',  action: 'CDI Query',  actionCol: INDIGO, uplift: '+AED 14K', risk: 'HIGH',     col: INDIGO, show: 0.46, profile: { referral: 'Neuro CDI team',         next: 'CC documentation query',  guideline: 'AAN: GCS Δ Day 2 → MCC eligible' } },
+    { init: 'B.S.', dept: 'Oncology',   signal: 'ECOG progressing — chemo eligible',        opportunity: 'Pre-auth for systemic therapy ready',   action: 'PA Ready',   actionCol: GREEN,  uplift: '+AED 27K', risk: 'MED',      col: PURPLE, show: 0.62, profile: { referral: 'Oncology PA pathway',    next: 'Systemic therapy pre-auth', guideline: 'ESMO: ECOG 1→2 → systemic eligible' } },
   ];
   return (
     <ProductShell breadcrumb="Service Line Growth · Clinical Engagement" color={INDIGO}>
@@ -1145,8 +1190,8 @@ function TowerScreen({ progress }) {
 
         {/* Column headers */}
         <div style={{ display: 'flex', padding: '0 8px', borderBottom: `1px solid ${BORDER}` }}>
-          {['Patient', 'Clinical Signal', 'Revenue Opportunity', 'Action', 'Uplift'].map((h, i) => (
-            <div key={i} style={{ flex: i === 1 || i === 2 ? 2 : 1, fontSize: 7, color: MUTED, fontWeight: 700, padding: '3px 0', letterSpacing: 0.3 }}>{h}</div>
+          {[['Patient', 1], ['AI Profile', 2], ['Clinical Signal', 2], ['Revenue Opportunity', 2], ['Action', 1], ['Uplift', 1]].map(([h, f], i) => (
+            <div key={i} style={{ flex: f, fontSize: 7, color: i === 1 ? PURPLE : MUTED, fontWeight: 700, padding: '3px 0', letterSpacing: 0.3 }}>{h}</div>
           ))}
         </div>
 
@@ -1166,6 +1211,15 @@ function TowerScreen({ progress }) {
                     <div style={{ fontSize: 8, fontWeight: 700, color: active ? p.col : TXT }}>{p.dept}</div>
                     <Badge text={p.risk} color={p.risk === 'CRITICAL' ? RED : p.risk === 'HIGH' ? AMBER : GREEN} />
                   </div>
+                </div>
+                {/* AI Profile column */}
+                <div style={{ flex: 2, paddingRight: 6 }}>
+                  <div style={{ display: 'flex', gap: 4, alignItems: 'center', marginBottom: 2 }}>
+                    <span style={{ fontSize: 6, fontWeight: 800, color: p.risk === 'CRITICAL' ? RED : p.risk === 'HIGH' ? AMBER : GREEN, background: `${p.risk === 'CRITICAL' ? RED : p.risk === 'HIGH' ? AMBER : GREEN}18`, borderRadius: 3, padding: '1px 4px', flexShrink: 0 }}>{p.risk}</span>
+                    <span style={{ fontSize: 7, color: PURPLE, fontWeight: 600 }}>{p.profile.referral}</span>
+                  </div>
+                  <div style={{ fontSize: 6.5, color: DIM, marginBottom: 1 }}>→ {p.profile.next}</div>
+                  <div style={{ fontSize: 6, color: `${PURPLE}90`, fontStyle: 'italic' }}>{p.profile.guideline}</div>
                 </div>
                 <div style={{ flex: 2, fontSize: 9, color: active ? TXT : DIM, fontWeight: active ? 600 : 400, paddingRight: 6 }}>{p.signal}</div>
                 <div style={{ flex: 2, fontSize: 8, color: DIM, paddingRight: 6 }}>{p.opportunity}</div>
@@ -1188,6 +1242,10 @@ function TowerScreen({ progress }) {
             <div style={{ flex: 1, background: `${TEAL}10`, border: `1px solid ${TEAL}25`, borderRadius: 8, padding: '7px 12px', textAlign: 'center' }}>
               <div style={{ fontSize: 20, fontWeight: 900, color: TEAL, fontFamily: 'Sora' }}>Day 0</div>
               <div style={{ fontSize: 7, color: DIM }}>clinical signal → ops team · no lag · no reports</div>
+            </div>
+            <div style={{ flex: 1, background: `${PURPLE}10`, border: `1px solid ${PURPLE}25`, borderRadius: 8, padding: '7px 12px', textAlign: 'center' }}>
+              <div style={{ fontSize: 13, fontWeight: 900, color: PURPLE, fontFamily: 'Sora', marginBottom: 2 }}>AI Profiles</div>
+              <div style={{ fontSize: 7, color: DIM }}>per-patient intelligence · risk · referral opportunity · clinical guidelines</div>
             </div>
           </div>
         )}
@@ -1332,20 +1390,29 @@ function SceneVisual({ scene, progress }) {
 /* ─── Intro Splash ───────────────────────────────────────────── */
 function Splash({ onPlay }) {
   return (
-    <div onClick={onPlay} style={{ position: 'absolute', inset: 0, zIndex: 30, background: 'radial-gradient(ellipse 80% 60% at 50% 45%, #06102a 0%, #000 70%)', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 18, cursor: 'pointer', fontFamily: 'Sora, sans-serif' }}>
+    <div onClick={onPlay} style={{ position: 'absolute', inset: 0, zIndex: 30, background: 'radial-gradient(ellipse 80% 60% at 50% 45%, #06102a 0%, #000 70%)', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 14, cursor: 'pointer', fontFamily: 'Sora, sans-serif' }}>
       <div style={{ position: 'absolute', inset: 0, opacity: 0.04, backgroundImage: 'linear-gradient(rgba(0,203,168,0.3) 1px,transparent 1px),linear-gradient(90deg,rgba(0,203,168,0.3) 1px,transparent 1px)', backgroundSize: '48px 48px' }} />
-      <div style={{ fontSize: 9, fontWeight: 700, color: `${TEAL}90`, letterSpacing: 3, textTransform: 'uppercase' }}>UAE Healthcare · AI-Native RCM Platform</div>
+      {/* Breathing ambient */}
+      <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none', background: `radial-gradient(ellipse 55% 45% at 50% 50%,${TEAL}07 0%,transparent 70%)`, animation: 'dpBreath 4s ease-in-out infinite' }} />
+      <div style={{ fontSize: 9, fontWeight: 700, color: `${TEAL}90`, letterSpacing: 3, textTransform: 'uppercase' }}>Clinical Intelligence Platform</div>
       <div style={{ fontSize: 44, fontWeight: 900, background: `linear-gradient(135deg,#fff 40%,${TEAL})`, WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', letterSpacing: -1.5, lineHeight: 1 }}>Docstribe</div>
-      <div style={{ fontSize: 13, fontWeight: 700, color: TXT, textAlign: 'center', maxWidth: 480, lineHeight: 1.6 }}>
-        A skilled AI agentic workforce that listens to every clinical and financial signal —
-        and puts your hospital ahead in the RCM game.
+      <div style={{ fontSize: 12, fontWeight: 600, color: TXT, textAlign: 'center', maxWidth: 460, lineHeight: 1.65 }}>
+        Deployed across the US, UAE &amp; India — personalized clinical intelligence<br />
+        for every patient, every payor, every physician.
       </div>
-      <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap', justifyContent: 'center', maxWidth: 420 }}>
-        {[['Clinical Signals', INDIGO], ['Financial Intelligence', TEAL], ['60-Day Guarantee', AMBER]].map(([t, c]) => (
+      {/* Feature pills */}
+      <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap', justifyContent: 'center', maxWidth: 440 }}>
+        {[['Clinical Intelligence', INDIGO], ['Patient Profiling', TEAL], ['60-Day Guarantee', AMBER]].map(([t, c]) => (
           <span key={t} style={{ fontSize: 9, fontWeight: 700, color: c, background: `${c}16`, border: `1px solid ${c}30`, borderRadius: 20, padding: '4px 12px' }}>{t}</span>
         ))}
       </div>
-      <div style={{ marginTop: 10, padding: '13px 34px', borderRadius: 30, background: `linear-gradient(135deg,${TEAL},${INDIGO})`, color: '#fff', fontSize: 13, fontWeight: 800, letterSpacing: 0.5, boxShadow: `0 0 40px ${TEAL}40`, display: 'flex', alignItems: 'center', gap: 8, animation: 'dpPulseScale 2s ease-in-out infinite' }}>
+      {/* Credential pills — smaller row */}
+      <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', justifyContent: 'center', maxWidth: 440 }}>
+        {[['US · UAE · India', INDIGO], ['100+ Hospitals', TEAL], ['10M+ Lives', PURPLE], ['30 Yrs Clinical Exp', AMBER]].map(([t, c]) => (
+          <span key={t} style={{ fontSize: 8, fontWeight: 700, color: c, background: `${c}12`, border: `1px solid ${c}28`, borderRadius: 20, padding: '3px 10px', letterSpacing: 0.3 }}>{t}</span>
+        ))}
+      </div>
+      <div style={{ marginTop: 8, padding: '13px 34px', borderRadius: 30, background: `linear-gradient(135deg,${TEAL},${INDIGO})`, color: '#fff', fontSize: 13, fontWeight: 800, letterSpacing: 0.5, boxShadow: `0 0 40px ${TEAL}40`, display: 'flex', alignItems: 'center', gap: 8, animation: 'dpPulseScale 2s ease-in-out infinite' }}>
         <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><polygon points="5,3 19,12 5,21" /></svg>
         Watch the Platform Demo
       </div>
@@ -1353,16 +1420,37 @@ function Splash({ onPlay }) {
   );
 }
 
-/* ─── Scene stat strip — centered, sits just above the caption ── */
+/* ─── Scene stat strip — cinematic glass pill ─────────────────── */
 function SceneStatStrip({ scene, progress }) {
   if (scene.type === 'stat' || scene.type === 'kpi') return null;
   const fired = (scene.beats || []).slice().reverse().find(b => progress >= b.at);
   if (!fired) return null;
   return (
-    <div key={fired.stat} style={{ position: 'absolute', bottom: 44, left: '50%', transform: 'translateX(-50%)', zIndex: 15, display: 'flex', gap: 8, alignItems: 'center', background: 'rgba(3,7,20,0.92)', backdropFilter: 'blur(14px)', borderRadius: 20, padding: '6px 18px', border: `1px solid ${scene.color}45`, pointerEvents: 'none', animation: 'dpBeatIn 0.45s ease both', maxWidth: '76%', whiteSpace: 'nowrap' }}>
-      <div style={{ width: 7, height: 7, borderRadius: '50%', background: scene.color, boxShadow: `0 0 10px ${scene.color}`, flexShrink: 0 }} />
-      <span style={{ fontSize: 13, fontWeight: 900, color: scene.color, fontFamily: 'Sora', letterSpacing: -0.3 }}>{fired.stat}</span>
-      {fired.sub && <span style={{ fontSize: 8, color: DIM, overflow: 'hidden', textOverflow: 'ellipsis' }}>· {fired.sub}</span>}
+    <div
+      key={fired.stat}
+      style={{
+        position: 'absolute', bottom: 44, left: '50%',
+        transform: 'translateX(-50%)',
+        zIndex: 15,
+        display: 'flex', gap: 10, alignItems: 'center',
+        background: 'linear-gradient(135deg,rgba(2,5,18,0.96),rgba(6,10,28,0.92))',
+        backdropFilter: 'blur(20px)',
+        borderRadius: 24,
+        padding: '8px 22px',
+        border: `1px solid ${scene.color}60`,
+        boxShadow: `0 0 0 1px ${scene.color}20, 0 0 28px ${scene.color}30, 0 8px 40px rgba(0,0,0,0.7), inset 0 1px 0 ${scene.color}20`,
+        pointerEvents: 'none',
+        animation: 'dpSpringIn 0.5s cubic-bezier(0.34,1.4,0.64,1) both',
+        maxWidth: '76%', whiteSpace: 'nowrap',
+      }}
+    >
+      {/* Bloom dot */}
+      <div style={{ width: 8, height: 8, borderRadius: '50%', background: scene.color, boxShadow: `0 0 12px ${scene.color}, 0 0 24px ${scene.color}80`, flexShrink: 0, animation: 'dpPulse 1.6s ease-in-out infinite' }} />
+      {/* Stat — hero scale */}
+      <span style={{ fontSize: 18, fontWeight: 900, color: scene.color, fontFamily: 'Sora', letterSpacing: -0.5, textShadow: `0 0 20px ${scene.color}80` }}>
+        {fired.stat}
+      </span>
+      {fired.sub && <span style={{ fontSize: 9, color: DIM, overflow: 'hidden', textOverflow: 'ellipsis' }}>· {fired.sub}</span>}
     </div>
   );
 }
@@ -1604,6 +1692,43 @@ export default function DemoPlayer() {
         @keyframes dpFadeCaption {
           from { opacity:0; }
           to   { opacity:1; }
+        }
+        /* ── Cinematic additions ── */
+        @keyframes dpEmergeStat {
+          0%   { opacity:0; transform:scale(0.82) translateY(22px); filter:blur(18px); }
+          60%  { opacity:1; filter:blur(2px); }
+          100% { opacity:1; transform:scale(1) translateY(0); filter:blur(0); }
+        }
+        @keyframes dpBloom {
+          0%   { opacity:0; }
+          12%  { opacity:1; }
+          100% { opacity:0; }
+        }
+        @keyframes dpBreath {
+          0%,100% { opacity:0.6; transform:scale(1); }
+          50%     { opacity:1;   transform:scale(1.06); }
+        }
+        @keyframes dpRowBlurIn {
+          from { opacity:0; transform:translateX(-14px); filter:blur(6px); }
+          to   { opacity:1; transform:translateX(0);     filter:blur(0); }
+        }
+        @keyframes dpGridBreathe {
+          0%,100% { opacity:0.028; }
+          50%     { opacity:0.055; }
+        }
+        @keyframes dpChromeShimmer {
+          0%   { transform:translateX(-200%); }
+          100% { transform:translateX(400%); }
+        }
+        @keyframes dpStatRing {
+          0%   { transform:scale(0.5); opacity:0.7; }
+          100% { transform:scale(2.8); opacity:0; }
+        }
+        @keyframes dpSpringIn {
+          0%   { opacity:0; transform:scale(0.6) translateY(30px); }
+          55%  { opacity:1; transform:scale(1.08) translateY(-4px); }
+          75%  { transform:scale(0.97) translateY(1px); }
+          100% { opacity:1; transform:scale(1) translateY(0); }
         }
       `}</style>
     </section>

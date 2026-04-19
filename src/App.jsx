@@ -1,117 +1,145 @@
 import './App.css';
 import ExplainerAgent from './components/ExplainerAgent';
 import Shakti from './components/Shakti';
+import DemoPlayer from './components/DemoPlayer';
 
 /* ──────────────────────────────────────────────
    DATA
    ────────────────────────────────────────────── */
 const NAV_LINKS = [
   { label: 'Platform',  href: '#platform' },
-  { label: 'Journey',   href: '#journey' },
+  { label: 'OPD',       href: '#opd' },
+  { label: 'IPD',       href: '#ipd' },
   { label: 'Outcomes',  href: '#outcomes' },
   { label: 'Contact',   href: '#contact' },
 ];
 
 const PROOF_STATS = [
-  { value: '99%',    label: 'Clean claim rate' },
-  { value: '+10%',   label: 'Charge capture uplift' },
-  { value: '+0.05',  label: 'CMI uplift per discharge' },
-  { value: '$8–14M', label: 'Projected annual impact' },
+  { value: '↓ 30%',   label: 'Claim denial reduction' },
+  { value: '+25%',    label: 'Revenue capture uplift' },
+  { value: '+0.15',   label: 'CMI uplift — IPD' },
+  { value: 'AED 214K', label: 'Live recoverable — 4 payers' },
 ];
 
 const SIGNALS = [
-  'DRG optimization', 'CC/MCC capture', 'CDI workflows', 'Pre-bill defense',
-  'Payer contracts', 'HCC recapture', 'Charge capture', 'Clinical documentation',
-  'Inpatient coding', 'LOS monitoring', 'Discharge summary AI', 'DRG downgrade defense',
-  'DRG optimization', 'CC/MCC capture', 'CDI workflows', 'Pre-bill defense',
-  'Payer contracts', 'HCC recapture', 'Charge capture', 'Clinical documentation',
-  'Inpatient coding', 'LOS monitoring', 'Discharge summary AI', 'DRG downgrade defense',
+  'Revenue Integrity RCM', 'IR-DRG optimisation', 'OPD coding accuracy', 'IPD CDI queries',
+  'Payer edits scrubbing', 'Daman ToB', 'AXA Gulf', 'Bupa Arabia', 'NABIDH integration',
+  'DHA compliance', 'Pre-auth AI', 'Ambient scribe', 'Denial intelligence', 'CMI growth',
+  'Revenue Integrity RCM', 'IR-DRG optimisation', 'OPD coding accuracy', 'IPD CDI queries',
+  'Payer edits scrubbing', 'Daman ToB', 'AXA Gulf', 'Bupa Arabia', 'NABIDH integration',
+  'DHA compliance', 'Pre-auth AI', 'Ambient scribe', 'Denial intelligence', 'CMI growth',
 ];
 
 const JOURNEY_STAGES = [
   {
     id: 'front-end',
     accentColor: '#00cba8',
-    title: 'H&P & Day 0 CDI — The Revenue Clock Starts Here',
-    desc: 'The physician writes for clinical communication. The DRG grouper reads for financial classification. That gap is where all revenue leakage lives. Docstribe reads every H&P within minutes — extracting ICD-10 codes, computing the baseline DRG, and firing CDI queries on Day 0, not Day 3.',
+    track: null,
+    title: 'Pre-Visit — Eligibility, Benefits & Pre-Authorisation',
+    desc: 'Revenue leakage begins before the patient arrives. Docstribe verifies every patient against each payer\'s real-time eligibility feed — active coverage status, co-pay structure, deductible balance, and in-network flag. It then cross-references the planned service against the payer\'s Terms of Benefits: does this CPT require PA? Is this service category excluded? Is there a coverage limit already consumed? A PA trigger is issued at the point of order entry — not at discharge when the service is already rendered and the denial is inevitable. Every check is logged to NABIDH, creating a DHA-compliant audit trail from the first patient touchpoint.',
     pills: [
-      'H&P ingested within minutes of signing',
-      'Baseline DRG computed via grouper',
-      'CDI queries fired Day 0 — not Day 3',
-      'ICD-10 extraction & MDC mapping',
-      'DRG delta surfaced: e.g. $8.6K → $16.6K',
+      'Real-time eligibility — active status, co-pay, deductible, in-network',
+      'Terms of Benefits cross-reference — Daman, AXA Gulf, Bupa Arabia',
+      'PA triggered at order entry — not at discharge',
+      'Coverage limits, exclusions & service restrictions flagged instantly',
+      'DHA-compliant audit trail — NABIDH logged from first touchpoint',
     ],
-    products: [
-      { label: 'CDI ENGINE' },
-      { label: 'DRG GROUPER' },
-    ],
+    products: [{ label: 'ELIGIBILITY ENGINE' }, { label: 'PRE-AUTH AI' }],
     layout: 'text-left',
   },
   {
-    id: 'mid-cycle',
-    accentColor: '#4d8aff',
-    title: 'Daily Rounding — DRG Recomputed Every 24 Hours',
-    desc: 'Every progress note, lab result, and consult order is a revenue signal. Docstribe recomputes the DRG on every new clinical event — mapping labs to undocumented diagnoses, detecting LOS paradox when your patient outlasts GMLOS, and escalating documentation gaps before the window closes.',
+    id: 'opd',
+    accentColor: '#38bdf8',
+    track: 'OPD',
+    title: 'OPD — CDI, ICD-10-CM / CPT Coding, NCCI / MUE & Payer Edit Scrubbing',
+    desc: 'Outpatient revenue is lost at three points: wrong E&M level, missing or incorrect ICD-10-CM / CPT codes, and payer edit failures before submission. Docstribe addresses all three. Its CDI engine reads every OPD note and surfaces documentation gaps — the physician said "chest pain" but didn\'t document the severity qualifier that supports a higher E&M. It then extracts the correct ICD-10-CM principal and secondary diagnoses, assigns the medically supported CPT procedure codes, and runs the claim through a full payer edit scrubber. NCCI (National Correct Coding Initiative) edits flag procedure pairs that cannot be billed together. MUE (Medically Unlikely Edits) catch units that exceed per-day limits. Mutual exclusion rules reject code combinations that are clinically contradictory. Every edit is resolved before the claim leaves the system — not after the denial arrives.',
     pills: [
-      'DRG recomputed on every clinical signal',
-      'Labs & orders mapped to undocumented DX',
-      'LOS vs. GMLOS paradox detection',
-      'Revenue delta tracked daily: e.g. +$4,200',
-      'CDI query escalation before rounds close',
+      'CDI → documentation gap flagged before coding begins',
+      'ICD-10-CM principal + secondary DX — correct sequencing enforced',
+      'CPT extracted from clinical note — no coder guess required',
+      'NCCI edits — mutually exclusive procedure pairs detected & resolved',
+      'MUE — per-day unit limits validated per payer ruleset',
     ],
-    products: [
-      { label: 'LOS MONITOR' },
-      { label: 'QUERY ENGINE' },
+    products: [{ label: 'OPD CDI + CODING AI' }, { label: 'NCCI / MUE EDIT ENGINE' }],
+    layout: 'text-right',
+  },
+  {
+    id: 'ipd',
+    accentColor: '#4d8aff',
+    track: 'IPD',
+    title: 'IPD — Ambient Scribe, CDI Queries & IR-DRG Daily Refresh',
+    desc: 'Inpatient revenue is lost in three places: admission documentation, daily rounding notes, and the discharge summary. Docstribe deploys across all three. Ambient Scribe captures every consultation. CDI queries fire against IR-DRG criteria the same day — not Day 3. Every new lab, consult, and progress note recomputes the IR-DRG. At discharge, the full chart is cross-referenced and the final IR-DRG is locked with a DHA-compliant pre-bill brief.',
+    pills: [
+      'Ambient Scribe — full consultation captured, HL7 integrated',
+      'CDI queries against IR-DRG criteria — Day 0, not Day 3',
+      'IR-DRG recomputed on every new clinical signal — daily',
+      'LOS vs. GMLOS paradox detection — under-coding flagged',
+      'Discharge cross-reference — final IR-DRG locked, DHA audit-ready',
     ],
+    products: [{ label: 'AMBIENT SCRIBE' }, { label: 'IR-DRG CDI ENGINE' }],
+    layout: 'text-left',
+  },
+  {
+    id: 'payer-edits',
+    accentColor: '#a78bfa',
+    track: null,
+    title: 'Payer Edits & Denial Intelligence — Stop Denials Before Submission',
+    desc: 'Daman, AXA Gulf, and Bupa Arabia each run proprietary edit engines that check every claim before payment. Docstribe learns those edit patterns — CARC codes, bundling rules, auth requirements, medical necessity criteria — and scrubs every claim against each payer\'s ruleset before it goes out. Denials that do occur are resolved with a one-click, contract-grounded appeal letter citing the specific clause.',
+    pills: [
+      'CARC / RARC code analysis — denial root cause mapped',
+      'Payer-specific bundling rules and modifier requirements validated',
+      'Medical necessity criteria checked per Daman / AXA Gulf / Bupa',
+      'Auth gap detection — AED 47.7K Ortho/Spine + MRI example recovered',
+      'One-click appeal letter — contract clauses C-3.2, C-5.4 cited',
+    ],
+    products: [{ label: 'PAYER EDIT SCRUBBER' }, { label: 'DENIAL INTELLIGENCE' }],
     layout: 'text-right',
   },
   {
     id: 'back-end',
     accentColor: '#ff7b4a',
-    title: 'Discharge & Coding — Where 40–60% of DRG Value Is Lost',
-    desc: 'Forty to sixty percent of DRG revenue is abandoned at the discharge summary. Physicians omit treated conditions. Confirmed diagnoses go unlisted. Docstribe cross-references the entire chart — every note, consult, order, and result — locks the final DRG, and generates a pre-bill defense brief before the claim drops.',
+    track: null,
+    title: 'Revenue Pipeline & CMI Growth — 30-Day Forward View',
+    desc: 'Revenue integrity does not end at the clean claim. Finance teams need a forward view: which inpatient cases are moving toward surgical intervention, what the LOS forecast is under IR-DRG, and what the 30-day revenue pipeline looks like by service line and payer. Docstribe\'s Case Management Control Tower delivers exactly that — clinical signals converted into financial projections, updated daily.',
     pills: [
-      'Entire chart cross-referenced at discharge',
-      'Conditions treated but not listed — flagged',
-      'Final DRG locked pre-submission',
-      'Payer-specific pre-bill defense brief',
-      'Per-physician CDI profile built over time',
+      'Inpatient progression probability scored from first contact',
+      'LOS forecast under IR-DRG — surgical candidates identified',
+      '30-day revenue pipeline by service line, payer & IR-DRG band',
+      'CMI movement tracked per discharge — daily delta reported',
+      'AED 1.4M expected vs AED 1.1M paid — AED 214K recoverable identified',
     ],
-    products: [
-      { label: 'DISCHARGE AI' },
-      { label: 'PRE-BILL BRIEF' },
-    ],
+    products: [{ label: 'REVENUE PIPELINE AI' }, { label: 'CMI GROWTH ENGINE' }],
     layout: 'text-left',
   },
 ];
 
 const FOUNDATION_CARDS = [
   {
-    title: 'Reads every clinical document the moment it is signed',
-    body: 'H&P, progress notes, consults, labs, imaging orders — all ingested in real time. DRG recomputed on every new signal, not at the end of the stay.',
+    title: 'NABIDH & Malaffi integrated — zero re-keying',
+    body: 'Docstribe connects directly to Dubai\'s NABIDH and Abu Dhabi\'s Malaffi health information exchanges. Every clinical document is ingested the moment it is signed — H&P, progress notes, labs, imaging, consults. IR-DRG recomputed on every signal.',
   },
   {
-    title: 'Fires CDI queries on Day 0 — not Day 3',
-    body: 'Traditional CDI reviews happen too late. Docstribe catches documentation gaps at admission — when the physician can still clarify, not after discharge when the DRG is already locked.',
+    title: 'Pre-auth at order entry — not at discharge',
+    body: 'UAE payer rules (Daman, AXA Gulf, Bupa Arabia) require pre-authorisation before service — not after. Docstribe fires PA triggers at the point of order, aligning with each payer\'s Terms of Benefits to prevent front-door write-offs.',
   },
   {
-    title: 'Prevents 40–60% of revenue lost at the discharge summary',
-    body: 'Physicians omit treated conditions. Confirmed diagnoses go unlisted. Docstribe cross-references the entire chart at discharge and locks the correct DRG before the claim drops.',
+    title: 'Denial intelligence learns every payer pattern',
+    body: '12–18% of UAE claims are denied on first submission. Docstribe tracks CARC codes, payer-specific bundling rules, and auth gaps — flagging risk before the claim goes out and generating contract-grounded appeal letters in one click.',
   },
 ];
 
 const OUTCOME_CARDS = [
-  { value: 'Day 0',  title: 'First CDI query fired',           body: 'Not Day 3. Not at discharge. The revenue clock starts the moment the H&P is signed.' },
-  { value: '24h',    title: 'DRG refresh cycle',               body: 'Every progress note, lab, and consult triggers a fresh DRG computation. Revenue delta tracked daily.' },
-  { value: '100%',   title: 'Chart coverage at discharge',     body: 'Every note, consult, order, and result cross-referenced before the final DRG is locked.' },
-  { value: '40–60%', title: 'Revenue loss prevented at DC',    body: 'The discharge summary is where DRG value dies. Docstribe closes that gap — systematically.' },
+  { value: '↓ 30%',   title: 'Claim denial reduction',        body: 'Measured across UAE hospital deployments. Payer-specific denial intelligence prevents denials before claims are submitted — not after.' },
+  { value: '+25%',    title: 'Revenue capture uplift',         body: 'IR-DRG optimisation, ICD-10-CM sequencing accuracy, and CDI closure at admission — capturing revenue that previously slipped through.' },
+  { value: '+0.15',   title: 'CMI uplift per discharge',       body: 'Comorbidity mapping, CDI queries, and discharge cross-referencing push CMI from base IR-DRG weight to the true clinical complexity of the case.' },
+  { value: 'AED 214K', title: 'Recoverable identified live',    body: 'Across 4 UAE payers — Daman, AXA Gulf, Bupa Arabia, Neuron Health — in a single deployment. AED 296K variance identified. AED 214K actionable.' },
 ];
 
 const CHECKPOINTS = [
-  'Week 1: Epic connect, payer contract ingestion, baseline charge capture established',
-  'Week 2: AI agents on live charts — missed charges, DRG gaps, HCC opportunities flagged',
-  'Week 3: Side-by-side DRG accuracy comparison — charge capture delta per encounter',
-  'Week 4: CCR, CMI, and charge capture deltas quantified — go/no-go recommendation',
+  'Week 1: HIS / EMR connect (Epic, Cerner or local), NABIDH integration, payer contract ingestion, baseline IR-DRG established',
+  'Week 2: AI agents on live charts — PA gaps, IR-DRG gaps, ICD-10-CM sequencing errors, eligibility flags surfaced',
+  'Week 3: Side-by-side IR-DRG accuracy comparison — claim delta per encounter across Daman, AXA Gulf, Bupa Arabia',
+  'Week 4: CCR, CMI, and denial rate deltas quantified to the dirham — go/no-go recommendation delivered',
 ];
 
 /* ──────────────────────────────────────────────
@@ -349,8 +377,8 @@ function ContractMockupSVG() {
       <text x="44" y="376" fill="rgba(0,203,168,0.7)"
         fontSize="8.5" fontWeight="700" fontFamily="Inter" letterSpacing="1.6">DRG COMPUTED — DELTA SURFACED</text>
       {[
-        'DRG 195  →  $8,600  (baseline)',
-        'DRG 871  →  $16,600  (if AKI coded) ✓',
+        'DRG 195  →  AED 8,600  (baseline)',
+        'DRG 871  →  AED 16,600  (if AKI coded) ✓',
         'CDI Query: AKI — creatinine 3.2 elevated',
         'Query sent to Dr. Smith · Day 0',
       ].map((rule, i) => (
@@ -368,7 +396,7 @@ function ContractMockupSVG() {
         fill="rgba(0,203,168,0.1)" stroke="rgba(0,203,168,0.2)" strokeWidth="0.8"/>
       <circle cx="44" cy="549" r="4" fill="#00cba8"/>
       <text x="54" y="553" fill="rgba(255,255,255,0.82)"
-        fontSize="10.5" fontWeight="600" fontFamily="Inter">DRG delta: +$8,000 identified</text>
+        fontSize="10.5" fontWeight="600" fontFamily="Inter">DRG delta: +AED 8,000 identified</text>
       {/* Home bar */}
       <rect x="113" y="566" width="84" height="4" rx="2" fill="rgba(255,255,255,0.18)"/>
     </svg>
@@ -476,11 +504,11 @@ function ClinicalMockupSVG() {
 /* ─── DENIAL MOCKUP (Back End dashboard) ─── */
 function DenialMockupSVG() {
   const rows = [
-    { condition: 'AKI — Acute Kidney Injury',   source: 'Lab: Creatinine 3.2',  delta: '+$4,200' },
-    { condition: 'Protein Malnutrition',         source: 'Consult Note (Dietitian)', delta: '+$2,800' },
-    { condition: 'CHF Acute Exacerbation',       source: 'Echo Report Day 2',    delta: '+$3,100' },
-    { condition: 'Hypertensive Crisis',          source: 'Progress Note Day 3',  delta: '+$1,900' },
-    { condition: 'Septicemia — Blood Culture +', source: 'Micro Report Day 1',   delta: '+$8,000' },
+    { condition: 'AKI — Acute Kidney Injury',   source: 'Lab: Creatinine 3.2',  delta: '+AED 4,200' },
+    { condition: 'Protein Malnutrition',         source: 'Consult Note (Dietitian)', delta: '+AED 2,800' },
+    { condition: 'CHF Acute Exacerbation',       source: 'Echo Report Day 2',    delta: '+AED 3,100' },
+    { condition: 'Hypertensive Crisis',          source: 'Progress Note Day 3',  delta: '+AED 1,900' },
+    { condition: 'Septicemia — Blood Culture +', source: 'Micro Report Day 1',   delta: '+AED 8,000' },
   ];
   return (
     <svg viewBox="0 0 540 448" fill="none" xmlns="http://www.w3.org/2000/svg"
@@ -494,7 +522,7 @@ function DenialMockupSVG() {
       <text x="97" y="36" fill="rgba(255,255,255,0.92)"
         fontSize="13" fontWeight="700" fontFamily="Sora">5 Conditions Found — Not Listed</text>
       <text x="97" y="53" fill="rgba(255,123,74,0.75)"
-        fontSize="10" fontFamily="Inter">Discharge summary omits treated diagnoses · DRG impact: +$20,000</text>
+        fontSize="10" fontFamily="Inter">Discharge summary omits treated diagnoses · DRG impact: +AED 20,000</text>
 
       {/* Main card */}
       <rect x="12" y="76" width="516" height="360" rx="18"
@@ -712,7 +740,7 @@ function BackEndSVG() {
       ))}
       {/* Stat at bottom */}
       <text x="223" y="108" textAnchor="middle" fill="rgba(255,123,74,0.8)"
-        fontSize="16" fontWeight="800" fontFamily="Sora">$28M+</text>
+        fontSize="16" fontWeight="800" fontFamily="Sora">AED 28M+</text>
     </svg>
   );
 }
@@ -818,7 +846,7 @@ export default function App() {
           <div className="brand-mark">D</div>
           <div>
             <span className="brand-name">Docstribe</span>
-            <span className="brand-sub">Dynamic DRG Intelligence</span>
+            <span className="brand-sub">Intelligence Layer for Hospitals</span>
           </div>
         </a>
 
@@ -828,8 +856,8 @@ export default function App() {
           ))}
         </nav>
 
-        <a className="nav-cta" href="mailto:akash@docstribe.com?subject=Docstribe Demo">
-          Book a demo
+        <a className="nav-cta" href="mailto:arcus@docstribe.com?subject=Docstribe UAE Demo">
+          Book a UAE demo
         </a>
       </header>
 
@@ -846,28 +874,42 @@ export default function App() {
           <div className="hero-copy">
             <div className="announce-badge">
               <span className="announce-badge-dot" />
-              Dynamic DRG Intelligence · Skilled AI for Inpatient Revenue
+              IR-DRG Intelligence · Built for UAE Hospitals · DHA &amp; NABIDH Compliant
             </div>
 
             <h1>
-              The AI layer between{' '}
-              <span className="hero-highlight">your chart</span>
-              {' '}and{' '}
-              <span className="grad">your clean claim.</span>
+              One Intelligent Layer<br />
+              to Power <span className="grad">Care Coordination</span><br />
+              &amp; Revenue Integrity
             </h1>
 
-            <p className="hero-tagline">Documentation AI is deployed. Denial AI is deployed against you.</p>
+            <p className="hero-tagline">
+              &ldquo;The future of healthcare is agentic, autonomous, and intelligent&rdquo;
+            </p>
 
             <p className="hero-desc">
-              Revenue integrity AI is the answer. 99% clean claim rate — guaranteed by outcomes.
+              The all-in-one platform to scale growth, acquisition &amp; transform revenue cycle management — built for UAE hospitals operating under IR-DRG, DHA, and NABIDH.
             </p>
+
+            {/* Stat callout strip */}
+            <div className="hero-stat-strip">
+              <div className="hero-stat-item">
+                <span className="hero-stat-num">12–18%</span>
+                <span className="hero-stat-label">UAE claims denied on first submission</span>
+              </div>
+              <div className="hero-stat-divider" />
+              <div className="hero-stat-item">
+                <span className="hero-stat-num grad">60–70%</span>
+                <span className="hero-stat-label">are preventable with the right AI layer</span>
+              </div>
+            </div>
 
             <div className="hero-actions">
               <a className="btn-primary" href="#journey">
-                See the journey →
+                See the UAE journey →
               </a>
-              <a className="btn-secondary" href="mailto:rishav@docstribe.com?subject=Docstribe Pilot">
-                Start a pilot
+              <a className="btn-secondary" href="mailto:arcus@docstribe.com?subject=Docstribe UAE Pilot">
+                Start a UAE pilot
               </a>
             </div>
 
@@ -908,39 +950,60 @@ export default function App() {
         </div>
       </div>
 
+      {/* ── EXPLAIN DOCSTRIBE — Full Demo Player ── */}
+      <DemoPlayer />
+
       {/* ── JOURNEY (Commure vertical alternating) ── */}
       <section className="journey-section" id="journey">
         <div className="wrap">
 
           {/* ── Centered header ── */}
           <div className="journey-header">
-            <div className="section-eyebrow">Dynamic DRG Intelligence</div>
+            <div className="section-eyebrow">UAE Patient Journey — 5 Stages</div>
             <h2 className="journey-section-title">
-              AI reads every clinical document.{' '}
-              <span className="title-grad">DRG recomputed in real time.</span>
+              Pre-visit to recovered claim.{' '}
+              <span className="title-grad">Zero leakage at every stage.</span>
             </h2>
             <p className="journey-section-sub">
-              The physician writes for clinical communication. The DRG grouper reads for financial classification.
-              That gap is where all revenue leakage lives. Docstribe sits exactly in that gap — from H&P to clean claim.
+              UAE hospitals face 12–18% first-submission denial rates. Daman, AXA Gulf, and Bupa Arabia have strict payer rules. Docstribe aligns every stage of the patient encounter — from eligibility at registration to IR-DRG lock at discharge — so no revenue is left behind.
             </p>
           </div>
 
           {/* ── Vertical stages ── */}
           <div className="journey-stages">
             {JOURNEY_STAGES.map((stage, i) => (
-              <div key={stage.id}>
+              <div key={stage.id} id={stage.id}>
 
                 {/* Stage row */}
                 <div className={`journey-stage${stage.layout === 'text-right' ? ' stage-flip' : ''}`}>
 
                   {/* Text side */}
                   <div className="stage-text">
+                    {/* Track badge — OPD / IPD */}
+                    {stage.track && (
+                      <div style={{
+                        display: 'inline-flex', alignItems: 'center', gap: '6px',
+                        padding: '4px 12px', borderRadius: '20px', marginBottom: '14px',
+                        background: stage.track === 'OPD'
+                          ? 'rgba(56,189,248,0.12)' : 'rgba(77,138,255,0.12)',
+                        border: `1px solid ${stage.track === 'OPD' ? 'rgba(56,189,248,0.35)' : 'rgba(77,138,255,0.35)'}`,
+                        fontSize: '10px', fontWeight: '800', letterSpacing: '2px',
+                        color: stage.track === 'OPD' ? '#38bdf8' : '#4d8aff',
+                        textTransform: 'uppercase',
+                      }}>
+                        <span style={{
+                          width: '6px', height: '6px', borderRadius: '50%',
+                          background: stage.track === 'OPD' ? '#38bdf8' : '#4d8aff',
+                        }} />
+                        {stage.track} TRACK
+                      </div>
+                    )}
                     <h2 className="stage-title">{stage.title}</h2>
                     <p className="stage-desc">{stage.desc}</p>
 
                     <div className="stage-pills">
                       {stage.pills.map(p => (
-                        <span key={p} className="stage-pill">{p}</span>
+                        <span key={p} className="stage-pill" style={{ borderColor: `${stage.accentColor}30`, color: stage.accentColor }}>{p}</span>
                       ))}
                     </div>
 
@@ -948,7 +1011,7 @@ export default function App() {
 
                     <div className="stage-products">
                       {stage.products.map(p => (
-                        <a key={p.label} className="stage-product-btn" href="#contact">
+                        <a key={p.label} className="stage-product-btn" href="#contact" style={{ borderColor: `${stage.accentColor}30`, color: stage.accentColor }}>
                           <svg width="15" height="15" viewBox="0 0 15 15" fill="none">
                             <rect x="1" y="1" width="13" height="13" rx="3"
                               stroke="currentColor" strokeWidth="1.4"/>
@@ -964,9 +1027,11 @@ export default function App() {
 
                   {/* Visual side */}
                   <div className="stage-visual">
-                    {stage.id === 'front-end' && <ContractMockupSVG />}
-                    {stage.id === 'mid-cycle' && <ClinicalMockupSVG />}
-                    {stage.id === 'back-end'  && <DenialMockupSVG />}
+                    {stage.id === 'front-end'   && <ContractMockupSVG />}
+                    {stage.id === 'opd'         && <ClinicalMockupSVG />}
+                    {stage.id === 'ipd'         && <ContractMockupSVG />}
+                    {stage.id === 'payer-edits' && <DenialMockupSVG />}
+                    {stage.id === 'back-end'    && <ClinicalMockupSVG />}
                   </div>
                 </div>
 
@@ -978,20 +1043,21 @@ export default function App() {
                       <defs>
                         <marker id={`arr${i}`} markerWidth="7" markerHeight="7"
                           refX="3.5" refY="3.5" orient="auto">
-                          <path d="M0,0 L0,7 L7,3.5 Z" fill="rgba(255,255,255,0.25)"/>
+                          <path d="M0,0 L0,7 L7,3.5 Z"
+                            fill={JOURNEY_STAGES[i].accentColor || 'rgba(255,255,255,0.25)'}/>
                         </marker>
                       </defs>
-                      {/* dot at top */}
-                      <circle cx="500" cy="2" r="5" fill="rgba(255,255,255,0.28)"/>
-                      {i === 0
-                        ? /* Stage 1→2 — bend right */
-                          <path d="M500 2 L500 28 L972 28 L972 72 L500 72 L500 100"
-                            stroke="rgba(255,255,255,0.2)" strokeWidth="1.5"
-                            strokeDasharray="8 5" markerEnd={`url(#arr${i})`}/>
-                        : /* Stage 2→3 — bend left */
-                          <path d="M500 2 L500 28 L28 28 L28 72 L500 72 L500 100"
-                            stroke="rgba(255,255,255,0.2)" strokeWidth="1.5"
-                            strokeDasharray="8 5" markerEnd={`url(#arr${i})`}/>
+                      <circle cx="500" cy="2" r="5"
+                        fill={JOURNEY_STAGES[i].accentColor || 'rgba(255,255,255,0.28)'}
+                        opacity="0.5"/>
+                      {/* Alternate right / left bend every stage */}
+                      {i % 2 === 0
+                        ? <path d="M500 2 L500 28 L972 28 L972 72 L500 72 L500 100"
+                            stroke={`${JOURNEY_STAGES[i].accentColor}55` || 'rgba(255,255,255,0.2)'}
+                            strokeWidth="1.5" strokeDasharray="8 5" markerEnd={`url(#arr${i})`}/>
+                        : <path d="M500 2 L500 28 L28 28 L28 72 L500 72 L500 100"
+                            stroke={`${JOURNEY_STAGES[i].accentColor}55` || 'rgba(255,255,255,0.2)'}
+                            strokeWidth="1.5" strokeDasharray="8 5" markerEnd={`url(#arr${i})`}/>
                       }
                     </svg>
                   </div>
@@ -1007,12 +1073,12 @@ export default function App() {
       {/* ── FOUNDATION / PLATFORM ───────────────── */}
       <section className="section" id="platform">
         <div className="wrap">
-          <div className="section-eyebrow">Platform</div>
+          <div className="section-eyebrow">Platform · NABIDH · DHA · SOC 2 · HIPAA</div>
           <h2 className="section-title" style={{ maxWidth: 680 }}>
-            From H&P to clean claim — without a single documentation gap.
+            The only UAE platform compliant from data exchange to claim defence.
           </h2>
           <p className="section-sub">
-            The goal is not another CDI dashboard. The goal is to make every clinical document work for the DRG grouper — automatically, from the moment the physician signs.
+            Docstribe is NABIDH and Malaffi integrated, DHA compliant, SOC 2 certified, and HIPAA aligned. It connects to your HIS, reads every clinical event through the UAE health information exchange, and converts clinical documentation into the correct IR-DRG — automatically.
           </p>
 
           <div className="foundation-grid">
@@ -1020,19 +1086,19 @@ export default function App() {
             <div className="statement-card">
               <div>
                 <span style={{ fontSize: '0.7rem', fontWeight: 700, letterSpacing: '0.14em', textTransform: 'uppercase', color: 'var(--teal)' }}>
-                  Why this changes the DRG
+                  Why UAE hospitals choose Docstribe
                 </span>
-                <h3>AI sits in the gap between the physician and the grouper.</h3>
-                <p>Every clinical document carries DRG revenue that physicians never intended to leave behind. Docstribe reads those documents in real time, computes the DRG impact, and fires the right CDI query before the window closes.</p>
+                <h3>One platform. Every payer. Every claim stage.</h3>
+                <p>UAE hospitals submit claims to Daman, AXA Gulf, Bupa Arabia, and Neuron under IR-DRG grouping rules. Each payer has distinct Terms of Benefits, auth triggers, and denial patterns. Docstribe unifies all payer intelligence into one clinical and revenue workflow — NABIDH integrated, DHA compliant, SOC 2 certified.</p>
               </div>
               <div className="before-after">
                 <div className="ba-item">
                   <span className="ba-label ba-label-before">Before</span>
-                  <strong>CDI review on Day 3+, discharge summaries with omitted diagnoses, DRG locked too late</strong>
+                  <strong>12–18% first-submission denial rate, manual PA at discharge, IR-DRG under-coded, AED 296K variance unresolved</strong>
                 </div>
                 <div className="ba-item">
                   <span className="ba-label ba-label-after">After</span>
-                  <strong>Day 0 CDI queries, 24h DRG refresh, 100% chart coverage at discharge</strong>
+                  <strong>↓ 30% denials, PA at order entry, IR-DRG optimised, AED 214K recoverable identified — live</strong>
                 </div>
               </div>
             </div>
@@ -1075,12 +1141,12 @@ export default function App() {
       {/* ── OUTCOMES ────────────────────────────── */}
       <section className="section outcomes-section" id="outcomes">
         <div className="wrap">
-          <div className="section-eyebrow">Outcomes</div>
+          <div className="section-eyebrow">Outcomes · UAE Deployments</div>
           <h2 className="section-title" style={{ maxWidth: 600 }}>
-            The DRG you deserved — but never got — until now.
+            Measurable. Auditable. Guaranteed by outcomes.
           </h2>
           <p className="section-sub">
-            These are the operating outcomes Docstribe delivers. The same AI that reads the H&P fires the CDI query, tracks the LOS paradox, and locks the final DRG at discharge.
+            These are the results Docstribe delivers across UAE hospital deployments — across OPD, acute inpatient, and emergency. Every metric is auditable. Payment only when improvement is proven.
           </p>
 
           <div className="outcomes-grid">
@@ -1096,7 +1162,7 @@ export default function App() {
           <div className="quote-block">
             <span className="quote-mark">"</span>
             <p>
-              The physician writes for clinical communication. The DRG grouper reads for financial classification. That gap is where all revenue leakage lives. Docstribe sits exactly in that gap.
+              12 to 18% of UAE hospital claims are denied on first submission. Not because care was not delivered — because the documentation did not survive the payer rules. Docstribe closes that gap at every stage.
             </p>
           </div>
         </div>
@@ -1106,10 +1172,10 @@ export default function App() {
       <section className="cta-section" id="contact">
         <div className="wrap">
           <div className="cta-shell">
-            <div className="section-eyebrow" style={{ margin: '0 auto 0' }}>4-Week Pilot</div>
-            <h2>Real charts. Real DRGs. Measured impact in 4 weeks.</h2>
+            <div className="section-eyebrow" style={{ margin: '0 auto 0' }}>4-Week UAE Pilot — Zero Cost</div>
+            <h2>Real charts. Real IR-DRG impact. Measured to the dirham in 4 weeks.</h2>
             <p>
-              Connect Epic, ingest payer contracts, deploy AI agents on live charts. In 4 weeks you get CCR, CMI, and charge capture deltas — quantified to the dollar, per encounter. Zero cost. Outcome-driven decision. If we don't deliver, there's nothing to pay.
+              Connect your HIS, integrate NABIDH, ingest Daman / AXA Gulf / Bupa Arabia payer contracts, deploy AI agents on live charts. In 4 weeks you get denial rate delta, IR-DRG accuracy comparison, and CMI movement — quantified per encounter. Zero cost. Pay only when improvement is proven.
             </p>
 
             <div className="cta-checkpoints">
@@ -1119,11 +1185,11 @@ export default function App() {
             </div>
 
             <div className="cta-actions">
-              <a className="btn-primary" href="mailto:akash@docstribe.com?subject=Docstribe Pilot">
-                Start your pilot →
+              <a className="btn-primary" href="mailto:arcus@docstribe.com?subject=Docstribe UAE Pilot">
+                Start your UAE pilot →
               </a>
-              <a className="btn-secondary" href="https://docstribe.health" target="_blank" rel="noreferrer">
-                Visit docstribe.health
+              <a className="btn-secondary" href="https://docstribe.com" target="_blank" rel="noreferrer">
+                Visit docstribe.com
               </a>
             </div>
           </div>
@@ -1138,12 +1204,12 @@ export default function App() {
         <div className="wrap footer-inner">
           <div className="footer-brand">
             <strong>Docstribe</strong>
-            <span>Dynamic DRG Intelligence. Built for inpatient revenue teams.</span>
+            <span>IR-DRG Intelligence · UAE Market · NABIDH · DHA · SOC 2 · HIPAA</span>
           </div>
 
           <div className="footer-links">
-            <a href="mailto:akash@docstribe.com">akash@docstribe.com</a>
-            <a href="mailto:rishav@docstribe.com">rishav@docstribe.com</a>
+            <a href="mailto:arcus@docstribe.com">arcus@docstribe.com</a>
+            <a href="https://docstribe.com" target="_blank" rel="noreferrer">docstribe.com</a>
           </div>
 
           <span className="footer-copy">© 2026 Docstribe</span>

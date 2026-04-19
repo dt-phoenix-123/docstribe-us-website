@@ -405,7 +405,7 @@ const UAE_DEMO_SCENES = [
   {
     id: 2, timecode: '0:10–0:22', journeyStage: 'outcomes',
     title: 'Introducing Docstribe',
-    voText: 'Meet Docstribe — an AI agentic workforce built for UAE healthcare. Denials drop thirty percent, revenue goes up twenty-five percent, CMI improves by zero point fifteen. We guarantee it within sixty days.',
+    voText: 'Docstribe is a clinical intelligence platform deployed across the US, UAE, and India — across one hundred hospitals, managing ten million lives, driven by clinicians with thirty years of experience. Denials drop thirty percent. Revenue goes up twenty-five percent. Guaranteed.',
   },
   {
     id: 3, timecode: '0:22–0:32', journeyStage: 'platform',
