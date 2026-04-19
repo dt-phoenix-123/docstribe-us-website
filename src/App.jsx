@@ -1,6 +1,7 @@
 import './App.css';
 import ExplainerAgent from './components/ExplainerAgent';
 import Shakti from './components/Shakti';
+import DemoPlayer from './components/DemoPlayer';
 
 /* ──────────────────────────────────────────────
    DATA
@@ -1071,6 +1072,11 @@ export default function App() {
 
       {/* ── SHAKTI WORKFLOW ─────────────────────── */}
       <Shakti />
+
+      {/* ── BOARD DEMO ──────────────────────────── */}
+      <section style={{ background: '#06080f', padding: '0' }}>
+        <DemoPlayer />
+      </section>
 
       {/* ── OUTCOMES ────────────────────────────── */}
       <section className="section outcomes-section" id="outcomes">
