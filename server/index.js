@@ -400,17 +400,17 @@ const UAE_DEMO_SCENES = [
   {
     id: 1, timecode: '0:00–0:10', journeyStage: 'opening',
     title: 'The Revenue Gap',
-    voText: 'In the UAE, twelve to eighteen percent of every claim is denied. Sixty to seventy percent of those — entirely preventable. Docstribe closes that gap before it opens.',
+    voText: 'In the UAE, twelve to eighteen percent of every hospital claim is denied. Sixty to seventy percent — entirely preventable. Four gaps: documentation, authorization, coding, claim edits. Docstribe closes every one. Before a single claim goes out.',
   },
   {
     id: 2, timecode: '0:10–0:22', journeyStage: 'outcomes',
     title: 'Introducing Docstribe',
-    voText: 'This is Docstribe. Built by clinicians — thirty years of practice. A hundred hospitals across the US, UAE, and India. Ten million lives. Denials fall thirty percent. Clean claim rate ninety-nine percent. CMI up by zero point one five. Sixty days. Guaranteed.',
+    voText: 'This is Docstribe. Built by clinicians — thirty years of practice. A hundred hospitals across the US, UAE, and India. Ten million lives. That gap you just saw — the twelve to eighteen percent — we close it. Contractually. Denials fall thirty percent. Clean claim rate ninety-nine percent. CMI up by zero point one five. Sixty days. Guaranteed.',
   },
   {
     id: 3, timecode: '0:22–0:32', journeyStage: 'platform',
     title: 'One Unified Workspace',
-    voText: 'Two hundred live encounters — OPD, IPD, Emergency — in one workspace. Every case tracked from diagnosis to final payment. Nothing falls through. Zero leakage.',
+    voText: 'Docstribe connects with your existing EMR and HIS — no rip and replace. It builds a unified case workbench across OPD, IPD, and Emergency — for physicians, medical coders, and case managers. Two hundred live encounters. Every case tracked from order to payment. Zero leakage.',
   },
   {
     id: 4, timecode: '0:32–0:42', journeyStage: 'pre-visit',
@@ -435,7 +435,7 @@ const UAE_DEMO_SCENES = [
   {
     id: 8, timecode: '1:14–1:24', journeyStage: 'denial-intel',
     title: 'Denial Intelligence',
-    voText: 'Every denial has a pattern. Docstribe maps it — payor by payor, batch by batch. Most is preventable. Up to ninety-one percent recoverable before the claim goes out. That is how the denial rate falls — not by chasing. By never losing.',
+    voText: 'Every denial has a pattern. Docstribe maps it — payer by payer, batch by batch. Most is preventable. Up to ninety-one percent recoverable before the claim goes out. That is how the denial rate falls — not by chasing. By never losing.',
   },
   {
     id: 9, timecode: '1:24–1:33', journeyStage: 'recovery',
@@ -450,7 +450,7 @@ const UAE_DEMO_SCENES = [
   {
     id: 11, timecode: '1:44–1:58', journeyStage: 'dashboard',
     title: 'Your RCM Intelligence Partner',
-    voText: 'This is not a generic platform. It is an intelligence framework that learns your hospital — your payors, your physicians, your case mix — and gets smarter with every claim, every signal, every patient. Clinical intelligence. Built for you.',
+    voText: 'This is not a generic platform. It is an intelligence framework that learns your hospital — your payers, your physicians, your case mix — and gets smarter with every claim, every signal, every patient. Clinical intelligence. Built for you.',
   },
 ];
 
