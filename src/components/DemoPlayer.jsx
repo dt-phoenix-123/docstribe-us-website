@@ -1,6 +1,6 @@
 /**
  * DemoPlayer — Docstribe Board Demo
- * 11 scenes · one focal element at a time · VO synced with screen numbers
+ * 13 scenes · one focal element at a time · VO synced with screen numbers
  * Board-level sales demo — ICD-10-CM · UAE · 60-day guarantee
  */
 
@@ -62,7 +62,7 @@ function glow(active, color, extra = {}) {
     transition: 'all 0.5s cubic-bezier(0.34,1.2,0.64,1)',
     transform: active ? 'scale(1.03)' : 'scale(1)',
     border: active ? `1px solid ${color}70` : `1px solid rgba(255,255,255,0.07)`,
-    boxShadow: active ? `0 0 28px ${color}30, 0 4px 20px rgba(0,0,0,0.5)` : '0 2px 8px rgba(0,0,0,0.25)',
+    boxShadow: active ? `0 0 32px ${color}45, 0 4px 20px rgba(0,0,0,0.5)` : '0 2px 8px rgba(0,0,0,0.25)',
     background: active ? `${color}16` : `${color}07`,
     ...extra,
   };
@@ -77,7 +77,7 @@ function splitSentences(text) {
 function highlightCaption(text) {
   if (!text) return null;
   // Split on key terms — capturing group keeps the matched parts at odd indices
-  const pattern = /(twelve to eighteen|sixty to seventy|thirty percent|twenty-five percent|zero point fifteen|sixty.?day|one point four million|eighteen thousand four hundred|two hundred fourteen|four hundred twenty|one thousand nine hundred|ninety-one thousand|twenty-eight thousand five hundred|zero point nine four|one point three four|zero leakage|per payor.?per batch|personalized intelligence|built for you|one click|order entry|CARC \d+|ICD-10-CM|NABIDH|DHA|IR-DRG|CMI|Docstribe|guaranteed|\d+(?:\.\d+)?%)/gi;
+  const pattern = /(twelve to eighteen|sixty to seventy|thirty percent|twenty-five percent|zero point fifteen|sixty.?day|one point four million|eighteen thousand four hundred|two hundred fourteen|four hundred twenty|one thousand nine hundred|ninety-one thousand|twenty-eight thousand five hundred|zero point nine four|one point three four|zero leakage|per payor.?per batch|personalized intelligence|built for you|one click|order entry|CARC \d+|ICD-10-CM|NABIDH|DHA|IR-DRG|CMI|Docstribe|guaranteed|thirty years|fifty years|one hundred hospitals|clinical governance|medical necessity|concurrent review|bespoke|\d+(?:\.\d+)?%)/gi;
   const parts = text.split(pattern);
   return parts.map((part, i) =>
     i % 2 === 1
@@ -89,6 +89,17 @@ function highlightCaption(text) {
 /* ══════════════════ SCENE DATA ═════════════════════════════════ */
 // VOs crafted by Gemini 2.5 Flash Lite — board-level, screen-precise
 const SCENES = [
+  {
+    id: 0, type: 'heritage', color: GREEN,
+    title: 'Our Heritage',
+    vo: "Docstribe brings thirty years of healthcare business leadership and fifty years of combined clinical experience. We are live across one hundred hospitals in India, the UAE, and the United States — not because we built software and went looking for a problem. We lived it first. Then we built.",
+    beats: [
+      { at: 0.04, stat: '30+ Years',      sub: 'Healthcare business leadership · operational excellence' },
+      { at: 0.34, stat: '50+ Years',      sub: 'Combined clinical experience · frontline & advisory' },
+      { at: 0.58, stat: '100+ Hospitals', sub: 'India · UAE · United States · live and scaling' },
+      { at: 0.80, stat: 'We lived it.',   sub: 'Built from clinical reality — not from a whiteboard' },
+    ],
+  },
   {
     id: 1, type: 'stat', color: TEAL,
     title: 'The Revenue Gap',
@@ -117,11 +128,11 @@ const SCENES = [
     id: 3, type: 'product', color: TEAL,
     title: 'One Unified Workspace',
     breadcrumb: 'Cases Workbench',
-    // S1:15w S2:8w = 23w — beat fracs 0.65 1.00; zero leakage at word 14 = 0.61
-    vo: "Here you can see two hundred live cases — OPD, IPD, Emergency — with zero leakage. Every encounter tracked from diagnosis to final payment.",
+    vo: "Here you can see two hundred live cases — OPD, IPD, Emergency — with zero leakage. Every encounter tracked from diagnosis to final payment. And for each patient, a bespoke intelligence profile: clinical risk, payer history, and the exact revenue at stake.",
     beats: [
       { at: 0.06, stat: '200 active cases', sub: 'OPD · IPD · Emergency — unified' },
-      { at: 0.62, stat: 'Zero leakage',     sub: 'every encounter tracked end-to-end' },
+      { at: 0.52, stat: 'Zero leakage',     sub: 'every encounter tracked end-to-end' },
+      { at: 0.76, stat: 'Bespoke profile',  sub: 'clinical risk · payer intelligence · revenue at stake' },
     ],
   },
   {
@@ -210,12 +221,23 @@ const SCENES = [
     id: 11, type: 'dashboard', color: TEAL,
     title: 'Your RCM Intelligence Partner',
     breadcrumb: 'Your RCM Intelligence Framework',
-    // S1:7w S2:22w S3:9w = 38w — fracs 0.18 0.76 1.00
     vo: "Docstribe is not a generic platform. It builds a personalized intelligence framework — your payors, your physicians, your case mix — and it evolves with your hospital. Clinical intelligence, financial integrity, built for you.",
     beats: [
       { at: 0.06, stat: 'Your intelligence',      sub: 'payors · physicians · case mix — personalized' },
       { at: 0.20, stat: 'Personalized framework',  sub: 'evolves with your hospital · not a generic tool' },
       { at: 0.78, stat: 'Built for you.',          sub: 'Clinical Intelligence · Financial Integrity' },
+    ],
+  },
+  {
+    id: 12, type: 'governance', color: GREEN,
+    title: 'Clinical Governance',
+    breadcrumb: 'Clinical Governance Framework',
+    vo: "Clinical governance is not an afterthought — it is the foundation. Docstribe runs a concurrent review layer across every active admission: medical necessity validation, UM Control Tower, DHA and NABIDH compliance audit trail. Every clinical decision is documented. Every insurer obligation is met.",
+    beats: [
+      { at: 0.04, stat: 'UM Control Tower',       sub: 'concurrent review · denied days elimination' },
+      { at: 0.36, stat: 'DHA · NABIDH Compliant', sub: 'every note structured · audit-ready' },
+      { at: 0.62, stat: 'Medical Necessity',       sub: 'validated at point of care · not retrospectively' },
+      { at: 0.84, stat: 'Zero Compliance Risk',    sub: 'governance embedded · not bolted on' },
     ],
   },
 ];
@@ -235,7 +257,7 @@ function ProductShell({ breadcrumb, color, children }) {
         <div style={{ height: 34, flexShrink: 0, borderBottom: `1px solid ${BORDER}`, display: 'flex', alignItems: 'center', padding: '0 12px', gap: 6, background: 'rgba(0,0,0,0.35)' }}>
           <span style={{ fontSize: 8, color: MUTED }}>Docstribe</span>
           <span style={{ fontSize: 8, color: '#1e293b' }}>›</span>
-          <span style={{ fontSize: 10, fontWeight: 700, color: TXT }}>{breadcrumb}</span>
+          <span style={{ fontSize: 11, fontWeight: 800, color: TXT }}>{breadcrumb}</span>
           <div style={{ flex: 1 }} />
           {[color, INDIGO, '#1e293b'].map((c, i) => <div key={i} style={{ width: 5, height: 5, borderRadius: '50%', background: c }} />)}
         </div>
@@ -266,11 +288,48 @@ function StatScene({ scene, progress }) {
         const active = spot(progress, b.at, b.at + 0.28);
         return (
           <div key={i} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8, opacity: show ? 1 : 0, transform: show ? 'none' : 'translateY(24px)', transition: 'all 0.9s cubic-bezier(0.34,1.2,0.64,1)', filter: show && !active && i < 2 ? 'brightness(0.5)' : 'brightness(1)' }}>
-            <div style={{ fontSize: i === 0 ? 96 : i === 1 ? 76 : 28, fontWeight: 900, letterSpacing: i < 2 ? -2 : -0.5, fontFamily: 'Sora', lineHeight: 1.0, color: i === 2 ? TEAL : '#fff', textShadow: active ? `0 0 80px ${TEAL}80` : i < 2 ? `0 0 40px ${TEAL}30` : 'none', transition: 'text-shadow 0.5s ease', background: i === 2 && active ? `linear-gradient(135deg,${TEAL},${INDIGO})` : 'none', WebkitBackgroundClip: i === 2 && active ? 'text' : 'unset', WebkitTextFillColor: i === 2 && active ? 'transparent' : 'unset' }}>
+            <div style={{ fontSize: i === 0 ? 108 : i === 1 ? 88 : 30, fontWeight: 900, letterSpacing: i < 2 ? -2 : -0.5, fontFamily: 'Sora', lineHeight: 1.0, color: i === 2 ? TEAL : '#fff', textShadow: active ? `0 0 100px ${TEAL}90` : i < 2 ? `0 0 50px ${TEAL}35` : 'none', transition: 'text-shadow 0.5s ease', background: i === 2 && active ? `linear-gradient(135deg,${TEAL},${INDIGO})` : 'none', WebkitBackgroundClip: i === 2 && active ? 'text' : 'unset', WebkitTextFillColor: i === 2 && active ? 'transparent' : 'unset' }}>
               {show ? <CountUp value={b.stat} duration={900} key={`${i}-${show}`} /> : b.stat}
             </div>
             <div style={{ fontSize: i === 2 ? 14 : 11, color: i === 2 ? TXT : DIM, fontFamily: 'Sora', textAlign: 'center', maxWidth: 480, letterSpacing: 0.2, fontWeight: i === 2 ? 500 : 400 }}>{b.sub}</div>
             {i < 2 && show && <div style={{ width: 32, height: 2, background: active ? TEAL : `${TEAL}40`, borderRadius: 1, transition: 'background 0.5s' }} />}
+          </div>
+        );
+      })}
+    </div>
+  );
+}
+
+/* Scene 0 — Corporate Heritage: big sequential stat beats, green accent */
+function HeritageScene({ scene, progress }) {
+  const geo = [{ flag: '🇮🇳', label: 'India' }, { flag: '🇦🇪', label: 'UAE' }, { flag: '🇺🇸', label: 'United States' }];
+  const sizes = [88, 80, 64, 26];
+  return (
+    <div style={{ position: 'absolute', inset: 0, background: 'radial-gradient(ellipse 80% 60% at 50% 45%,#030d08 0%,#000 70%)', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 24 }}>
+      <div style={{ position: 'absolute', inset: 0, opacity: 0.025, backgroundImage: 'linear-gradient(rgba(16,185,129,0.5) 1px,transparent 1px),linear-gradient(90deg,rgba(16,185,129,0.5) 1px,transparent 1px)', backgroundSize: '56px 56px' }} />
+      <div style={{ position: 'absolute', top: 16, left: 0, right: 0, textAlign: 'center', fontSize: 9, fontWeight: 700, color: `${GREEN}60`, letterSpacing: 3, fontFamily: 'Sora' }}>DOCSTRIBE · OUR HERITAGE</div>
+      <div style={{ position: 'absolute', bottom: 14, right: 18, fontSize: 8, fontWeight: 800, color: `${GREEN}40`, letterSpacing: 2, fontFamily: 'Sora' }}>DOCSTRIBE</div>
+      {scene.beats.map((b, i) => {
+        const isLast = i === scene.beats.length - 1;
+        const show = progress >= b.at;
+        const active = spot(progress, b.at, b.at + 0.22);
+        return (
+          <div key={i} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6, opacity: show ? 1 : 0, transform: show ? 'none' : 'translateY(24px)', transition: 'all 0.9s cubic-bezier(0.34,1.2,0.64,1)', filter: show && !active && !isLast ? 'brightness(0.45)' : 'brightness(1)' }}>
+            <div style={{ fontSize: sizes[i] || 24, fontWeight: 900, letterSpacing: -1.5, fontFamily: 'Sora', lineHeight: 1.0, color: isLast ? GREEN : '#fff', textShadow: active ? `0 0 80px ${GREEN}80` : `0 0 40px ${GREEN}20`, transition: 'text-shadow 0.5s ease', background: isLast && active ? `linear-gradient(135deg,${GREEN},${TEAL})` : 'none', WebkitBackgroundClip: isLast && active ? 'text' : 'unset', WebkitTextFillColor: isLast && active ? 'transparent' : 'unset' }}>
+              {show ? <CountUp value={b.stat} duration={900} key={`h${i}-${show}`} /> : b.stat}
+            </div>
+            <div style={{ fontSize: isLast ? 14 : 10, color: isLast ? TXT : DIM, fontFamily: 'Sora', textAlign: 'center', maxWidth: 440, letterSpacing: 0.2, fontWeight: isLast ? 500 : 400 }}>{b.sub}</div>
+            {i === 2 && show && (
+              <div style={{ display: 'flex', gap: 20, marginTop: 4, opacity: show ? 1 : 0, transition: 'opacity 0.7s ease' }}>
+                {geo.map(g => (
+                  <div key={g.label} style={{ display: 'flex', alignItems: 'center', gap: 5, fontSize: 9, fontWeight: 700, color: DIM }}>
+                    <span style={{ fontSize: 15 }}>{g.flag}</span>
+                    <span>{g.label}</span>
+                  </div>
+                ))}
+              </div>
+            )}
+            {!isLast && show && <div style={{ width: 28, height: 2, background: active ? GREEN : `${GREEN}35`, borderRadius: 1, transition: 'background 0.5s' }} />}
           </div>
         );
       })}
@@ -410,9 +469,24 @@ function CasesScreen({ progress }) {
             </div>
           );
         })}
-        {progress >= 0.86 && (
-          <div style={{ textAlign: 'center', fontSize: 9, color: TEAL, fontWeight: 700, animation: 'dpBeatIn 0.4s ease both' }}>
-            Zero leakage — every encounter tracked from admission to payment
+        {/* Bespoke Patient Profile — slides in at progress 0.76 */}
+        {progress >= 0.76 && (
+          <div style={{ background: `${TEAL}0d`, border: `1px solid ${TEAL}35`, borderRadius: 10, padding: '10px 12px', animation: 'dpBeatIn 0.5s cubic-bezier(0.34,1.4,0.64,1) both', flexShrink: 0 }}>
+            <div style={{ fontSize: 7, fontWeight: 800, color: TEAL, letterSpacing: 1.5, textTransform: 'uppercase', marginBottom: 8 }}>Bespoke Patient Intelligence · F.H. (OPD · Endocrinology)</div>
+            <div style={{ display: 'flex', gap: 8 }}>
+              {[
+                { label: 'Clinical Risk', value: 'HIGH', sub: 'DM + HTN · 2 CDI gaps open', col: AMBER },
+                { label: 'Payer Profile', value: 'Daman', sub: '94% approval · avg 2.1 days', col: INDIGO },
+                { label: 'Revenue at Risk', value: 'AED 2,100', sub: 'without CDI closure · leakage', col: RED },
+                { label: 'AI Opportunity', value: '+AED 4,550', sub: 'complications + CC capture', col: GREEN },
+              ].map((item, i) => (
+                <div key={i} style={{ flex: 1, background: `${item.col}0a`, border: `1px solid ${item.col}25`, borderRadius: 7, padding: '7px 8px', textAlign: 'center' }}>
+                  <div style={{ fontSize: 7, color: item.col, fontWeight: 700, marginBottom: 3 }}>{item.label}</div>
+                  <div style={{ fontSize: 11, fontWeight: 900, color: item.col, fontFamily: 'Sora', lineHeight: 1 }}>{item.value}</div>
+                  <div style={{ fontSize: 6.5, color: DIM, marginTop: 3, lineHeight: 1.4 }}>{item.sub}</div>
+                </div>
+              ))}
+            </div>
           </div>
         )}
       </div>
@@ -1307,12 +1381,54 @@ function DashboardScreen({ progress }) {
   );
 }
 
+/* Scene 12 — Clinical Governance: 2×2 pillar grid with compliance strip */
+function GovernanceScene({ progress }) {
+  const pillars = [
+    { icon: '🔍', title: 'UM Control Tower', sub: 'Concurrent & retrospective review · denied days management · auth escalation', col: GREEN,  show: 0.06 },
+    { icon: '✅', title: 'Medical Necessity', sub: 'Real-time clinical validation · physician one-tap confirm · ICD-justified at point of care', col: TEAL,   show: 0.30 },
+    { icon: '📋', title: 'DHA · NABIDH Audit Trail', sub: 'Structured note exchange · regulatory audit trail · DHA-ready documentation every encounter', col: INDIGO, show: 0.55 },
+    { icon: '📊', title: 'CDI Governance', sub: 'Documentation gap alerts · DRG accuracy assurance · compliance-first coding across service lines', col: AMBER,  show: 0.76 },
+  ];
+  return (
+    <ProductShell breadcrumb="Clinical Governance Framework" color={GREEN}>
+      <div style={{ padding: '12px 14px', height: '100%', display: 'flex', flexDirection: 'column', gap: 8 }}>
+        <div style={{ textAlign: 'center', flexShrink: 0, opacity: progress >= 0.04 ? 1 : 0, transition: 'opacity 0.6s ease' }}>
+          <div style={{ fontSize: 8, fontWeight: 700, color: `${GREEN}90`, letterSpacing: 2.5, textTransform: 'uppercase', marginBottom: 4 }}>Clinical Governance · Embedded — Not Bolted On</div>
+          <div style={{ fontSize: 9, color: DIM, maxWidth: 360, margin: '0 auto', lineHeight: 1.5 }}>Every clinical decision documented · every insurer obligation met · every audit ready on day one</div>
+        </div>
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8, flex: 1 }}>
+          {pillars.map((p, i) => {
+            const show = progress >= p.show;
+            const active = spot(progress, p.show, p.show + 0.20);
+            return (
+              <div key={i} style={{ ...glow(active, p.col, { borderRadius: 12, padding: '14px', display: 'flex', flexDirection: 'column', gap: 8 }), opacity: show ? 1 : 0, transform: show ? (active ? 'scale(1.04)' : 'scale(1)') : 'translateY(14px) scale(0.96)', transition: 'all 0.55s cubic-bezier(0.34,1.4,0.64,1)', filter: show && !active ? 'brightness(0.65)' : 'brightness(1)' }}>
+                <div style={{ fontSize: 24 }}>{p.icon}</div>
+                <div style={{ fontSize: 11, fontWeight: 800, color: active ? p.col : TXT, lineHeight: 1.2 }}>{p.title}</div>
+                <div style={{ fontSize: 8, color: DIM, lineHeight: 1.55 }}>{p.sub}</div>
+              </div>
+            );
+          })}
+        </div>
+        {progress >= 0.90 && (
+          <div style={{ flexShrink: 0, display: 'flex', gap: 6, justifyContent: 'center', flexWrap: 'wrap', animation: 'dpBeatIn 0.4s ease both' }}>
+            {[['DHA Compliant', GREEN], ['NABIDH Ready', TEAL], ['IR-DRG Certified', INDIGO], ['SOC 2 Type II', AMBER]].map(([t, c]) => (
+              <span key={t} style={{ fontSize: 8, fontWeight: 700, color: c, background: `${c}14`, border: `1px solid ${c}30`, borderRadius: 20, padding: '3px 10px' }}>{t}</span>
+            ))}
+          </div>
+        )}
+      </div>
+    </ProductShell>
+  );
+}
+
 /* ─── Scene router ───────────────────────────────────────────── */
 function SceneVisual({ scene, progress }) {
   switch (scene.type) {
-    case 'stat':      return <StatScene scene={scene} progress={progress} />;
-    case 'kpi':       return <KPIScene  scene={scene} progress={progress} />;
-    case 'dashboard': return <DashboardScreen progress={progress} />;
+    case 'heritage':   return <HeritageScene  scene={scene} progress={progress} />;
+    case 'stat':       return <StatScene      scene={scene} progress={progress} />;
+    case 'kpi':        return <KPIScene       scene={scene} progress={progress} />;
+    case 'governance': return <GovernanceScene progress={progress} />;
+    case 'dashboard':  return <DashboardScreen progress={progress} />;
     case 'product':
       switch (scene.id) {
         case 3:  return <CasesScreen       progress={progress} />;
@@ -1355,14 +1471,14 @@ function Splash({ onPlay }) {
 
 /* ─── Scene stat strip — centered, sits just above the caption ── */
 function SceneStatStrip({ scene, progress }) {
-  if (scene.type === 'stat' || scene.type === 'kpi') return null;
+  if (['stat','kpi','heritage'].includes(scene.type)) return null;
   const fired = (scene.beats || []).slice().reverse().find(b => progress >= b.at);
   if (!fired) return null;
   return (
     <div key={fired.stat} style={{ position: 'absolute', bottom: 44, left: '50%', transform: 'translateX(-50%)', zIndex: 15, display: 'flex', gap: 8, alignItems: 'center', background: 'rgba(3,7,20,0.92)', backdropFilter: 'blur(14px)', borderRadius: 20, padding: '6px 18px', border: `1px solid ${scene.color}45`, pointerEvents: 'none', animation: 'dpBeatIn 0.45s ease both', maxWidth: '76%', whiteSpace: 'nowrap' }}>
-      <div style={{ width: 7, height: 7, borderRadius: '50%', background: scene.color, boxShadow: `0 0 10px ${scene.color}`, flexShrink: 0 }} />
-      <span style={{ fontSize: 13, fontWeight: 900, color: scene.color, fontFamily: 'Sora', letterSpacing: -0.3 }}>{fired.stat}</span>
-      {fired.sub && <span style={{ fontSize: 8, color: DIM, overflow: 'hidden', textOverflow: 'ellipsis' }}>· {fired.sub}</span>}
+      <div style={{ width: 7, height: 7, borderRadius: '50%', background: scene.color, boxShadow: `0 0 12px ${scene.color}`, flexShrink: 0 }} />
+      <span style={{ fontSize: 15, fontWeight: 900, color: scene.color, fontFamily: 'Sora', letterSpacing: -0.5 }}>{fired.stat}</span>
+      {fired.sub && <span style={{ fontSize: 9, color: DIM, overflow: 'hidden', textOverflow: 'ellipsis' }}>· {fired.sub}</span>}
     </div>
   );
 }

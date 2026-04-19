@@ -1609,7 +1609,7 @@ export default function ExplainerAgent() {
                   const CARDS = [
                     {
                       icon: '⚠️',
-                      stat: '$8–14M',
+                      stat: 'AED 29M–51M',
                       label: 'Revenue lost per hospital / year',
                       sub: 'Physician ↔ grouper language gap',
                       color: '#f87171',

@@ -16,7 +16,7 @@ const PROOF_STATS = [
   { value: '99%',    label: 'Clean claim rate' },
   { value: '+10%',   label: 'Charge capture uplift' },
   { value: '+0.05',  label: 'CMI uplift per discharge' },
-  { value: '$8–14M', label: 'Projected annual impact' },
+  { value: 'AED 29M–51M', label: 'Projected annual impact' },
 ];
 
 const SIGNALS = [
@@ -39,7 +39,7 @@ const JOURNEY_STAGES = [
       'Baseline DRG computed via grouper',
       'CDI queries fired Day 0 — not Day 3',
       'ICD-10 extraction & MDC mapping',
-      'DRG delta surfaced: e.g. $8.6K → $16.6K',
+      'DRG delta surfaced: e.g. AED 31K → AED 61K',
     ],
     products: [
       { label: 'CDI ENGINE' },
@@ -56,7 +56,7 @@ const JOURNEY_STAGES = [
       'DRG recomputed on every clinical signal',
       'Labs & orders mapped to undocumented DX',
       'LOS vs. GMLOS paradox detection',
-      'Revenue delta tracked daily: e.g. +$4,200',
+      'Revenue delta tracked daily: e.g. +AED 15,400',
       'CDI query escalation before rounds close',
     ],
     products: [
@@ -349,8 +349,8 @@ function ContractMockupSVG() {
       <text x="44" y="376" fill="rgba(0,203,168,0.7)"
         fontSize="8.5" fontWeight="700" fontFamily="Inter" letterSpacing="1.6">DRG COMPUTED — DELTA SURFACED</text>
       {[
-        'DRG 195  →  $8,600  (baseline)',
-        'DRG 871  →  $16,600  (if AKI coded) ✓',
+        'DRG 195  →  AED 31,600  (baseline)',
+        'DRG 871  →  AED 61,000  (if AKI coded) ✓',
         'CDI Query: AKI — creatinine 3.2 elevated',
         'Query sent to Dr. Smith · Day 0',
       ].map((rule, i) => (
@@ -368,7 +368,7 @@ function ContractMockupSVG() {
         fill="rgba(0,203,168,0.1)" stroke="rgba(0,203,168,0.2)" strokeWidth="0.8"/>
       <circle cx="44" cy="549" r="4" fill="#00cba8"/>
       <text x="54" y="553" fill="rgba(255,255,255,0.82)"
-        fontSize="10.5" fontWeight="600" fontFamily="Inter">DRG delta: +$8,000 identified</text>
+        fontSize="10.5" fontWeight="600" fontFamily="Inter">DRG delta: +AED 29,400 identified</text>
       {/* Home bar */}
       <rect x="113" y="566" width="84" height="4" rx="2" fill="rgba(255,255,255,0.18)"/>
     </svg>
@@ -476,11 +476,11 @@ function ClinicalMockupSVG() {
 /* ─── DENIAL MOCKUP (Back End dashboard) ─── */
 function DenialMockupSVG() {
   const rows = [
-    { condition: 'AKI — Acute Kidney Injury',   source: 'Lab: Creatinine 3.2',  delta: '+$4,200' },
-    { condition: 'Protein Malnutrition',         source: 'Consult Note (Dietitian)', delta: '+$2,800' },
-    { condition: 'CHF Acute Exacerbation',       source: 'Echo Report Day 2',    delta: '+$3,100' },
-    { condition: 'Hypertensive Crisis',          source: 'Progress Note Day 3',  delta: '+$1,900' },
-    { condition: 'Septicemia — Blood Culture +', source: 'Micro Report Day 1',   delta: '+$8,000' },
+    { condition: 'AKI — Acute Kidney Injury',   source: 'Lab: Creatinine 3.2',  delta: '+AED 15,400' },
+    { condition: 'Protein Malnutrition',         source: 'Consult Note (Dietitian)', delta: '+AED 10,300' },
+    { condition: 'CHF Acute Exacerbation',       source: 'Echo Report Day 2',    delta: '+AED 11,400' },
+    { condition: 'Hypertensive Crisis',          source: 'Progress Note Day 3',  delta: '+AED 7,000' },
+    { condition: 'Septicemia — Blood Culture +', source: 'Micro Report Day 1',   delta: '+AED 29,400' },
   ];
   return (
     <svg viewBox="0 0 540 448" fill="none" xmlns="http://www.w3.org/2000/svg"
@@ -494,7 +494,7 @@ function DenialMockupSVG() {
       <text x="97" y="36" fill="rgba(255,255,255,0.92)"
         fontSize="13" fontWeight="700" fontFamily="Sora">5 Conditions Found — Not Listed</text>
       <text x="97" y="53" fill="rgba(255,123,74,0.75)"
-        fontSize="10" fontFamily="Inter">Discharge summary omits treated diagnoses · DRG impact: +$20,000</text>
+        fontSize="10" fontFamily="Inter">Discharge summary omits treated diagnoses · DRG impact: +AED 73,400</text>
 
       {/* Main card */}
       <rect x="12" y="76" width="516" height="360" rx="18"
@@ -712,7 +712,7 @@ function BackEndSVG() {
       ))}
       {/* Stat at bottom */}
       <text x="223" y="108" textAnchor="middle" fill="rgba(255,123,74,0.8)"
-        fontSize="16" fontWeight="800" fontFamily="Sora">$28M+</text>
+        fontSize="16" fontWeight="800" fontFamily="Sora">AED 103M+</text>
     </svg>
   );
 }

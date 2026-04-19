@@ -38,7 +38,7 @@ const reasons = [
         <path d="M22 12h-4l-3 9L9 3l-3 9H2" />
       </svg>
     ),
-    label: '$1.4T hospital market',
+    label: 'AED 100B+ UAE healthcare market',
     body: '3–5% of net hospital revenue is lost annually to preventable RCM failures — a staggering, recoverable opportunity.',
     color: '#10b981',
   },
@@ -65,7 +65,7 @@ export default function WhyNow() {
               marginBottom: '20px',
             }}>
               <span style={{ width: '4px', height: '4px', borderRadius: '50%', background: '#f97316', display: 'inline-block' }} />
-              Why The US. Why Now.
+              Why The UAE. Why Now.
             </div>
             <h2 style={{
               fontSize: 'clamp(32px, 3.5vw, 48px)',
@@ -74,7 +74,7 @@ export default function WhyNow() {
               fontFamily: '"Inter Display", Inter, sans-serif',
               marginBottom: '20px',
             }}>
-              US Hospitals Lose{' '}
+              UAE Hospitals Lose{' '}
               <span style={{
                 background: 'linear-gradient(135deg, #fb923c, #f97316)',
                 WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text',
@@ -86,7 +86,7 @@ export default function WhyNow() {
             </p>
 
             <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-              {['HITRUST Certified — ready for US health systems', 'HIPAA Compliant — enterprise data security', 'SOC 2 Type II — audited infrastructure'].map(item => (
+              {['DHA & NABIDH Compliant — UAE data exchange standards', 'IR-DRG Certified — UAE inpatient grouper expertise', 'SOC 2 Type II — enterprise-grade data security'].map(item => (
                 <div key={item} style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
                   <div style={{
                     width: '22px', height: '22px', borderRadius: '50%',

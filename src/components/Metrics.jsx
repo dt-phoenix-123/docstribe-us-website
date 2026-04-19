@@ -188,7 +188,7 @@ export default function Metrics() {
           {[
             { val: '100+', label: 'Hospitals Deployed', sub: 'India, USA & UAE' },
             { val: '10M+', label: 'Lives Managed', sub: 'Active patient population' },
-            { val: '$100M+', label: 'Revenue Growth Attributable', sub: 'Across all deployments' },
+            { val: 'AED 370M+', label: 'Revenue Growth Attributable', sub: 'Across all deployments' },
           ].map((s) => (
             <div key={s.label} style={{
               padding: '36px 24px', textAlign: 'center',
