@@ -175,35 +175,35 @@ const SCENES = [
     id: 8, type: 'product', color: RED,
     title: 'Denial Intelligence',
     breadcrumb: 'Payor Contract Intelligence',
-    // S1:7w S2:9w S3:1w S4:8w S5:6w = 31w — fracs 0.23 0.52 0.55 0.81 1.00
-    vo: "Docstribe pulls denials per payor, per batch. Daman: twenty-three percent denial rate, AXA Gulf: thirty-one. Recoverable? Sixty-seven to ninety-one percent — pre-submission. Denial rate drops thirty percent.",
+    // S1:5w S2:9w S3:6w S4:4w S5:10w S6:2w = 36w — fracs 0.14 0.39 0.56 0.67 0.94 1.00
+    vo: "Every denial has a pattern. Docstribe maps them — payor by payor, batch by batch. Most of what's denied is preventable. Two thirds recoverable, pre-submission. That's how the denial rate falls — not by chasing. By pattern-breaking.",
     beats: [
-      { at: 0.10, stat: 'Per payor · per batch', sub: 'Daman · Thiqa · AXA Gulf · Oman Insurance' },
-      { at: 0.54, stat: '67–91% recoverable',    sub: 'pre-submission · flagged before send' },
-      { at: 0.82, stat: 'Denial rate ↓ 30%',    sub: 'batch over batch · systemic improvement' },
+      { at: 0.08, stat: 'Per payor · per batch', sub: 'Daman · Thiqa · AXA Gulf · Oman Insurance' },
+      { at: 0.60, stat: '67–91% recoverable',    sub: 'pre-submission · flagged before send' },
+      { at: 0.84, stat: 'Denial rate ↓ 30%',    sub: 'batch over batch · systemic improvement' },
     ],
   },
   {
     id: 9, type: 'product', color: TEAL,
     title: 'One-Click Recovery',
     breadcrumb: 'Claim Recovery — Appeal Generator',
-    // S1:12w S2:17w S3:2w = 31w — fracs 0.39 0.94 1.00; one click at S2 word 2 = 0.42
-    vo: "CARC 97 — bundling denial, AED one thousand nine hundred at risk. One click: Docstribe searches the Daman contract, finds Clause four point one point two, builds the appeal. Thirty seconds.",
+    // S1:12w S2:2w S3:15w S4:3w S5:2w = 34w — fracs 0.35 0.41 0.85 0.94 1.00
+    vo: "This claim just came back denied — three weeks of follow-up, historically. Watch this. One click: Docstribe reads the contract, finds the matching clause, and writes the appeal letter. The whole thing. Thirty seconds.",
     beats: [
-      { at: 0.06, stat: 'AED 1,900 denied', sub: 'CARC 97 · Daman · bundling dispute' },
-      { at: 0.40, stat: '1-click appeal',   sub: 'contract searched · clause cited · letter built' },
-      { at: 0.90, stat: '✅ 30 seconds',    sub: 'AED 1,900 recovered · vs. 3 weeks manual' },
+      { at: 0.06, stat: 'AED 1,900 denied', sub: 'Daman · bundling dispute · appeal pending' },
+      { at: 0.42, stat: '1-click appeal',   sub: 'contract read · clause matched · letter built' },
+      { at: 0.92, stat: '✅ 30 seconds',    sub: 'AED 1,900 recovered · vs. 3 weeks manual' },
     ],
   },
   {
     id: 10, type: 'product', color: INDIGO,
     title: 'Service Line Growth',
     breadcrumb: 'Service Line Growth · Clinical Engagement',
-    // S1:12w S2:12w S3:10w = 34w — fracs 0.35 0.71 1.00
-    vo: "Docstribe turns clinical deterioration into an ops team action list. Oxygen falling, BNP rising — revenue windows surfaced in real time. Four patients, AED ninety-one thousand in uplift, Day Zero.",
+    // S1:7w S2:2w S3:11w S4:14w S5:2w = 36w — fracs 0.19 0.25 0.56 0.95 1.00
+    vo: "Your ops team can't watch every chart. Docstribe does. A patient's oxygen is falling, another's labs flag a diagnosis escalation. It surfaces these as a live action list — clinical signals, turned into revenue opportunities. Right now.",
     beats: [
-      { at: 0.10, stat: 'Ops engagement queue', sub: 'clinical deterioration → revenue action · live' },
-      { at: 0.36, stat: 'AED 91K opportunity',  sub: '4 patients · surfaced live · Day Zero' },
+      { at: 0.10, stat: 'Ops engagement queue', sub: 'clinical signals → revenue action · live' },
+      { at: 0.55, stat: 'AED 91K opportunity',  sub: '4 patients · surfaced live · Day Zero' },
     ],
   },
   {
@@ -1240,15 +1240,18 @@ function DashboardScreen({ progress }) {
     <ProductShell breadcrumb="Your RCM Intelligence Framework" color={TEAL}>
       <div style={{ padding: '10px 14px', height: '100%', display: 'flex', flexDirection: 'column', gap: 8 }}>
 
-        {/* Header — partner positioning */}
+        {/* Brand wordmark — always at the TOP so it never overlaps the stat strip */}
         {headerShow && (
-          <div style={{ background: `linear-gradient(135deg,${TEAL}18,${INDIGO}0d)`, border: `1px solid ${TEAL}40`, borderRadius: 10, padding: '10px 16px', animation: 'dpBeatIn 0.7s cubic-bezier(0.34,1.4,0.64,1) both', flexShrink: 0 }}>
-            <div style={{ fontSize: 12, fontWeight: 800, color: TXT, fontFamily: 'Sora' }}>
-              Docstribe doesn't give you a platform. It builds{' '}
-              <span style={{ color: TEAL }}>your</span> intelligence framework.
+          <div style={{ flexShrink: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 5, animation: 'dpBeatIn 0.9s cubic-bezier(0.34,1.2,0.64,1) both' }}>
+            <div style={{ fontSize: 30, fontWeight: 900, fontFamily: 'Sora', background: `linear-gradient(135deg,#fff 20%,${TEAL} 55%,${INDIGO})`, WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', letterSpacing: -1.5, lineHeight: 1 }}>Docstribe</div>
+            <div style={{ display: 'flex', gap: 6, alignItems: 'center', flexWrap: 'wrap', justifyContent: 'center' }}>
+              {[['Clinical Intelligence', TEAL], ['Financial Integrity', INDIGO], ['Built for You', PURPLE]].map(([t, c], i) => (
+                <span key={i} style={{ fontSize: 8, fontWeight: 700, color: c, background: `${c}14`, border: `1px solid ${c}30`, borderRadius: 20, padding: '3px 10px' }}>{t}</span>
+              ))}
             </div>
-            <div style={{ fontSize: 8, color: DIM, marginTop: 4, lineHeight: 1.5 }}>
-              Every layer is calibrated to your payors, your physicians, your case mix — and evolves as your hospital evolves.
+            <div style={{ fontSize: 9, color: DIM, textAlign: 'center', lineHeight: 1.4, maxWidth: 260 }}>
+              Not a generic platform — a framework built around{' '}
+              <span style={{ color: TEAL, fontWeight: 700 }}>your</span> payors, physicians, and case mix.
             </div>
           </div>
         )}
@@ -1288,23 +1291,15 @@ function DashboardScreen({ progress }) {
           })}
         </div>
 
-        {/* Brand close */}
-        {brandShow && (
-          <div style={{ flexShrink: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 7, animation: 'dpBeatIn 0.9s cubic-bezier(0.34,1.2,0.64,1) both', paddingTop: 4 }}>
-            <div style={{ fontSize: 32, fontWeight: 900, fontFamily: 'Sora', background: `linear-gradient(135deg,#fff 20%,${TEAL} 55%,${INDIGO})`, WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', letterSpacing: -1.5, lineHeight: 1 }}>Docstribe</div>
-            <div style={{ display: 'flex', gap: 7, alignItems: 'center', flexWrap: 'wrap', justifyContent: 'center' }}>
-              {[['Clinical Intelligence', TEAL], ['Financial Integrity', INDIGO], ['Built for You', PURPLE]].map(([t, c], i) => (
-                <span key={i} style={{ fontSize: 8, fontWeight: 700, color: c, background: `${c}14`, border: `1px solid ${c}30`, borderRadius: 20, padding: '3px 10px' }}>{t}</span>
-              ))}
-            </div>
-            {closingShow && (
-              <div style={{ background: `linear-gradient(135deg,${TEAL}1a,${INDIGO}10)`, border: `1px solid ${TEAL}40`, borderRadius: 10, padding: '7px 18px', animation: 'dpBeatIn 0.6s ease both' }}>
-                <div style={{ fontSize: 10, fontWeight: 800, color: TXT, textAlign: 'center' }}>
-                  Not a tool you configure once.{' '}
-                  <span style={{ color: TEAL }}>A partner that learns your hospital.</span>
-                </div>
+        {/* Closing tagline — sits above stat strip with bottom padding */}
+        {closingShow && (
+          <div style={{ flexShrink: 0, paddingBottom: 6, animation: 'dpBeatIn 0.6s ease both' }}>
+            <div style={{ background: `linear-gradient(135deg,${TEAL}1a,${INDIGO}10)`, border: `1px solid ${TEAL}40`, borderRadius: 10, padding: '7px 18px' }}>
+              <div style={{ fontSize: 10, fontWeight: 800, color: TXT, textAlign: 'center' }}>
+                Not a tool you configure once.{' '}
+                <span style={{ color: TEAL }}>A partner that learns your hospital.</span>
               </div>
-            )}
+            </div>
           </div>
         )}
       </div>

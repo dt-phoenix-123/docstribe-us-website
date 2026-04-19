@@ -435,17 +435,17 @@ const UAE_DEMO_SCENES = [
   {
     id: 8, timecode: '1:14–1:24', journeyStage: 'denial-intel',
     title: 'Denial Intelligence',
-    voText: 'Docstribe pulls denials per payor, per batch. Daman: twenty-three percent denial rate, AXA Gulf: thirty-one. Recoverable? Sixty-seven to ninety-one percent — pre-submission. Denial rate drops thirty percent.',
+    voText: 'Every denial has a pattern. Docstribe maps them — payor by payor, batch by batch. Most of what\'s denied is preventable. Two thirds recoverable, pre-submission. That\'s how the denial rate falls — not by chasing. By pattern-breaking.',
   },
   {
     id: 9, timecode: '1:24–1:33', journeyStage: 'recovery',
     title: 'One-Click Recovery',
-    voText: 'CARC ninety-seven — bundling denial, AED one thousand nine hundred at risk. One click: Docstribe searches the Daman contract, finds Clause four point one point two, builds the appeal. Thirty seconds.',
+    voText: 'This claim just came back denied — three weeks of follow-up, historically. Watch this. One click: Docstribe reads the contract, finds the matching clause, and writes the appeal letter. The whole thing. Thirty seconds.',
   },
   {
     id: 10, timecode: '1:33–1:44', journeyStage: 'service-line',
     title: 'Service Line Growth',
-    voText: 'Docstribe turns clinical deterioration into an ops team action list. Oxygen falling, BNP rising — revenue windows surfaced in real time. Four patients, AED ninety-one thousand in uplift, Day Zero.',
+    voText: 'Your ops team can\'t watch every chart. Docstribe does. A patient\'s oxygen is falling, another\'s labs flag a diagnosis escalation. It surfaces these as a live action list — clinical signals, turned into revenue opportunities. Right now.',
   },
   {
     id: 11, timecode: '1:44–1:58', journeyStage: 'dashboard',
