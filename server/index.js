@@ -405,7 +405,7 @@ const UAE_DEMO_SCENES = [
   {
     id: 2, timecode: '0:10–0:22', journeyStage: 'outcomes',
     title: 'Introducing Docstribe',
-    voText: 'This is Docstribe. Built by clinicians — thirty years of practice, not engineering. Deployed across a hundred hospitals in the US, UAE, and India — managing ten million lives. Denials fall thirty percent. Revenue grows twenty-five percent. Guaranteed.',
+    voText: 'This is Docstribe. Built by clinicians — thirty years of practice. A hundred hospitals across the US, UAE, and India. Ten million lives. Denials fall thirty percent. Clean claim rate ninety-nine percent. CMI up by zero point one five. Sixty days. Guaranteed.',
   },
   {
     id: 3, timecode: '0:22–0:32', journeyStage: 'platform',
