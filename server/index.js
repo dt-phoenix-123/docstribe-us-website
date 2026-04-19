@@ -435,22 +435,22 @@ const UAE_DEMO_SCENES = [
   {
     id: 8, timecode: '1:14–1:24', journeyStage: 'denial-intel',
     title: 'Denial Intelligence',
-    voText: 'See this? That AED two hundred fourteen thousand six hundred is recoverable, right now. This is why our denial rate drops thirty percent — before a single claim is sent.',
+    voText: 'Docstribe pulls denials per payor, per batch. Daman: twenty-three percent denial rate, AXA Gulf: thirty-one. Recoverable? Sixty-seven to ninety-one percent — pre-submission. Denial rate drops thirty percent.',
   },
   {
     id: 9, timecode: '1:24–1:33', journeyStage: 'recovery',
     title: 'One-Click Recovery',
-    voText: 'A denied claim used to mean weeks of follow-up — AED one thousand nine hundred at risk. Now, one click pulls the contract, cites the right clauses, and fires the appeal. Three weeks becomes thirty seconds.',
+    voText: 'CARC ninety-seven — bundling denial, AED one thousand nine hundred at risk. One click: Docstribe searches the Daman contract, finds Clause four point one point two, builds the appeal. Thirty seconds.',
   },
   {
-    id: 10, timecode: '1:33–1:44', journeyStage: 'pathway',
-    title: '30-Day Revenue Pipeline',
-    voText: "This is your live thirty-day pipeline — AED one point four million, IR-DRG weighted, from today's admissions. Not a month-end report. Clinical signals, right now.",
+    id: 10, timecode: '1:33–1:44', journeyStage: 'service-line',
+    title: 'Service Line Growth',
+    voText: 'Docstribe turns clinical deterioration into an ops team action list. Oxygen falling, BNP rising — revenue windows surfaced in real time. Four patients, AED ninety-one thousand in uplift, Day Zero.',
   },
   {
     id: 11, timecode: '1:44–1:58', journeyStage: 'dashboard',
-    title: 'One Platform. Zero Leakage.',
-    voText: 'And here\'s the sixty-day guarantee in numbers — denials down thirty percent, revenue up twenty-five percent, CMI up zero point fifteen. Payor rates strong across the board. This is Docstribe.',
+    title: 'Your RCM Intelligence Partner',
+    voText: 'Docstribe is not a generic platform. It builds a personalized intelligence framework — your payors, your physicians, your case mix — and it evolves with your hospital. Clinical intelligence, financial integrity, built for you.',
   },
 ];
 

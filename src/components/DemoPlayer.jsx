@@ -77,7 +77,7 @@ function splitSentences(text) {
 function highlightCaption(text) {
   if (!text) return null;
   // Split on key terms — capturing group keeps the matched parts at odd indices
-  const pattern = /(twelve to eighteen|sixty to seventy|thirty percent|twenty-five percent|zero point fifteen|sixty.?day|one point four million|eighteen thousand four hundred|two hundred fourteen|four hundred twenty|one thousand nine hundred|twenty-eight thousand five hundred|zero point nine four|one point three four|zero leakage|one click|order entry|ICD-10-CM|NABIDH|DHA|IR-DRG|CMI|Docstribe|guaranteed|\d+(?:\.\d+)?%)/gi;
+  const pattern = /(twelve to eighteen|sixty to seventy|thirty percent|twenty-five percent|zero point fifteen|sixty.?day|one point four million|eighteen thousand four hundred|two hundred fourteen|four hundred twenty|one thousand nine hundred|ninety-one thousand|twenty-eight thousand five hundred|zero point nine four|one point three four|zero leakage|per payor.?per batch|personalized intelligence|built for you|one click|order entry|CARC \d+|ICD-10-CM|NABIDH|DHA|IR-DRG|CMI|Docstribe|guaranteed|\d+(?:\.\d+)?%)/gi;
   const parts = text.split(pattern);
   return parts.map((part, i) =>
     i % 2 === 1
@@ -175,46 +175,47 @@ const SCENES = [
     id: 8, type: 'product', color: RED,
     title: 'Denial Intelligence',
     breadcrumb: 'Payor Contract Intelligence',
-    // S1:2w S2:12w S3:15w = 29w — beat fracs 0.07 0.48 1.00; AED at S2 word 2 = 0.14; 30% at S3 word 8 = 0.76
-    vo: "See this? That AED two hundred fourteen thousand six hundred is recoverable, right now. This is why our denial rate drops thirty percent — before a single claim is sent.",
+    // S1:7w S2:9w S3:1w S4:8w S5:6w = 31w — fracs 0.23 0.52 0.55 0.81 1.00
+    vo: "Docstribe pulls denials per payor, per batch. Daman: twenty-three percent denial rate, AXA Gulf: thirty-one. Recoverable? Sixty-seven to ninety-one percent — pre-submission. Denial rate drops thirty percent.",
     beats: [
-      { at: 0.10, stat: 'AED 214,600',        sub: 'recoverable · pre-submission · act now' },
-      { at: 0.50, stat: 'Denial rate ↓ 30%', sub: 'pre-submission prevention · systemic' },
+      { at: 0.10, stat: 'Per payor · per batch', sub: 'Daman · Thiqa · AXA Gulf · Oman Insurance' },
+      { at: 0.54, stat: '67–91% recoverable',    sub: 'pre-submission · flagged before send' },
+      { at: 0.82, stat: 'Denial rate ↓ 30%',    sub: 'batch over batch · systemic improvement' },
     ],
   },
   {
     id: 9, type: 'product', color: TEAL,
     title: 'One-Click Recovery',
-    breadcrumb: 'Claim Recovery — Bundling Dispute',
-    // S1:16w S2:14w S3:5w = 35w — beat fracs 0.46 0.86 1.00; AED at S1 word 10 = 0.29; one click at S2 word 3 = 0.54
-    vo: "A denied claim used to mean weeks of follow-up — AED one thousand nine hundred at risk. Now, one click pulls the contract, cites the right clauses, and fires the appeal. Three weeks becomes thirty seconds.",
+    breadcrumb: 'Claim Recovery — Appeal Generator',
+    // S1:12w S2:17w S3:2w = 31w — fracs 0.39 0.94 1.00; one click at S2 word 2 = 0.42
+    vo: "CARC 97 — bundling denial, AED one thousand nine hundred at risk. One click: Docstribe searches the Daman contract, finds Clause four point one point two, builds the appeal. Thirty seconds.",
     beats: [
-      { at: 0.06, stat: 'AED 1,900 denied',   sub: 'OPD · bundling · CARC 97 · recoverable' },
-      { at: 0.46, stat: '1-click appeal',      sub: 'contract clauses cited · recovery underway' },
-      { at: 0.86, stat: '3 weeks → 30 sec',   sub: 'AI-automated dispute resolution' },
+      { at: 0.06, stat: 'AED 1,900 denied', sub: 'CARC 97 · Daman · bundling dispute' },
+      { at: 0.40, stat: '1-click appeal',   sub: 'contract searched · clause cited · letter built' },
+      { at: 0.90, stat: '✅ 30 seconds',    sub: 'AED 1,900 recovered · vs. 3 weeks manual' },
     ],
   },
   {
     id: 10, type: 'product', color: INDIGO,
-    title: '30-Day Revenue Pipeline',
-    breadcrumb: 'Case Management Control Tower',
-    // S1:16w S2:5w S3:4w = 25w — beat fracs 0.64 0.84 1.00; AED at S1 word 9 = 0.36; clinical at S3 = 0.84
-    vo: "This is your live thirty-day pipeline — AED one point four million, IR-DRG weighted, from today's admissions. Not a month-end report. Clinical signals, right now.",
+    title: 'Service Line Growth',
+    breadcrumb: 'Service Line Growth · Clinical Engagement',
+    // S1:12w S2:12w S3:10w = 34w — fracs 0.35 0.71 1.00
+    vo: "Docstribe turns clinical deterioration into an ops team action list. Oxygen falling, BNP rising — revenue windows surfaced in real time. Four patients, AED ninety-one thousand in uplift, Day Zero.",
     beats: [
-      { at: 0.36, stat: 'AED 1.4M forecast', sub: 'next 30 days · IR-DRG weighted · live' },
-      { at: 0.84, stat: 'Clinical signals',   sub: 'not averages — predictive from admission' },
+      { at: 0.10, stat: 'Ops engagement queue', sub: 'clinical deterioration → revenue action · live' },
+      { at: 0.36, stat: 'AED 91K opportunity',  sub: '4 patients · surfaced live · Day Zero' },
     ],
   },
   {
     id: 11, type: 'dashboard', color: TEAL,
-    title: 'One Platform. Zero Leakage.',
-    breadcrumb: 'Executive Revenue Dashboard',
-    // S1:22w S2:6w S3:3w = 31w — fracs 0.71 0.90 1.00; 30% at word 8 = 0.26; 25% at word 13 = 0.42; CMI at word 16 = 0.52
-    vo: "And here's the sixty-day guarantee in numbers — denials down thirty percent, revenue up twenty-five percent, CMI up zero point fifteen. Payor rates strong across the board. This is Docstribe.",
+    title: 'Your RCM Intelligence Partner',
+    breadcrumb: 'Your RCM Intelligence Framework',
+    // S1:7w S2:22w S3:9w = 38w — fracs 0.18 0.76 1.00
+    vo: "Docstribe is not a generic platform. It builds a personalized intelligence framework — your payors, your physicians, your case mix — and it evolves with your hospital. Clinical intelligence, financial integrity, built for you.",
     beats: [
-      { at: 0.26, stat: '↓30% · +25%',       sub: 'denial reduction · revenue capture — guaranteed' },
-      { at: 0.54, stat: '+0.15 CMI',          sub: 'case mix index uplift — within 60 days' },
-      { at: 0.90, stat: 'This is Docstribe.', sub: 'Clinical Intelligence · Financial Integrity' },
+      { at: 0.06, stat: 'Your intelligence',      sub: 'payors · physicians · case mix — personalized' },
+      { at: 0.20, stat: 'Personalized framework',  sub: 'evolves with your hospital · not a generic tool' },
+      { at: 0.78, stat: 'Built for you.',          sub: 'Clinical Intelligence · Financial Integrity' },
     ],
   },
 ];
@@ -940,57 +941,83 @@ function CodingScreen({ progress }) {
   );
 }
 
-/* Scene 8 — Denial Intelligence: payer-specific, one driver at a time */
+/* Scene 8 — Denial Intelligence: per payor per batch, % view, recoverable surfaced */
 function DenialScreen({ progress }) {
-  const drivers = [
-    { label: 'Medical Necessity — Daman',  code: 'CARC 50', amt: 'AED 78,600', pct: '37%', col: RED,    show: 0.08 },
-    { label: 'Auth Required — Thiqa',      code: 'CARC 15', amt: 'AED 56,200', pct: '26%', col: AMBER,  show: 0.22 },
-    { label: 'Bundled Service — AXA Gulf', code: 'CARC 97', amt: 'AED 48,300', pct: '22%', col: AMBER,  show: 0.36 },
-    { label: 'Code Modifier — Oman Ins.',  code: 'CARC 4',  amt: 'AED 31,500', pct: '15%', col: GREEN,  show: 0.50 },
+  const payors = [
+    { name: 'Daman',     batch: '#B-2847', denial: '23%', trend: [28, 25, 23], topReason: 'Medical Necessity', code: 'CARC 50', recoverable: '67%', recCol: AMBER, col: RED,    show: 0.06 },
+    { name: 'Thiqa',     batch: '#B-1923', denial: '18%', trend: [24, 21, 18], topReason: 'Auth Missing',      code: 'CARC 15', recoverable: '82%', recCol: GREEN, col: AMBER,  show: 0.22 },
+    { name: 'AXA Gulf',  batch: '#B-0441', denial: '31%', trend: [35, 33, 31], topReason: 'Bundled Service',   code: 'CARC 97', recoverable: '54%', recCol: AMBER, col: PURPLE, show: 0.38 },
+    { name: 'Oman Ins.', batch: '#B-3301', denial: '12%', trend: [18, 15, 12], topReason: 'Code Modifier',     code: 'CARC 4',  recoverable: '91%', recCol: GREEN, col: GREEN,  show: 0.54 },
   ];
-  const bigNum = progress >= 0.06;
+  const summaryShow = progress >= 0.68;
   return (
     <ProductShell breadcrumb="Payor Contract Intelligence" color={RED}>
-      <div style={{ padding: '12px 14px', height: '100%', display: 'flex', flexDirection: 'column', gap: 10 }}>
-        {/* Big recoverable total */}
-        <div style={{ ...glow(spot(progress, 0.10, 0.30), RED, { borderRadius: 12, padding: '14px 16px', textAlign: 'center' }), opacity: bigNum ? 1 : 0, transition: 'all 0.6s ease', animation: 'dpRowIn 0.4s ease both' }}>
-          <div style={{ fontSize: 9, color: MUTED, letterSpacing: 1, marginBottom: 4, fontWeight: 700 }}>TOTAL RECOVERABLE REVENUE · CURRENT CYCLE</div>
-          <div style={{ fontSize: 40, fontWeight: 900, color: RED, fontFamily: 'Sora', lineHeight: 1 }}>
-            {bigNum ? <CountUp value="214600" duration={700} key="rec" /> : '214,600'}
-          </div>
-          <div style={{ fontSize: 10, color: DIM, marginTop: 4 }}>AED · across 4 UAE payors · pre-submission identified</div>
+      <div style={{ padding: '10px 14px', height: '100%', display: 'flex', flexDirection: 'column', gap: 7 }}>
+
+        {/* Header */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+          <div style={{ flex: 1, fontSize: 8, color: MUTED, fontWeight: 700, letterSpacing: 0.5 }}>DENIAL PATTERN ANALYSIS · PER PAYOR · PER BATCH</div>
+          {progress >= 0.04 && (
+            <div style={{ fontSize: 7, color: RED, fontWeight: 700, background: `${RED}12`, border: `1px solid ${RED}30`, borderRadius: 4, padding: '2px 8px', animation: 'dpBeatIn 0.3s ease both' }}>● LIVE — Current Cycle</div>
+          )}
         </div>
 
-        <div style={{ fontSize: 9, color: MUTED, fontWeight: 700, letterSpacing: 0.5 }}>DENIAL DRIVERS — FLAGGED & RESOLVED PRE-SUBMISSION</div>
+        {/* Column headers */}
+        <div style={{ display: 'flex', alignItems: 'center', padding: '0 10px', borderBottom: `1px solid ${BORDER}` }}>
+          {['Payor · Batch', 'Denial %', 'Trend (3 batches)', 'Top Denial Reason', '% Recoverable'].map((h, i) => (
+            <div key={i} style={{ flex: i === 2 ? 1.4 : i === 3 ? 1.8 : 1, fontSize: 7, color: MUTED, fontWeight: 700, letterSpacing: 0.3, padding: '3px 0' }}>{h}</div>
+          ))}
+        </div>
 
-        {drivers.map((d, i) => {
-          const visible = progress >= d.show;
-          const active = spot(progress, d.show, d.show + 0.16);
-          const pastFocus = progress > d.show + 0.16;
+        {/* Payor rows — one spotlit at a time */}
+        {payors.map((p, i) => {
+          const visible = progress >= p.show;
+          const active = spot(progress, p.show, p.show + 0.16);
+          const past = progress > p.show + 0.16;
           return (
-            <div key={i} style={{ ...glow(active, d.col, { borderRadius: 8, padding: '10px 13px', borderLeft: `3px solid ${d.col}` }), opacity: visible ? (pastFocus ? 0.6 : 1) : 0, transform: visible ? (active ? 'scale(1.025)' : 'scale(1)') : 'translateY(12px)', transition: 'all 0.5s ease' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                <div style={{ flex: 1 }}>
-                  <span style={{ fontSize: 10, fontWeight: 700, color: TXT }}>{d.label}</span>
-                  <div style={{ fontSize: 8, color: DIM, marginTop: 2 }}>{d.code} · flagged before submission</div>
-                </div>
-                <span style={{ fontSize: 16, fontWeight: 900, color: d.col, fontFamily: 'Sora' }}>{d.amt}</span>
-                <span style={{ fontSize: 9, fontWeight: 700, color: d.col, background: `${d.col}18`, padding: '2px 8px', borderRadius: 5 }}>{d.pct}</span>
+            <div key={i} style={{ ...glow(active, p.col, { borderRadius: 8, padding: '9px 12px', display: 'flex', alignItems: 'center' }), opacity: visible ? (past ? 0.6 : 1) : 0, transform: visible ? (active ? 'scale(1.02)' : 'scale(1)') : 'translateY(10px)', transition: 'all 0.5s cubic-bezier(0.34,1.2,0.64,1)' }}>
+              <div style={{ flex: 1 }}>
+                <div style={{ fontSize: 10, fontWeight: 800, color: active ? p.col : TXT, transition: 'color 0.3s' }}>{p.name}</div>
+                <div style={{ fontSize: 7, color: DIM, marginTop: 1 }}>{p.batch} · {p.code}</div>
+              </div>
+              <div style={{ flex: 1, textAlign: 'center' }}>
+                <div style={{ fontSize: 22, fontWeight: 900, color: p.col, fontFamily: 'Sora', lineHeight: 1 }}>{p.denial}</div>
+                <div style={{ fontSize: 6, color: DIM }}>this batch</div>
+              </div>
+              <div style={{ flex: 1.4, paddingRight: 8 }}>
+                <svg width="100%" height="26" viewBox="0 0 62 26" preserveAspectRatio="none">
+                  <polyline points={p.trend.map((v, j) => `${j * 30},${24 - (v / 40) * 20}`).join(' ')} fill="none" stroke={p.col} strokeWidth="2" strokeLinejoin="round" opacity="0.9" />
+                  {p.trend.map((v, j) => <circle key={j} cx={j * 30} cy={24 - (v / 40) * 20} r={j === 2 ? 3 : 2} fill={p.col} opacity={j === 2 ? 1 : 0.4} />)}
+                  <text x="0" y="26" fontSize="5" fill="#475569">B1</text>
+                  <text x="25" y="26" fontSize="5" fill="#475569">B2</text>
+                  <text x="51" y="26" fontSize="5" fill="#475569">B3↓</text>
+                </svg>
+              </div>
+              <div style={{ flex: 1.8 }}>
+                <div style={{ fontSize: 9, fontWeight: 700, color: active ? TXT : DIM }}>{p.topReason}</div>
+                <div style={{ fontSize: 7, color: DIM, marginTop: 1 }}>flagged pre-submission</div>
+              </div>
+              <div style={{ flex: 1, textAlign: 'right' }}>
+                <div style={{ fontSize: 16, fontWeight: 900, color: p.recCol, fontFamily: 'Sora' }}>{p.recoverable}</div>
+                <div style={{ fontSize: 6, color: DIM }}>recoverable</div>
               </div>
             </div>
           );
         })}
 
-        {progress >= 0.58 && (
-          <div style={{ display: 'flex', alignItems: 'center', gap: 10, animation: 'dpBeatIn 0.4s ease both' }}>
-            <span style={{ fontSize: 9, color: MUTED }}>Denial rate trend:</span>
-            <div style={{ flex: 1, height: 22 }}>
-              <svg width="100%" height="22" viewBox="0 0 240 22" preserveAspectRatio="none">
-                <polyline points="0,20 40,17 80,14 120,10 160,7 200,4 240,3" fill="none" stroke={GREEN} strokeWidth="2.5" />
-                <circle cx="240" cy="3" r="3.5" fill={GREEN} />
-              </svg>
+        {/* Summary row */}
+        {summaryShow && (
+          <div style={{ display: 'flex', gap: 8, animation: 'dpBeatIn 0.5s ease both' }}>
+            <div style={{ flex: 1, background: `${GREEN}10`, border: `1px solid ${GREEN}30`, borderRadius: 8, padding: '8px 12px', textAlign: 'center' }}>
+              <div style={{ fontSize: 8, color: MUTED, marginBottom: 2 }}>Recoverable this cycle</div>
+              <div style={{ fontSize: 22, fontWeight: 900, color: GREEN, fontFamily: 'Sora', lineHeight: 1 }}>AED 214K</div>
+              <div style={{ fontSize: 7, color: DIM, marginTop: 2 }}>flagged pre-submission · 4 payors</div>
             </div>
-            <span style={{ fontSize: 13, color: GREEN, fontWeight: 900 }}>↓ 30%</span>
+            <div style={{ flex: 1, background: `${TEAL}10`, border: `1px solid ${TEAL}30`, borderRadius: 8, padding: '8px 12px', textAlign: 'center' }}>
+              <div style={{ fontSize: 8, color: MUTED, marginBottom: 2 }}>Batch-over-batch trend</div>
+              <div style={{ fontSize: 22, fontWeight: 900, color: TEAL, fontFamily: 'Sora', lineHeight: 1 }}>↓ 30%</div>
+              <div style={{ fontSize: 7, color: DIM, marginTop: 2 }}>denial rate reduction · systemic</div>
+            </div>
           </div>
         )}
       </div>
@@ -998,246 +1025,286 @@ function DenialScreen({ progress }) {
   );
 }
 
-/* Scene 9 — One-click recovery: denied → appeal → recovered */
+/* Scene 9 — Claim Recovery: step-by-step appeal generation, clause citation, letter preview */
 function ClaimScreen({ progress }) {
-  const letterGen = progress >= 0.42;
-  const recovered = progress >= 0.62;
+  const step1 = progress >= 0.14; // denial parsed
+  const step2 = progress >= 0.28; // contract searched
+  const step3 = progress >= 0.42; // clause matched
+  const step4 = progress >= 0.58; // letter generated
+  const recovered = progress >= 0.74;
+  const steps = [
+    { label: 'Denial parsed',     detail: 'CARC 97 · Bundled service · Daman batch #B-2847', done: step1, col: INDIGO },
+    { label: 'Contract searched', detail: 'Daman Benefit Schedule 2024 · 847 clauses scanned in 0.3s', done: step2, col: TEAL },
+    { label: 'Clause matched',    detail: 'Clause 4.1.2 — standalone DM with HbA1c review', done: step3, col: GREEN },
+    { label: 'Appeal generated',  detail: 'Letter drafted · supporting docs attached · ready to file', done: step4, col: AMBER },
+  ];
   return (
-    <ProductShell breadcrumb="Claim Recovery — Bundling Dispute" color={TEAL}>
-      <div style={{ padding: '12px 16px', height: '100%', display: 'flex', flexDirection: 'column', gap: 10 }}>
-        {/* Claim header */}
-        <div style={{ display: 'flex', gap: 8, alignItems: 'center', animation: 'dpRowIn 0.4s ease both' }}>
-          <Pill text="OPD" color={INDIGO} />
-          <div>
-            <span style={{ fontSize: 12, fontWeight: 700, color: TXT }}>F.H. · Daman Enhanced</span>
-            <span style={{ fontSize: 8, color: MUTED, marginLeft: 6 }}>DM management visit · 14 Dec 2024</span>
+    <ProductShell breadcrumb="Claim Recovery — Appeal Generator" color={TEAL}>
+      <div style={{ padding: '11px 14px', height: '100%', display: 'flex', flexDirection: 'column', gap: 9 }}>
+
+        {/* Denied claim header */}
+        <div style={{ display: 'flex', gap: 10, alignItems: 'center', background: `${RED}0a`, border: `1px solid ${RED}28`, borderRadius: 9, padding: '9px 13px', flexShrink: 0, animation: 'dpRowIn 0.4s ease both' }}>
+          <div style={{ flex: 1 }}>
+            <div style={{ display: 'flex', gap: 6, alignItems: 'center', marginBottom: 4 }}>
+              <Badge text="DENIED · CARC 97" color={RED} />
+              <Pill text="OPD" color={INDIGO} />
+            </div>
+            <div style={{ fontSize: 11, fontWeight: 700, color: TXT }}>F.H. · Daman Enhanced · DM Management Visit</div>
+            <div style={{ fontSize: 8, color: DIM, marginTop: 2 }}>Bundled service — standalone DM visit with HbA1c review denied under office visit bundling rule</div>
           </div>
-          <span style={{ marginLeft: 'auto', fontSize: 20, fontWeight: 900, color: TEAL, fontFamily: 'Sora' }}>AED 1,900</span>
+          <div style={{ textAlign: 'right', flexShrink: 0 }}>
+            <div style={{ fontSize: 24, fontWeight: 900, color: RED, fontFamily: 'Sora', lineHeight: 1 }}>AED 1,900</div>
+            <div style={{ fontSize: 7, color: DIM }}>at risk</div>
+          </div>
         </div>
 
-        <div style={{ display: 'flex', gap: 10, flex: 1 }}>
-          {/* Denied */}
-          <div style={{ flex: 1, background: `${RED}0a`, border: `1px solid ${RED}28`, borderRadius: 10, padding: '14px', display: 'flex', flexDirection: 'column', gap: 8, animation: 'dpRowIn 0.4s ease 0.1s both' }}>
-            <Badge text="DENIED" color={RED} />
-            <div style={{ fontSize: 22, fontWeight: 900, color: RED, fontFamily: 'Sora' }}>CARC 97</div>
-            <div style={{ fontSize: 9, color: DIM, lineHeight: 1.6 }}>Bundled service — DM management billed as standalone CPT</div>
-            <div style={{ background: `${RED}0a`, borderRadius: 6, padding: '8px', marginTop: 'auto' }}>
-              <div style={{ fontSize: 8, color: MUTED }}>Without platform:</div>
-              <div style={{ fontSize: 9, color: RED, fontWeight: 700 }}>3–6 weeks manual chase</div>
-            </div>
+        {/* Two-panel: builder steps + appeal letter */}
+        <div style={{ flex: 1, display: 'flex', gap: 10, minHeight: 0 }}>
+
+          {/* Left: Appeal builder steps */}
+          <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 6 }}>
+            <div style={{ fontSize: 8, color: MUTED, fontWeight: 700, letterSpacing: 0.5, flexShrink: 0 }}>APPEAL BUILDER · ONE CLICK</div>
+            {steps.map((s, i) => (
+              <div key={i} style={{ flex: 1, display: 'flex', gap: 8, alignItems: 'center', padding: '8px 10px', background: s.done ? `${s.col}12` : 'rgba(255,255,255,0.02)', border: `1px solid ${s.done ? s.col + '40' : BORDER}`, borderRadius: 8, transition: 'all 0.5s ease' }}>
+                <div style={{ width: 20, height: 20, borderRadius: '50%', border: `1.5px solid ${s.done ? s.col : MUTED}`, background: s.done ? `${s.col}22` : 'transparent', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, transition: 'all 0.4s ease' }}>
+                  <span style={{ fontSize: 9, color: s.done ? s.col : MUTED, fontWeight: 800 }}>{s.done ? '✓' : i + 1}</span>
+                </div>
+                <div style={{ opacity: s.done ? 1 : 0.35, transition: 'opacity 0.4s' }}>
+                  <div style={{ fontSize: 9, fontWeight: 700, color: s.done ? TXT : MUTED }}>{s.label}</div>
+                  <div style={{ fontSize: 7, color: DIM, marginTop: 1 }}>{s.detail}</div>
+                </div>
+              </div>
+            ))}
           </div>
 
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-            <div style={{ fontSize: 24, color: letterGen ? TEAL : MUTED, transition: 'color 0.5s ease' }}>→</div>
-          </div>
+          {/* Right: Auto-generated appeal letter */}
+          <div style={{ flex: 1.3, display: 'flex', flexDirection: 'column', gap: 6, background: `${TEAL}07`, border: `1px solid ${step4 ? TEAL + '45' : step1 ? TEAL + '18' : BORDER}`, borderRadius: 10, padding: '11px 13px', transition: 'border-color 0.6s ease', overflow: 'hidden' }}>
+            <div style={{ fontSize: 7, color: TEAL, fontWeight: 800, letterSpacing: 1, flexShrink: 0 }}>AUTO-GENERATED APPEAL LETTER</div>
 
-          {/* Recovered */}
-          <div style={{ ...glow(letterGen, TEAL, { flex: 1, borderRadius: 10, padding: '14px', display: 'flex', flexDirection: 'column', gap: 8 }), opacity: letterGen ? 1 : 0, transition: 'all 0.7s cubic-bezier(0.34,1.4,0.64,1)' }}>
-            <Badge text="APPEAL GENERATED" color={TEAL} />
-            <div style={{ fontSize: 22, fontWeight: 900, color: TEAL, fontFamily: 'Sora' }}>1 Click</div>
-            <div style={{ background: `${TEAL}0a`, borderRadius: 7, padding: '8px 10px' }}>
-              <div style={{ fontSize: 8, color: DIM, marginBottom: 4 }}>CONTRACT CLAUSE CITED AUTOMATICALLY</div>
-              <div style={{ fontSize: 9, color: TXT, lineHeight: 1.5 }}>Daman Benefit Schedule, Clause 4.1.2 — standalone DM management with documented HbA1c review is <span style={{ color: TEAL, fontWeight: 700 }}>not bundled</span> under office visit</div>
+            <div style={{ flex: 1, fontSize: 8, color: DIM, lineHeight: 1.75, overflow: 'hidden' }}>
+              <div style={{ fontSize: 9, color: TXT, fontWeight: 700, marginBottom: 5 }}>RE: Claim #DM-2847-FH · CARC 97 Dispute</div>
+              {step1 && (
+                <div style={{ animation: 'dpBeatIn 0.3s ease both' }}>
+                  Dear Daman Medical Claims Review,<br />
+                  We formally dispute the denial of claim #DM-2847-FH dated 14 Dec 2024.
+                </div>
+              )}
+              {step3 && (
+                <div style={{ margin: '7px 0', background: `${GREEN}14`, border: `1px solid ${GREEN}35`, borderRadius: 6, padding: '6px 9px', animation: 'dpBeatIn 0.35s ease both' }}>
+                  <div style={{ fontSize: 7, color: GREEN, fontWeight: 800, marginBottom: 3 }}>CONTRACT CLAUSE CITED</div>
+                  <div style={{ fontSize: 8, color: TXT, lineHeight: 1.6 }}>
+                    Daman Benefit Schedule 2024, <span style={{ color: GREEN, fontWeight: 800 }}>Clause 4.1.2</span> — standalone DM management with documented HbA1c review is <span style={{ color: GREEN, fontWeight: 800 }}>not bundled</span> under office visit codes.
+                  </div>
+                </div>
+              )}
+              {step4 && (
+                <div style={{ animation: 'dpBeatIn 0.3s ease both' }}>
+                  Supporting docs attached: physician notes, HbA1c report, DHA guidelines Ref. <span style={{ color: TEAL }}>DHA-CDI-2024-11</span>.
+                </div>
+              )}
             </div>
+
             {recovered && (
-              <div style={{ fontSize: 12, fontWeight: 800, color: GREEN, animation: 'dpBeatIn 0.4s ease both' }}>
-                ✅ AED 1,900 recovery in progress · 30 seconds
+              <div style={{ background: `${GREEN}1a`, border: `1px solid ${GREEN}55`, borderRadius: 7, padding: '8px 11px', animation: 'dpBeatIn 0.6s cubic-bezier(0.34,1.4,0.64,1) both', textAlign: 'center', flexShrink: 0 }}>
+                <div style={{ fontSize: 13, fontWeight: 900, color: GREEN }}>✅ Appeal Filed · AED 1,900 in Recovery</div>
+                <div style={{ fontSize: 7, color: DIM, marginTop: 2 }}>30 seconds · vs. 3–6 weeks manual · 100% contract-cited</div>
               </div>
             )}
           </div>
         </div>
-        <div style={{ display: 'flex', gap: 16, alignItems: 'center', justifyContent: 'center', animation: 'dpBeatIn 0.4s ease both' }}>
-          <div style={{ textAlign: 'center' }}>
-            <div style={{ fontSize: 11, fontWeight: 900, color: RED, fontFamily: 'Sora' }}>3 weeks</div>
-            <div style={{ fontSize: 7, color: MUTED }}>manual chase · without platform</div>
-          </div>
-          <div style={{ fontSize: 18, color: TEAL, fontWeight: 900 }}>→</div>
-          <div style={{ textAlign: 'center' }}>
-            <div style={{ fontSize: 11, fontWeight: 900, color: TEAL, fontFamily: 'Sora' }}>30 seconds</div>
-            <div style={{ fontSize: 7, color: MUTED }}>Docstribe · one click · done</div>
-          </div>
-        </div>
       </div>
     </ProductShell>
   );
 }
 
-/* Scene 10 — 30-Day Pipeline: 3 clean "clinical signal → revenue" cards */
+/* Scene 10 — Service Line Growth: clinical deterioration signals → ops engagement queue */
 function TowerScreen({ progress }) {
-  const signals = [
-    {
-      icon: '🫁', dept: 'Respiratory',
-      signal: '3 surgical candidates at ED admission',
-      detail: 'Pre-auth secured · theatre slot flagged · IR-DRG weighted',
-      forecast: 'AED 380K', col: TEAL, show: 0.10,
-    },
-    {
-      icon: '❤️', dept: 'Cardiology',
-      signal: '2 cath lab bookings · PA pre-approved',
-      detail: 'Complex cases · IR-DRG weighted · revenue locked at admission',
-      forecast: 'AED 290K', col: INDIGO, show: 0.30,
-    },
-    {
-      icon: '⚡', dept: 'Cross-Specialty Pipeline',
-      signal: '6 service lines · 45 inpatient cases live',
-      detail: 'Tracked from admission signal to discharge revenue',
-      forecast: 'AED 730K', col: PURPLE, show: 0.50,
-    },
+  const patients = [
+    { init: 'D.K.', dept: 'Respiratory', signal: 'SpO₂ 94→88% over 4h · deteriorating',    opportunity: 'IR-DRG escalation window open',         action: 'CDI Alert',  actionCol: AMBER,  uplift: '+AED 18K', risk: 'HIGH',     col: TEAL,   show: 0.10 },
+    { init: 'N.M.', dept: 'Cardiology',  signal: 'BNP risen 3× — heart failure likely',     opportunity: 'Complex DRG candidate · MCC qualifies', action: 'Ops Engage', actionCol: RED,    uplift: '+AED 32K', risk: 'CRITICAL', col: RED,    show: 0.28 },
+    { init: 'A.R.', dept: 'Neurology',   signal: 'GCS change Day 2 — LOS extension likely', opportunity: 'CDI query pending · CC documentation',  action: 'CDI Query',  actionCol: INDIGO, uplift: '+AED 14K', risk: 'HIGH',     col: INDIGO, show: 0.46 },
+    { init: 'B.S.', dept: 'Oncology',   signal: 'ECOG progressing — chemo eligible',        opportunity: 'Pre-auth for systemic therapy ready',   action: 'PA Ready',   actionCol: GREEN,  uplift: '+AED 27K', risk: 'MED',      col: PURPLE, show: 0.62 },
   ];
-
   return (
-    <ProductShell breadcrumb="Case Management Control Tower" color={INDIGO}>
-      <div style={{ padding: '14px 16px', height: '100%', display: 'flex', flexDirection: 'column', gap: 12 }}>
-
-        {/* Big headline number */}
-        <div style={{ ...glow(spot(progress, 0.06, 0.22), INDIGO, { borderRadius: 12, padding: '14px 18px', textAlign: 'center' }), animation: 'dpRowIn 0.4s ease both' }}>
-          <div style={{ fontSize: 9, color: MUTED, letterSpacing: 1.5, marginBottom: 4, fontWeight: 700 }}>30-DAY REVENUE PIPELINE · IR-DRG WEIGHTED</div>
-          <div style={{ fontSize: 44, fontWeight: 900, color: INDIGO, fontFamily: 'Sora', lineHeight: 1 }}>
-            {progress > 0.06 ? <CountUp value="1400000" duration={800} key="pipe" /> : 'AED 1.4M'}
-          </div>
-          <div style={{ fontSize: 9, color: DIM, marginTop: 4 }}>Driven by live clinical signals · from the moment of admission</div>
-        </div>
-
-        {/* 3 signal cards — one spotlit at a time */}
-        <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 10 }}>
-          {signals.map((s, i) => {
-            const visible = progress >= s.show;
-            const active = spot(progress, s.show, s.show + 0.22);
-            const past = progress > s.show + 0.22;
-            return (
-              <div key={i} style={{ ...glow(active, s.col, { borderRadius: 12, padding: '14px 16px', display: 'flex', gap: 14, alignItems: 'center' }), opacity: visible ? (past ? 0.6 : 1) : 0, transform: visible ? (active ? 'scale(1.02)' : 'scale(1)') : 'translateY(16px)', transition: 'all 0.55s cubic-bezier(0.34,1.2,0.64,1)' }}>
-                <div style={{ fontSize: 28, flexShrink: 0 }}>{s.icon}</div>
-                <div style={{ flex: 1 }}>
-                  <div style={{ display: 'flex', gap: 8, alignItems: 'center', marginBottom: 4 }}>
-                    <span style={{ fontSize: 11, fontWeight: 800, color: active ? s.col : TXT, transition: 'color 0.3s' }}>{s.dept}</span>
-                    {active && <div style={{ width: 6, height: 6, borderRadius: '50%', background: s.col, boxShadow: `0 0 8px ${s.col}`, animation: 'dpPulse 1.2s ease infinite' }} />}
-                  </div>
-                  <div style={{ fontSize: 10, fontWeight: 600, color: TXT, marginBottom: 3 }}>{s.signal}</div>
-                  <div style={{ fontSize: 8, color: DIM }}>{s.detail}</div>
-                </div>
-                <div style={{ textAlign: 'right', flexShrink: 0 }}>
-                  <div style={{ fontSize: 20, fontWeight: 900, color: s.col, fontFamily: 'Sora' }}>
-                    {visible ? <CountUp value={s.forecast.replace(/[^0-9K]/g, '')} duration={600} key={`f${i}`} /> : s.forecast}
-                  </div>
-                  <div style={{ fontSize: 7, color: DIM, marginTop: 2 }}>forecasted</div>
-                </div>
-              </div>
-            );
-          })}
-        </div>
-
-        {/* Bottom tagline */}
-        {progress >= 0.68 && (
-          <div style={{ textAlign: 'center', fontSize: 9, color: DIM, animation: 'dpBeatIn 0.4s ease both' }}>
-            Clinical signal → revenue forecast · at admission · <span style={{ color: INDIGO, fontWeight: 700 }}>not at month-end</span>
-          </div>
-        )}
-      </div>
-    </ProductShell>
-  );
-}
-
-/* Scene 11 — Executive Dashboard: 60-day guarantee front and centre */
-function DashboardScreen({ progress }) {
-  const guaranteeShow = progress >= 0.04;
-  // S11 VO fracs: 0.71 0.90 1.00 — KPI cards timed to when spoken: 30% at word 8 (0.26), 25% at word 13 (0.42), CMI at word 16 (0.52)
-  const kpiTimes = [0.06, 0.26, 0.52];
-  const guaranteeKPIs = [
-    { val: '↓30%',   label: 'First-submission denials', sub: 'vs. pre-integration baseline', col: TEAL },
-    { val: '+25%',   label: 'Net revenue capture',       sub: 'incremental · measurable',     col: GREEN },
-    { val: '+0.15',  label: 'CMI per discharge',         sub: 'complexity-adjusted uplift',   col: INDIGO },
-  ];
-  const timelineShow = progress >= 0.56;
-  const payorShow = progress >= 0.72;
-  const brandShow = progress >= 0.90;
-
-  return (
-    <ProductShell breadcrumb="Executive Revenue Dashboard" color={TEAL}>
+    <ProductShell breadcrumb="Service Line Growth · Clinical Engagement" color={INDIGO}>
       <div style={{ padding: '10px 14px', height: '100%', display: 'flex', flexDirection: 'column', gap: 8 }}>
 
-        {/* 60-Day Guarantee Banner */}
-        {guaranteeShow && (
-          <div style={{ background: `linear-gradient(135deg,${TEAL}1a,${INDIGO}12)`, border: `1px solid ${TEAL}50`, borderRadius: 10, padding: '10px 16px', display: 'flex', alignItems: 'center', gap: 12, animation: 'dpBeatIn 0.7s cubic-bezier(0.34,1.4,0.64,1) both', flexShrink: 0 }}>
-            <div style={{ background: `linear-gradient(135deg,${TEAL},${INDIGO})`, borderRadius: 8, padding: '6px 14px', fontSize: 11, fontWeight: 900, color: '#fff', fontFamily: 'Sora', flexShrink: 0, whiteSpace: 'nowrap' }}>
-              60-Day Guarantee
-            </div>
-            <div>
-              <div style={{ fontSize: 11, fontWeight: 700, color: TXT }}>Every metric below, delivered within 60 days of go-live. Contractually committed.</div>
-              <div style={{ fontSize: 8, color: DIM, marginTop: 1 }}>Auditable against your pre-integration baseline · backed by Docstribe SLA</div>
-            </div>
+        {/* Header */}
+        <div style={{ display: 'flex', gap: 8, alignItems: 'flex-start' }}>
+          <div style={{ flex: 1 }}>
+            <div style={{ fontSize: 8, color: MUTED, fontWeight: 700, letterSpacing: 0.5 }}>CLINICAL DETERIORATION SIGNALS → OPS ENGAGEMENT QUEUE</div>
+            <div style={{ fontSize: 9, fontWeight: 600, color: TXT, marginTop: 2 }}>Docstribe reads patient deterioration and surfaces revenue engagement opportunities in real time — no lag, no reports</div>
           </div>
-        )}
+          {progress >= 0.06 && (
+            <div style={{ background: `${INDIGO}15`, border: `1px solid ${INDIGO}40`, borderRadius: 8, padding: '6px 14px', textAlign: 'center', animation: 'dpBeatIn 0.4s ease both', flexShrink: 0 }}>
+              <div style={{ fontSize: 22, fontWeight: 900, color: INDIGO, fontFamily: 'Sora', lineHeight: 1 }}>4</div>
+              <div style={{ fontSize: 6, color: DIM }}>patients flagged</div>
+            </div>
+          )}
+        </div>
 
-        {/* Committed KPI cards — appear one by one */}
-        <div style={{ display: 'flex', gap: 8 }}>
-          {guaranteeKPIs.map((k, i) => {
-            const show = progress >= kpiTimes[i];
-            const active = spot(progress, kpiTimes[i], kpiTimes[i] + 0.14);
+        {/* Column headers */}
+        <div style={{ display: 'flex', padding: '0 8px', borderBottom: `1px solid ${BORDER}` }}>
+          {['Patient', 'Clinical Signal', 'Revenue Opportunity', 'Action', 'Uplift'].map((h, i) => (
+            <div key={i} style={{ flex: i === 1 || i === 2 ? 2 : 1, fontSize: 7, color: MUTED, fontWeight: 700, padding: '3px 0', letterSpacing: 0.3 }}>{h}</div>
+          ))}
+        </div>
+
+        {/* Patient rows — one spotlit at a time */}
+        <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 6 }}>
+          {patients.map((p, i) => {
+            const visible = progress >= p.show;
+            const active = spot(progress, p.show, p.show + 0.18);
+            const past = progress > p.show + 0.18;
             return (
-              <div key={i} style={{ ...glow(active, k.col, { flex: 1, borderRadius: 10, padding: '14px 10px', textAlign: 'center' }), opacity: show ? 1 : 0, transform: show ? (active ? 'scale(1.08)' : 'scale(1)') : 'translateY(22px) scale(0.82)', transition: 'all 0.6s cubic-bezier(0.34,1.4,0.64,1)', filter: show && !active ? 'brightness(0.75)' : 'brightness(1)' }}>
-                <div style={{ fontSize: 28, fontWeight: 900, color: k.col, fontFamily: 'Sora', lineHeight: 1 }}>
-                  {show ? <CountUp value={k.val} duration={700} key={`dk${i}`} /> : k.val}
+              <div key={i} style={{ ...glow(active, p.col, { borderRadius: 8, padding: '9px 10px', display: 'flex', alignItems: 'center' }), opacity: visible ? (past ? 0.55 : 1) : 0, transform: visible ? (active ? 'scale(1.02)' : 'scale(1)') : 'translateY(10px)', transition: 'all 0.5s cubic-bezier(0.34,1.2,0.64,1)' }}>
+                <div style={{ flex: 1, display: 'flex', gap: 6, alignItems: 'center' }}>
+                  <div style={{ width: 26, height: 26, borderRadius: '50%', background: `${p.col}20`, border: `1.5px solid ${p.col}45`, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                    <span style={{ fontSize: 8, fontWeight: 900, color: p.col }}>{p.init}</span>
+                  </div>
+                  <div>
+                    <div style={{ fontSize: 8, fontWeight: 700, color: active ? p.col : TXT }}>{p.dept}</div>
+                    <Badge text={p.risk} color={p.risk === 'CRITICAL' ? RED : p.risk === 'HIGH' ? AMBER : GREEN} />
+                  </div>
                 </div>
-                <div style={{ width: 20, height: 2, borderRadius: 1, background: k.col, margin: '6px auto' }} />
-                <div style={{ fontSize: 9, fontWeight: 700, color: TXT, lineHeight: 1.3 }}>{k.label}</div>
-                <div style={{ fontSize: 7, color: DIM, marginTop: 2, lineHeight: 1.3 }}>{k.sub}</div>
+                <div style={{ flex: 2, fontSize: 9, color: active ? TXT : DIM, fontWeight: active ? 600 : 400, paddingRight: 6 }}>{p.signal}</div>
+                <div style={{ flex: 2, fontSize: 8, color: DIM, paddingRight: 6 }}>{p.opportunity}</div>
+                <div style={{ flex: 1 }}>
+                  <span style={{ fontSize: 7, fontWeight: 800, color: p.actionCol, background: `${p.actionCol}18`, border: `1px solid ${p.actionCol}35`, borderRadius: 4, padding: '2px 7px' }}>{p.action}</span>
+                </div>
+                <div style={{ flex: 1, textAlign: 'right', fontSize: 11, fontWeight: 900, color: p.col, fontFamily: 'Sora' }}>{p.uplift}</div>
               </div>
             );
           })}
         </div>
 
-        {/* 60-day integration timeline */}
-        {timelineShow && (
-          <div style={{ background: 'rgba(255,255,255,0.03)', border: `1px solid ${BORDER}`, borderRadius: 9, padding: '10px 14px', animation: 'dpBeatIn 0.5s ease both', flexShrink: 0 }}>
-            <div style={{ fontSize: 8, color: MUTED, fontWeight: 700, marginBottom: 8, letterSpacing: 0.5 }}>60-DAY INTEGRATION PATHWAY · CONTRACTUAL MILESTONES</div>
-            <div style={{ display: 'flex', alignItems: 'center' }}>
-              {[
-                { day: 'Day 0', label: 'Go-Live', col: TEAL },
-                { day: 'Day 14', label: 'CDI Active', col: INDIGO },
-                { day: 'Day 30', label: 'Denials ↓', col: GREEN },
-                { day: 'Day 60', label: '✓ All Outcomes', col: AMBER },
-              ].map((t, i) => (
-                <div key={i} style={{ display: 'flex', alignItems: 'center', flex: 1 }}>
-                  <div style={{ flex: 1, textAlign: 'center' }}>
-                    <div style={{ fontSize: 11, fontWeight: 900, color: t.col, fontFamily: 'Sora' }}>{t.day}</div>
-                    <div style={{ fontSize: 7, color: DIM, marginTop: 2 }}>{t.label}</div>
-                  </div>
-                  {i < 3 && <div style={{ width: 16, height: 2, background: `linear-gradient(90deg,${t.col}60,${[TEAL,INDIGO,GREEN,AMBER][i+1]}60)`, flexShrink: 0 }} />}
-                </div>
-              ))}
+        {/* Summary */}
+        {progress >= 0.78 && (
+          <div style={{ display: 'flex', gap: 8, animation: 'dpBeatIn 0.4s ease both' }}>
+            <div style={{ flex: 1, background: `${INDIGO}10`, border: `1px solid ${INDIGO}25`, borderRadius: 8, padding: '7px 12px', textAlign: 'center' }}>
+              <div style={{ fontSize: 20, fontWeight: 900, color: INDIGO, fontFamily: 'Sora' }}>AED 91K</div>
+              <div style={{ fontSize: 7, color: DIM }}>revenue opportunity · 4 patients · live</div>
+            </div>
+            <div style={{ flex: 1, background: `${TEAL}10`, border: `1px solid ${TEAL}25`, borderRadius: 8, padding: '7px 12px', textAlign: 'center' }}>
+              <div style={{ fontSize: 20, fontWeight: 900, color: TEAL, fontFamily: 'Sora' }}>Day 0</div>
+              <div style={{ fontSize: 7, color: DIM }}>clinical signal → ops team · no lag · no reports</div>
+            </div>
+          </div>
+        )}
+      </div>
+    </ProductShell>
+  );
+}
+
+/* Scene 11 — RCM Intelligence Partner: personalized framework positioning */
+function DashboardScreen({ progress }) {
+  const headerShow = progress >= 0.04;
+  const intelligenceLayers = [
+    {
+      icon: '🏥',
+      label: 'Your Payor Intelligence',
+      detail: 'Daman · Thiqa · AXA Gulf · contract-calibrated denial prevention per batch',
+      metric: '4 payors · 847 rules loaded',
+      col: TEAL,
+      show: 0.06,
+    },
+    {
+      icon: '🩺',
+      label: 'Your Physician Patterns',
+      detail: 'CDI queries tuned to your top 20 physicians — specialty-specific, not generic',
+      metric: '20 physicians profiled',
+      col: INDIGO,
+      show: 0.20,
+    },
+    {
+      icon: '📊',
+      label: 'Your Case Mix Intelligence',
+      detail: 'IR-DRG optimization calibrated to your service line mix and payer contracts',
+      metric: '6 service lines · live CMI tracking',
+      col: PURPLE,
+      show: 0.36,
+    },
+    {
+      icon: '⚡',
+      label: 'Your Clinical Signals',
+      detail: 'Deterioration triggers tuned to your patient population — surfaces Day 0',
+      metric: 'Real-time · no lag · no reports',
+      col: AMBER,
+      show: 0.52,
+    },
+  ];
+  const brandShow = progress >= 0.72;
+  const closingShow = progress >= 0.88;
+
+  return (
+    <ProductShell breadcrumb="Your RCM Intelligence Framework" color={TEAL}>
+      <div style={{ padding: '10px 14px', height: '100%', display: 'flex', flexDirection: 'column', gap: 8 }}>
+
+        {/* Header — partner positioning */}
+        {headerShow && (
+          <div style={{ background: `linear-gradient(135deg,${TEAL}18,${INDIGO}0d)`, border: `1px solid ${TEAL}40`, borderRadius: 10, padding: '10px 16px', animation: 'dpBeatIn 0.7s cubic-bezier(0.34,1.4,0.64,1) both', flexShrink: 0 }}>
+            <div style={{ fontSize: 12, fontWeight: 800, color: TXT, fontFamily: 'Sora' }}>
+              Docstribe doesn't give you a platform. It builds{' '}
+              <span style={{ color: TEAL }}>your</span> intelligence framework.
+            </div>
+            <div style={{ fontSize: 8, color: DIM, marginTop: 4, lineHeight: 1.5 }}>
+              Every layer is calibrated to your payors, your physicians, your case mix — and evolves as your hospital evolves.
             </div>
           </div>
         )}
 
-        {/* Live payer first-pass rates */}
-        {payorShow && (
-          <div style={{ animation: 'dpBeatIn 0.5s ease both', flexShrink: 0 }}>
-            <div style={{ fontSize: 8, color: MUTED, fontWeight: 700, letterSpacing: 0.5, marginBottom: 6 }}>LIVE PAYOR FIRST-PASS CLAIM RATE</div>
-            <div style={{ display: 'flex', gap: 6 }}>
-              {[['Daman', '94%', GREEN], ['Thiqa', '91%', TEAL], ['AXA Gulf', '89%', AMBER], ['Oman Ins.', '96%', GREEN]].map(([name, rate, col], i) => (
-                <div key={i} style={{ flex: 1, background: `${col}09`, border: `1px solid ${col}22`, borderRadius: 7, padding: '7px 8px', textAlign: 'center' }}>
-                  <div style={{ fontSize: 15, fontWeight: 900, color: col, fontFamily: 'Sora' }}>{rate}</div>
-                  <div style={{ fontSize: 7, color: DIM, marginTop: 2 }}>{name}</div>
+        {/* Intelligence layer cards — appear one by one */}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 7, flex: 1 }}>
+          {intelligenceLayers.map((layer, i) => {
+            const show = progress >= layer.show;
+            const active = spot(progress, layer.show, layer.show + 0.13);
+            return (
+              <div
+                key={i}
+                style={{
+                  ...glow(active, layer.col, { borderRadius: 9, padding: '9px 13px', display: 'flex', alignItems: 'center', gap: 12 }),
+                  opacity: show ? 1 : 0,
+                  transform: show ? (active ? 'scale(1.03)' : 'scale(1)') : 'translateX(-18px) scale(0.95)',
+                  transition: 'all 0.55s cubic-bezier(0.34,1.4,0.64,1)',
+                  filter: show && !active ? 'brightness(0.72)' : 'brightness(1)',
+                  flexShrink: 0,
+                }}
+              >
+                {/* Icon bubble */}
+                <div style={{ width: 34, height: 34, borderRadius: 8, background: `${layer.col}1a`, border: `1px solid ${layer.col}30`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 16, flexShrink: 0 }}>
+                  {layer.icon}
                 </div>
-              ))}
-            </div>
-          </div>
-        )}
+                {/* Text */}
+                <div style={{ flex: 1, minWidth: 0 }}>
+                  <div style={{ fontSize: 10, fontWeight: 800, color: layer.col, fontFamily: 'Sora', lineHeight: 1.2 }}>{layer.label}</div>
+                  <div style={{ fontSize: 8, color: DIM, marginTop: 2, lineHeight: 1.4 }}>{layer.detail}</div>
+                </div>
+                {/* Metric badge */}
+                <div style={{ background: `${layer.col}18`, border: `1px solid ${layer.col}30`, borderRadius: 6, padding: '4px 8px', textAlign: 'center', flexShrink: 0 }}>
+                  <div style={{ fontSize: 8, fontWeight: 700, color: layer.col, whiteSpace: 'nowrap' }}>{layer.metric}</div>
+                </div>
+              </div>
+            );
+          })}
+        </div>
 
         {/* Brand close */}
         {brandShow && (
-          <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 8, animation: 'dpBeatIn 0.9s cubic-bezier(0.34,1.2,0.64,1) both' }}>
-            <div style={{ fontSize: 36, fontWeight: 900, fontFamily: 'Sora', background: `linear-gradient(135deg,#fff 30%,${TEAL} 60%,${INDIGO})`, WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', letterSpacing: -1.5, lineHeight: 1 }}>Docstribe</div>
-            <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
-              {['Clinical Intelligence', 'Financial Integrity', 'Zero Leakage'].map((t, i) => (
-                <span key={i} style={{ fontSize: 8, fontWeight: 700, color: [TEAL, INDIGO, GREEN][i], background: `${[TEAL, INDIGO, GREEN][i]}14`, border: `1px solid ${[TEAL, INDIGO, GREEN][i]}30`, borderRadius: 20, padding: '3px 10px' }}>{t}</span>
+          <div style={{ flexShrink: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 7, animation: 'dpBeatIn 0.9s cubic-bezier(0.34,1.2,0.64,1) both', paddingTop: 4 }}>
+            <div style={{ fontSize: 32, fontWeight: 900, fontFamily: 'Sora', background: `linear-gradient(135deg,#fff 20%,${TEAL} 55%,${INDIGO})`, WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', letterSpacing: -1.5, lineHeight: 1 }}>Docstribe</div>
+            <div style={{ display: 'flex', gap: 7, alignItems: 'center', flexWrap: 'wrap', justifyContent: 'center' }}>
+              {[['Clinical Intelligence', TEAL], ['Financial Integrity', INDIGO], ['Built for You', PURPLE]].map(([t, c], i) => (
+                <span key={i} style={{ fontSize: 8, fontWeight: 700, color: c, background: `${c}14`, border: `1px solid ${c}30`, borderRadius: 20, padding: '3px 10px' }}>{t}</span>
               ))}
             </div>
-            <div style={{ background: `linear-gradient(135deg,${TEAL}1a,${INDIGO}10)`, border: `1px solid ${TEAL}40`, borderRadius: 10, padding: '8px 20px', marginTop: 4 }}>
-              <div style={{ fontSize: 11, fontWeight: 800, color: TXT, textAlign: 'center' }}>
-                Measurable outcomes — <span style={{ color: TEAL }}>contractually guaranteed within 60 days</span>
+            {closingShow && (
+              <div style={{ background: `linear-gradient(135deg,${TEAL}1a,${INDIGO}10)`, border: `1px solid ${TEAL}40`, borderRadius: 10, padding: '7px 18px', animation: 'dpBeatIn 0.6s ease both' }}>
+                <div style={{ fontSize: 10, fontWeight: 800, color: TXT, textAlign: 'center' }}>
+                  Not a tool you configure once.{' '}
+                  <span style={{ color: TEAL }}>A partner that learns your hospital.</span>
+                </div>
               </div>
-            </div>
+            )}
           </div>
         )}
       </div>
