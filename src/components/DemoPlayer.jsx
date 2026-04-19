@@ -40,6 +40,61 @@ function b64ToArrayBuffer(b64) {
   return bytes.buffer.slice(0);
 }
 
+/* ─── Client-side PCM → WAV (browser DataView) ──────────────── */
+function pcmToWavBase64(pcm, sampleRate = 24000, ch = 1, bits = 16) {
+  const buf = new ArrayBuffer(44 + pcm.length);
+  const v = new DataView(buf);
+  const s = (o, str) => { for (let i = 0; i < str.length; i++) v.setUint8(o + i, str.charCodeAt(i)); };
+  s(0, 'RIFF'); v.setUint32(4, 36 + pcm.length, true);
+  s(8, 'WAVE'); s(12, 'fmt '); v.setUint32(16, 16, true);
+  v.setUint16(20, 1, true); v.setUint16(22, ch, true);
+  v.setUint32(24, sampleRate, true); v.setUint32(28, sampleRate * ch * bits / 8, true);
+  v.setUint16(32, ch * bits / 8, true); v.setUint16(34, bits, true);
+  s(36, 'data'); v.setUint32(40, pcm.length, true);
+  new Uint8Array(buf).set(pcm, 44);
+  let bin = ''; new Uint8Array(buf).forEach(b => bin += String.fromCharCode(b));
+  return btoa(bin);
+}
+
+/* ─── Client-side Gemini TTS (used when server is unavailable) ── */
+async function clientSideTTS(voText, apiKey) {
+  const raw = voText.match(/[^.!?…]+[.!?…]+\s*/g) || [voText];
+  const sentences = [];
+  let carry = '';
+  for (const s of raw) {
+    carry += s;
+    if (carry.trim().length >= 25) { sentences.push(carry.trim()); carry = ''; }
+  }
+  if (carry.trim()) sentences.push(carry.trim());
+
+  const chunks = [];
+  for (const sentence of sentences) {
+    const res = await fetch(
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-tts:generateContent?key=${apiKey}`,
+      {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          contents: [{ parts: [{ text: sentence }] }],
+          generationConfig: {
+            responseModalities: ['AUDIO'],
+            speechConfig: { voiceConfig: { prebuiltVoiceConfig: { voiceName: 'Charon' } } },
+          },
+        }),
+      }
+    );
+    const data = await res.json();
+    if (!res.ok || data.error) throw new Error(data?.error?.message || `TTS ${res.status}`);
+    const pcmB64 = data?.candidates?.[0]?.content?.parts?.[0]?.inlineData?.data;
+    if (!pcmB64) throw new Error('No PCM in TTS response');
+    chunks.push(Uint8Array.from(atob(pcmB64), c => c.charCodeAt(0)));
+  }
+
+  const total = chunks.reduce((n, c) => n + c.length, 0);
+  const combined = new Uint8Array(total);
+  let off = 0; for (const c of chunks) { combined.set(c, off); off += c.length; }
+  return pcmToWavBase64(combined);
+}
+
 /* ─── Design tokens ─────────────────────────────────────────── */
 const TEAL   = '#00cba8';
 const BLUE   = '#0d1526';
@@ -1611,8 +1666,44 @@ export default function DemoPlayer() {
       };
       rafRef.current = requestAnimationFrame(tick);
     } catch (err) {
-      console.warn('DemoPlayer: audio unavailable, using timer fallback');
-      // No server / API key — drive progress by a fixed per-scene duration
+      // Try client-side Gemini TTS (GitHub Pages / no server)
+      const clientKey = import.meta.env.VITE_GEMINI_API_KEY;
+      if (clientKey) {
+        try {
+          setLoading(true);
+          const wav = await clientSideTTS(s.vo, clientKey);
+          let ctx = audioCtxRef.current;
+          if (!ctx) {
+            ctx = new (window.AudioContext || window.webkitAudioContext)();
+            const an = ctx.createAnalyser(); an.fftSize = 256; an.connect(ctx.destination);
+            audioCtxRef.current = ctx; analyserRef.current = an;
+          }
+          if (ctx.state === 'suspended') await ctx.resume();
+          const buf = await ctx.decodeAudioData(b64ToArrayBuffer(wav));
+          if (sourceRef.current) { try { sourceRef.current.stop(); } catch {} }
+          cancelAnimationFrame(rafRef.current);
+          const src = ctx.createBufferSource();
+          src.buffer = buf; src.connect(analyserRef.current);
+          durRef.current = buf.duration; t0Ref.current = ctx.currentTime;
+          src.start(0); sourceRef.current = src;
+          setLoading(false); setIsPlaying(true);
+          const scSentences = splitSentences(s.vo);
+          const tick = () => {
+            const p = Math.min((ctx.currentTime - t0Ref.current) / durRef.current, 1);
+            setProgress(p);
+            const si = scSentences.findIndex((_, j) => p <= (j + 1) / scSentences.length);
+            setSentIdx(si < 0 ? scSentences.length - 1 : si);
+            if (p < 1) rafRef.current = requestAnimationFrame(tick);
+            else { setIsPlaying(false); autoAdvance(); }
+          };
+          rafRef.current = requestAnimationFrame(tick);
+          return;
+        } catch (ttsErr) {
+          console.warn('Client TTS failed, using timer:', ttsErr.message);
+        }
+      }
+      // Final fallback: timer-driven animation, no audio
+      console.warn('DemoPlayer: no audio, using timer fallback');
       const FALLBACK_MS = 9000;
       const t0 = Date.now();
       const scSentences = splitSentences(s.vo);
