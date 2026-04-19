@@ -1611,7 +1611,25 @@ export default function DemoPlayer() {
       };
       rafRef.current = requestAnimationFrame(tick);
     } catch (err) {
-      console.error('DemoPlayer error:', err);
+      console.warn('DemoPlayer: audio unavailable, using timer fallback');
+      // No server / API key — drive progress by a fixed per-scene duration
+      const FALLBACK_MS = 9000;
+      const t0 = Date.now();
+      const scSentences = splitSentences(s.vo);
+      setLoading(false);
+      setIsPlaying(true);
+      const tick = () => {
+        const p = Math.min((Date.now() - t0) / FALLBACK_MS, 1);
+        setProgress(p);
+        let si = scSentences.length - 1;
+        for (let j = 0; j < scSentences.length; j++) {
+          if (p <= (j + 1) / scSentences.length) { si = j; break; }
+        }
+        setSentIdx(si);
+        if (p < 1) rafRef.current = requestAnimationFrame(tick);
+        else { setIsPlaying(false); autoAdvance(); }
+      };
+      rafRef.current = requestAnimationFrame(tick);
       setLoading(false); setIsPlaying(false);
     }
   }, [autoAdvance]);
