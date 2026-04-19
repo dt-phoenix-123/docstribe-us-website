@@ -400,57 +400,57 @@ const UAE_DEMO_SCENES = [
   {
     id: 1, timecode: '0:00–0:10', journeyStage: 'opening',
     title: 'The Revenue Gap',
-    voText: 'In the UAE, twelve to eighteen percent of claims are denied. Sixty to seventy percent of those? Entirely preventable. Docstribe closes that gap.',
+    voText: 'In the UAE, twelve to eighteen percent of every claim is denied. Sixty to seventy percent of those — entirely preventable. Docstribe closes that gap before it opens.',
   },
   {
     id: 2, timecode: '0:10–0:22', journeyStage: 'outcomes',
     title: 'Introducing Docstribe',
-    voText: 'Docstribe is a clinical intelligence platform deployed across the US, UAE, and India — across one hundred hospitals, managing ten million lives, driven by clinicians with thirty years of experience. Denials drop thirty percent. Revenue goes up twenty-five percent. Guaranteed.',
+    voText: 'This is Docstribe. Built by clinicians — thirty years of practice, not engineering. Deployed across a hundred hospitals in the US, UAE, and India — managing ten million lives. Denials fall thirty percent. Revenue grows twenty-five percent. Guaranteed.',
   },
   {
     id: 3, timecode: '0:22–0:32', journeyStage: 'platform',
     title: 'One Unified Workspace',
-    voText: 'Here you can see two hundred live cases — OPD, IPD, Emergency — with zero leakage. Every encounter tracked from diagnosis to final payment.',
+    voText: 'Two hundred live encounters — OPD, IPD, Emergency — in one workspace. Every case tracked from diagnosis to final payment. Nothing falls through. Zero leakage.',
   },
   {
     id: 4, timecode: '0:32–0:42', journeyStage: 'pre-visit',
     title: 'Pre-Visit Intelligence',
-    voText: 'Watch what happens here. Before the OPD patient arrives, Daman eligibility is confirmed automatically. For this IPD admission, Thiqa pre-approval for AED twenty-eight thousand five hundred fires at order entry, not discharge.',
+    voText: 'Before Fatima walks in, eligibility is already confirmed — coverage active, no auth required. For Khalid\'s admission, Thiqa pre-authorisation for AED twenty-eight thousand five hundred fires at order entry, not discharge. Approved before care begins.',
   },
   {
     id: 5, timecode: '0:42–0:52', journeyStage: 'in-visit',
     title: 'Ambient Clinical Intelligence',
-    voText: 'As the physician talks, our AI builds the structured note in real time — vital signs, diagnoses, ICD codes. It connects directly to NABIDH and DHA, so the doctor stays focused on care.',
+    voText: 'The physician speaks. The structured clinical note builds in real time — vital signs, ICD codes, comorbidities, all captured automatically. Feeding directly into NABIDH and DHA. The doctor never looks up from the patient. Documentation already done.',
   },
   {
     id: 6, timecode: '0:52–1:02', journeyStage: 'cdi',
     title: 'CDI — Closing the Gap',
-    voText: 'One tap from the physician confirms medical necessity — that\'s AED four hundred twenty captured right there. Here for the IPD patient, confirming Pneumonia closes the IR-DRG gap before discharge.',
+    voText: 'One tap. The physician confirms medical necessity — four hundred twenty dirhams, captured. For the inpatient — confirming Pneumonia as principal diagnosis locks the IR-DRG gap before discharge. Revenue that would have been lost, isn\'t.',
   },
   {
     id: 7, timecode: '1:02–1:14', journeyStage: 'coding',
     title: 'AI-Powered Coding',
-    voText: 'The AI reads clinical notes and surfaces ranked ICD codes instantly. Watch the IR-DRG weight move from zero point nine four to one point three four — that jump alone recovers AED eighteen thousand four hundred per case.',
+    voText: 'Clinical notes in. Ranked ICD codes out — instantly. The IR-DRG weight moves from zero point nine four to one point three four. That jump alone recovers AED eighteen thousand four hundred. Per case. On every case.',
   },
   {
     id: 8, timecode: '1:14–1:24', journeyStage: 'denial-intel',
     title: 'Denial Intelligence',
-    voText: 'Every denial has a pattern. Docstribe maps them — payor by payor, batch by batch. Most of what\'s denied is preventable. Two thirds recoverable, pre-submission. That\'s how the denial rate falls — not by chasing. By pattern-breaking.',
+    voText: 'Every denial has a pattern. Docstribe maps it — payor by payor, batch by batch. Most is preventable. Up to ninety-one percent recoverable before the claim goes out. That is how the denial rate falls — not by chasing. By never losing.',
   },
   {
     id: 9, timecode: '1:24–1:33', journeyStage: 'recovery',
     title: 'One-Click Recovery',
-    voText: 'This claim just came back denied — three weeks of follow-up, historically. Watch this. One click: Docstribe reads the contract, finds the matching clause, and writes the appeal letter. The whole thing. Thirty seconds.',
+    voText: 'A denial lands. Historically, three weeks of follow-up. Now — one click. Docstribe reads the contract, finds the clause, writes the appeal letter. The whole thing. Thirty seconds. AED nineteen hundred in recovery.',
   },
   {
     id: 10, timecode: '1:33–1:44', journeyStage: 'service-line',
     title: 'Service Line Growth',
-    voText: 'Your ops team can\'t watch every chart. Docstribe does. A patient\'s oxygen is falling, another\'s labs flag a diagnosis escalation. It surfaces these as a live action list — clinical signals, turned into revenue opportunities. Right now.',
+    voText: 'Your ops team cannot watch every chart. Docstribe does. Oxygen dropping. Labs flagging a DRG escalation. Pre-auth ready for systemic therapy. Four patients — AED ninety-one thousand — surfaced as a live action list. Clinical signals, turned into revenue. Day Zero.',
   },
   {
     id: 11, timecode: '1:44–1:58', journeyStage: 'dashboard',
     title: 'Your RCM Intelligence Partner',
-    voText: 'Docstribe is not a generic platform. It builds a personalized intelligence framework — your payors, your physicians, your case mix — and it evolves with your hospital. Clinical intelligence, financial integrity, built for you.',
+    voText: 'This is not a generic platform. It is an intelligence framework that learns your hospital — your payors, your physicians, your case mix — and gets smarter with every claim, every signal, every patient. Clinical intelligence. Built for you.',
   },
 ];
 

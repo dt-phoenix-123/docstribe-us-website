@@ -97,7 +97,7 @@ const SCENES = [
     id: 1, type: 'stat', color: TEAL,
     title: 'The Revenue Gap',
     // S1:12w S2:7w S3:2w S4:4w = 25w — beat fracs 0.48 0.76 0.84 1.00
-    vo: "In the UAE, twelve to eighteen percent of claims are denied. Sixty to seventy percent of those? Entirely preventable. Docstribe closes that gap.",
+    vo: "In the UAE, twelve to eighteen percent of every claim is denied. Sixty to seventy percent of those — entirely preventable. Docstribe closes that gap before it opens.",
     beats: [
       { at: 0.04, stat: '12–18%',        sub: 'UAE claims denied on first submission' },
       { at: 0.49, stat: '60–70%',        sub: 'of those denials are entirely preventable' },
@@ -108,7 +108,7 @@ const SCENES = [
     id: 2, type: 'kpi', color: TEAL,
     title: 'Introducing Docstribe',
     // S1:25w credentials S2:7w outcomes S3:1w = 33w — beat fracs 0.26 0.46 0.62 0.76 0.90
-    vo: "Docstribe is a clinical intelligence platform deployed across the US, UAE, and India — across one hundred hospitals, managing ten million lives, driven by clinicians with thirty years of experience. Denials drop thirty percent. Revenue goes up twenty-five percent. Guaranteed.",
+    vo: "This is Docstribe. Built by clinicians — thirty years of practice, not engineering. Deployed across a hundred hospitals in the US, UAE, and India — managing ten million lives. Denials fall thirty percent. Revenue grows twenty-five percent. Guaranteed.",
     beats: [
       { at: 0.04, stat: 'Docstribe',      sub: 'Clinical intelligence platform · clinician-built' },
       { at: 0.26, stat: '100+ Hospitals',  sub: 'US · UAE · India · live deployments' },
@@ -122,7 +122,7 @@ const SCENES = [
     title: 'One Unified Workspace',
     breadcrumb: 'Cases Workbench',
     // S1:15w S2:8w = 23w — beat fracs 0.65 1.00; zero leakage at word 14 = 0.61
-    vo: "Here you can see two hundred live cases — OPD, IPD, Emergency — with zero leakage. Every encounter tracked from diagnosis to final payment.",
+    vo: "Two hundred live encounters — OPD, IPD, Emergency — in one workspace. Every case tracked from diagnosis to final payment. Nothing falls through. Zero leakage.",
     beats: [
       { at: 0.06, stat: '200 active cases', sub: 'OPD · IPD · Emergency — unified' },
       { at: 0.62, stat: 'Zero leakage',     sub: 'every encounter tracked end-to-end' },
@@ -133,7 +133,7 @@ const SCENES = [
     title: 'Pre-Visit Intelligence',
     breadcrumb: 'Eligibility & Pre-Authorisation',
     // S1:4w S2:11w S3:18w = 33w — beat fracs 0.12 0.45 1.00; Daman at S2 word 6 = 0.30
-    vo: "Watch what happens here. Before the OPD patient arrives, Daman eligibility is confirmed automatically. For this IPD admission, Thiqa pre-approval for AED twenty-eight thousand five hundred fires at order entry, not discharge.",
+    vo: "Before Fatima walks in, eligibility is already confirmed — coverage active, no auth required. For Khalid's admission, Thiqa pre-authorisation for AED twenty-eight thousand five hundred fires at order entry, not discharge. Approved before care begins.",
     beats: [
       { at: 0.14, stat: 'Daman eligible',  sub: 'OPD · confirmed before arrival' },
       { at: 0.46, stat: '✅ PA APPROVED',   sub: 'AED 28,500 · Thiqa · order entry not discharge' },
@@ -144,7 +144,7 @@ const SCENES = [
     title: 'Ambient Clinical Intelligence',
     breadcrumb: 'Ambient Scribe — OPD & IPD',
     // S1:18w S2:13w = 31w — beat fracs 0.58 1.00; NABIDH at S2 word 5 = 0.74
-    vo: "As the physician talks, our AI builds the structured note in real time — vital signs, diagnoses, ICD codes. It connects directly to NABIDH and DHA, so the doctor stays focused on care.",
+    vo: "The physician speaks. The structured clinical note builds in real time — vital signs, ICD codes, comorbidities, all captured automatically. Feeding directly into NABIDH and DHA. The doctor never looks up from the patient. Documentation already done.",
     beats: [
       { at: 0.06, stat: 'OPD note built live', sub: 'DM · HTN · auto-coded from voice' },
       { at: 0.60, stat: 'NABIDH ✓  DHA ✓',    sub: 'compliant · structured · exchange-ready' },
@@ -156,7 +156,7 @@ const SCENES = [
     title: 'CDI — Closing the Gap',
     breadcrumb: 'Clinical Documentation Intelligence',
     // S1:16w S2:13w = 29w — beat fracs 0.55 1.00; AED at word 13 = 0.45; Pneumonia at S2 word 5 = 0.72
-    vo: "One tap from the physician confirms medical necessity — that's AED four hundred twenty captured right there. Here for the IPD patient, confirming Pneumonia closes the IR-DRG gap before discharge.",
+    vo: "One tap. The physician confirms medical necessity — four hundred twenty dirhams, captured. For the inpatient — confirming Pneumonia as principal diagnosis locks the IR-DRG gap before discharge. Revenue that would have been lost, isn't.",
     beats: [
       { at: 0.06, stat: 'OPD — Medical Necessity', sub: 'physician confirms with one tap' },
       { at: 0.42, stat: '+AED 420',                sub: 'medical necessity captured · billed' },
@@ -168,7 +168,7 @@ const SCENES = [
     title: 'AI-Powered Coding',
     breadcrumb: 'ICD-10-CM · Smart Coding Engine',
     // S1:11w S2:25w = 36w — beat fracs 0.31 1.00; IR-DRG at S2 word 3 = 0.36; AED at S2 word 18 = 0.81
-    vo: "The AI reads clinical notes and surfaces ranked ICD codes instantly. Watch the IR-DRG weight move from zero point nine four to one point three four — that jump alone recovers AED eighteen thousand four hundred per case.",
+    vo: "Clinical notes in. Ranked ICD codes out — instantly. The IR-DRG weight moves from zero point nine four to one point three four. That jump alone recovers AED eighteen thousand four hundred. Per case. On every case.",
     beats: [
       { at: 0.06, stat: 'Notes → ICD-10-CM',   sub: 'diagnoses ranked · symptoms suppressed' },
       { at: 0.34, stat: 'IR-DRG 0.94 → 1.34', sub: 'weight maximised · revenue recovered' },
@@ -180,7 +180,7 @@ const SCENES = [
     title: 'Denial Intelligence',
     breadcrumb: 'Payor Contract Intelligence',
     // S1:5w S2:9w S3:6w S4:4w S5:10w S6:2w = 36w — fracs 0.14 0.39 0.56 0.67 0.94 1.00
-    vo: "Every denial has a pattern. Docstribe maps them — payor by payor, batch by batch. Most of what's denied is preventable. Two thirds recoverable, pre-submission. That's how the denial rate falls — not by chasing. By pattern-breaking.",
+    vo: "Every denial has a pattern. Docstribe maps it — payor by payor, batch by batch. Most is preventable. Up to ninety-one percent recoverable before the claim goes out. That is how the denial rate falls — not by chasing. By never losing.",
     beats: [
       { at: 0.08, stat: 'Per payor · per batch', sub: 'Daman · Thiqa · AXA Gulf · Oman Insurance' },
       { at: 0.60, stat: '67–91% recoverable',    sub: 'pre-submission · flagged before send' },
@@ -192,7 +192,7 @@ const SCENES = [
     title: 'One-Click Recovery',
     breadcrumb: 'Claim Recovery — Appeal Generator',
     // S1:12w S2:2w S3:15w S4:3w S5:2w = 34w — fracs 0.35 0.41 0.85 0.94 1.00
-    vo: "This claim just came back denied — three weeks of follow-up, historically. Watch this. One click: Docstribe reads the contract, finds the matching clause, and writes the appeal letter. The whole thing. Thirty seconds.",
+    vo: "A denial lands. Historically, three weeks of follow-up. Now — one click. Docstribe reads the contract, finds the clause, writes the appeal letter. The whole thing. Thirty seconds. AED nineteen hundred in recovery.",
     beats: [
       { at: 0.06, stat: 'AED 1,900 denied', sub: 'Daman · bundling dispute · appeal pending' },
       { at: 0.42, stat: '1-click appeal',   sub: 'contract read · clause matched · letter built' },
@@ -204,7 +204,7 @@ const SCENES = [
     title: 'Service Line Growth',
     breadcrumb: 'Service Line Growth · Clinical Engagement',
     // S1:7w S2:2w S3:11w S4:14w S5:2w = 36w — fracs 0.19 0.25 0.56 0.95 1.00
-    vo: "Your ops team can't watch every chart. Docstribe does. A patient's oxygen is falling, another's labs flag a diagnosis escalation. It surfaces these as a live action list — clinical signals, turned into revenue opportunities. Right now.",
+    vo: "Your ops team cannot watch every chart. Docstribe does. Oxygen dropping. Labs flagging a DRG escalation. Pre-auth ready for systemic therapy. Four patients — AED ninety-one thousand — surfaced as a live action list. Clinical signals, turned into revenue. Day Zero.",
     beats: [
       { at: 0.10, stat: 'Ops engagement queue', sub: 'clinical signals → revenue action · live' },
       { at: 0.55, stat: 'AED 91K opportunity',  sub: '4 patients · surfaced live · Day Zero' },
@@ -215,7 +215,7 @@ const SCENES = [
     title: 'Your RCM Intelligence Partner',
     breadcrumb: 'Your RCM Intelligence Framework',
     // S1:7w S2:22w S3:9w = 38w — fracs 0.18 0.76 1.00
-    vo: "Docstribe is not a generic platform. It builds a personalized intelligence framework — your payors, your physicians, your case mix — and it evolves with your hospital. Clinical intelligence, financial integrity, built for you.",
+    vo: "This is not a generic platform. It is an intelligence framework that learns your hospital — your payors, your physicians, your case mix — and gets smarter with every claim, every signal, every patient. Clinical intelligence. Built for you.",
     beats: [
       { at: 0.06, stat: 'Your intelligence',      sub: 'payors · physicians · case mix — personalized' },
       { at: 0.20, stat: 'Personalized framework',  sub: 'evolves with your hospital · not a generic tool' },
@@ -223,6 +223,110 @@ const SCENES = [
     ],
   },
 ];
+
+/* ─── PatientProfileCard — clinical governance + AI intelligence ─ */
+function PatientProfileCard({ patient, progress, showFrom = 0 }) {
+  const {
+    name, initials, age, type, dept, mrn, payer, payerPlan,
+    risk, diagnoses, vitals, governance, financial, aiProfile,
+  } = patient;
+  const riskColor = risk === 'CRITICAL' ? RED : risk === 'HIGH' ? AMBER : risk === 'MED' ? INDIGO : GREEN;
+  if (progress < showFrom) return null;
+  return (
+    <div style={{
+      background: 'linear-gradient(135deg,rgba(4,8,20,0.97),rgba(6,12,28,0.94))',
+      border: `1px solid ${riskColor}35`,
+      borderRadius: 12, padding: '9px 13px',
+      animation: 'dpSpringIn 0.6s cubic-bezier(0.34,1.4,0.64,1) both',
+      flexShrink: 0,
+      boxShadow: `0 0 0 1px ${riskColor}10, 0 4px 24px rgba(0,0,0,0.45)`,
+    }}>
+      {/* Row 1: identity + risk + financial */}
+      <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 7 }}>
+        <div style={{ width: 30, height: 30, borderRadius: '50%', background: `${riskColor}20`, border: `2px solid ${riskColor}50`, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+          <span style={{ fontSize: 9, fontWeight: 900, color: riskColor }}>{initials}</span>
+        </div>
+        <div style={{ flex: 1, minWidth: 0 }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 5 }}>
+            <span style={{ fontSize: 11, fontWeight: 800, color: TXT }}>{name}</span>
+            <Pill text={type} color={type === 'OPD' ? INDIGO : type === 'IPD' ? TEAL : RED} size={7} />
+            <span style={{ fontSize: 7, color: MUTED }}>{age} · {dept}</span>
+          </div>
+          <div style={{ fontSize: 7, color: MUTED, marginTop: 1 }}>MRN: {mrn} · {payer} {payerPlan}</div>
+        </div>
+        <div style={{ textAlign: 'center', flexShrink: 0 }}>
+          <div style={{ fontSize: 6, color: MUTED, letterSpacing: 0.5, marginBottom: 1 }}>AI RISK</div>
+          <div style={{ fontSize: 9, fontWeight: 900, color: riskColor, background: `${riskColor}18`, border: `1px solid ${riskColor}40`, borderRadius: 5, padding: '2px 7px' }}>{risk}</div>
+        </div>
+        <div style={{ textAlign: 'right', flexShrink: 0 }}>
+          <div style={{ fontSize: 6, color: MUTED, letterSpacing: 0.5, marginBottom: 1 }}>AT STAKE</div>
+          <div style={{ fontSize: 14, fontWeight: 900, color: riskColor, fontFamily: 'Sora', letterSpacing: -0.5 }}>{financial.pending}</div>
+        </div>
+      </div>
+      {/* Row 2: diagnoses + vitals chips */}
+      <div style={{ display: 'flex', gap: 5, marginBottom: 7, flexWrap: 'wrap' }}>
+        {diagnoses.map((d, i) => (
+          <span key={i} style={{ fontSize: 7, fontWeight: 700, color: d.col, background: `${d.col}10`, border: `1px solid ${d.col}25`, borderRadius: 4, padding: '2px 6px' }}>{d.code} · {d.label}</span>
+        ))}
+        {vitals.map((v, i) => (
+          <span key={i} style={{ fontSize: 7, color: v.col, background: `${v.col}08`, border: `1px solid ${v.col}18`, borderRadius: 4, padding: '2px 5px' }}>{v.label}: <b style={{ color: v.col }}>{v.value}</b></span>
+        ))}
+      </div>
+      {/* Row 3: Clinical Governance panel */}
+      <div style={{ background: 'rgba(0,0,0,0.35)', borderRadius: 8, padding: '6px 9px', marginBottom: 6, border: `1px solid rgba(255,255,255,0.04)` }}>
+        <div style={{ fontSize: 6, fontWeight: 700, color: TEAL, letterSpacing: 1.2, marginBottom: 5, textTransform: 'uppercase' }}>Clinical Governance</div>
+        <div style={{ display: 'flex', gap: 8, alignItems: 'flex-start', flexWrap: 'wrap' }}>
+          {/* Compliance badges */}
+          <div style={{ display: 'flex', gap: 4 }}>
+            {[['NABIDH', INDIGO, governance.nabidh], ['DHA', TEAL, governance.dha], ['JAWDA', GREEN, governance.jawda], ['Audit Ready', AMBER, governance.auditReady]].map(([l, c, on]) => on ? (
+              <span key={l} style={{ fontSize: 6, fontWeight: 800, color: c, background: `${c}14`, border: `1px solid ${c}35`, borderRadius: 3, padding: '2px 6px' }}>{l} ✓</span>
+            ) : null)}
+          </div>
+          {/* Score bars */}
+          <div style={{ display: 'flex', gap: 6, flex: 1, minWidth: 120 }}>
+            {[['CDI', governance.cdiScore, TEAL], ['Doc', governance.docScore, GREEN]].map(([l, v, c]) => (
+              <div key={l} style={{ flex: 1 }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 6, color: MUTED, marginBottom: 2 }}>
+                  <span>{l} Score</span><span style={{ color: c, fontWeight: 700 }}>{v}%</span>
+                </div>
+                <div style={{ height: 3, background: 'rgba(255,255,255,0.05)', borderRadius: 2, overflow: 'hidden' }}>
+                  <div style={{ height: '100%', width: `${v}%`, background: `linear-gradient(90deg,${c},${c}99)`, borderRadius: 2 }} />
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+        {/* Clinical protocol quote */}
+        {governance.protocol && (
+          <div style={{ marginTop: 5, fontSize: 6.5, color: `${PURPLE}bb`, fontStyle: 'italic', borderLeft: `2px solid ${PURPLE}40`, paddingLeft: 6, lineHeight: 1.4 }}>
+            {governance.protocol}
+          </div>
+        )}
+        {/* Auth ref */}
+        {financial.authRef && (
+          <div style={{ marginTop: 4, fontSize: 6.5, color: DIM }}>
+            Prior auth: <span style={{ color: financial.authStatus === 'approved' ? GREEN : AMBER, fontWeight: 700 }}>{financial.authRef} {financial.authStatus === 'approved' ? '✓ Approved' : '⏳ Pending'}</span>
+          </div>
+        )}
+      </div>
+      {/* Row 4: AI intelligence */}
+      <div style={{ display: 'flex', gap: 5 }}>
+        <div style={{ flex: 1, background: `${PURPLE}0c`, border: `1px solid ${PURPLE}22`, borderRadius: 5, padding: '4px 7px' }}>
+          <div style={{ fontSize: 5.5, color: PURPLE, fontWeight: 700, letterSpacing: 0.5, marginBottom: 2 }}>REFERRAL</div>
+          <div style={{ fontSize: 7.5, color: TXT, fontWeight: 600 }}>{aiProfile.referral}</div>
+        </div>
+        <div style={{ flex: 1, background: `${AMBER}0c`, border: `1px solid ${AMBER}22`, borderRadius: 5, padding: '4px 7px' }}>
+          <div style={{ fontSize: 5.5, color: AMBER, fontWeight: 700, letterSpacing: 0.5, marginBottom: 2 }}>NEXT STEP</div>
+          <div style={{ fontSize: 7.5, color: TXT, fontWeight: 600 }}>{aiProfile.next}</div>
+        </div>
+        <div style={{ flex: 2, background: 'rgba(0,0,0,0.2)', border: `1px solid ${BORDER}`, borderRadius: 5, padding: '4px 7px' }}>
+          <div style={{ fontSize: 5.5, color: MUTED, fontWeight: 700, letterSpacing: 0.5, marginBottom: 2 }}>CLINICAL GUIDELINE</div>
+          <div style={{ fontSize: 6.5, color: DIM, fontStyle: 'italic', lineHeight: 1.4 }}>{aiProfile.guideline}</div>
+        </div>
+      </div>
+    </div>
+  );
+}
 
 /* ─── ProductShell — cinematic SaaS chrome ───────────────────── */
 function ProductShell({ breadcrumb, color, children }) {
@@ -451,8 +555,10 @@ function CasesScreen({ progress }) {
           );
         })}
         {progress >= 0.86 && (
-          <div style={{ textAlign: 'center', fontSize: 9, color: TEAL, fontWeight: 700, animation: 'dpBeatIn 0.4s ease both' }}>
-            Zero leakage — every encounter tracked from admission to payment
+          <div style={{ textAlign: 'center', animation: 'dpSpringIn 0.55s cubic-bezier(0.34,1.4,0.64,1) both' }}>
+            <span style={{ fontSize: 10, fontWeight: 800, color: TEAL, background: `${TEAL}12`, border: `1px solid ${TEAL}40`, borderRadius: 20, padding: '5px 18px', boxShadow: `0 0 20px ${TEAL}20`, textShadow: `0 0 10px ${TEAL}50` }}>
+              ✦ Zero leakage — every encounter tracked end-to-end
+            </span>
           </div>
         )}
       </div>
@@ -554,68 +660,108 @@ function EligibilityScreen({ progress }) {
 function AmbientScreen({ progress }) {
   const p = progress;
 
-  // OPD phases (compressed for shorter VO)
+  const opdPatient = {
+    name: 'Fatima Hassan', initials: 'FH', age: 'F/42', type: 'OPD', dept: 'Endocrinology',
+    mrn: 'UH-2024-4821', payer: 'Daman', payerPlan: 'Enhanced',
+    risk: 'HIGH',
+    diagnoses: [
+      { code: 'E11.65', label: 'T2DM uncontrolled', col: RED },
+      { code: 'N18.3',  label: 'CKD Stage 3',       col: INDIGO },
+    ],
+    vitals: [
+      { label: 'HbA1c', value: '9.1% ↑', col: RED },
+      { label: 'BP',    value: '142/88',  col: AMBER },
+      { label: 'eGFR',  value: '68 ↓',   col: INDIGO },
+    ],
+    governance: {
+      nabidh: true, dha: true, jawda: true, auditReady: false,
+      cdiScore: 62, docScore: 74,
+      protocol: 'ADA 2024 §10.3: HbA1c >9% → intensify + nephrology if eGFR <60',
+    },
+    financial: { pending: 'AED 2,450', authRef: 'DM-2024-01', authStatus: 'approved' },
+    aiProfile: {
+      referral: 'Nephrology consult',
+      next: 'Jardiance Rx + CDI query',
+      guideline: 'ADA 2024: eGFR 60→45 stage transition warrants SGLT2 initiation + nephrology co-management',
+    },
+  };
+
+  const ipdPatient = {
+    name: 'Khalid Al-Mansoori', initials: 'KM', age: 'M/58', type: 'IPD', dept: 'Respiratory · Day 3',
+    mrn: 'UH-2024-7203', payer: 'Thiqa', payerPlan: 'SEHA',
+    risk: 'CRITICAL',
+    diagnoses: [
+      { code: 'J18.9', label: 'Pneumonia',         col: RED },
+      { code: 'J44.1', label: 'COPD exacerbation', col: AMBER },
+    ],
+    vitals: [
+      { label: 'SpO₂',  value: '91% ↓',      col: RED },
+      { label: 'CRP',   value: '148 mg/L ↑',  col: AMBER },
+      { label: 'qSOFA', value: '2 — sepsis',  col: PURPLE },
+    ],
+    governance: {
+      nabidh: true, dha: true, jawda: true, auditReady: true,
+      cdiScore: 85, docScore: 91,
+      protocol: 'ATS/IDSA CAP 2019: J18.9 as principal dx required for IR-DRG 1.34 weight. qSOFA ≥2 → ICU assessment.',
+    },
+    financial: { pending: 'AED 28,500', authRef: 'THQ-2024-189234', authStatus: 'approved' },
+    aiProfile: {
+      referral: 'ICU/HDU step-up',
+      next: 'Lock IR-DRG before discharge',
+      guideline: 'ATS/IDSA: Pneumonia with COPD background — sequence J18.9 first for maximum DRG weight (1.34 vs 0.94)',
+    },
+  };
+
+  // OPD phases
   const opdListening   = p >= 0.06 && p < 0.36;
   const opdStructuring = p >= 0.34 && p < 0.44;
   const opdComplete    = p >= 0.42;
   const opdPhaseLabel  = opdListening ? 'LISTENING' : opdStructuring ? 'STRUCTURING' : opdComplete ? 'NOTE READY' : 'STANDBY';
   const opdPhaseColor  = opdListening ? RED : opdStructuring ? AMBER : opdComplete ? GREEN : MUTED;
 
-  // IPD phases (compressed)
+  // IPD phases
   const ipdListening   = p >= 0.42 && p < 0.64;
   const ipdStructuring = p >= 0.62 && p < 0.70;
   const ipdComplete    = p >= 0.68;
   const ipdPhaseLabel  = ipdListening ? 'LISTENING' : ipdStructuring ? 'STRUCTURING' : ipdComplete ? 'NOTE READY' : p < 0.42 ? 'QUEUED' : 'STANDBY';
   const ipdPhaseColor  = ipdListening ? RED : ipdStructuring ? AMBER : ipdComplete ? GREEN : MUTED;
 
-  // OPD transcript lines — 3 lines, compressed
   const opdLines = [
     { text: '"HbA1c nine point one — definitely uncontrolled."', show: 0.08 },
     { text: 'BP one forty two over eighty eight. eGFR sixty eight — CKD Stage 3.', show: 0.17 },
     { text: 'Adjusting Metformin, adding Jardiance. Nephrology referral flagged.', show: 0.28 },
   ];
-
-  // OPD AI entities — 3 entities
   const opdEntities = [
-    { label: 'HbA1c', value: '9.1% ↑', col: RED,    show: 0.10 },
-    { label: 'BP',    value: '142/88 ↑', col: AMBER, show: 0.18 },
+    { label: 'HbA1c', value: '9.1% ↑',    col: RED,    show: 0.10 },
+    { label: 'BP',    value: '142/88 ↑',   col: AMBER,  show: 0.18 },
     { label: 'eGFR',  value: '68 ↓ CKD3', col: INDIGO, show: 0.28 },
   ];
-
-  // OPD ICD codes — 2 codes
   const opdCodes = [
     { code: 'E11.65', desc: 'Type 2 DM with hyperglycaemia', col: RED,   show: 0.42 },
     { code: 'I10',    desc: 'Essential hypertension',         col: AMBER, show: 0.50 },
   ];
-
-  // IPD transcript lines — 3 lines, compressed
   const ipdLines = [
     { text: '"Sats ninety one on room air. Bilateral crackles at both bases."', show: 0.44 },
     { text: 'CRP one forty eight. Chest X-ray: consolidation left base. qSOFA two.', show: 0.52 },
     { text: 'Pneumonia on COPD background. Tazocin IV. Sepsis bundle initiated.', show: 0.60 },
   ];
-
-  // IPD AI entities — 3 entities
   const ipdEntities = [
     { label: 'SpO₂',  value: '91% ↓',               col: RED,    show: 0.46 },
     { label: 'CRP',   value: '148 mg/L ↑',           col: AMBER,  show: 0.54 },
     { label: 'qSOFA', value: 'Score 2 · Sepsis risk', col: PURPLE, show: 0.62 },
   ];
-
-  // IPD ICD codes — 2 codes
   const ipdCodes = [
     { code: 'J18.9', desc: 'Pneumonia, unspecified organism', col: RED,   show: 0.68 },
     { code: 'J44.1', desc: 'COPD with acute exacerbation',    col: AMBER, show: 0.74 },
   ];
-
   const sessionLive = p >= 0.06 && p < 0.68;
 
   return (
     <ProductShell breadcrumb="Ambient Scribe — Live Session" color={INDIGO}>
-      <div style={{ padding: '9px 12px', height: '100%', display: 'flex', flexDirection: 'column', gap: 8, overflow: 'hidden' }}>
+      <div style={{ padding: '8px 11px', height: '100%', display: 'flex', flexDirection: 'column', gap: 7, overflow: 'hidden' }}>
 
-        {/* ── Session bar ── */}
-        <div style={{ display: 'flex', gap: 8, alignItems: 'center', flexShrink: 0, paddingBottom: 6, borderBottom: `1px solid ${BORDER}` }}>
+        {/* Session bar */}
+        <div style={{ display: 'flex', gap: 8, alignItems: 'center', flexShrink: 0, paddingBottom: 5, borderBottom: `1px solid ${BORDER}` }}>
           <div style={{ display: 'flex', gap: 4, alignItems: 'center' }}>
             <div style={{ width: 6, height: 6, borderRadius: '50%', background: sessionLive ? RED : p >= 0.72 ? GREEN : MUTED, animation: sessionLive ? 'dpPulse 1.1s ease infinite' : 'none', boxShadow: sessionLive ? `0 0 7px ${RED}` : 'none', transition: 'background 0.4s' }} />
             <span style={{ fontSize: 8, fontWeight: 800, color: sessionLive ? RED : p >= 0.72 ? GREEN : MUTED, letterSpacing: 0.5 }}>
@@ -628,58 +774,48 @@ function AmbientScreen({ progress }) {
           <div style={{ fontSize: 7, fontWeight: 700, color: TEAL, background: `${TEAL}14`, border: `1px solid ${TEAL}28`, borderRadius: 4, padding: '2px 6px' }}>DHA Licensed</div>
         </div>
 
-        {/* ── Two columns: OPD | IPD ── */}
+        {/* Two columns */}
         <div style={{ display: 'flex', gap: 10, flex: 1, overflow: 'hidden', minHeight: 0 }}>
 
-          {/* ── OPD Column ── */}
-          <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 7, overflow: 'hidden' }}>
+          {/* OPD Column */}
+          <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 6, overflow: 'hidden' }}>
 
-            {/* Patient card — always visible from p=0 */}
-            <div style={{ background: `${INDIGO}10`, border: `1px solid ${INDIGO}${opdListening ? '55' : opdStructuring ? '40' : opdComplete ? '28' : '1a'}`, borderRadius: 9, padding: '8px 11px', flexShrink: 0, transition: 'border-color 0.5s ease' }}>
-              <div style={{ display: 'flex', alignItems: 'center', marginBottom: 5, gap: 6 }}>
-                <Pill text="OPD" color={INDIGO} />
-                <span style={{ fontSize: 10, fontWeight: 700, color: TXT }}>F.H. · Fatima Hassan</span>
-                <div style={{ flex: 1 }} />
-                <div style={{ display: 'flex', gap: 3, alignItems: 'center', background: `${opdPhaseColor}15`, border: `1px solid ${opdPhaseColor}30`, borderRadius: 10, padding: '2px 8px', transition: 'all 0.4s' }}>
-                  {opdListening && <div style={{ width: 4, height: 4, borderRadius: '50%', background: RED, animation: 'dpPulse 1s ease infinite' }} />}
-                  <span style={{ fontSize: 7, fontWeight: 800, color: opdPhaseColor, letterSpacing: 0.3 }}>{opdPhaseLabel}</span>
-                </div>
-              </div>
-              <div style={{ display: 'flex', gap: 6, alignItems: 'center', flexWrap: 'wrap' }}>
-                <div style={{ fontSize: 7, fontWeight: 700, color: `${INDIGO}90`, letterSpacing: 1, background: `${INDIGO}0e`, border: `1px solid ${INDIGO}25`, borderRadius: 4, padding: '2px 6px' }}>AI PROFILE</div>
-                {[['HbA1c trend: rising', AMBER], ['Prior auth: DM-2024-01 ✓', TEAL], ['DRG risk: HIGH', RED]].map(([t, c], i) => (
-                  <span key={i} style={{ fontSize: 7, color: c, background: `${c}10`, border: `1px solid ${c}22`, borderRadius: 4, padding: '1px 5px' }}>{t}</span>
-                ))}
-              </div>
-            </div>
+            {/* Patient profile card */}
+            <PatientProfileCard patient={opdPatient} progress={p} showFrom={0.02} />
 
-            {/* Live transcript panel — always visible, waveform activates with voice */}
-            <div style={{ background: 'rgba(0,0,0,0.28)', border: `1px solid ${opdListening ? `${INDIGO}40` : BORDER}`, borderRadius: 8, padding: '8px 10px', flexShrink: 0, transition: 'border-color 0.5s' }}>
-              <div style={{ fontSize: 7, fontWeight: 700, color: MUTED, letterSpacing: 0.4, marginBottom: 6 }}>LIVE TRANSCRIPT</div>
-              {/* Animated waveform */}
-              <div style={{ display: 'flex', gap: 1.5, alignItems: 'flex-end', height: 14, marginBottom: 7 }}>
+            {/* Phase indicator */}
+            {p >= 0.04 && (
+              <div style={{ display: 'flex', gap: 3, alignItems: 'center', background: `${opdPhaseColor}12`, border: `1px solid ${opdPhaseColor}28`, borderRadius: 6, padding: '3px 8px', flexShrink: 0, transition: 'all 0.4s' }}>
+                {opdListening && <div style={{ width: 4, height: 4, borderRadius: '50%', background: RED, animation: 'dpPulse 1s ease infinite' }} />}
+                <span style={{ fontSize: 7, fontWeight: 800, color: opdPhaseColor, letterSpacing: 0.3 }}>{opdPhaseLabel}</span>
+              </div>
+            )}
+
+            {/* Live transcript */}
+            <div style={{ background: 'rgba(0,0,0,0.28)', border: `1px solid ${opdListening ? `${INDIGO}40` : BORDER}`, borderRadius: 7, padding: '7px 9px', flexShrink: 0, transition: 'border-color 0.5s' }}>
+              <div style={{ fontSize: 7, fontWeight: 700, color: MUTED, letterSpacing: 0.4, marginBottom: 5 }}>LIVE TRANSCRIPT</div>
+              <div style={{ display: 'flex', gap: 1.5, alignItems: 'flex-end', height: 12, marginBottom: 6 }}>
                 {Array.from({ length: 26 }, (_, i) => (
                   <div key={i} style={{ flex: 1, background: INDIGO, borderRadius: 1, opacity: opdListening ? 0.72 : 0.18, height: opdListening ? `${20 + Math.sin(i * 1.2 + p * 42) * 68}%` : '18%', transition: 'height 0.1s ease, opacity 0.5s' }} />
                 ))}
               </div>
-              {/* Transcript lines — appear progressively */}
-              <div style={{ display: 'flex', flexDirection: 'column', gap: 3, minHeight: 36 }}>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 3, minHeight: 30 }}>
                 {opdLines.map((line, i) => (
-                  <div key={i} style={{ fontSize: 8, color: p >= line.show ? (p >= line.show + 0.12 ? `${TXT}99` : TXT) : 'transparent', lineHeight: 1.45, fontStyle: 'italic', transition: 'color 0.5s ease' }}>
+                  <div key={i} style={{ fontSize: 7.5, color: p >= line.show ? (p >= line.show + 0.12 ? `${TXT}99` : TXT) : 'transparent', lineHeight: 1.45, fontStyle: 'italic', transition: 'color 0.5s ease' }}>
                     {p >= line.show ? line.text : ' '}
                   </div>
                 ))}
-                {opdListening && <span style={{ display: 'inline-block', width: 2, height: 11, background: INDIGO, borderRadius: 1, animation: 'dpPulse 0.75s step-end infinite', verticalAlign: 'bottom' }} />}
+                {opdListening && <span style={{ display: 'inline-block', width: 2, height: 10, background: INDIGO, borderRadius: 1, animation: 'dpPulse 0.75s step-end infinite', verticalAlign: 'bottom' }} />}
               </div>
             </div>
 
-            {/* AI entity tags */}
+            {/* AI entities */}
             {p >= 0.12 && (
               <div style={{ animation: 'dpEnterScene 0.45s ease-out both', flexShrink: 0 }}>
-                <div style={{ fontSize: 7, fontWeight: 700, color: MUTED, letterSpacing: 0.4, marginBottom: 5 }}>AI-EXTRACTED ENTITIES</div>
+                <div style={{ fontSize: 7, fontWeight: 700, color: MUTED, letterSpacing: 0.4, marginBottom: 4 }}>AI-EXTRACTED ENTITIES</div>
                 <div style={{ display: 'flex', flexWrap: 'wrap', gap: 4 }}>
                   {opdEntities.map((e, i) => p >= e.show && (
-                    <div key={i} style={{ display: 'flex', gap: 4, alignItems: 'center', background: `${e.col}12`, border: `1px solid ${e.col}30`, borderRadius: 8, padding: '3px 9px', animation: 'dpBeatIn 0.4s ease both' }}>
+                    <div key={i} style={{ display: 'flex', gap: 4, alignItems: 'center', background: `${e.col}12`, border: `1px solid ${e.col}30`, borderRadius: 7, padding: '3px 8px', animation: 'dpBeatIn 0.4s ease both' }}>
                       <span style={{ fontSize: 7, color: MUTED }}>{e.label}:</span>
                       <span style={{ fontSize: 8, fontWeight: 800, color: e.col }}>{e.value}</span>
                     </div>
@@ -688,14 +824,14 @@ function AmbientScreen({ progress }) {
               </div>
             )}
 
-            {/* ICD-10-CM coded note */}
+            {/* ICD codes */}
             {opdComplete && (
               <div style={{ animation: 'dpEnterScene 0.5s ease-out both', flex: 1, overflow: 'hidden' }}>
-                <div style={{ fontSize: 7, fontWeight: 800, color: `${GREEN}cc`, letterSpacing: 0.4, marginBottom: 5 }}>✓ ICD-10-CM AUTO-CODED · CLAIM READY</div>
+                <div style={{ fontSize: 7, fontWeight: 800, color: `${GREEN}cc`, letterSpacing: 0.4, marginBottom: 4 }}>✓ ICD-10-CM AUTO-CODED · CLAIM READY</div>
                 {opdCodes.map((c, i) => p >= c.show && (
-                  <div key={i} style={{ display: 'flex', gap: 8, alignItems: 'center', padding: '6px 10px', marginBottom: 4, borderRadius: 8, background: `${c.col}0d`, border: `1px solid ${c.col}28`, animation: 'dpBeatIn 0.4s ease both' }}>
-                    <span style={{ fontSize: 12, fontWeight: 900, color: c.col, fontFamily: 'Sora', width: 46, flexShrink: 0 }}>{c.code}</span>
-                    <span style={{ fontSize: 9, color: TXT, flex: 1, lineHeight: 1.3 }}>{c.desc}</span>
+                  <div key={i} style={{ display: 'flex', gap: 8, alignItems: 'center', padding: '5px 9px', marginBottom: 3, borderRadius: 7, background: `${c.col}0d`, border: `1px solid ${c.col}28`, animation: 'dpBeatIn 0.4s ease both' }}>
+                    <span style={{ fontSize: 11, fontWeight: 900, color: c.col, fontFamily: 'Sora', width: 46, flexShrink: 0 }}>{c.code}</span>
+                    <span style={{ fontSize: 8.5, color: TXT, flex: 1, lineHeight: 1.3 }}>{c.desc}</span>
                     <span style={{ fontSize: 9, color: GREEN, fontWeight: 800 }}>✓</span>
                   </div>
                 ))}
@@ -703,67 +839,56 @@ function AmbientScreen({ progress }) {
             )}
           </div>
 
-          {/* ── Divider ── */}
+          {/* Divider */}
           <div style={{ width: 1, background: BORDER, flexShrink: 0 }} />
 
-          {/* ── IPD Column ── */}
-          <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 7, overflow: 'hidden' }}>
+          {/* IPD Column */}
+          <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 6, overflow: 'hidden' }}>
 
-            {/* Patient card — always visible */}
-            <div style={{ background: `${TEAL}0d`, border: `1px solid ${TEAL}${ipdListening ? '50' : ipdStructuring ? '38' : ipdComplete ? '28' : '18'}`, borderRadius: 9, padding: '8px 11px', flexShrink: 0, transition: 'border-color 0.5s ease' }}>
-              <div style={{ display: 'flex', alignItems: 'center', marginBottom: 5, gap: 6 }}>
-                <Pill text="IPD" color={TEAL} />
-                <span style={{ fontSize: 10, fontWeight: 700, color: TXT }}>K.A. · Khalid Al-Mansoori</span>
-                <div style={{ flex: 1 }} />
-                <div style={{ display: 'flex', gap: 3, alignItems: 'center', background: `${ipdPhaseColor}15`, border: `1px solid ${ipdPhaseColor}30`, borderRadius: 10, padding: '2px 8px', transition: 'all 0.4s' }}>
-                  {ipdListening && <div style={{ width: 4, height: 4, borderRadius: '50%', background: RED, animation: 'dpPulse 1s ease infinite' }} />}
-                  <span style={{ fontSize: 7, fontWeight: 800, color: ipdPhaseColor, letterSpacing: 0.3 }}>{ipdPhaseLabel}</span>
-                </div>
-              </div>
-              <div style={{ display: 'flex', gap: 6, alignItems: 'center', flexWrap: 'wrap' }}>
-                <div style={{ fontSize: 7, fontWeight: 700, color: `${TEAL}90`, letterSpacing: 1, background: `${TEAL}0e`, border: `1px solid ${TEAL}25`, borderRadius: 4, padding: '2px 6px' }}>AI PROFILE</div>
-                {[['COPD hx: 3 admissions', AMBER], ['Prior auth: THQ-189234 ✓', TEAL], ['DRG risk: CRITICAL', RED]].map(([t, c], i) => (
-                  <span key={i} style={{ fontSize: 7, color: c, background: `${c}10`, border: `1px solid ${c}22`, borderRadius: 4, padding: '1px 5px' }}>{t}</span>
-                ))}
-              </div>
-            </div>
+            {/* Patient profile card */}
+            <PatientProfileCard patient={ipdPatient} progress={p} showFrom={0.04} />
 
-            {/* Live transcript / queued state */}
-            <div style={{ background: 'rgba(0,0,0,0.28)', border: `1px solid ${ipdListening ? `${TEAL}40` : BORDER}`, borderRadius: 8, padding: '8px 10px', flexShrink: 0, transition: 'border-color 0.5s' }}>
-              <div style={{ fontSize: 7, fontWeight: 700, color: MUTED, letterSpacing: 0.4, marginBottom: 6 }}>
+            {/* Phase indicator */}
+            {p >= 0.04 && (
+              <div style={{ display: 'flex', gap: 3, alignItems: 'center', background: `${ipdPhaseColor}12`, border: `1px solid ${ipdPhaseColor}28`, borderRadius: 6, padding: '3px 8px', flexShrink: 0, transition: 'all 0.4s' }}>
+                {ipdListening && <div style={{ width: 4, height: 4, borderRadius: '50%', background: RED, animation: 'dpPulse 1s ease infinite' }} />}
+                <span style={{ fontSize: 7, fontWeight: 800, color: ipdPhaseColor, letterSpacing: 0.3 }}>{ipdPhaseLabel}</span>
+              </div>
+            )}
+
+            {/* Live transcript */}
+            <div style={{ background: 'rgba(0,0,0,0.28)', border: `1px solid ${ipdListening ? `${TEAL}40` : BORDER}`, borderRadius: 7, padding: '7px 9px', flexShrink: 0, transition: 'border-color 0.5s' }}>
+              <div style={{ fontSize: 7, fontWeight: 700, color: MUTED, letterSpacing: 0.4, marginBottom: 5 }}>
                 {p < 0.46 ? 'NEXT SESSION — WARD ROUND 09:28 GST' : 'LIVE TRANSCRIPT'}
               </div>
-              {/* Waveform */}
-              <div style={{ display: 'flex', gap: 1.5, alignItems: 'flex-end', height: 14, marginBottom: 7 }}>
+              <div style={{ display: 'flex', gap: 1.5, alignItems: 'flex-end', height: 12, marginBottom: 6 }}>
                 {Array.from({ length: 26 }, (_, i) => (
                   <div key={i} style={{ flex: 1, background: TEAL, borderRadius: 1, opacity: ipdListening ? 0.72 : 0.16, height: ipdListening ? `${20 + Math.sin(i * 1.35 + p * 40) * 68}%` : '16%', transition: 'height 0.1s ease, opacity 0.5s' }} />
                 ))}
               </div>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: 3, minHeight: 36 }}>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 3, minHeight: 30 }}>
                 {p < 0.46 ? (
-                  <div style={{ fontSize: 8, color: MUTED, fontStyle: 'italic', lineHeight: 1.45 }}>
-                    Ambient session queued · Dr. Farooqi completing ward round...
-                  </div>
+                  <div style={{ fontSize: 7.5, color: MUTED, fontStyle: 'italic', lineHeight: 1.45 }}>Ambient session queued · Dr. Farooqi completing ward round...</div>
                 ) : (
                   <>
                     {ipdLines.map((line, i) => (
-                      <div key={i} style={{ fontSize: 8, color: p >= line.show ? (p >= line.show + 0.12 ? `${TXT}99` : TXT) : 'transparent', lineHeight: 1.45, fontStyle: 'italic', transition: 'color 0.5s ease' }}>
+                      <div key={i} style={{ fontSize: 7.5, color: p >= line.show ? (p >= line.show + 0.12 ? `${TXT}99` : TXT) : 'transparent', lineHeight: 1.45, fontStyle: 'italic', transition: 'color 0.5s ease' }}>
                         {p >= line.show ? line.text : ' '}
                       </div>
                     ))}
-                    {ipdListening && <span style={{ display: 'inline-block', width: 2, height: 11, background: TEAL, borderRadius: 1, animation: 'dpPulse 0.75s step-end infinite', verticalAlign: 'bottom' }} />}
+                    {ipdListening && <span style={{ display: 'inline-block', width: 2, height: 10, background: TEAL, borderRadius: 1, animation: 'dpPulse 0.75s step-end infinite', verticalAlign: 'bottom' }} />}
                   </>
                 )}
               </div>
             </div>
 
-            {/* AI entity tags */}
+            {/* AI entities */}
             {p >= 0.50 && (
               <div style={{ animation: 'dpEnterScene 0.45s ease-out both', flexShrink: 0 }}>
-                <div style={{ fontSize: 7, fontWeight: 700, color: MUTED, letterSpacing: 0.4, marginBottom: 5 }}>AI-EXTRACTED ENTITIES</div>
+                <div style={{ fontSize: 7, fontWeight: 700, color: MUTED, letterSpacing: 0.4, marginBottom: 4 }}>AI-EXTRACTED ENTITIES</div>
                 <div style={{ display: 'flex', flexWrap: 'wrap', gap: 4 }}>
                   {ipdEntities.map((e, i) => p >= e.show && (
-                    <div key={i} style={{ display: 'flex', gap: 4, alignItems: 'center', background: `${e.col}12`, border: `1px solid ${e.col}30`, borderRadius: 8, padding: '3px 9px', animation: 'dpBeatIn 0.4s ease both' }}>
+                    <div key={i} style={{ display: 'flex', gap: 4, alignItems: 'center', background: `${e.col}12`, border: `1px solid ${e.col}30`, borderRadius: 7, padding: '3px 8px', animation: 'dpBeatIn 0.4s ease both' }}>
                       <span style={{ fontSize: 7, color: MUTED }}>{e.label}:</span>
                       <span style={{ fontSize: 8, fontWeight: 800, color: e.col }}>{e.value}</span>
                     </div>
@@ -772,14 +897,14 @@ function AmbientScreen({ progress }) {
               </div>
             )}
 
-            {/* ICD-10-CM coded note */}
+            {/* ICD codes */}
             {ipdComplete && (
               <div style={{ animation: 'dpEnterScene 0.5s ease-out both', flex: 1, overflow: 'hidden' }}>
-                <div style={{ fontSize: 7, fontWeight: 800, color: `${GREEN}cc`, letterSpacing: 0.4, marginBottom: 5 }}>✓ ICD-10-CM AUTO-CODED · CLAIM READY</div>
+                <div style={{ fontSize: 7, fontWeight: 800, color: `${GREEN}cc`, letterSpacing: 0.4, marginBottom: 4 }}>✓ ICD-10-CM AUTO-CODED · CLAIM READY</div>
                 {ipdCodes.map((c, i) => p >= c.show && (
-                  <div key={i} style={{ display: 'flex', gap: 8, alignItems: 'center', padding: '6px 10px', marginBottom: 4, borderRadius: 8, background: `${c.col}0d`, border: `1px solid ${c.col}28`, animation: 'dpBeatIn 0.4s ease both' }}>
-                    <span style={{ fontSize: 12, fontWeight: 900, color: c.col, fontFamily: 'Sora', width: 46, flexShrink: 0 }}>{c.code}</span>
-                    <span style={{ fontSize: 9, color: TXT, flex: 1, lineHeight: 1.3 }}>{c.desc}</span>
+                  <div key={i} style={{ display: 'flex', gap: 8, alignItems: 'center', padding: '5px 9px', marginBottom: 3, borderRadius: 7, background: `${c.col}0d`, border: `1px solid ${c.col}28`, animation: 'dpBeatIn 0.4s ease both' }}>
+                    <span style={{ fontSize: 11, fontWeight: 900, color: c.col, fontFamily: 'Sora', width: 46, flexShrink: 0 }}>{c.code}</span>
+                    <span style={{ fontSize: 8.5, color: TXT, flex: 1, lineHeight: 1.3 }}>{c.desc}</span>
                     <span style={{ fontSize: 9, color: GREEN, fontWeight: 800 }}>✓</span>
                   </div>
                 ))}
@@ -788,24 +913,15 @@ function AmbientScreen({ progress }) {
           </div>
         </div>
 
-        {/* ── Patient intelligence profile banner ── */}
-        {p >= 0.60 && (
-          <div style={{ background: `linear-gradient(90deg,${PURPLE}12,${INDIGO}0a)`, border: `1px solid ${PURPLE}30`, borderRadius: 7, padding: '6px 12px', display: 'flex', gap: 8, alignItems: 'center', flexShrink: 0, animation: 'dpBeatIn 0.4s ease both' }}>
-            <div style={{ width: 5, height: 5, borderRadius: '50%', background: PURPLE, boxShadow: `0 0 8px ${PURPLE}`, flexShrink: 0 }} />
-            <span style={{ fontSize: 8, fontWeight: 700, color: PURPLE }}>Patient Intelligence Profile</span>
-            <span style={{ fontSize: 7, color: DIM }}>Comorbidities · Medication history · Prior auth trail · DRG risk — built per patient, fed into every downstream decision</span>
-          </div>
-        )}
-
-        {/* ── Compliance banner ── */}
+        {/* Compliance footer */}
         {p >= 0.68 && (
-          <div style={{ background: `linear-gradient(90deg,${INDIGO}12,${TEAL}12)`, border: `1px solid ${TEAL}38`, borderRadius: 8, padding: '8px 14px', display: 'flex', gap: 22, alignItems: 'center', animation: 'dpBeatIn 0.6s cubic-bezier(0.34,1.4,0.64,1) both', flexShrink: 0 }}>
-            {[['NABIDH ✓', INDIGO, 'Unified Medical Record'],['DHA Licensed ✓', TEAL, 'Dubai Health Authority'],['HL7 FHIR ✓', GREEN, 'Exchange-ready structured note']].map(([label, c, sub]) => (
-              <div key={label} style={{ display: 'flex', gap: 7, alignItems: 'center' }}>
-                <div style={{ width: 7, height: 7, borderRadius: '50%', background: c, boxShadow: `0 0 8px ${c}`, flexShrink: 0 }} />
+          <div style={{ background: `linear-gradient(90deg,${INDIGO}12,${TEAL}12)`, border: `1px solid ${TEAL}35`, borderRadius: 7, padding: '6px 12px', display: 'flex', gap: 18, alignItems: 'center', animation: 'dpBeatIn 0.6s cubic-bezier(0.34,1.4,0.64,1) both', flexShrink: 0 }}>
+            {[['NABIDH ✓', INDIGO, 'Unified Medical Record'], ['DHA Licensed ✓', TEAL, 'Dubai Health Authority'], ['HL7 FHIR ✓', GREEN, 'Exchange-ready structured note']].map(([label, c, sub]) => (
+              <div key={label} style={{ display: 'flex', gap: 6, alignItems: 'center' }}>
+                <div style={{ width: 6, height: 6, borderRadius: '50%', background: c, boxShadow: `0 0 7px ${c}`, flexShrink: 0 }} />
                 <div>
-                  <div style={{ fontSize: 9, fontWeight: 800, color: c }}>{label}</div>
-                  <div style={{ fontSize: 7, color: DIM }}>{sub}</div>
+                  <div style={{ fontSize: 8, fontWeight: 800, color: c }}>{label}</div>
+                  <div style={{ fontSize: 6.5, color: DIM }}>{sub}</div>
                 </div>
               </div>
             ))}
@@ -975,8 +1091,9 @@ function CodingScreen({ progress }) {
               </div>
             </div>
             {showImpact && (
-              <div style={{ marginTop: 8, textAlign: 'center', animation: 'dpBeatIn 0.4s ease both' }}>
-                <span style={{ fontSize: 12, fontWeight: 800, color: GREEN }}>↑ +AED 18,400 additional revenue · per case</span>
+              <div style={{ marginTop: 10, textAlign: 'center', animation: 'dpSpringIn 0.65s cubic-bezier(0.34,1.4,0.64,1) both' }}>
+                <div style={{ fontSize: 30, fontWeight: 900, color: GREEN, fontFamily: 'Sora', letterSpacing: -1.5, lineHeight: 1, textShadow: `0 0 50px ${GREEN}80` }}>+AED 18,400</div>
+                <div style={{ fontSize: 8, color: DIM, marginTop: 3, letterSpacing: 0.3 }}>additional revenue · per case · on every case</div>
               </div>
             )}
           </div>
@@ -1351,11 +1468,11 @@ function DashboardScreen({ progress }) {
 
         {/* Closing tagline — sits above stat strip with bottom padding */}
         {closingShow && (
-          <div style={{ flexShrink: 0, paddingBottom: 6, animation: 'dpBeatIn 0.6s ease both' }}>
-            <div style={{ background: `linear-gradient(135deg,${TEAL}1a,${INDIGO}10)`, border: `1px solid ${TEAL}40`, borderRadius: 10, padding: '7px 18px' }}>
-              <div style={{ fontSize: 10, fontWeight: 800, color: TXT, textAlign: 'center' }}>
+          <div style={{ flexShrink: 0, paddingBottom: 6, animation: 'dpSpringIn 0.7s cubic-bezier(0.34,1.4,0.64,1) both' }}>
+            <div style={{ background: `linear-gradient(135deg,${TEAL}1a,${INDIGO}10)`, border: `1px solid ${TEAL}40`, borderRadius: 10, padding: '9px 18px', boxShadow: `0 0 30px ${TEAL}14` }}>
+              <div style={{ fontSize: 11, fontWeight: 800, color: TXT, textAlign: 'center' }}>
                 Not a tool you configure once.{' '}
-                <span style={{ color: TEAL }}>A partner that learns your hospital.</span>
+                <span style={{ color: TEAL, textShadow: `0 0 14px ${TEAL}60` }}>A partner that learns your hospital.</span>
               </div>
             </div>
           </div>
