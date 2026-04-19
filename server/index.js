@@ -425,12 +425,12 @@ const UAE_DEMO_SCENES = [
   {
     id: 6, timecode: '0:52–1:02', journeyStage: 'cdi',
     title: 'CDI — Closing the Gap',
-    voText: 'One tap. The physician confirms medical necessity — four hundred twenty dirhams, captured. For the inpatient — confirming Pneumonia as principal diagnosis locks the IR-DRG gap before discharge. Revenue that would have been lost, isn\'t.',
+    voText: 'While the physician is in the note, Docstribe surfaces a query — automatically, grounded in clinical guidelines. One answer. The documentation is locked and e-signed. Code corrected at the point of care. For inpatient — principal diagnosis confirmed before discharge. IR-DRG weight locked. Revenue that would have been lost, isn\'t.',
   },
   {
     id: 7, timecode: '1:02–1:14', journeyStage: 'coding',
     title: 'AI-Powered Coding',
-    voText: 'Clinical notes in. Ranked ICD codes out — instantly. The IR-DRG weight moves from zero point nine four to one point three four. That jump alone recovers AED eighteen thousand four hundred. Per case. On every case.',
+    voText: 'Every OPD claim — diagnoses ranked, procedure codes checked against payer NCCI and MUE edits before anything goes out. That cuts denials at source. For inpatient, the IR-DRG recalculates live while the patient is admitted — every complication captured today reflects in the DRG weight immediately. AED eighteen thousand four hundred more. Per case.',
   },
   {
     id: 8, timecode: '1:14–1:24', journeyStage: 'denial-intel',
