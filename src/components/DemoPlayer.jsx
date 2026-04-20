@@ -137,12 +137,13 @@ const SCENES = [
     id: 4, type: 'product', color: GREEN,
     title: 'Pre-Visit Intelligence',
     breadcrumb: 'Eligibility & Pre-Authorisation',
-    // S1:4w S2:11w S3:18w = 33w — beat fracs 0.12 0.45 1.00; Daman at S2 word 6 = 0.30
-    vo: "Before Fatima walks in, eligibility is already confirmed — coverage active, no auth required. For Khalid's admission, Thiqa pre-authorisation for AED twenty-eight thousand five hundred fires at order entry, not discharge. Approved before care begins.",
+    // flowchart: patient in → EMR auto-fetch → payer API → status chips → cleared
+    vo: "A patient walks in. Docstribe pulls their insurance profile automatically — coverage, co-pay, network status — direct from the payer API. Eligibility confirmed before they reach the desk. For the inpatient needing pre-authorisation — PA filed at order entry, approved before care begins. No forms. No delays.",
     beats: [
-      { at: 0.14, stat: 'Daman eligible',  sub: 'OPD · confirmed before arrival' },
-      { at: 0.30, stat: 'Auth triggered',  sub: 'admission order → PA submitted → 0.3s' },
-      { at: 0.46, stat: '✅ PA APPROVED',   sub: 'AED 28,500 · Thiqa · order entry not discharge' },
+      { at: 0.10, stat: 'Auto-fetched',    sub: 'insurance profile pulled · no manual entry' },
+      { at: 0.33, stat: 'Eligible ✓',      sub: 'co-pay · network · coverage confirmed' },
+      { at: 0.72, stat: 'PA filed · 0.3s', sub: 'auto-submitted at order entry' },
+      { at: 0.86, stat: 'PA APPROVED',     sub: 'AED 28,500 authorised · admission cleared' },
     ],
   },
   {
@@ -702,142 +703,172 @@ function EligChipRow({ chips, apisActive, apiNames, p }) {
   );
 }
 
-/* Scene 4 — Eligibility: real-time payer API chip flow */
+/* Scene 4 — Eligibility: animated flowchart journey, no patient names */
 function EligibilityScreen({ progress }) {
   const p = progress;
+  const ipdPhase = p >= 0.48;
 
-  // OPD: Fatima Hassan (0.0→0.48), IPD: Khalid (0.44→1.0)
-  const opdAPIsActive = p >= 0.10 && p < 0.36;
-  const ipdAPIsActive = p >= 0.54 && p < 0.78;
-
-  // OPD alert chips — stream in as API results return
-  const opdChips = [
-    { label: 'Coverage',   value: 'Active',                   col: GREEN,  icon: '✓',  show: 0.14 },
-    { label: 'Network',    value: 'In-Network',                col: GREEN,  icon: '✓',  show: 0.17 },
-    { label: 'Plan',       value: 'Comprehensive Plus',        col: TEAL,   icon: '◉',  show: 0.20 },
-    { label: 'Deductible', value: 'AED 6,550 remaining',       col: INDIGO, icon: '◎',  show: 0.22 },
-    { label: 'Co-pay',     value: 'AED 50 / visit',            col: AMBER,  icon: '◎',  show: 0.25 },
-    { label: 'Pre-auth',   value: 'Not Required ✓',            col: GREEN,  icon: '✓',  show: 0.28 },
-    { label: 'DM + HTN',   value: 'Covered — no exclusions',   col: TEAL,   icon: '✓',  show: 0.31 },
+  // Flow steps for OPD and IPD journeys
+  const opdFlow = [
+    { label: 'Patient In',     icon: '🏥', show: 0.02 },
+    { label: 'EMR Auto-Fetch', icon: '📋', show: 0.10, api: false },
+    { label: 'Payer API',      icon: '🔗', show: 0.18, api: true  },
+    { label: 'Eligibility',    icon: '🔍', show: 0.26, api: false },
+    { label: 'Cleared ✓',      icon: '✅', show: 0.40, api: false },
   ];
-  const opdCleared = p >= 0.35;
-
-  // IPD alert chips
-  const ipdChips = [
-    { label: 'Coverage',   value: 'Active',                   col: GREEN,  icon: '✓',  show: 0.56 },
-    { label: 'Network',    value: 'SEHA Network',              col: GREEN,  icon: '✓',  show: 0.59 },
-    { label: 'Admission',  value: 'Inpatient eligible',        col: TEAL,   icon: '✓',  show: 0.62 },
-    { label: 'Pre-auth',   value: 'REQUIRED — AED 28,500',     col: AMBER,  icon: '⚠',  show: 0.65 },
-    { label: 'PA Filed',   value: 'THQ-2024-189234 · 0.3s',   col: INDIGO, icon: '→',  show: 0.70 },
-    { label: 'J18.9',      value: 'Pneumonia covered',         col: TEAL,   icon: '✓',  show: 0.74 },
-    { label: 'PA Status',  value: 'APPROVED',                  col: GREEN,  icon: '✓✓', show: 0.80, hero: true },
+  const ipdFlow = [
+    { label: 'Patient In',     icon: '🏥', show: 0.50 },
+    { label: 'EMR Auto-Fetch', icon: '📋', show: 0.57, api: false },
+    { label: 'Payer API',      icon: '🔗', show: 0.63, api: true  },
+    { label: 'PA Filed',       icon: '📤', show: 0.72, api: false },
+    { label: 'PA Approved',    icon: '✅', show: 0.84, api: false },
   ];
-  const ipdApproved = p >= 0.82;
+
+  // Status result chips (OPD)
+  const opdResults = [
+    { label: 'Insurance',  value: 'Active',              icon: '✓', col: GREEN,  show: 0.28 },
+    { label: 'Network',    value: 'In-Network',           icon: '✓', col: GREEN,  show: 0.30 },
+    { label: 'Co-pay',     value: 'AED 50 / visit',       icon: '◎', col: AMBER,  show: 0.32 },
+    { label: 'Pre-auth',   value: 'Not Required ✓',       icon: '✓', col: GREEN,  show: 0.34 },
+    { label: 'Deductible', value: 'AED 6,550 remaining',  icon: '◎', col: INDIGO, show: 0.36 },
+    { label: 'Coverage',   value: 'DM + HTN Covered',     icon: '✓', col: TEAL,   show: 0.38 },
+  ];
+  // Status result chips (IPD)
+  const ipdResults = [
+    { label: 'Insurance',  value: 'Active',                   icon: '✓',  col: GREEN,  show: 0.64 },
+    { label: 'Network',    value: 'SEHA Network',              icon: '✓',  col: GREEN,  show: 0.66 },
+    { label: 'Admission',  value: 'Inpatient eligible',        icon: '✓',  col: TEAL,   show: 0.68 },
+    { label: 'Pre-auth',   value: 'REQUIRED — AED 28,500',     icon: '⚠',  col: AMBER,  show: 0.72, hero: true },
+    { label: 'PA Filed',   value: 'THQ-2024-189234 · 0.3s',   icon: '→',  col: INDIGO, show: 0.78 },
+    { label: 'PA Status',  value: 'APPROVED',                  icon: '✅', col: GREEN,  show: 0.84, hero: true },
+  ];
+
+  const flow     = ipdPhase ? ipdFlow    : opdFlow;
+  const results  = ipdPhase ? ipdResults : opdResults;
+  const col      = ipdPhase ? AMBER      : GREEN;
+  const cleared  = ipdPhase ? p >= 0.84  : p >= 0.40;
+  const apiActive = ipdPhase ? (p >= 0.63 && p < 0.72) : (p >= 0.18 && p < 0.26);
 
   return (
     <ProductShell breadcrumb="Eligibility & Pre-Authorisation" color={GREEN}>
-      <div style={{ padding: '10px 14px', height: '100%', display: 'flex', flexDirection: 'column', gap: 9, overflow: 'hidden' }}>
+      <div style={{ padding: '10px 14px', height: '100%', display: 'flex', flexDirection: 'column', gap: 8, overflow: 'hidden' }}>
 
         {/* Live header */}
         <div style={{ display: 'flex', gap: 8, alignItems: 'center', flexShrink: 0 }}>
           <div style={{ width: 6, height: 6, borderRadius: '50%', background: GREEN, boxShadow: `0 0 8px ${GREEN}`, animation: 'dpPulse 1s ease infinite' }} />
           <span style={{ fontSize: 8, fontWeight: 700, color: GREEN, letterSpacing: 0.5 }}>ELIGIBILITY ENGINE LIVE</span>
-          <span style={{ fontSize: 7, color: MUTED }}>· Real-time payer API · NABIDH · DHA Benefits Registry</span>
+          <span style={{ fontSize: 7, color: MUTED }}>· Payer API · NABIDH · DHA Benefits Registry</span>
           <div style={{ flex: 1 }} />
           <span style={{ fontSize: 7, color: MUTED }}>19 Apr 2025 · 09:12 GST</span>
         </div>
 
-        {/* ── OPD: Fatima Hassan ── */}
-        <div style={{ background: 'rgba(0,0,0,0.2)', border: `1px solid ${p >= 0.35 ? GREEN + '40' : INDIGO + '28'}`, borderRadius: 11, padding: '10px 13px', flexShrink: 0, transition: 'border-color 0.6s ease', boxShadow: p >= 0.35 ? `0 0 16px ${GREEN}12` : 'none' }}>
-
-          {/* Patient chip row */}
-          <div style={{ display: 'flex', gap: 8, alignItems: 'center', marginBottom: 9 }}>
-            {/* Patient data chip — auto-fetched from EMR */}
-            <div style={{ display: 'flex', gap: 7, alignItems: 'center', background: `${INDIGO}14`, border: `1px solid ${INDIGO}35`, borderRadius: 8, padding: '5px 10px', animation: 'dpRowBlurIn 0.5s ease both' }}>
-              <div style={{ width: 24, height: 24, borderRadius: '50%', background: `${INDIGO}25`, border: `1.5px solid ${INDIGO}50`, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-                <span style={{ fontSize: 8, fontWeight: 900, color: INDIGO }}>FH</span>
-              </div>
-              <div>
-                <div style={{ fontSize: 9, fontWeight: 800, color: TXT }}>Fatima Hassan</div>
-                <div style={{ fontSize: 6.5, color: DIM }}>F/42 · MRN: UH-2024-4821 · Endocrinology</div>
-              </div>
-            </div>
-            {/* Auto-fetch indicator */}
-            {p >= 0.06 && (
-              <div style={{ display: 'flex', gap: 5, alignItems: 'center', animation: 'dpBeatIn 0.3s ease both' }}>
-                <div style={{ fontSize: 6.5, color: p >= 0.09 ? GREEN : AMBER, fontWeight: 700 }}>
-                  {p >= 0.09 ? '✓ EMR data fetched' : '⟳ Fetching HIS data...'}
-                </div>
-              </div>
-            )}
-            <div style={{ flex: 1 }} />
-            {/* Payer chip */}
-            <div style={{ background: `${TEAL}12`, border: `1px solid ${TEAL}30`, borderRadius: 20, padding: '3px 10px', display: 'flex', gap: 5, alignItems: 'center' }}>
-              <span style={{ fontSize: 7, fontWeight: 800, color: TEAL }}>Daman Enhanced</span>
-              <span style={{ fontSize: 6.5, color: DIM }}>Abu Dhabi</span>
-            </div>
-            {/* Outcome */}
-            {opdCleared && (
-              <div style={{ background: `${GREEN}18`, border: `1px solid ${GREEN}50`, borderRadius: 20, padding: '4px 12px', animation: 'dpSpringIn 0.5s cubic-bezier(0.34,1.4,0.64,1) both', boxShadow: `0 0 12px ${GREEN}25` }}>
-                <span style={{ fontSize: 8, fontWeight: 900, color: GREEN }}>✅ Visit Cleared · No auth needed</span>
-              </div>
-            )}
+        {/* Phase tabs */}
+        <div style={{ display: 'flex', gap: 6, flexShrink: 0 }}>
+          <div style={{ display: 'flex', gap: 5, alignItems: 'center', background: !ipdPhase ? `${GREEN}14` : 'rgba(0,0,0,0.14)', border: `1px solid ${!ipdPhase ? GREEN + '40' : BORDER}`, borderRadius: 20, padding: '3px 11px', transition: 'all 0.5s' }}>
+            <div style={{ width: 5, height: 5, borderRadius: '50%', background: !ipdPhase ? GREEN : DIM, transition: 'background 0.4s' }} />
+            <span style={{ fontSize: 7, fontWeight: 800, color: !ipdPhase ? GREEN : DIM }}>OPD · Endocrinology</span>
+            <span style={{ fontSize: 6.5, color: MUTED }}> · Daman Enhanced</span>
+            {p >= 0.40 && <span style={{ fontSize: 7, color: GREEN }}>✓</span>}
           </div>
-
-          {/* API calls + chips */}
-          {p >= 0.10 && (
-            <EligChipRow
-              chips={opdChips}
-              apisActive={opdAPIsActive}
-              apiNames={['Daman Enhanced API', 'NABIDH Eligibility', 'DHA Benefits Registry']}
-              p={p}
-            />
+          {p >= 0.48 && (
+            <div style={{ display: 'flex', gap: 5, alignItems: 'center', background: `${AMBER}14`, border: `1px solid ${AMBER}40`, borderRadius: 20, padding: '3px 11px', animation: 'dpBeatIn 0.4s ease both' }}>
+              <div style={{ width: 5, height: 5, borderRadius: '50%', background: AMBER, animation: 'dpPulse 1.2s ease-in-out infinite' }} />
+              <span style={{ fontSize: 7, fontWeight: 800, color: AMBER }}>IPD · Respiratory</span>
+              <span style={{ fontSize: 6.5, color: MUTED }}> · Thiqa SEHA</span>
+              {p >= 0.84 && <span style={{ fontSize: 7, color: GREEN }}>✓</span>}
+            </div>
           )}
         </div>
 
-        {/* ── IPD: Khalid Al-Mansoori ── */}
-        {p >= 0.44 && (
-          <div style={{ background: 'rgba(0,0,0,0.2)', border: `1px solid ${ipdApproved ? GREEN + '45' : TEAL + '28'}`, borderRadius: 11, padding: '10px 13px', flex: 1, transition: 'border-color 0.6s ease', animation: 'dpRowBlurIn 0.5s ease both', boxShadow: ipdApproved ? `0 0 20px ${GREEN}14` : 'none' }}>
+        {/* ── Journey card ── */}
+        <div style={{ flexShrink: 0, background: 'rgba(0,0,0,0.18)', border: `1px solid ${cleared ? col + '38' : BORDER}`, borderRadius: 12, padding: '10px 14px', transition: 'border-color 0.6s ease', boxShadow: cleared ? `0 0 20px ${col}10` : 'none' }}>
+          <div style={{ display: 'flex', gap: 12, alignItems: 'center' }}>
 
-            {/* Patient chip row */}
-            <div style={{ display: 'flex', gap: 8, alignItems: 'center', marginBottom: 9 }}>
-              <div style={{ display: 'flex', gap: 7, alignItems: 'center', background: `${TEAL}14`, border: `1px solid ${TEAL}35`, borderRadius: 8, padding: '5px 10px' }}>
-                <div style={{ width: 24, height: 24, borderRadius: '50%', background: `${TEAL}25`, border: `1.5px solid ${TEAL}55`, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-                  <span style={{ fontSize: 8, fontWeight: 900, color: TEAL }}>KA</span>
-                </div>
-                <div>
-                  <div style={{ fontSize: 9, fontWeight: 800, color: TXT }}>Khalid Al-Mansoori</div>
-                  <div style={{ fontSize: 6.5, color: DIM }}>M/58 · MRN: UH-2024-7203 · Respiratory · IPD</div>
+            {/* Patient byte — small info card, no name */}
+            <div key={ipdPhase ? 'ipd' : 'opd'} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4, flexShrink: 0, animation: 'dpSpringIn 0.5s cubic-bezier(0.34,1.4,0.64,1) both' }}>
+              <div style={{ width: 36, height: 36, borderRadius: '50%', background: `${col}22`, border: `2px solid ${col}55`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 17, boxShadow: `0 0 14px ${col}30` }}>
+                {ipdPhase ? '🫁' : '🩺'}
+              </div>
+              <div style={{ textAlign: 'center' }}>
+                <div style={{ fontSize: 8, fontWeight: 700, color: TXT }}>{ipdPhase ? 'M · 58 yrs' : 'F · 42 yrs'}</div>
+                <div style={{ fontSize: 6.5, color: DIM }}>{ipdPhase ? 'Respiratory · IPD' : 'Endocrinology · OPD'}</div>
+                <div style={{ marginTop: 3, background: `${col}14`, border: `1px solid ${col}30`, borderRadius: 4, padding: '2px 7px' }}>
+                  <span style={{ fontSize: 6.5, fontWeight: 800, color: col }}>{ipdPhase ? 'Thiqa SEHA' : 'Daman Enhanced'}</span>
                 </div>
               </div>
-              {p >= 0.48 && (
-                <div style={{ fontSize: 6.5, color: p >= 0.52 ? GREEN : AMBER, fontWeight: 700, animation: 'dpBeatIn 0.3s ease both' }}>
-                  {p >= 0.52 ? '✓ EMR data fetched' : '⟳ Pulling admission data...'}
-                </div>
-              )}
-              <div style={{ flex: 1 }} />
-              <div style={{ background: `${AMBER}12`, border: `1px solid ${AMBER}30`, borderRadius: 20, padding: '3px 10px', display: 'flex', gap: 5, alignItems: 'center' }}>
-                <span style={{ fontSize: 7, fontWeight: 800, color: AMBER }}>Thiqa SEHA</span>
-                <span style={{ fontSize: 6.5, color: DIM }}>Abu Dhabi</span>
-              </div>
-              {ipdApproved && (
-                <div style={{ background: `${GREEN}18`, border: `1px solid ${GREEN}55`, borderRadius: 20, padding: '4px 12px', animation: 'dpSpringIn 0.55s cubic-bezier(0.34,1.4,0.64,1) both', boxShadow: `0 0 14px ${GREEN}30` }}>
-                  <span style={{ fontSize: 8, fontWeight: 900, color: GREEN }}>✅ PA Approved · AED 28,500 authorised</span>
-                </div>
-              )}
             </div>
 
-            {/* API calls + chips */}
-            {p >= 0.54 && (
-              <EligChipRow
-                chips={ipdChips}
-                apisActive={ipdAPIsActive}
-                apiNames={['Thiqa SEHA API', 'SEHA Admissions Portal', 'NABIDH Registry']}
-                p={p}
-              />
-            )}
+            {/* Flow nodes + animated connectors */}
+            <div style={{ flex: 1, display: 'flex', alignItems: 'center' }}>
+              {flow.flatMap((step, i) => {
+                const vis    = p >= step.show;
+                const next   = flow[i + 1];
+                const active = vis && next && p < next.show;
+                const isLast = i === flow.length - 1;
+                const lineOn = next && p >= next.show;
+
+                const nodeEl = (
+                  <div key={`n${i}`} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 3, flexShrink: 0, opacity: vis ? 1 : 0.15, transition: 'opacity 0.4s, transform 0.35s', transform: vis ? 'scale(1)' : 'scale(0.82)' }}>
+                    <div style={{ width: 32, height: 32, borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 14, background: vis ? (active ? `${col}24` : `${col}12`) : 'rgba(255,255,255,0.03)', border: `2px solid ${vis ? (active ? col : col + '55') : BORDER}`, boxShadow: active ? `0 0 18px ${col}45, 0 0 40px ${col}15` : 'none', transition: 'all 0.4s ease' }}>
+                      {step.icon}
+                    </div>
+                    <span style={{ fontSize: 5.5, fontWeight: active ? 800 : 600, color: vis ? (active ? col : `${col}bb`) : DIM, whiteSpace: 'nowrap', transition: 'color 0.4s' }}>
+                      {step.label}
+                    </span>
+                    {step.api && vis && (
+                      <span style={{ fontSize: 6, color: apiActive ? TEAL : `${GREEN}80`, fontWeight: 700, lineHeight: 1 }}>
+                        {apiActive ? '⟳ ···' : '✓'}
+                      </span>
+                    )}
+                  </div>
+                );
+
+                if (isLast) return [nodeEl];
+
+                const arrowEl = (
+                  <div key={`a${i}`} style={{ flex: 1, height: 2, borderRadius: 1, background: lineOn ? `linear-gradient(90deg,${col}55,${col}25)` : `${BORDER}35`, margin: '0 3px', marginBottom: 18, transition: 'background 0.5s ease', position: 'relative', overflow: 'hidden' }}>
+                    {lineOn && (
+                      <div style={{ position: 'absolute', inset: 0, background: `linear-gradient(90deg,transparent 0%,${col}70 50%,transparent 100%)`, animation: 'dpChromeShimmer 1.2s ease-out both' }} />
+                    )}
+                  </div>
+                );
+
+                return [nodeEl, arrowEl];
+              })}
+            </div>
+          </div>
+        </div>
+
+        {/* ── Status results ── */}
+        <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 6, overflow: 'hidden' }}>
+          {results.some(r => p >= r.show) && (
+            <div style={{ fontSize: 7, fontWeight: 700, color: DIM, letterSpacing: 0.4, flexShrink: 0 }}>
+              {ipdPhase ? 'IPD ELIGIBILITY · PRE-AUTH RESULTS' : 'OPD ELIGIBILITY RESULTS'} · REAL-TIME
+            </div>
+          )}
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, alignContent: 'flex-start' }}>
+            {results.map((r, i) => p >= r.show && (
+              <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 6, background: `${r.col}${r.hero ? '1e' : '10'}`, border: `1px solid ${r.col}${r.hero ? '55' : '28'}`, borderRadius: r.hero ? 8 : 20, padding: r.hero ? '6px 14px' : '4px 11px', animation: 'dpSpringIn 0.5s cubic-bezier(0.34,1.4,0.64,1) both', boxShadow: r.hero ? `0 0 18px ${r.col}35, 0 0 50px ${r.col}12` : 'none', flexShrink: 0 }}>
+                <span style={{ fontSize: r.hero ? 9 : 7.5, fontWeight: 900, color: r.col }}>{r.icon}</span>
+                <span style={{ fontSize: r.hero ? 8 : 7, color: MUTED, fontWeight: 600 }}>{r.label}:</span>
+                <span style={{ fontSize: r.hero ? 10 : 8, fontWeight: r.hero ? 900 : 700, color: r.hero ? r.col : TXT, fontFamily: r.hero ? 'Sora' : 'inherit' }}>{r.value}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* ── Cleared / Approved banner ── */}
+        {cleared && (
+          <div style={{ flexShrink: 0, display: 'flex', justifyContent: 'center', animation: 'dpSpringIn 0.6s cubic-bezier(0.34,1.4,0.64,1) both' }}>
+            <div style={{ background: `${GREEN}18`, border: `1px solid ${GREEN}55`, borderRadius: 24, padding: '6px 22px', boxShadow: `0 0 24px ${GREEN}25, 0 0 60px ${GREEN}08`, display: 'flex', gap: 8, alignItems: 'center' }}>
+              <div style={{ width: 7, height: 7, borderRadius: '50%', background: GREEN, boxShadow: `0 0 10px ${GREEN}`, animation: 'dpPulse 1.5s ease-in-out infinite' }} />
+              <span style={{ fontSize: 9, fontWeight: 900, color: GREEN }}>
+                {ipdPhase ? '✅ PA Approved · AED 28,500 authorised · Admission cleared' : '✅ Eligibility cleared · No authorisation needed · Visit confirmed'}
+              </span>
+            </div>
           </div>
         )}
+
       </div>
     </ProductShell>
   );

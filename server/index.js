@@ -415,7 +415,7 @@ const UAE_DEMO_SCENES = [
   {
     id: 4, timecode: '0:32–0:42', journeyStage: 'pre-visit',
     title: 'Pre-Visit Intelligence',
-    voText: 'Before Fatima walks in, eligibility is already confirmed — coverage active, no auth required. For Khalid\'s admission, Thiqa pre-authorisation for AED twenty-eight thousand five hundred fires at order entry, not discharge. Approved before care begins.',
+    voText: 'A patient walks in. Docstribe pulls their insurance profile automatically — coverage, co-pay, network status — direct from the payer API. Eligibility confirmed before they reach the desk. For the inpatient needing pre-authorisation — PA filed at order entry, approved before care begins. No forms. No delays.',
   },
   {
     id: 5, timecode: '0:42–0:52', journeyStage: 'in-visit',
