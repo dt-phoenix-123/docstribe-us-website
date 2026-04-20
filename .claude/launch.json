@@ -4,7 +4,7 @@
     {
       "name": "docstribe-website",
       "runtimeExecutable": "/opt/homebrew/bin/node",
-      "runtimeArgs": ["/opt/homebrew/lib/node_modules/npm/bin/npm-cli.js", "run", "dev"],
+      "runtimeArgs": ["/opt/homebrew/lib/node_modules/npm/bin/npm-cli.js", "run", "dev", "--prefix", "/Users/Dr.NidhiChandra/Desktop/docstribe-website"],
       "port": 5173
     }
   ]

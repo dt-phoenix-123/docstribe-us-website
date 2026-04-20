@@ -1,3 +1,79 @@
+// ── UAE MARKET KNOWLEDGE BASE ─────────────────────────────────────────────────
+const UAE_KNOWLEDGE = `
+DOCSTRIBE — UAE MARKET INTELLIGENCE
+=====================================
+
+MARKET CONTEXT:
+- 12–18% of UAE hospital claims denied on first submission
+- 60–70% of those denials are preventable
+- UAE uses IR-DRG (Inpatient Refined DRG) — NOT standard DRG
+- UAE uses ICD-10-CM coding standard — NOT ICD-10-CM (that is the US standard)
+- DHA (Dubai Health Authority) and DOH (Abu Dhabi Department of Health) regulatory compliance required
+- Key payers: Daman (national health insurance), AXA Gulf, Bupa Arabia, Neuron Health
+- Contact: arcus@docstribe.com · docstribe.com
+
+UAE OUTCOME BENCHMARKS (Docstribe guaranteed):
+- ↓ 30% claim denial reduction
+- +25% revenue capture improvement
+- +0.05 to +0.15 CMI uplift
+- ↑ 20% IR-DRG performance improvement
+- +10% inpatient pipeline accuracy
+- $214.6K recoverable identified across 4 UAE payers (live deployment)
+- $1.4M expected vs $1.1M paid → $296.4K variance → $214.6K recoverable
+
+UAE PATIENT JOURNEY — 5 STAGES:
+1. PRE-VISIT: Eligibility verification against Daman ToB, AXA Gulf, Bupa Arabia. PA triggered at order entry (not at discharge). Coverage flags: PA required, exclusions, coverage limits.
+2. IN-VISIT (AMBIENT SCRIBE): Doctor-patient consultation captured via ambient microphone. HL7 feed replays. Structured note auto-populates: chief complaint, HPI, ROS, medications, ICD-10-CM codes. Physician never touches keyboard.
+3. CDI (REAL-TIME): CDI engine identifies gaps against IR-DRG grouping criteria while patient is admitted. MOON workflow, observation status, sepsis classification. Physician receives guided multiple-choice queries on device. E-signed responses captured. DHA Compliant — Audit Ready stamp.
+4. CODING + IR-DRG OPTIMISATION: ICD-10-CM and CPT coding automated. Comorbidities mapped, IR-DRG grouping integrity validated, symptom-only codes flagged. Every procedure captured, every diagnosis sequenced correctly.
+5. DENIAL INTELLIGENCE + CLAIM RECOVERY: Payer-specific denial patterns learned. CARC code analysis. One-click contract-grounded appeal letters citing specific contract clauses. NCCI/MUE validated.
+
+UAE-SPECIFIC PLATFORM FEATURES:
+- Cases Workbench: 200 active cases (Outpatient 139, Inpatient 5, Emergency 25, Others 31)
+- Eligibility & Benefits: PA triggers at order entry, payer ToB alignment for Daman, AXA Gulf, Bupa Arabia
+- Ambient Scribe: HL7 payload 4 touchpoints · 29 lines, timeline replay 100% complete
+- CDI Queries: CRITICAL tags, MOON workflow triggers, DHA Compliant audit-ready stamps
+- Insurance/Coding tab: J18.9 Pneumonia (Primary, CC, POA:Y), E11.9 DM, J44.9 COPD, R50.9 rejected
+- Payor Contract Intelligence: BlueShield/Daman $78.6K, Aetna/AXA, UnitedHealth/Bupa, Cigna/Neuron
+- Case Management Control Tower: Mark Brown (Sepsis/Pneumonia, IP admission, 4h left, HIGH denial risk), Ananya S. (MRI PA packet, 6h left, HIGH)
+- Executive Dashboard: denial rates, IR-DRG/CMI movement, payer variance, cash flow, pipeline KPIs
+
+UAE PAYER INTELLIGENCE (live data):
+- BlueShield/Daman: $78.6K recoverable (17.7%) — top driver: auth gap $47.7K (Ortho/Spine + MRI)
+- Aetna/AXA Gulf: active contract tracking
+- UnitedHealth/Bupa Arabia: active contract tracking
+- Cigna/Neuron: active contract tracking
+- Total portfolio: $214.6K recoverable identified
+- Top denial driver: CARC 97 — procedure bundled. Example: Claim BS-98245, Fatima N., $1,900 gap
+
+UAE REGULATORY & COMPLIANCE:
+- DHA (Dubai Health Authority) compliant — audit-ready documentation
+- DOH (Abu Dhabi Department of Health) aligned
+- IR-DRG grouper validates against UAE Ministry of Health standards
+- ICD-10-CM sequencing — used in UAE hospitals for diagnosis coding
+- Payer ToB (Terms of Benefits) alignment: Daman, AXA Gulf, Bupa Arabia
+
+UAE PILOT STRUCTURE (4 weeks):
+- Week 1: HIS/EMR connect (Epic, Cerner, or local system), payer contract ingestion, baseline established
+- Week 2: AI agents on live charts — PA gaps, IR-DRG gaps, eligibility flags surfaced
+- Week 3: Side-by-side IR-DRG accuracy comparison — claim delta per encounter
+- Week 4: CCR, CMI, charge capture deltas quantified — go/no-go recommendation
+- Cost: Zero. Pay only on measurable financial improvement.
+
+UAE DEMO SCRIPT — 11 SCENES (2 min 30 sec):
+Scene 1 (0:00-0:12) THE OPENING STAT: "12 to 18% of claims submitted by UAE hospitals are denied on first submission. Not because care was not delivered — because the documentation and coding did not survive the payer rules." On screen: 12-18% · 60-70% preventable
+Scene 2 (0:12-0:28) OUTCOMES UPFRONT: "With Docstribe, UAE hospitals see measurable, auditable results: up to 30% fewer claim denials, 25% higher revenue capture, CMI uplift of 0.05 to 0.15, up to 20% improvement in IR-DRG performance, and a 10% uplift in inpatient pipeline accuracy."
+Scene 3 (0:28-0:38) WHY IT WORKS: "This is possible because Docstribe unifies clinical, operational, and payer context into one patient-and-claim story — so every gap is caught before it becomes a denial." 200 active cases, one workspace.
+Scene 4 (0:38-0:52) PRE-VISIT: "Before the patient arrives, Docstribe verifies eligibility against each payer's Terms of Benefits, triggers pre-authorisation early, and flags coverage risks — preventing write-offs that start at the front door." Daman ToB · AXA Gulf · Bupa Arabia aligned.
+Scene 5 (0:52-1:10) IN-VISIT AMBIENT SCRIBE: "During the encounter, Docstribe's Ambient Scribe captures the full clinical conversation and generates a structured, coded note automatically. Doctors focus on the patient. The documentation builds itself."
+Scene 6 (1:10-1:25) CDI: "Docstribe's CDI engine identifies documentation gaps against IR-DRG grouping criteria while the patient is still admitted — prompting the physician with guided, compliant queries. Each response is e-signed and captured, closing the gap that would otherwise suppress the IR-DRG weight."
+Scene 7 (1:25-1:43) CODING + IR-DRG: "Docstribe automates ICD-10-CM and CPT coding — mapping comorbidities, validating IR-DRG grouping integrity, and flagging symptom-only codes. Every procedure is captured. Every diagnosis is sequenced correctly."
+Scene 8 (1:43-1:51) DENIAL INTELLIGENCE: "Docstribe learns payer-specific denial patterns and flags risk before claims go out — driving systemic denial reduction across every batch."
+Scene 9 (1:51-1:58) CLAIM RECOVERY: "When denials do occur, a contract-grounded appeal letter is generated automatically — in one click."
+Scene 10 (1:58-2:15) PATHWAY + BUDGET: "Docstribe also predicts inpatient progression from first contact — identifying surgical candidates and forecasting Length of Stay under IR-DRG. Finance teams get a rolling 30-day revenue pipeline by service line, payer, and DRG band."
+Scene 11 (2:15-2:30) DASHBOARD CLOSE: "Everything converges in one real-time dashboard — denials, IR-DRG and CMI movement, payer contract variance, and cash flow. Docstribe is denial-first revenue protection and clinical intelligence. For UAE hospitals ready to stop reacting and start recovering."
+`;
+
 export const KNOWLEDGE_BASE = `
 DOCSTRIBE AI — PRODUCT KNOWLEDGE BASE (Grounded Context for Agent)
 
@@ -253,4 +329,4 @@ This is not a distant aspiration — it's the direction every module is building
 Thynk Growth = Thynk Docstribe.
 `;
 
-export default KNOWLEDGE_BASE;
+export default UAE_KNOWLEDGE + '\n' + KNOWLEDGE_BASE;

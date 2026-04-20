@@ -27,21 +27,31 @@ function emitPhase(phase) {
 }
 
 // ── Tour trigger detection ────────────────────────────────────────────────────
-const TOUR_RE = /\b(walk me through|show me (how|the|all|it)|the (whole |full |patient |revenue |drg )(workflow|journey|cycle|process|lifecycle)|how does it (all |)work|full overview|explain (everything|the process|how it all|the drg|the lifecycle)|give me (an |the )(overview|tour)|drg lifecycle|h&p to (claim|discharge|coding))\b/i;
+const TOUR_RE = /\b(walk me through|show me (how|the|all|it)|the (whole |full |patient |revenue |drg |uae )(workflow|journey|cycle|process|lifecycle)|how does it (all |)work|full overview|explain (everything|the process|how it all|the drg|the lifecycle|the platform)|give me (an |the )(overview|tour|demo)|drg lifecycle|h&p to (claim|discharge|coding)|full demo|show me everything|complete demo|demo|ir.drg|patient journey|uae (demo|platform|flow))\b/i;
 
 const TOUR_PHASE_COLORS = ['#00cba8', '#4d8aff', '#ff7b4a'];
 const TOUR_PHASE_LABELS = ['H&P & Day 0 CDI', 'Daily Rounding', 'Discharge & Coding'];
 
 // ── Constants ─────────────────────────────────────────────────────────────────
 const ROLES = [
-  { id: 'cfo',       label: 'CFO / CEO',          sub: 'Revenue, margin & financial strategy',    abbr: 'CFO' },
-  { id: 'cdi',       label: 'CDI Director',        sub: 'Documentation quality & DRG optimization', abbr: 'CDI' },
-  { id: 'rcm',       label: 'RCM Director',        sub: 'Revenue cycle operations',                 abbr: 'RCM' },
-  { id: 'physician', label: 'Physician / CMO',     sub: 'Clinical documentation workflow',          abbr: 'MD'  },
-  { id: 'coder',     label: 'Coding / HIM Manager', sub: 'DRG accuracy & claim integrity',          abbr: 'HIM' },
-  { id: 'investor',  label: 'Investor / Partner',  sub: 'Market opportunity & growth thesis',       abbr: '$'   },
+  { id: 'cfo',       label: 'CFO / CEO',            sub: 'Revenue, margin & financial strategy',      abbr: 'CFO' },
+  { id: 'cdi',       label: 'CDI Director',          sub: 'IR-DRG documentation quality',             abbr: 'CDI' },
+  { id: 'rcm',       label: 'RCM Director',          sub: 'Revenue cycle & claim integrity',           abbr: 'RCM' },
+  { id: 'physician', label: 'Physician / CMO',        sub: 'Clinical documentation & ambient scribe',  abbr: 'MD'  },
+  { id: 'coder',     label: 'Coding / HIM Manager',  sub: 'ICD-10-CM accuracy & IR-DRG grouping',     abbr: 'HIM' },
+  { id: 'investor',  label: 'Investor / Partner',    sub: 'UAE market opportunity & growth thesis',    abbr: '$'   },
 ];
 
+
+// ── Role-specific greetings — bridge from intro to role conversation ──────────
+const ROLE_GREETINGS = {
+  cfo:       `For a CFO, the number that matters: every percentage point improvement in IR-DRG accuracy translates to 2–3% inpatient revenue recovery. UAE hospitals averaging 650 admissions a month are leaving AED 2–4M on the table annually — in earned revenue that never arrived. Where do you want to start — the financial model, the pilot ROI structure, or how we measure and prove impact?`,
+  cdi:       `CDI Directors find the biggest gap at Day 0 — the H&P is signed, but the DRG grouper has not seen a CDI query yet. Docstribe fires its first query within minutes of that signature, before the patient even leaves the admission unit. Want to walk through how the Day 0 CDI workflow runs — or go straight to a live DRG example?`,
+  rcm:       `For RCM, the first-pass denial rate is where everything starts. At 12 to 18 percent in UAE, hospitals are funding payers' cash flow with their own earned revenue. Docstribe's pre-bill scrubber catches the edit before it ever reaches the payer — clean claim rate goes up, days in AR comes down. What part of the revenue cycle do you want to dig into first?`,
+  physician: `Physicians document for clinical communication. The DRG grouper reads for financial classification. That gap costs UAE hospitals millions — and it is entirely a documentation language problem, not a care delivery problem. Docstribe closes it with ambient capture and real-time CDI alerts that do not interrupt your workflow. Want to see what a typical inpatient day looks like with Docstribe running alongside you?`,
+  coder:     `For HIM and coding, ICD-10-CM specificity is where the revenue lives — the difference between a code that maps to a CC, an MCC, or nothing at all. Docstribe's pre-bill review compares every coded claim against the clinical documentation before submission, flagging every specificity gap and missed opportunity. Want to walk through the coding workflow, or look at a live IR-DRG optimisation example?`,
+  investor:  `The UAE healthcare market processes over AED 15 billion in insurance claims annually — with a 12 to 18 percent denial rate representing AED 1.8 to 2.7 billion in delayed or lost revenue each year. Docstribe captures a share of that as recovered revenue on an outcome-based model — zero cost to the hospital until impact is proven. Want to walk through the market thesis, the technology defensibility, or UAE traction so far?`,
+};
 
 // ── EQ Canvas visualizer ──────────────────────────────────────────────────────
 function EQCanvas({ analyserRef, isPlaying }) {
@@ -536,6 +546,228 @@ function LifecycleArtifact({ data, progress = 0, playing = false }) {
   );
 }
 
+// ── UAE Demo Journey Bar — shows 11-scene journey with current scene highlighted ──
+const UAE_JOURNEY_STAGES = [
+  { id: 'opening',     label: 'Opening',      color: '#f87171', scenes: [1] },
+  { id: 'outcomes',    label: 'KPIs',         color: '#fb923c', scenes: [2] },
+  { id: 'platform',    label: 'Platform',     color: '#4d8aff', scenes: [3] },
+  { id: 'pre-visit',   label: 'Pre-Visit',    color: '#00cba8', scenes: [4] },
+  { id: 'in-visit',    label: 'In-Visit',     color: '#4d8aff', scenes: [5] },
+  { id: 'cdi',         label: 'CDI',          color: '#a78bfa', scenes: [6] },
+  { id: 'coding',      label: 'Coding',       color: '#38bdf8', scenes: [7] },
+  { id: 'denial-intel',label: 'Denial Intel', color: '#fb923c', scenes: [8] },
+  { id: 'recovery',    label: 'Recovery',     color: '#4ade80', scenes: [9] },
+  { id: 'pathway',     label: 'Pathway',      color: '#00cba8', scenes: [10] },
+  { id: 'dashboard',   label: 'Dashboard',    color: '#a78bfa', scenes: [11] },
+];
+
+function DemoJourneyBar({ currentScene, totalScenes = 11, onSkip }) {
+  const currentStage = UAE_JOURNEY_STAGES.find(s => s.scenes.includes(currentScene));
+  return (
+    <div style={{ padding: '10px 16px 0', flexShrink: 0 }}>
+      {/* Progress bar */}
+      <div style={{ height: '2px', borderRadius: '2px', background: 'rgba(255,255,255,0.06)', marginBottom: '8px', overflow: 'hidden' }}>
+        <div style={{ height: '100%', borderRadius: '2px', background: 'linear-gradient(90deg, #00cba8, #4d8aff, #a78bfa)', width: `${(currentScene / totalScenes) * 100}%`, transition: 'width 0.5s ease' }} />
+      </div>
+      {/* Stage dots */}
+      <div style={{ display: 'flex', gap: '3px', alignItems: 'center', overflowX: 'auto', paddingBottom: '4px' }}>
+        {UAE_JOURNEY_STAGES.map((stage) => {
+          const isActive = stage.scenes.includes(currentScene);
+          const isPast   = stage.scenes[stage.scenes.length - 1] < currentScene;
+          return (
+            <div key={stage.id} title={stage.label} style={{
+              display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '3px', flexShrink: 0,
+            }}>
+              <div style={{
+                width: isActive ? '8px' : '5px', height: isActive ? '8px' : '5px',
+                borderRadius: '50%',
+                background: isActive ? stage.color : isPast ? stage.color + '66' : 'rgba(255,255,255,0.1)',
+                boxShadow: isActive ? `0 0 8px ${stage.color}` : 'none',
+                transition: 'all 0.3s ease',
+              }} />
+              {isActive && (
+                <span style={{ fontSize: '8px', color: stage.color, fontWeight: '700', letterSpacing: '0.5px', whiteSpace: 'nowrap' }}>
+                  {stage.label}
+                </span>
+              )}
+            </div>
+          );
+        })}
+        <div style={{ flex: 1 }} />
+        {onSkip && (
+          <button onClick={onSkip} style={{ fontSize: '9px', color: '#475569', background: 'none', border: 'none', cursor: 'pointer', flexShrink: 0, padding: '2px 6px' }}>
+            Skip demo
+          </button>
+        )}
+      </div>
+      {/* Current scene label */}
+      {currentStage && (
+        <div style={{ fontSize: '9px', color: '#64748b', marginTop: '2px' }}>
+          Scene {currentScene} of {totalScenes} — {UAE_JOURNEY_STAGES.find(s => s.scenes.includes(currentScene))?.label}
+        </div>
+      )}
+    </div>
+  );
+}
+
+// ── Demo Scene View — cinema-style infographic display ────────────────────────
+const DEMO_STAGE_COLORS = {
+  'opening': '#f87171', 'outcomes': '#4ade80', 'platform': '#4d8aff',
+  'pre-visit': '#00cba8', 'in-visit': '#38bdf8', 'cdi': '#a78bfa',
+  'coding': '#4d8aff', 'denial-intel': '#fb923c', 'recovery': '#00cba8',
+  'pathway': '#4d8aff', 'dashboard': '#a78bfa',
+};
+
+function DemoSceneView({
+  scene, sceneIdx, totalScenes,
+  isPlaying, progress, analyserRef,
+  words, wordIndex,
+  onSkip, onPrev, onNext, onPlay, onStop,
+}) {
+  if (!scene) return null;
+  const stageColor = DEMO_STAGE_COLORS[scene.journeyStage] || '#00cba8';
+  const progressPct = ((sceneIdx + 1) / totalScenes) * 100;
+
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column', flex: 1, minHeight: 0 }}>
+
+      {/* ── Scene header ── */}
+      <div style={{ padding: '10px 20px 8px', borderBottom: '1px solid rgba(255,255,255,0.05)', flexShrink: 0 }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '7px', marginBottom: '8px' }}>
+          <div style={{
+            padding: '2px 9px', borderRadius: '20px',
+            background: `${stageColor}15`, border: `1px solid ${stageColor}35`,
+            fontSize: '9px', fontWeight: '700', color: stageColor,
+            letterSpacing: '1.5px', fontFamily: 'Sora, sans-serif', flexShrink: 0,
+          }}>
+            SCENE {sceneIdx + 1}
+          </div>
+          <div style={{ flex: 1, fontSize: '11.5px', fontWeight: '600', color: '#cbd5e1', lineHeight: 1.25, minWidth: 0 }}>
+            {scene.title}
+          </div>
+          <div style={{ fontSize: '9.5px', color: '#334155', flexShrink: 0 }}>{scene.timecode}</div>
+          <button onClick={onSkip} style={{
+            background: 'none', border: 'none', color: '#334155', fontSize: '12px',
+            cursor: 'pointer', padding: '2px 4px', lineHeight: 1,
+          }}>✕</button>
+        </div>
+        {/* Progress bar */}
+        <div style={{ height: '2px', borderRadius: '2px', background: 'rgba(255,255,255,0.05)', overflow: 'hidden' }}>
+          <div style={{
+            height: '100%', borderRadius: '2px',
+            background: `linear-gradient(90deg, #00cba8, ${stageColor})`,
+            width: `${progressPct}%`, transition: 'width 0.6s ease',
+          }} />
+        </div>
+      </div>
+
+      {/* ── Main infographic area ── */}
+      <div className="rudra-scroll" style={{ flex: 1, overflowY: 'auto', padding: '14px 20px 8px', minHeight: 0 }}>
+        {isPlaying && (
+          <div style={{ marginBottom: '12px' }}>
+            <EQCanvas analyserRef={analyserRef} isPlaying={isPlaying} />
+          </div>
+        )}
+        {scene.artifact && (
+          <div key={sceneIdx} style={{
+            padding: '14px', borderRadius: '14px',
+            border: `1px solid ${isPlaying ? stageColor + '35' : 'rgba(255,255,255,0.07)'}`,
+            background: 'rgba(0,0,0,0.22)',
+            boxShadow: isPlaying ? `0 0 24px ${stageColor}15` : 'none',
+            transition: 'border-color 0.4s ease, box-shadow 0.4s ease',
+            animation: 'rudraFadeIn 0.45s ease',
+          }}>
+            <ToolOutput tool={scene.artifact} progress={progress} playing={isPlaying} />
+          </div>
+        )}
+      </div>
+
+      {/* ── VO caption ── */}
+      <div style={{
+        padding: '9px 20px 7px',
+        borderTop: '1px solid rgba(255,255,255,0.04)',
+        background: 'rgba(0,0,0,0.12)',
+        flexShrink: 0, maxHeight: '68px', overflow: 'hidden',
+      }}>
+        <div style={{ fontSize: '11.5px', lineHeight: '1.65', color: '#475569' }}>
+          {isPlaying && words?.length ? (
+            words.map((word, i) => (
+              <span key={i} style={{
+                color: i <= wordIndex ? '#94a3b8' : '#2d3748',
+                transition: 'color 0.08s ease',
+              }}>{word}{' '}</span>
+            ))
+          ) : (
+            <span style={{ fontStyle: 'italic', color: '#334155' }}>{scene.voText?.slice(0, 160)}{scene.voText?.length > 160 ? '…' : ''}</span>
+          )}
+        </div>
+      </div>
+
+      {/* ── Controls ── */}
+      <div style={{
+        padding: '8px 20px 10px', flexShrink: 0,
+        borderTop: '1px solid rgba(255,255,255,0.04)',
+        display: 'flex', alignItems: 'center', gap: '8px',
+      }}>
+        {/* Prev */}
+        <button onClick={onPrev} disabled={sceneIdx === 0} style={{
+          width: '30px', height: '30px', borderRadius: '7px',
+          border: '1px solid rgba(255,255,255,0.07)',
+          background: 'rgba(255,255,255,0.025)',
+          color: sceneIdx === 0 ? '#1e293b' : '#475569',
+          cursor: sceneIdx === 0 ? 'default' : 'pointer',
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
+        }}>
+          <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor"><polygon points="19 20 9 12 19 4"/><rect x="4" y="4" width="3" height="16" rx="1"/></svg>
+        </button>
+
+        {/* Play/Pause */}
+        <button onClick={isPlaying ? onStop : onPlay} style={{
+          width: '36px', height: '36px', borderRadius: '50%', border: 'none',
+          background: `linear-gradient(135deg, ${stageColor}, #4d8aff)`,
+          color: '#fff', cursor: 'pointer', flexShrink: 0,
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
+          boxShadow: `0 0 14px ${stageColor}40`,
+          transition: 'box-shadow 0.3s ease',
+        }}>
+          {isPlaying
+            ? <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="4" width="4" height="16" rx="1"/><rect x="14" y="4" width="4" height="16" rx="1"/></svg>
+            : <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+          }
+        </button>
+
+        {/* Next */}
+        <button onClick={onNext} disabled={sceneIdx >= totalScenes - 1} style={{
+          width: '30px', height: '30px', borderRadius: '7px',
+          border: '1px solid rgba(255,255,255,0.07)',
+          background: 'rgba(255,255,255,0.025)',
+          color: sceneIdx >= totalScenes - 1 ? '#1e293b' : '#475569',
+          cursor: sceneIdx >= totalScenes - 1 ? 'default' : 'pointer',
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
+        }}>
+          <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 4 15 12 5 20"/><rect x="17" y="4" width="3" height="16" rx="1"/></svg>
+        </button>
+
+        {/* Dot progress */}
+        <div style={{ flex: 1, display: 'flex', gap: '3px', alignItems: 'center', justifyContent: 'center', overflow: 'hidden' }}>
+          {Array.from({ length: totalScenes }).map((_, i) => (
+            <div key={i} style={{
+              width: i === sceneIdx ? '14px' : '4px', height: '4px', borderRadius: '2px',
+              background: i === sceneIdx ? stageColor : i < sceneIdx ? 'rgba(255,255,255,0.18)' : 'rgba(255,255,255,0.05)',
+              transition: 'all 0.35s ease', flexShrink: 0,
+            }} />
+          ))}
+        </div>
+
+        {/* Counter */}
+        <span style={{ fontSize: '9.5px', color: '#334155', flexShrink: 0, fontVariantNumeric: 'tabular-nums' }}>
+          {sceneIdx + 1} / {totalScenes}
+        </span>
+      </div>
+    </div>
+  );
+}
+
 // ── Tool router — renders the right component from AI tool call ────────────────
 function ToolOutput({ tool, progress = 0, playing = false }) {
   if (!tool?.type) return null;
@@ -562,15 +794,71 @@ function getItemState(i, total, progress, playing) {
   return 'future';
 }
 
+// ── Inline bold renderer: **text** → <strong> ────────────────────────────────
+function formatBold(text) {
+  if (!text) return null;
+  const parts = text.split(/\*\*([^*]+)\*\*/);
+  if (parts.length === 1) return text;
+  return parts.map((p, i) =>
+    i % 2 === 1
+      ? <strong key={i} style={{ color: '#f1f5f9', fontWeight: '700' }}>{p}</strong>
+      : p
+  );
+}
+
+// ── Markdown renderer: paragraphs, bullets, bold ─────────────────────────────
+function renderMd(text) {
+  if (!text) return null;
+  const blocks = text.split(/\n\n+/);
+  return blocks.map((block, pi) => {
+    const lines = block.trim().split('\n').filter(Boolean);
+    if (!lines.length) return null;
+    // Bullet list
+    if (lines.every(l => /^[-•*]\s/.test(l.trim()))) {
+      return (
+        <ul key={pi} style={{ margin: '0 0 10px', padding: 0, listStyle: 'none' }}>
+          {lines.map((l, li) => (
+            <li key={li} style={{ display: 'flex', gap: '8px', marginBottom: '6px', alignItems: 'flex-start' }}>
+              <span style={{ color: '#00cba8', fontWeight: '700', flexShrink: 0, lineHeight: '1.65', fontSize: '13px' }}>›</span>
+              <span style={{ lineHeight: '1.65' }}>{formatBold(l.replace(/^[-•*]\s+/, ''))}</span>
+            </li>
+          ))}
+        </ul>
+      );
+    }
+    // Regular paragraph — join wrapped lines
+    return (
+      <p key={pi} style={{ margin: '0 0 10px', lineHeight: '1.75' }}>
+        {formatBold(lines.join(' '))}
+      </p>
+    );
+  }).filter(Boolean);
+}
+
+// ── Quick-reply chip suggestions by role ─────────────────────────────────────
+function getQuickReplies(role, msgCount) {
+  const byRole = {
+    cfo:       ['What is the revenue impact?', 'How does the pilot work?', 'Show me outcomes'],
+    cdi:       ['How does CDI Day 0 work?', 'Show a DRG optimization example', 'NABIDH integration'],
+    rcm:       ['How are denials prevented?', 'Explain NCCI / MUE edits', 'Payer edit scrubbing'],
+    physician: ['How does ambient scribe work?', 'What is CDI Day 0?', 'Explain OPD workflow'],
+    coder:     ['ICD-10-CM to IR-DRG mapping', 'What is payer edit scrubbing?', 'Coding workflow'],
+    investor:  ['What is the UAE market size?', 'Tell me about expansion', 'Explain the pilot model'],
+  };
+  const base = byRole[role] || ['How does Docstribe work?', 'Show outcome metrics', 'Explain IR-DRG'];
+  if (msgCount > 4) return [...base.slice(0, 2), 'Show full demo'];
+  return base;
+}
+
 // ── Role selection step ───────────────────────────────────────────────────────
 function RoleStep({ onSelect }) {
   return (
     <div style={{ padding: '28px 24px 32px' }}>
       <h2 style={{ fontSize: '21px', fontWeight: '700', color: '#f1f5f9', margin: '0 0 8px', letterSpacing: '-0.3px' }}>
-        Now — who are you?
+        Who are you at your hospital?
       </h2>
       <p style={{ fontSize: '13.5px', color: '#64748b', margin: '0 0 24px' }}>
-        I'll show you exactly what this means for your work.
+        I will show you exactly what IR-DRG Intelligence means for your role in the UAE market.
       </p>
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
         {ROLES.map(role => (
@@ -689,7 +977,7 @@ function GeneratingStep() {
           display: 'flex', alignItems: 'center', justifyContent: 'center',
           fontSize: '36px',
           boxShadow: '0 0 50px rgba(14,165,233,0.55)',
-        }}>ॐ</div>
+        }}>D</div>
       </div>
       <div style={{ textAlign: 'center' }}>
         <div style={{ fontSize: '15px', fontWeight: '600', color: '#e2e8f0', marginBottom: '10px' }}>
@@ -742,7 +1030,7 @@ function ChatMessage({ msg, isCurrentlyPlaying, words, wordIndex, analyserRef, p
           fontSize: '10px',
           boxShadow: isCurrentlyPlaying ? '0 0 10px rgba(14,165,233,0.5)' : 'none',
           transition: 'box-shadow 0.4s',
-        }}>ॐ</div>
+        }}>D</div>
         <span style={{ fontSize: '9.5px', fontWeight: '700', color: '#38bdf8', letterSpacing: '2px', fontFamily: 'Sora, sans-serif' }}>
           RUDRA
         </span>
@@ -781,24 +1069,25 @@ function ChatMessage({ msg, isCurrentlyPlaying, words, wordIndex, analyserRef, p
 
       {/* Message text — karaoke when currently playing */}
       <div style={{
-        padding: '11px 15px',
+        padding: '13px 16px',
         borderRadius: '4px 18px 18px 18px',
-        background: 'rgba(255,255,255,0.04)',
-        border: '1px solid rgba(255,255,255,0.05)',
-        fontSize: '13.5px', lineHeight: '1.75', color: '#94a3b8',
+        background: 'rgba(14,165,233,0.05)',
+        border: '1px solid rgba(14,165,233,0.1)',
+        borderLeft: '2px solid rgba(0,203,168,0.45)',
+        fontSize: '13.5px', lineHeight: '1.75', color: '#cbd5e1',
         wordBreak: 'break-word',
       }}>
         {isCurrentlyPlaying ? (
           displayWords.map((word, i) => (
             <span key={i} style={{
-              color: i <= wordIndex ? '#e2e8f0' : '#475569',
+              color: i <= wordIndex ? '#f1f5f9' : '#475569',
               fontWeight: i === wordIndex ? '600' : '400',
               transition: 'color 0.1s ease',
               borderBottom: i === wordIndex ? '1px solid rgba(14,165,233,0.55)' : 'none',
             }}>{word}{' '}</span>
           ))
         ) : (
-          msg.content
+          renderMd(msg.content)
         )}
       </div>
     </div>
@@ -815,6 +1104,9 @@ function PlayingStep({
   isTour, tourStep,
   visual, visualPhase,
   toolOutput,
+  demoMode, demoSceneIdx, demoScenes, currentDemoScene, onDemoSkip, onDemoPrev, onDemoNext,
+  onLaunchDemo,
+  onSendText, selectedRole,
 }) {
   const chatEndRef = useRef(null);
   useEffect(() => {
@@ -827,8 +1119,8 @@ function PlayingStep({
   return (
     <div style={{ display: 'flex', flexDirection: 'column', flex: 1, minHeight: 0 }}>
 
-      {/* ── Compact audio strip — visible whenever there's audio ── */}
-      {briefingAudio && (
+      {/* ── Compact audio strip — hidden during demo (DemoSceneView has its own controls) ── */}
+      {briefingAudio && !demoMode && (
         <div style={{ padding: '10px 20px 0', flexShrink: 0 }}>
           <div style={{
             borderRadius: '12px',
@@ -884,6 +1176,15 @@ function PlayingStep({
         </div>
       )}
 
+      {/* ── UAE Demo journey bar ── */}
+      {demoMode && (
+        <DemoJourneyBar
+          currentScene={demoSceneIdx + 1}
+          totalScenes={11}
+          onSkip={onDemoSkip}
+        />
+      )}
+
       {/* ── Tour phase indicator ── */}
       {isTour && tourStep && (
         <div style={{
@@ -922,7 +1223,24 @@ function PlayingStep({
         </div>
       )}
 
-      {/* ── Chat message list ── */}
+      {/* ── Chat message list OR demo scene view ── */}
+      {demoMode && currentDemoScene ? (
+        <DemoSceneView
+          scene={currentDemoScene}
+          sceneIdx={demoSceneIdx}
+          totalScenes={demoScenes?.length || 11}
+          isPlaying={isPlaying}
+          progress={progress}
+          analyserRef={analyserRef}
+          words={words}
+          wordIndex={wordIndex}
+          onSkip={onDemoSkip}
+          onPrev={onDemoPrev}
+          onNext={onDemoNext}
+          onPlay={onPlay}
+          onStop={onStop}
+        />
+      ) : (
       <div
         className="rudra-scroll"
         style={{ flex: 1, overflowY: 'auto', padding: '16px 20px 8px', minHeight: 0 }}
@@ -942,19 +1260,89 @@ function PlayingStep({
         {chatLoading && (
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '16px' }}>
             <div style={{
-              width: '24px', height: '24px', borderRadius: '50%',
+              width: '24px', height: '24px', borderRadius: '50%', flexShrink: 0,
               background: 'linear-gradient(135deg,#0ea5e9,#6366f1)',
               display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '10px',
-            }}>ॐ</div>
-            <div style={{ display: 'flex', gap: '5px', padding: '8px 12px', borderRadius: '4px 14px 14px 14px', background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.05)' }}>
+              boxShadow: '0 0 10px rgba(14,165,233,0.4)',
+            }}>D</div>
+            <div style={{
+              display: 'flex', alignItems: 'center', gap: '6px',
+              padding: '10px 14px', borderRadius: '4px 16px 16px 16px',
+              background: 'rgba(14,165,233,0.05)',
+              border: '1px solid rgba(14,165,233,0.1)',
+              borderLeft: '2px solid rgba(0,203,168,0.4)',
+            }}>
               {[0, 1, 2].map(i => (
-                <div key={i} style={{ width: '6px', height: '6px', borderRadius: '50%', background: '#0ea5e9', animation: `rudraDot 1.4s ${i * 0.2}s ease-in-out infinite` }} />
+                <div key={i} style={{ width: '5px', height: '5px', borderRadius: '50%', background: '#00cba8', animation: `rudraDot 1.4s ${i * 0.2}s ease-in-out infinite`, opacity: 0.8 }} />
               ))}
+              <span style={{ fontSize: '11.5px', color: '#475569', marginLeft: '4px', fontStyle: 'italic' }}>RUDRA is thinking…</span>
             </div>
           </div>
         )}
         <div ref={chatEndRef} />
       </div>
+      )}
+
+      {/* ── Quick-reply chips — shown when idle (not loading, not playing) ── */}
+      {!chatLoading && !isPlaying && !demoMode && onSendText && chatMessages.length > 0 && (() => {
+        const chips = getQuickReplies(selectedRole, chatMessages.length);
+        return (
+          <div style={{ padding: '4px 20px 10px', flexShrink: 0, display: 'flex', gap: '6px', flexWrap: 'wrap' }}>
+            {chips.map((chip, i) => (
+              <button
+                key={i}
+                onClick={() => onSendText(chip)}
+                style={{
+                  padding: '5px 12px', borderRadius: '20px',
+                  border: '1px solid rgba(0,203,168,0.22)',
+                  background: 'rgba(0,203,168,0.05)',
+                  color: '#64748b', fontSize: '11.5px', cursor: 'pointer',
+                  transition: 'all 0.18s ease', whiteSpace: 'nowrap',
+                  fontFamily: 'Inter, sans-serif',
+                }}
+                onMouseEnter={e => { e.currentTarget.style.borderColor = 'rgba(0,203,168,0.5)'; e.currentTarget.style.color = '#00cba8'; e.currentTarget.style.background = 'rgba(0,203,168,0.1)'; }}
+                onMouseLeave={e => { e.currentTarget.style.borderColor = 'rgba(0,203,168,0.22)'; e.currentTarget.style.color = '#64748b'; e.currentTarget.style.background = 'rgba(0,203,168,0.05)'; }}
+              >
+                {chip}
+              </button>
+            ))}
+          </div>
+        );
+      })()}
+
+      {/* ── Full Demo CTA — visible when in chat mode, not demo, not loading ── */}
+      {!demoMode && !chatLoading && onLaunchDemo && chatMessages.length > 0 && (
+        <div style={{ padding: '0 20px 10px', flexShrink: 0 }}>
+          <button
+            onClick={onLaunchDemo}
+            style={{
+              width: '100%', padding: '10px 16px', borderRadius: '12px', cursor: 'pointer',
+              background: 'linear-gradient(135deg, rgba(0,203,168,0.12), rgba(77,138,255,0.12))',
+              border: '1px solid rgba(0,203,168,0.35)',
+              display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+              transition: 'all 0.2s ease',
+              fontFamily: 'Inter, sans-serif',
+            }}
+            onMouseEnter={e => { e.currentTarget.style.background = 'linear-gradient(135deg,rgba(0,203,168,0.2),rgba(77,138,255,0.2))'; e.currentTarget.style.borderColor = 'rgba(0,203,168,0.6)'; e.currentTarget.style.boxShadow = '0 0 18px rgba(0,203,168,0.2)'; }}
+            onMouseLeave={e => { e.currentTarget.style.background = 'linear-gradient(135deg,rgba(0,203,168,0.12),rgba(77,138,255,0.12))'; e.currentTarget.style.borderColor = 'rgba(0,203,168,0.35)'; e.currentTarget.style.boxShadow = 'none'; }}
+          >
+            <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+              <div style={{
+                width: '28px', height: '28px', borderRadius: '8px', flexShrink: 0,
+                background: 'linear-gradient(135deg,#00cba8,#4d8aff)',
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+              }}>
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="white"><polygon points="5,3 19,12 5,21"/></svg>
+              </div>
+              <div style={{ textAlign: 'left' }}>
+                <div style={{ fontSize: '12.5px', fontWeight: '700', color: '#e2e8f0', lineHeight: 1 }}>Watch Full Platform Demo</div>
+                <div style={{ fontSize: '10.5px', color: '#64748b', marginTop: '2px' }}>11 scenes · live infographics · voice-over</div>
+              </div>
+            </div>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#00cba8" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+          </button>
+        </div>
+      )}
 
       {/* ── Write-back input — prominent ── */}
       <div style={{ padding: '10px 20px 16px', borderTop: '1px solid rgba(255,255,255,0.05)', flexShrink: 0 }}>
@@ -964,13 +1352,13 @@ function PlayingStep({
             value={chatInput}
             onChange={e => onChatInput(e.target.value)}
             onKeyDown={e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); onChatSend(); } }}
-            placeholder={voiceActive ? 'Listening… speak now' : 'Ask about DRG phases, CDI workflow, or pilot structure…'}
+            placeholder={voiceActive ? 'Listening… speak now' : demoMode ? 'Ask a question or type "continue" to resume demo…' : 'Ask about IR-DRG, OPD/IPD workflow, NCCI edits, denial prevention…'}
             rows={2}
             style={{
               width: '100%', boxSizing: 'border-box',
               background: voiceActive ? 'rgba(0,203,168,0.04)' : 'rgba(255,255,255,0.04)',
               border: `1px solid ${voiceActive ? 'rgba(0,203,168,0.4)' : 'rgba(14,165,233,0.18)'}`,
-              borderRadius: '14px', padding: '11px 90px 11px 15px',
+              borderRadius: '14px', padding: '11px 132px 11px 15px',
               color: '#e2e8f0', fontSize: '13.5px', lineHeight: '1.55',
               resize: 'none', fontFamily: 'Inter, sans-serif',
               transition: 'border-color 0.2s, background 0.2s',
@@ -1028,9 +1416,8 @@ function PlayingStep({
             </svg>
             New briefing
           </button>
-          <span style={{ fontSize: '10px', color: '#1e3a5f' }}>
-            <span style={{ background: 'linear-gradient(90deg,#4285F4,#EA4335,#FBBC04,#34A853)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text', fontWeight: '600' }}>Gemini</span>
-            {' · Docstribe AI © 2026'}
+          <span style={{ fontSize: '10px', color: '#334155' }}>
+            Docstribe AI © 2026
           </span>
         </div>
       </div>
@@ -1060,6 +1447,11 @@ export default function ExplainerAgent() {
   const onAudioEndRef = useRef(null); // called when current audio playback finishes
   const [voiceActive, setVoiceActive] = useState(false);
   const recognitionRef = useRef(null);
+  const [demoMode, setDemoMode]         = useState(false);
+  const [demoScenes, setDemoScenes]     = useState([]);
+  const [demoSceneIdx, setDemoSceneIdx] = useState(0);
+  const [demoInterrupted, setDemoInterrupted] = useState(false);
+  const demoSceneIdxRef = useRef(0);
 
   // Refs for audio engine
   const audioCtxRef     = useRef(null);
@@ -1341,7 +1733,7 @@ export default function ExplainerAgent() {
     setSelectedRole(roleId);
     setStep('generating');
 
-    const greetText = `Welcome! I am Rudra, and I can answer most of your questions about Dynamic DRG Intelligence. How may I help you today?`;
+    const greetText = ROLE_GREETINGS[roleId] || ROLE_GREETINGS.rcm;
 
     try {
       // Generate TTS for the static greeting in parallel with no artifact needed
@@ -1366,14 +1758,105 @@ export default function ExplainerAgent() {
     }
   }, [playAudio]);
 
+  // ── UAE Demo mode — 11-scene pre-curated walkthrough ────────────────────────
+  const playDemoScene = useCallback(async (scenes, idx) => {
+    if (idx >= scenes.length) {
+      // Demo complete — transition to chat
+      setDemoMode(false);
+      setChatMessages(prev => [...prev, {
+        role: 'assistant',
+        content: 'That is the full Docstribe platform — built for UAE hospitals. What would you like to explore further?',
+        audio: null, visual: null,
+      }]);
+      setStep('playing');
+      return;
+    }
+    const scene = scenes[idx];
+    demoSceneIdxRef.current = idx;
+    setDemoSceneIdx(idx);
+    if (scene.artifact) setToolOutput(scene.artifact);
+
+    try {
+      const res = await fetch('/api/demo', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ sceneId: scene.id }),
+      });
+      const data = res.ok ? await res.json() : scene;
+      briefingTextRef.current = scene.voText;
+      setBriefingText(scene.voText);
+      const audio = data.audio || null;
+      setBriefingAudio(audio);
+      // Append scene as chat message
+      setChatMessages(prev => [...prev, {
+        role: 'assistant',
+        content: scene.voText,
+        audio,
+        visual: scene.artifact || null,
+      }]);
+      // Auto-advance after audio ends (unless interrupted)
+      onAudioEndRef.current = () => {
+        if (!demoInterrupted) {
+          playDemoScene(scenes, idx + 1);
+        }
+      };
+      if (audio) setTimeout(() => playAudio(audio), 80);
+    } catch (err) {
+      console.error('Demo scene failed:', err);
+      playDemoScene(scenes, idx + 1);
+    }
+  }, [playAudio, demoInterrupted]);
+
+  const launchDemo = useCallback(async () => {
+    stopAudio();
+    setDemoMode(true);
+    setDemoInterrupted(false);
+    setDemoSceneIdx(0);
+    setStep('playing');
+    setChatMessages([]);
+
+    try {
+      const res = await fetch('/api/demo', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({}),
+      });
+      const { scenes } = res.ok ? await res.json() : { scenes: [] };
+      setDemoScenes(scenes);
+      playDemoScene(scenes, 0);
+    } catch (err) {
+      console.error('Demo load failed:', err);
+      setDemoMode(false);
+    }
+  }, [stopAudio, playDemoScene]);
+
   // ── Follow-up chat ───────────────────────────────────────────────────────
-  const sendFollowUp = useCallback(async () => {
-    const trimmed = chatInput.trim();
+  const sendFollowUp = useCallback(async (overrideText) => {
+    const trimmed = (typeof overrideText === 'string' ? overrideText : chatInput).trim();
     if (!trimmed || chatLoading) return;
     // Stop any playing audio immediately — user is taking over
     stopAudio();
     onAudioEndRef.current = null;
+    // If demo is running, pause it — user is interrupting
+    if (demoMode) {
+      setDemoInterrupted(true);
+    }
     setChatInput('');
+
+    // Demo trigger — launch full UAE 11-scene demonstration
+    if (/\b(full demo|complete demo|show me everything|show.*demo|demo|full demonstration)\b/i.test(trimmed)) {
+      setChatMessages(prev => [...prev, { role: 'user', content: trimmed }]);
+      launchDemo();
+      return;
+    }
+
+    // Resume demo if interrupted
+    if (demoInterrupted && /\b(continue|resume|yes|go on|next|proceed)\b/i.test(trimmed)) {
+      setChatMessages(prev => [...prev, { role: 'user', content: trimmed }]);
+      setDemoInterrupted(false);
+      playDemoScene(demoScenes, demoSceneIdx + 1);
+      return;
+    }
 
     // Detect tour intent — trigger visual guided tour instead of text response
     if (TOUR_RE.test(trimmed)) {
@@ -1420,15 +1903,25 @@ export default function ExplainerAgent() {
         setBriefingText(text);
         stopAudio();
         setTimeout(() => playAudio(audio), 80);
+        // After answering, offer to resume demo if it was interrupted
+        if (demoInterrupted) {
+          onAudioEndRef.current = () => {
+            setChatMessages(prev => [...prev, {
+              role: 'assistant',
+              content: 'Shall I continue the demonstration from where we left off?',
+              audio: null, visual: null,
+            }]);
+          };
+        }
       }
     } catch {
       setChatMessages(prev => [...prev, {
         role: 'assistant',
-        content: "Let me connect you with our team directly — email akash@docstribe.com",
+        content: "There was a brief connection issue. Try asking again, or reach our UAE team directly at **arcus@docstribe.com** — we typically respond within the hour.",
       }]);
       setChatLoading(false);
     }
-  }, [chatInput, chatLoading, chatMessages, selectedRole, selectedPain, stopAudio, playAudio]);
+  }, [chatInput, chatLoading, chatMessages, selectedRole, selectedPain, stopAudio, playAudio, demoMode, demoInterrupted, demoScenes, demoSceneIdx, launchDemo, playDemoScene]);
 
   // ── Reset wizard ─────────────────────────────────────────────────────────
   const reset = useCallback(() => {
@@ -1517,7 +2010,7 @@ export default function ExplainerAgent() {
             background: 'rgba(255,255,255,0.18)',
             display: 'flex', alignItems: 'center', justifyContent: 'center',
             fontSize: '18px', color: '#fff',
-          }}>ॐ</div>
+          }}>D</div>
           <span style={{ fontSize: '14px', fontWeight: '700', color: '#fff', letterSpacing: '0.5px' }}>
             Ask RUDRA
           </span>
@@ -1565,14 +2058,14 @@ export default function ExplainerAgent() {
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
                 fontSize: '20px', flexShrink: 0,
                 boxShadow: '0 0 22px rgba(14,165,233,0.38)',
-              }}>ॐ</div>
+              }}>D</div>
               <div style={{ flex: 1 }}>
                 <div style={{
                   fontSize: '14px', fontWeight: '800', color: '#f0f9ff',
                   letterSpacing: '3.5px', fontFamily: 'Sora, sans-serif',
                 }}>RUDRA</div>
-                <div style={{ fontSize: '11px', color: '#1e3a5f', marginTop: '3px' }}>
-                  Dynamic DRG Intelligence · Powered by Gemini
+                <div style={{ fontSize: '11px', color: '#334155', marginTop: '3px' }}>
+                  Revenue Integrity Agent · Docstribe
                 </div>
               </div>
               <button
@@ -1599,40 +2092,50 @@ export default function ExplainerAgent() {
 
                 {/* ── Outcome cards — highlight in sequence with audio ── */}
                 {(() => {
-                  // 3 paragraphs map to 3 progress bands
-                  // Para 1 (gap)    0.00 – 0.38
-                  // Para 2 (fix)    0.38 – 0.68
-                  // Para 3 (result) 0.68 – 1.00
-                  const band = progress < 0.38 ? 0 : progress < 0.68 ? 1 : 2;
-                  const spoken = progress > 0.01; // audio has started
+                  // 4 bands synced to 4 sentences in the intro script
+                  // S1: "12 to 18%..."   0.00 – 0.28
+                  // S2: "60 to 70%..."   0.28 – 0.58
+                  // S3: "Docstribe is..."0.58 – 0.85
+                  // S4: "What do you..." 0.85 – 1.00
+                  const band = progress < 0.28 ? 0 : progress < 0.58 ? 1 : progress < 0.85 ? 2 : 3;
+                  const spoken = progress > 0.01;
 
                   const CARDS = [
                     {
-                      icon: '⚠️',
-                      stat: '$8–14M',
-                      label: 'Revenue lost per hospital / year',
-                      sub: 'Physician ↔ grouper language gap',
+                      num: '01',
+                      stat: '12–18%',
+                      label: 'UAE hospital claims denied — first submission',
+                      sub: 'Not a care failure — a documentation failure',
                       color: '#f87171',
-                      glow: 'rgba(248,113,113,0.35)',
-                      border: 'rgba(248,113,113,0.5)',
+                      glow: 'rgba(248,113,113,0.3)',
+                      border: 'rgba(248,113,113,0.45)',
                     },
                     {
-                      icon: '⚡',
-                      stat: 'Day 0 → 24h → DC',
-                      label: 'Three-point DRG intervention',
-                      sub: 'H&P · Rounding · Discharge lock',
+                      num: '02',
+                      stat: '60–70%',
+                      label: 'Of those denials are preventable',
+                      sub: 'Wrong code · Missing qualifier · Payer edit failure',
+                      color: '#fb923c',
+                      glow: 'rgba(251,146,60,0.3)',
+                      border: 'rgba(251,146,60,0.45)',
+                    },
+                    {
+                      num: '03',
+                      stat: '4 Stages',
+                      label: 'Pre-Visit → OPD → IPD → Claim',
+                      sub: 'One intelligence layer across the full patient journey',
                       color: '#38bdf8',
-                      glow: 'rgba(56,189,248,0.35)',
-                      border: 'rgba(56,189,248,0.5)',
+                      glow: 'rgba(56,189,248,0.3)',
+                      border: 'rgba(56,189,248,0.45)',
                     },
                     {
-                      icon: '✅',
-                      stat: '99% · +0.05 · +10%',
-                      label: 'Clean claim · CMI uplift · Charges',
-                      sub: 'Guaranteed by outcomes',
+                      num: '04',
+                      stat: '↓30% · +25%',
+                      label: 'Fewer denials · More revenue captured',
+                      sub: 'Outcome-based — you pay only on proven results',
                       color: '#4ade80',
-                      glow: 'rgba(74,222,128,0.35)',
-                      border: 'rgba(74,222,128,0.5)',
+                      glow: 'rgba(74,222,128,0.3)',
+                      border: 'rgba(74,222,128,0.45)',
                     },
                   ];
 
@@ -1644,35 +2147,40 @@ export default function ExplainerAgent() {
                         return (
                           <div key={i} style={{
                             borderRadius: '12px',
-                            border: `1px solid ${isActive ? c.border : isPast ? 'rgba(255,255,255,0.08)' : 'rgba(255,255,255,0.04)'}`,
+                            border: `1px solid ${isActive ? c.border : isPast ? 'rgba(255,255,255,0.07)' : 'rgba(255,255,255,0.03)'}`,
                             background: isActive
                               ? `radial-gradient(ellipse at left, ${c.glow} 0%, rgba(0,0,0,0.5) 70%)`
-                              : isPast ? 'rgba(255,255,255,0.03)' : 'rgba(0,0,0,0.2)',
+                              : isPast ? 'rgba(255,255,255,0.025)' : 'rgba(0,0,0,0.18)',
                             padding: '10px 14px',
                             display: 'flex', alignItems: 'center', gap: '12px',
                             transition: 'all 0.4s ease',
-                            transform: isActive ? 'scale(1.02)' : 'scale(1)',
-                            boxShadow: isActive ? `0 0 18px ${c.glow}` : 'none',
-                            opacity: !spoken ? 0.35 : isPast ? 0.5 : 1,
+                            transform: isActive ? 'translateX(3px) scale(1.01)' : 'translateX(0) scale(1)',
+                            boxShadow: isActive ? `0 0 16px ${c.glow}` : 'none',
+                            opacity: !spoken ? 0.3 : isPast ? 0.45 : 1,
                           }}>
-                            <div style={{ fontSize: '20px', flexShrink: 0 }}>{c.icon}</div>
+                            <div style={{
+                              width: '28px', height: '28px', borderRadius: '8px', flexShrink: 0,
+                              background: isActive ? `${c.glow}` : 'rgba(255,255,255,0.04)',
+                              border: `1px solid ${isActive ? c.border : 'rgba(255,255,255,0.06)'}`,
+                              display: 'flex', alignItems: 'center', justifyContent: 'center',
+                              fontSize: '9px', fontWeight: '800', color: isActive ? c.color : '#334155',
+                              fontFamily: 'Sora, sans-serif', transition: 'all 0.35s ease',
+                            }}>{c.num}</div>
                             <div style={{ flex: 1, minWidth: 0 }}>
                               <div style={{
-                                fontSize: '15px', fontWeight: 700, letterSpacing: '-0.3px',
-                                color: isActive ? c.color : isPast ? '#64748b' : '#334155',
+                                fontSize: '14px', fontWeight: 700, letterSpacing: '-0.3px',
+                                color: isActive ? c.color : isPast ? '#475569' : '#1e293b',
                                 transition: 'color 0.3s ease',
-                                fontFamily: 'monospace',
+                                fontFamily: 'Sora, sans-serif',
                               }}>{c.stat}</div>
-                              <div style={{ fontSize: '11px', color: isActive ? '#cbd5e1' : '#475569', marginTop: '1px' }}>{c.label}</div>
-                              <div style={{ fontSize: '10px', color: isActive ? '#64748b' : '#1e293b', marginTop: '1px' }}>{c.sub}</div>
+                              <div style={{ fontSize: '11px', color: isActive ? '#cbd5e1' : '#334155', marginTop: '1px', lineHeight: '1.3' }}>{c.label}</div>
+                              <div style={{ fontSize: '9.5px', color: isActive ? '#64748b' : '#1e293b', marginTop: '2px', lineHeight: '1.3' }}>{c.sub}</div>
                             </div>
                             {isActive && (
                               <div style={{
-                                width: '6px', height: '6px', borderRadius: '50%',
-                                background: c.color,
-                                boxShadow: `0 0 8px ${c.color}`,
-                                animation: 'pulse 1s infinite',
-                                flexShrink: 0,
+                                width: '5px', height: '5px', borderRadius: '50%',
+                                background: c.color, boxShadow: `0 0 6px ${c.color}`,
+                                animation: 'pulse 1s infinite', flexShrink: 0,
                               }} />
                             )}
                           </div>
@@ -1729,6 +2237,16 @@ export default function ExplainerAgent() {
                 visual={visual}
                 visualPhase={visualPhase}
                 toolOutput={toolOutput}
+                demoMode={demoMode}
+                demoSceneIdx={demoSceneIdx}
+                onDemoSkip={() => { stopAudio(); setDemoMode(false); setDemoInterrupted(false); setChatMessages([]); }}
+                onDemoPrev={() => { if (demoSceneIdx > 0) { stopAudio(); onAudioEndRef.current = null; playDemoScene(demoScenes, demoSceneIdx - 1); } }}
+                onDemoNext={() => { if (demoSceneIdx < demoScenes.length - 1) { stopAudio(); onAudioEndRef.current = null; playDemoScene(demoScenes, demoSceneIdx + 1); } }}
+                demoScenes={demoScenes}
+                currentDemoScene={demoMode ? demoScenes[demoSceneIdx] : null}
+                onLaunchDemo={launchDemo}
+                onSendText={(text) => { setChatInput(''); sendFollowUp(text); }}
+                selectedRole={selectedRole}
               />
             )}
             </div>
