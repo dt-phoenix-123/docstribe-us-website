@@ -91,54 +91,38 @@ function highlightCaption(text) {
 }
 
 /* ══════════════════ SCENE DATA ═════════════════════════════════ */
-// VOs crafted by Gemini 2.5 Flash Lite — board-level, screen-precise
+// 7 scenes — trimmed for 2:30 board demo
+// Scenes 3, 5, 9, 11 removed; 5+6 merged into Clinical Intelligence; 8+9 merged into Denial & Recovery
 const SCENES = [
   {
     id: 1, type: 'stat', color: TEAL,
     title: 'The Revenue Gap',
-    // 15w + 7w + 9w + 4w + 6w = 41w — beat fracs 0.04, 0.38, 0.56, 0.88
-    // Breakdown cards appear at p>=0.56 synced to "four gaps" beat
-    vo: "In the UAE, twelve to eighteen percent of every hospital claim is denied. Sixty to seventy percent — entirely preventable. Four gaps: documentation, authorization, coding, claim edits. Docstribe closes every one. Before a single claim goes out.",
+    vo: "In the UAE, twelve to eighteen percent of every hospital claim is denied. Sixty to seventy percent — entirely preventable. Four gaps: documentation, authorization, coding, claim edits. Someone has to close it.",
     beats: [
       { at: 0.04, stat: '12–18%',       sub: 'UAE hospital claims denied on first submission' },
       { at: 0.38, stat: '60–70%',       sub: 'of those denials entirely preventable' },
       { at: 0.56, stat: '4 Gap Types',  sub: 'documentation · auth · coding · claim edits' },
-      { at: 0.88, stat: 'Zero leakage.', sub: 'Docstribe closes all four — before claims go out' },
+      { at: 0.88, stat: 'Someone closes it.', sub: 'before a single claim goes out' },
     ],
   },
   {
     id: 2, type: 'kpi', color: TEAL,
     title: 'Introducing Docstribe',
-    // S1:25w credentials S2:7w outcomes S3:1w = 33w — beat fracs 0.26 0.46 0.62 0.76 0.90
-    vo: "This is Docstribe. Built by clinicians — thirty years of practice. A hundred hospitals across the US, UAE, and India. Ten million lives. That gap you just saw — the twelve to eighteen percent — we close it. Contractually. Denials fall thirty percent. Clean claim rate ninety-nine percent. CMI up by zero point one five. Sixty days. Guaranteed.",
+    vo: "Docstribe. Built by clinicians — thirty years of practice, a hundred hospitals across the US, UAE, and India, ten million lives. That gap you just saw — we close it. Contractually. Denials fall thirty percent. Clean claim rate ninety-nine percent. CMI up by zero point one five. Sixty days. Guaranteed.",
     beats: [
       { at: 0.04, stat: 'Docstribe',      sub: 'Clinical intelligence platform · clinician-built' },
-      { at: 0.22, stat: '100+ Hospitals', sub: 'US · UAE · India · live deployments' },
+      { at: 0.20, stat: '100+ Hospitals', sub: 'US · UAE · India · live deployments' },
       { at: 0.34, stat: '10M+ Lives',     sub: 'Patient population managed globally' },
       { at: 0.50, stat: '↓30%',          sub: 'Denial rate reduction · 60 days · guaranteed' },
-      { at: 0.64, stat: '99%',           sub: 'Clean claim rate · first-pass submission' },
-      { at: 0.78, stat: '+0.15 CMI',     sub: 'Case mix index improvement · 60 days' },
-    ],
-  },
-  {
-    id: 3, type: 'product', color: TEAL,
-    title: 'One Unified Workspace',
-    breadcrumb: 'Cases Workbench',
-    // S1:15w S2:8w = 23w — beat fracs 0.65 1.00; zero leakage at word 14 = 0.61
-    vo: "Docstribe connects with your existing EMR and HIS — no rip and replace. It builds a unified case workbench for physicians, medical coders, and case managers across OPD, IPD, and Emergency. Two hundred live encounters. Every case tracked from order to final payment. Nothing falls through.",
-    beats: [
-      { at: 0.04, stat: 'EMR / HIS Connected', sub: 'Epic · Oracle · Cerner · MEDITECH — live link' },
-      { at: 0.28, stat: '3 Roles · 1 View',   sub: 'physicians · coders · case managers — unified' },
-      { at: 0.52, stat: '200 live cases',      sub: 'OPD · IPD · Emergency — all tracked' },
-      { at: 0.78, stat: 'Zero leakage',        sub: 'order to payment — nothing falls through' },
+      { at: 0.66, stat: '99%',           sub: 'Clean claim rate · first-pass submission' },
+      { at: 0.80, stat: '+0.15 CMI',     sub: 'Case mix index improvement · 60 days' },
     ],
   },
   {
     id: 4, type: 'product', color: GREEN,
     title: 'Pre-Visit Intelligence',
     breadcrumb: 'Eligibility & Pre-Authorisation',
-    // flowchart: patient in → EMR auto-fetch → payer API → status chips → cleared
-    vo: "A patient walks in. Docstribe pulls their insurance profile automatically — coverage, co-pay, network status — direct from the payer API. Eligibility confirmed before they reach the desk. For the inpatient needing pre-authorisation — PA filed at order entry, approved before care begins. No forms. No delays.",
+    vo: "A patient walks in. Docstribe pulls their insurance profile automatically — coverage, co-pay, network status — direct from the payer API. Eligibility confirmed before they reach the desk. For inpatient — PA filed at order entry, approved before care begins. No forms. No delays.",
     beats: [
       { at: 0.10, stat: 'Auto-fetched',    sub: 'insurance profile pulled · no manual entry' },
       { at: 0.33, stat: 'Eligible ✓',      sub: 'co-pay · network · coverage confirmed' },
@@ -147,34 +131,22 @@ const SCENES = [
     ],
   },
   {
-    id: 5, type: 'product', color: INDIGO,
-    title: 'Ambient Clinical Intelligence',
-    breadcrumb: 'Ambient Scribe — OPD & IPD',
-    // S1:18w S2:13w = 31w — beat fracs 0.58 1.00; NABIDH at S2 word 5 = 0.74
-    vo: "The physician speaks. The structured clinical note builds in real time — vital signs, ICD codes, comorbidities, all captured automatically. Feeding directly into NABIDH and DHA. The doctor never looks up from the patient. Documentation already done.",
-    beats: [
-      { at: 0.06, stat: 'OPD note built live', sub: 'DM · HTN · auto-coded from voice' },
-      { at: 0.60, stat: 'NABIDH ✓  DHA ✓',    sub: 'compliant · structured · exchange-ready' },
-      { at: 0.84, stat: 'Physicians in care',  sub: 'documentation automated · zero burden' },
-    ],
-  },
-  {
     id: 6, type: 'product', color: AMBER,
-    title: 'CDI — Closing the Gap',
-    breadcrumb: 'Clinical Documentation Intelligence',
-    // CDI narrative: physician note → query auto-surfaces → guideline → tap → locked+esigned
-    vo: "While the physician is in the note, Docstribe surfaces a query — automatically, grounded in clinical guidelines. One answer. The documentation is locked and e-signed. Code corrected at the point of care. For inpatient — principal diagnosis confirmed before discharge. IR-DRG weight locked. Revenue that would have been lost, isn't.",
+    title: 'Clinical Intelligence',
+    breadcrumb: 'Ambient Scribe · CDI',
+    // Absorbs ambient scribe narrative + CDI query story
+    vo: "The physician speaks. The note builds itself — diagnoses, vitals, comorbidities, structured and coded in real time. Docstribe reads the note as it forms. A documentation gap surfaces automatically, grounded in clinical guidelines. One answer from the physician. Code corrected at the point of care. For inpatient — principal diagnosis confirmed, IR-DRG weight locked before discharge. Revenue that would have been lost, isn't.",
     beats: [
-      { at: 0.06, stat: 'Query auto-surfaces',    sub: 'while physician is in the note' },
-      { at: 0.42, stat: '✓ Locked · E-signed',    sub: 'ICD corrected · charge captured at point of care' },
-      { at: 0.62, stat: 'IPD DRG locked',          sub: 'principal Dx confirmed before discharge' },
+      { at: 0.06, stat: 'Note builds live',       sub: 'voice → structured ICD · zero physician effort' },
+      { at: 0.35, stat: 'Query auto-surfaces',    sub: 'documentation gap detected · in-note · real time' },
+      { at: 0.58, stat: '✓ Locked · E-signed',    sub: 'ICD corrected · charge captured at point of care' },
+      { at: 0.76, stat: 'IR-DRG locked',          sub: 'IPD principal Dx confirmed before discharge' },
     ],
   },
   {
     id: 7, type: 'product', color: PURPLE,
     title: 'AI-Powered Coding',
     breadcrumb: 'ICD-10-CM · Smart Coding Engine',
-    // OPD: ICD ranked + NCCI/MUE payer match → less denials; IPD: live IR-DRG while admitted
     vo: "Every OPD claim — diagnoses ranked, procedure codes checked against payer NCCI and MUE edits before anything goes out. That cuts denials at source. For inpatient, the IR-DRG recalculates live while the patient is admitted — every complication captured today reflects in the DRG weight immediately. AED eighteen thousand four hundred more. Per case.",
     beats: [
       { at: 0.06, stat: 'ICD-10-CM ranked',      sub: 'OPD diagnoses · symbols suppressed' },
@@ -185,50 +157,28 @@ const SCENES = [
   },
   {
     id: 8, type: 'product', color: RED,
-    title: 'Denial Intelligence',
-    breadcrumb: 'Payer Contract Intelligence',
-    // Bridge: system doesn't stop at coding → goes deeper into claim language payer by payer
-    vo: "The system does not stop there. It goes deeper — reading the claim language, payer by payer, batch by batch. Every denial has a pattern. Docstribe maps it. Up to ninety-one percent recoverable before the claim goes out. That is how the denial rate falls — not by chasing. By never losing.",
+    title: 'Denial Prevention & Recovery',
+    breadcrumb: 'Payer Contract Intelligence · Appeal Generator',
+    // Merged denial intel + one-click recovery
+    vo: "The system goes deeper — reading the claim language payer by payer, batch by batch. Every denial has a pattern. Docstribe maps it — sixty-seven to ninety-one percent recoverable before the claim even goes out. And when a denial does land, one click. Contract read, clause found, appeal written. Thirty seconds. AED nineteen hundred, recovered.",
     beats: [
       { at: 0.08, stat: 'Per payer · per batch', sub: 'Daman · Thiqa · AXA Gulf · Oman Insurance' },
-      { at: 0.60, stat: '67–91% recoverable',    sub: 'pre-submission · flagged before send' },
-      { at: 0.84, stat: 'Denial rate ↓ 30%',    sub: 'batch over batch · systemic improvement' },
-    ],
-  },
-  {
-    id: 9, type: 'product', color: TEAL,
-    title: 'One-Click Recovery',
-    breadcrumb: 'Claim Recovery — Appeal Generator',
-    // S1:12w S2:2w S3:15w S4:3w S5:2w = 34w — fracs 0.35 0.41 0.85 0.94 1.00
-    vo: "A denial lands. Historically, three weeks of follow-up. Now — one click. Docstribe reads the contract, finds the clause, writes the appeal letter. The whole thing. Thirty seconds. AED nineteen hundred in recovery.",
-    beats: [
-      { at: 0.06, stat: 'AED 1,900 denied', sub: 'Daman · bundling dispute · appeal pending' },
-      { at: 0.42, stat: '1-click appeal',   sub: 'contract read · clause matched · letter built' },
-      { at: 0.92, stat: '✅ 30 seconds',    sub: 'AED 1,900 recovered · vs. 3 weeks manual' },
+      { at: 0.46, stat: '67–91% recoverable',    sub: 'pre-submission · flagged before send' },
+      { at: 0.70, stat: '1-click appeal',         sub: 'contract read · clause matched · letter built' },
+      { at: 0.90, stat: '✅ 30 seconds',          sub: 'AED 1,900 recovered · vs. 3 weeks manual' },
     ],
   },
   {
     id: 10, type: 'product', color: INDIGO,
-    title: 'Service Line Growth',
+    title: 'Clinical Engagement & Closing',
     breadcrumb: 'Service Line Growth · Clinical Engagement',
-    // S1:7w S2:2w S3:11w S4:14w S5:2w = 36w — fracs 0.19 0.25 0.56 0.95 1.00
-    vo: "Your ops team cannot watch every chart. Docstribe does. Oxygen dropping. Labs flagging a DRG escalation. Pre-auth ready for systemic therapy. Four patients — AED ninety-one thousand — surfaced as a live action list. Clinical signals, turned into revenue. Day Zero.",
+    // Folds in closing sentiment from removed scene 11
+    vo: "Your ops team cannot watch every chart. Docstribe does. Oxygen dropping. Labs flagging a DRG escalation. Pre-auth ready for systemic therapy. Four patients — AED ninety-one thousand — surfaced live, today. And this is not a generic platform. It learns your hospital, your payers, your physicians — and gets sharper with every claim.",
     beats: [
       { at: 0.10, stat: 'Ops engagement queue', sub: 'clinical signals → revenue action · live' },
-      { at: 0.32, stat: '4 alerts · live now',   sub: 'Respiratory · Cardiology · Neurology · Oncology' },
-      { at: 0.55, stat: 'AED 91K opportunity',   sub: '4 patients · surfaced live · Day Zero' },
-    ],
-  },
-  {
-    id: 11, type: 'dashboard', color: TEAL,
-    title: 'Your RCM Intelligence Partner',
-    breadcrumb: 'Your RCM Intelligence Framework',
-    // S1:7w S2:22w S3:9w = 38w — fracs 0.18 0.76 1.00
-    vo: "This is not a generic platform. It is an intelligence framework that learns your hospital — your payers, your physicians, your case mix — and gets smarter with every claim, every signal, every patient. Clinical intelligence. Built for you.",
-    beats: [
-      { at: 0.06, stat: 'Your intelligence',      sub: 'payors · physicians · case mix — personalized' },
-      { at: 0.20, stat: 'Personalized framework',  sub: 'evolves with your hospital · not a generic tool' },
-      { at: 0.78, stat: 'Built for you.',          sub: 'Clinical Intelligence · Financial Integrity' },
+      { at: 0.30, stat: '4 alerts · live now',   sub: 'Respiratory · Cardiology · Neurology · Oncology' },
+      { at: 0.52, stat: 'AED 91K opportunity',   sub: '4 patients · surfaced live · Day Zero' },
+      { at: 0.80, stat: 'Built for you.',         sub: 'learns your hospital · sharper every claim' },
     ],
   },
 ];
@@ -1157,142 +1107,218 @@ function CDIQueryCard({ col, title, sub, question, guidelinePills, opts, answere
   );
 }
 
-/* Scene 6 — CDI: narrative physician-note → query auto-surfaces → guideline → tap → locked */
+/* Scene 6 — Clinical Intelligence: ambient note builds live → CDI left drawer slides in → ICD/CPT enhanced */
 function CDIScreen({ progress }) {
   const p = progress;
 
   const ipdPhase      = p >= 0.50;
-  const opdQueryShows = p >= 0.18;
-  const opdAnswered   = p >= 0.33;
-  const opdLocked     = p >= 0.42;
-  const ipdQueryShows = p >= 0.60;
-  const ipdAnswered   = p >= 0.76;
-  const ipdLocked     = p >= 0.84;
+  const opdQueryShows = p >= 0.22;
+  const opdAnswered   = p >= 0.36;
+  const opdLocked     = p >= 0.46;
+  const ipdQueryShows = p >= 0.62;
+  const ipdAnswered   = p >= 0.77;
+  const ipdLocked     = p >= 0.86;
+  const drawerOpen    = ipdPhase ? ipdQueryShows : opdQueryShows;
+  const queryColor    = ipdPhase ? TEAL : AMBER;
   const drgValue      = ipdLocked ? '1.34' : opdLocked ? '1.04' : '0.82';
   const totalCapture  = ipdLocked ? '+AED 14,000' : opdLocked ? '+AED 4,200' : '';
 
   const opdNoteLines = [
-    { text: 'Chief complaint: Poorly controlled blood sugars, fatigue ×3 months', show: 0.04 },
-    { text: 'Lab: HbA1c 9.1% ↑ · BP 142/88 · eGFR 68 mL/min', show: 0.09 },
-    { text: 'Impression: Type 2 DM — hyperglycaemia', show: 0.15, cursor: true },
+    { text: '"HbA1c nine point one. Definitely uncontrolled. She needs intensification."', show: 0.04 },
+    { text: 'BP 142/88. eGFR 68 — CKD Stage 3 territory. Adjusting Metformin, adding Jardiance.', show: 0.11 },
+    { text: 'Nephrology referral flagged. Impression: Type 2 DM — hyperglycaemia.', show: 0.18, cursor: true },
   ];
   const ipdNoteLines = [
-    { text: 'Admission: Shortness of breath · SpO₂ 88% on arrival', show: 0.52 },
-    { text: 'PMH: COPD (FEV1 52%) · smoker 30 pack-years', show: 0.56 },
-    { text: 'CXR: Right-lower-lobe opacity — Pneumonia', show: 0.60 },
-    { text: 'Primary impression: COPD exacerbation', show: 0.64, cursor: true },
+    { text: 'Admission: shortness of breath · SpO₂ 88% on arrival', show: 0.52 },
+    { text: 'PMH: COPD (FEV1 52%) · smoker 30 pack-years · prior exacerbation ×2', show: 0.58 },
+    { text: 'CXR: right-lower-lobe opacity — pneumonia likely. Impression: COPD exacerbation.', show: 0.63, cursor: true },
   ];
 
-  return (
-    <ProductShell breadcrumb="Clinical Documentation Intelligence" color={AMBER}>
-      <div style={{ padding: '8px 12px', height: '100%', display: 'flex', flexDirection: 'column', gap: 7, overflow: 'hidden' }}>
+  const opdEnhancements = [
+    { from: 'E11.9', to: 'E11.65', label: 'T2DM Uncontrolled (HbA1c 9.1%)', badge: 'CC captured', col: RED,    show: opdAnswered },
+    { from: 'CPT 99214', to: '99214 + 83036', label: 'HbA1c lab billed separately — MUE ✓', badge: '+CPT', col: TEAL, show: opdLocked },
+  ];
+  const ipdEnhancements = [
+    { from: 'J44.1 principal', to: 'J18.9 principal', label: 'Pneumonia sequenced as primary', badge: 'MCC locked', col: RED,    show: ipdAnswered },
+    { from: 'IR-DRG 0.94',    to: 'IR-DRG 1.34',      label: 'J44.1 + I10 + E11.9 = MCC+2×CC',  badge: '+0.40 wt', col: PURPLE, show: ipdLocked },
+  ];
+  const enhancements = ipdPhase ? ipdEnhancements : opdEnhancements;
+  const locked = ipdPhase ? ipdLocked : opdLocked;
 
-        {/* Header */}
-        <div style={{ display: 'flex', gap: 10, alignItems: 'center', flexShrink: 0 }}>
+  return (
+    <ProductShell breadcrumb="Ambient Scribe · CDI" color={AMBER}>
+      <div style={{ padding: '10px 14px', height: '100%', display: 'flex', flexDirection: 'column', gap: 8, overflow: 'hidden' }}>
+
+        {/* ── Top bar: scene label + IR-DRG ── */}
+        <div style={{ display: 'flex', gap: 12, alignItems: 'center', flexShrink: 0 }}>
           <div style={{ flex: 1 }}>
-            <div style={{ fontSize: 7.5, fontWeight: 700, color: AMBER, letterSpacing: 0.5 }}>CDI — DOCUMENTATION INTELLIGENCE</div>
-            <div style={{ fontSize: 7, color: DIM, marginTop: 1 }}>Queries surface automatically · grounded in clinical guidelines · physician confirms in-note</div>
-          </div>
-          {/* Live IR-DRG badge */}
-          <div style={{ background: `${PURPLE}12`, border: `1px solid ${PURPLE}35`, borderRadius: 8, padding: '5px 14px', textAlign: 'center', flexShrink: 0 }}>
-            <div style={{ fontSize: 6.5, color: MUTED, marginBottom: 1 }}>IR-DRG WEIGHT</div>
-            <div style={{ fontSize: 20, fontWeight: 900, color: opdLocked ? PURPLE : DIM, fontFamily: 'Sora', lineHeight: 1, transition: 'color 0.8s, text-shadow 0.8s', textShadow: opdLocked ? `0 0 20px ${PURPLE}80` : 'none' }}>
-              {opdLocked ? <CountUp value={drgValue} duration={600} key={drgValue} /> : '0.82'}
+            <div style={{ fontSize: 8.5, fontWeight: 700, color: AMBER, letterSpacing: 1, textTransform: 'uppercase' }}>Clinical Intelligence</div>
+            <div style={{ fontSize: 8, color: DIM, marginTop: 2 }}>
+              {drawerOpen ? 'CDI query surfaced · documentation gap auto-detected' : 'Physician speaking · note building in real time'}
             </div>
-            {totalCapture && <div style={{ fontSize: 6.5, color: GREEN, fontWeight: 700, marginTop: 2, animation: 'dpBeatIn 0.4s ease both' }}>{totalCapture}</div>}
+          </div>
+          <div style={{ background: locked ? `${PURPLE}18` : 'rgba(0,0,0,0.28)', border: `1px solid ${locked ? PURPLE + '50' : BORDER}`, borderRadius: 10, padding: '6px 18px', textAlign: 'center', flexShrink: 0, transition: 'border-color 0.6s, background 0.6s' }}>
+            <div style={{ fontSize: 7, color: MUTED, letterSpacing: 1, marginBottom: 2 }}>IR-DRG</div>
+            <div style={{ fontSize: 26, fontWeight: 900, color: locked ? PURPLE : DIM, fontFamily: 'Sora', lineHeight: 1, transition: 'color 0.8s', textShadow: locked ? `0 0 24px ${PURPLE}70` : 'none' }}>
+              {locked ? <CountUp value={drgValue} duration={600} key={drgValue} /> : '0.82'}
+            </div>
+            {totalCapture && <div style={{ fontSize: 7.5, color: GREEN, fontWeight: 700, marginTop: 2, animation: 'dpBeatIn 0.4s ease both' }}>{totalCapture}</div>}
           </div>
         </div>
 
-        {/* Two-column: note | query */}
-        <div style={{ display: 'flex', gap: 10, flex: 1, overflow: 'hidden' }}>
+        {/* ── Main workspace: drawer + note ── */}
+        <div style={{ flex: 1, display: 'flex', overflow: 'hidden', borderRadius: 12, border: `1px solid ${BORDER}`, background: 'rgba(4,8,22,0.55)' }}>
 
-          {/* LEFT — physician note */}
-          <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 6, minWidth: 0 }}>
-            <div style={{ fontSize: 7, fontWeight: 700, color: DIM, letterSpacing: 0.4 }}>
-              {ipdPhase ? 'IPD PHYSICIAN NOTE · IN PROGRESS' : 'OPD PHYSICIAN NOTE · IN PROGRESS'}
-            </div>
-            <div style={{ background: 'rgba(0,0,0,0.22)', border: `1px solid ${BORDER}`, borderRadius: 9, padding: '9px 11px', flex: 1, display: 'flex', flexDirection: 'column', gap: 4 }}>
-              {(ipdPhase ? ipdNoteLines : opdNoteLines).map((line, i) => p >= line.show && (
-                <div key={i} style={{ fontSize: 7.5, color: line.cursor ? `${TXT}cc` : TXT, lineHeight: 1.65, animation: 'dpRowBlurIn 0.4s ease both' }}>
-                  {line.text}
-                  {line.cursor && !(ipdPhase ? ipdAnswered : opdAnswered) && (
-                    <span style={{ color: AMBER, fontWeight: 900, animation: 'dpPulse 1s ease-in-out infinite' }}> ▌</span>
+          {/* ── LEFT DRAWER — slides in when query surfaces ── */}
+          <div style={{
+            width: drawerOpen ? '46%' : '0%',
+            flexShrink: 0,
+            overflow: 'hidden',
+            transition: 'width 0.6s cubic-bezier(0.34,1.05,0.64,1)',
+            borderRight: drawerOpen ? `1px solid ${queryColor}35` : 'none',
+            background: drawerOpen
+              ? `linear-gradient(170deg, ${queryColor}0d 0%, rgba(4,8,22,0.70) 100%)`
+              : 'transparent',
+          }}>
+            <div style={{ width: '100%', padding: '14px 16px', height: '100%', display: 'flex', flexDirection: 'column', gap: 12, overflowY: 'auto', boxSizing: 'border-box' }}>
+
+              {/* Drawer header */}
+              <div style={{ display: 'flex', gap: 10, alignItems: 'flex-start' }}>
+                <div style={{ width: 30, height: 30, borderRadius: '50%', background: `${queryColor}1a`, border: `1.5px solid ${queryColor}55`, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, fontSize: 14 }}>⚡</div>
+                <div style={{ flex: 1 }}>
+                  <div style={{ fontSize: 10, fontWeight: 800, color: queryColor, letterSpacing: 0.2 }}>
+                    {ipdPhase ? 'Principal Diagnosis Query' : 'Documentation Gap Detected'}
+                  </div>
+                  <div style={{ fontSize: 7.5, color: DIM, marginTop: 1 }}>
+                    {ipdPhase ? 'IPD · sequencing conflict · auto-surfaced' : 'OPD · in-note · no disruption'}
+                  </div>
+                </div>
+                {locked && (
+                  <span style={{ fontSize: 7.5, fontWeight: 800, color: GREEN, background: `${GREEN}1a`, border: `1px solid ${GREEN}40`, borderRadius: 6, padding: '3px 9px', animation: 'dpSpringIn 0.5s ease both', flexShrink: 0 }}>🔒 E-signed</span>
+                )}
+              </div>
+
+              {/* Clinical question — large, readable */}
+              <div style={{ fontSize: 13, fontWeight: 700, color: TXT, lineHeight: 1.5, borderLeft: `3px solid ${queryColor}`, paddingLeft: 12, paddingTop: 2, paddingBottom: 2 }}>
+                {ipdPhase
+                  ? 'What was the primary reason for this admission?'
+                  : 'Is this Type 2 DM controlled or uncontrolled?'}
+              </div>
+
+              {/* Guideline source pills */}
+              <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
+                {(ipdPhase
+                  ? [['ATS/IDSA CAP 2019', PURPLE], ['Thiqa SEHA Policy', TEAL]]
+                  : [['ADA 2024 §6.1', PURPLE]]
+                ).map(([label, c]) => (
+                  <div key={label} style={{ display: 'inline-flex', alignItems: 'center', gap: 5, background: `${c}12`, border: `1px solid ${c}30`, borderRadius: 20, padding: '4px 12px' }}>
+                    <div style={{ width: 4, height: 4, borderRadius: '50%', background: c }} />
+                    <span style={{ fontSize: 8, fontWeight: 700, color: c }}>{label}</span>
+                  </div>
+                ))}
+              </div>
+
+              {/* Answer options */}
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 7 }}>
+                {(ipdPhase
+                  ? ['J18.9 — Pneumonia (primary reason for admission)', 'J44.1 — COPD exacerbation (pre-existing)']
+                  : ['E11.65 — Uncontrolled (HbA1c 9.1%)', 'E11.9 — Controlled / no complications']
+                ).map((opt, j) => {
+                  const sel = j === 0 && ((ipdPhase ? ipdAnswered : opdAnswered) || locked);
+                  return (
+                    <div key={j} style={{ display: 'flex', gap: 10, alignItems: 'flex-start', padding: '10px 13px', borderRadius: 9, background: sel ? `${GREEN}12` : 'rgba(255,255,255,0.03)', border: `1px solid ${sel ? GREEN + '45' : 'rgba(255,255,255,0.07)'}`, transition: 'all 0.45s ease' }}>
+                      <div style={{ width: 17, height: 17, borderRadius: '50%', border: `2px solid ${sel ? GREEN : 'rgba(255,255,255,0.2)'}`, background: sel ? GREEN : 'transparent', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, marginTop: 1, transition: 'all 0.35s' }}>
+                        {sel && <div style={{ width: 6, height: 6, borderRadius: '50%', background: '#fff' }} />}
+                      </div>
+                      <span style={{ fontSize: 10, fontWeight: sel ? 600 : 400, color: sel ? TXT : DIM, lineHeight: 1.4, transition: 'all 0.35s' }}>{opt}</span>
+                    </div>
+                  );
+                })}
+              </div>
+
+              {/* Code enhancement section */}
+              {enhancements.some(e => e.show) && (
+                <div style={{ borderTop: `1px solid rgba(255,255,255,0.08)`, paddingTop: 12, display: 'flex', flexDirection: 'column', gap: 8 }}>
+                  <div style={{ fontSize: 7.5, fontWeight: 800, color: GREEN, letterSpacing: 1, textTransform: 'uppercase' }}>Code Enhancement</div>
+                  {enhancements.filter(e => e.show).map((e, i) => (
+                    <div key={i} style={{ padding: '9px 12px', borderRadius: 9, background: `${e.col}0a`, border: `1px solid ${e.col}22`, animation: 'dpSpringIn 0.6s cubic-bezier(0.34,1.4,0.64,1) both' }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 4 }}>
+                        <span style={{ fontSize: 9.5, color: `${RED}bb`, textDecoration: 'line-through', fontFamily: 'Sora' }}>{e.from}</span>
+                        <span style={{ fontSize: 11, color: MUTED }}>→</span>
+                        <span style={{ fontSize: 12, fontWeight: 900, color: GREEN, fontFamily: 'Sora' }}>{e.to}</span>
+                        <span style={{ marginLeft: 'auto', fontSize: 7, fontWeight: 800, color: e.col, background: `${e.col}18`, border: `1px solid ${e.col}30`, borderRadius: 5, padding: '2px 8px', flexShrink: 0 }}>{e.badge}</span>
+                      </div>
+                      <div style={{ fontSize: 8, color: DIM }}>{e.label}</div>
+                    </div>
+                  ))}
+                  {locked && (
+                    <div style={{ textAlign: 'center', paddingTop: 4, animation: 'dpSpringIn 0.7s cubic-bezier(0.34,1.4,0.64,1) both' }}>
+                      <div style={{ fontSize: 24, fontWeight: 900, color: GREEN, fontFamily: 'Sora', letterSpacing: -1.5, lineHeight: 1, textShadow: `0 0 30px ${GREEN}55` }}>
+                        {ipdPhase ? '+AED 9,800' : '+AED 4,200'}
+                      </div>
+                      <div style={{ fontSize: 8, color: DIM, marginTop: 4 }}>captured at point of care</div>
+                    </div>
                   )}
-                </div>
-              ))}
-              {/* Docstribe watching indicator */}
-              {(ipdPhase ? (p >= 0.54 && !ipdQueryShows) : (p >= 0.06 && !opdQueryShows)) && (
-                <div style={{ marginTop: 6, display: 'flex', gap: 5, alignItems: 'center', animation: 'dpBeatIn 0.4s ease both' }}>
-                  <div style={{ width: 5, height: 5, borderRadius: '50%', background: AMBER, animation: 'dpPulse 1.2s ease-in-out infinite' }} />
-                  <span style={{ fontSize: 6.5, color: `${AMBER}90` }}>Docstribe reading note in real time…</span>
-                </div>
-              )}
-              {/* Query surfaced indicator */}
-              {(ipdPhase ? ipdQueryShows : opdQueryShows) && !(ipdPhase ? ipdLocked : opdLocked) && (
-                <div style={{ marginTop: 6, display: 'flex', gap: 5, alignItems: 'center', animation: 'dpBeatIn 0.3s ease both' }}>
-                  <div style={{ width: 5, height: 5, borderRadius: '50%', background: AMBER, boxShadow: `0 0 6px ${AMBER}` }} />
-                  <span style={{ fontSize: 6.5, color: AMBER, fontWeight: 700 }}>Documentation gap detected → query surfaced</span>
-                </div>
-              )}
-              {(ipdPhase ? ipdLocked : opdLocked) && (
-                <div style={{ marginTop: 6, display: 'flex', gap: 5, alignItems: 'center', animation: 'dpBeatIn 0.3s ease both' }}>
-                  <span style={{ fontSize: 6.5, color: GREEN, fontWeight: 700 }}>✓ Query answered · note updated · charge captured at point of care</span>
                 </div>
               )}
             </div>
           </div>
 
-          {/* RIGHT — CDI query */}
-          <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 6, minWidth: 0 }}>
-            <div style={{ fontSize: 7, fontWeight: 700, color: DIM, letterSpacing: 0.4 }}>DOCSTRIBE CDI QUERY</div>
+          {/* ── RIGHT — Physician Note ── */}
+          <div style={{ flex: 1, display: 'flex', flexDirection: 'column', padding: '14px 16px', gap: 10, minWidth: 0 }}>
 
-            {!ipdPhase && (opdQueryShows ? (
-              <CDIQueryCard
-                col={AMBER}
-                title="Documentation Gap Detected"
-                sub="Auto-surfaced · OPD · in-note · no disruption"
-                question="Is this Type 2 DM controlled or uncontrolled?"
-                guidelinePills={[['ADA 2024 §6.1', PURPLE]]}
-                opts={['E11.65 — Uncontrolled (HbA1c 9.1%)', 'E11.9 — Controlled / no complications']}
-                answered={opdAnswered}
-                locked={opdLocked}
-                codeFrom="E11.9"
-                codeTo="E11.65"
-                codeLabel="CC captured"
-                drgFrom="0.82"
-                drgTo="1.04"
-                delta="+AED 4,200"
-              />
-            ) : (
-              <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', flexDirection: 'column', gap: 8 }}>
-                <div style={{ width: 36, height: 36, borderRadius: '50%', background: `${AMBER}12`, border: `1px solid ${AMBER}25`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 16, animation: 'dpPulse 2s ease-in-out infinite' }}>⚡</div>
-                <div style={{ fontSize: 7.5, color: DIM, textAlign: 'center', lineHeight: 1.6 }}>Scanning note in real time…<br/>Query will surface automatically</div>
-              </div>
-            ))}
+            {/* Note heading */}
+            <div style={{ display: 'flex', gap: 8, alignItems: 'center', flexShrink: 0 }}>
+              <div style={{ width: 7, height: 7, borderRadius: '50%', background: AMBER, animation: 'dpPulse 1.3s ease-in-out infinite', flexShrink: 0 }} />
+              <span style={{ fontSize: 8.5, fontWeight: 700, color: `${TXT}80`, letterSpacing: 0.8 }}>
+                {ipdPhase ? 'IPD PHYSICIAN NOTE · IN PROGRESS' : 'OPD PHYSICIAN NOTE · IN PROGRESS'}
+              </span>
+            </div>
 
-            {ipdPhase && (ipdQueryShows ? (
-              <CDIQueryCard
-                col={TEAL}
-                title="Principal Diagnosis Query"
-                sub="Auto-surfaced · IPD · sequencing conflict detected"
-                question="What was the primary reason for this admission?"
-                guidelinePills={[['ATS/IDSA CAP 2019', PURPLE], ['Thiqa SEHA Policy', TEAL]]}
-                opts={['J18.9 — Pneumonia (primary reason for admission)', 'J44.1 — COPD exacerbation (pre-existing)']}
-                answered={ipdAnswered}
-                locked={ipdLocked}
-                codeFrom="J44.1 principal"
-                codeTo="J18.9 principal"
-                codeLabel="MCC locked"
-                drgFrom="0.94"
-                drgTo="1.34"
-                delta="+AED 9,800"
-              />
-            ) : (
-              <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', flexDirection: 'column', gap: 8, animation: 'dpBeatIn 0.4s ease both' }}>
-                <div style={{ width: 36, height: 36, borderRadius: '50%', background: `${TEAL}12`, border: `1px solid ${TEAL}25`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 16, animation: 'dpPulse 2s ease-in-out infinite' }}>⚡</div>
-                <div style={{ fontSize: 7.5, color: DIM, textAlign: 'center', lineHeight: 1.6 }}>Reading IPD note in real time…<br/>Query will surface automatically</div>
-              </div>
-            ))}
+            {/* Note lines — larger, readable */}
+            <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 10 }}>
+              {(ipdPhase ? ipdNoteLines : opdNoteLines).map((line, i) => p >= line.show && (
+                <div key={i} style={{ fontSize: 11.5, color: line.cursor ? `${TXT}d0` : TXT, lineHeight: 1.7, animation: 'dpRowBlurIn 0.55s ease both', fontWeight: 400 }}>
+                  {line.text}
+                  {line.cursor && !(ipdPhase ? ipdAnswered : opdAnswered) && (
+                    <span style={{ color: AMBER, animation: 'dpPulse 1s ease-in-out infinite' }}> ▌</span>
+                  )}
+                </div>
+              ))}
+            </div>
+
+            {/* Status indicators */}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 6, flexShrink: 0 }}>
+              {(ipdPhase ? (p >= 0.55 && !ipdQueryShows) : (p >= 0.06 && !opdQueryShows)) && (
+                <div style={{ display: 'flex', gap: 7, alignItems: 'center', animation: 'dpBeatIn 0.4s ease both' }}>
+                  <div style={{ width: 6, height: 6, borderRadius: '50%', background: AMBER, animation: 'dpPulse 1.2s ease-in-out infinite' }} />
+                  <span style={{ fontSize: 8.5, color: `${AMBER}90` }}>Docstribe reading note in real time…</span>
+                </div>
+              )}
+              {drawerOpen && !locked && (
+                <div style={{ display: 'flex', gap: 7, alignItems: 'center', animation: 'dpBeatIn 0.3s ease both' }}>
+                  <div style={{ width: 6, height: 6, borderRadius: '50%', background: queryColor, boxShadow: `0 0 8px ${queryColor}` }} />
+                  <span style={{ fontSize: 8.5, color: queryColor, fontWeight: 600 }}>Gap detected → CDI query surfaced</span>
+                </div>
+              )}
+              {locked && (
+                <div style={{ display: 'flex', gap: 7, alignItems: 'center', animation: 'dpBeatIn 0.3s ease both' }}>
+                  <span style={{ fontSize: 9, color: GREEN, fontWeight: 700 }}>✓ Query answered · note updated · charge captured</span>
+                </div>
+              )}
+
+              {/* Compliance strip */}
+              {p >= 0.70 && (
+                <div style={{ display: 'flex', gap: 12, alignItems: 'center', borderTop: `1px solid rgba(255,255,255,0.07)`, paddingTop: 8, animation: 'dpBeatIn 0.5s ease both' }}>
+                  {[['NABIDH ✓', INDIGO], ['DHA ✓', TEAL], ['FHIR R4 ✓', GREEN]].map(([l, c]) => (
+                    <div key={l} style={{ display: 'flex', gap: 5, alignItems: 'center' }}>
+                      <div style={{ width: 5, height: 5, borderRadius: '50%', background: c, boxShadow: `0 0 5px ${c}` }} />
+                      <span style={{ fontSize: 8, fontWeight: 700, color: c }}>{l}</span>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
           </div>
         </div>
       </div>
@@ -1553,6 +1579,37 @@ function DenialScreen({ progress }) {
             </div>
           </div>
         )}
+
+        {/* ── Appeal Snapshot — product transition showing one-click recovery ── */}
+        {progress >= 0.76 && (
+          <div style={{ position: 'relative', background: 'rgba(0,0,0,0.25)', border: `1px solid ${TEAL}30`, borderRadius: 10, padding: '10px 14px', animation: 'dpSpringIn 0.65s cubic-bezier(0.34,1.2,0.64,1) both', overflow: 'hidden' }}>
+            {/* Subtle shimmer sweep */}
+            <div style={{ position: 'absolute', inset: 0, background: `linear-gradient(90deg, transparent 0%, ${TEAL}08 50%, transparent 100%)`, animation: 'dpChromeShimmer 2.4s ease-in-out infinite', pointerEvents: 'none' }} />
+            <div style={{ fontSize: 7.5, fontWeight: 800, color: TEAL, letterSpacing: 0.8, marginBottom: 8, textTransform: 'uppercase' }}>One-Click Recovery · Patient F.H. · Daman CARC 97</div>
+            <div style={{ display: 'flex', gap: 6, alignItems: 'center' }}>
+              {[
+                { label: 'Denial Parsed',     detail: 'CARC 97 · bundling',    col: RED,    done: progress >= 0.76 },
+                { label: 'Contract Read',      detail: '847 clauses · 0.3s',   col: TEAL,   done: progress >= 0.82 },
+                { label: 'Clause Matched',     detail: 'Clause 4.1.2 cited',   col: GREEN,  done: progress >= 0.88 },
+                { label: 'Appeal Generated',   detail: 'Letter ready · filed', col: AMBER,  done: progress >= 0.94 },
+              ].map((s, i) => (
+                <div key={i} style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4 }}>
+                  <div style={{ width: 28, height: 28, borderRadius: '50%', border: `1.5px solid ${s.done ? s.col : MUTED + '30'}`, background: s.done ? `${s.col}20` : 'transparent', display: 'flex', alignItems: 'center', justifyContent: 'center', transition: 'all 0.5s ease', boxShadow: s.done ? `0 0 12px ${s.col}40` : 'none' }}>
+                    <span style={{ fontSize: 10, color: s.done ? s.col : MUTED + '40', transition: 'all 0.4s' }}>{s.done ? '✓' : String(i + 1)}</span>
+                  </div>
+                  <div style={{ fontSize: 6.5, fontWeight: 700, color: s.done ? TXT : DIM, textAlign: 'center', transition: 'color 0.4s' }}>{s.label}</div>
+                  <div style={{ fontSize: 5.5, color: DIM, textAlign: 'center' }}>{s.detail}</div>
+                  {i < 3 && <div style={{ position: 'absolute', top: 14, left: `${25 * i + 14}%`, width: '12%', height: 1, background: s.done && progress >= 0.76 + (i + 1) * 0.06 ? `${s.col}50` : `${BORDER}` }} />}
+                </div>
+              ))}
+            </div>
+            {progress >= 0.96 && (
+              <div style={{ marginTop: 8, textAlign: 'center', animation: 'dpSpringIn 0.6s cubic-bezier(0.34,1.4,0.64,1) both' }}>
+                <span style={{ fontSize: 11, fontWeight: 900, color: GREEN }}>✅ AED 1,900 Recovered · 30 seconds · vs. 3 weeks manual</span>
+              </div>
+            )}
+          </div>
+        )}
       </div>
     </ProductShell>
   );
@@ -1650,90 +1707,145 @@ function ClaimScreen({ progress }) {
   );
 }
 
-/* Scene 10 — Service Line Growth: clinical deterioration signals → ops engagement queue */
+/* Scene 10 — AI Agent Workforce: clinical signals → multi-agent processing → revenue + referral actions */
 function TowerScreen({ progress }) {
-  const patients = [
-    { init: 'D.K.', dept: 'Respiratory', signal: 'SpO₂ 94→88% over 4h · deteriorating',    opportunity: 'IR-DRG escalation window open',         action: 'CDI Alert',  actionCol: AMBER,  uplift: '+AED 18K', risk: 'HIGH',     col: TEAL,   show: 0.10, profile: { referral: 'Pulm ICU consult',       next: 'Escalate IR-DRG',         guideline: 'ATS/ERS: SpO₂ <90% → ICU review' } },
-    { init: 'N.M.', dept: 'Cardiology',  signal: 'BNP risen 3× — heart failure likely',     opportunity: 'Complex DRG candidate · MCC qualifies', action: 'Ops Engage', actionCol: RED,    uplift: '+AED 32K', risk: 'CRITICAL', col: RED,    show: 0.28, profile: { referral: 'Cardiology specialist',  next: 'BNP-triggered CDI query', guideline: 'ACC/AHA HF: BNP >500 → specialist' } },
-    { init: 'A.R.', dept: 'Neurology',   signal: 'GCS change Day 2 — LOS extension likely', opportunity: 'CDI query pending · CC documentation',  action: 'CDI Query',  actionCol: INDIGO, uplift: '+AED 14K', risk: 'HIGH',     col: INDIGO, show: 0.46, profile: { referral: 'Neuro CDI team',         next: 'CC documentation query',  guideline: 'AAN: GCS Δ Day 2 → MCC eligible' } },
-    { init: 'B.S.', dept: 'Oncology',   signal: 'ECOG progressing — chemo eligible',        opportunity: 'Pre-auth for systemic therapy ready',   action: 'PA Ready',   actionCol: GREEN,  uplift: '+AED 27K', risk: 'MED',      col: PURPLE, show: 0.62, profile: { referral: 'Oncology PA pathway',    next: 'Systemic therapy pre-auth', guideline: 'ESMO: ECOG 1→2 → systemic eligible' } },
+  const p = progress;
+
+  // Clinical signals — raw EMR data feeding into AI
+  const signals = [
+    { id: 'dk', init: 'D.K.', dept: 'Respiratory', risk: 'HIGH',     col: TEAL,   show: 0.08,
+      signal: 'SpO₂ 94→88% over 4h',    agent: 'CDI Agent',       action: 'DRG Escalation',    referral: 'ICU consult triggered',   uplift: '+AED 18K', guideline: 'ATS/ERS: SpO₂ <90% → ICU review' },
+    { id: 'nm', init: 'N.M.', dept: 'Cardiology',  risk: 'CRITICAL', col: RED,    show: 0.26,
+      signal: 'BNP risen 3× — HF likely', agent: 'Coding Agent',   action: 'MCC documented',    referral: 'Cardiology specialist',   uplift: '+AED 32K', guideline: 'ACC/AHA: BNP >500 → specialist pathway' },
+    { id: 'ar', init: 'A.R.', dept: 'Neurology',   risk: 'HIGH',     col: INDIGO, show: 0.44,
+      signal: 'GCS Δ Day 2 · LOS ext.',  agent: 'CDI Agent',       action: 'CC query opened',   referral: 'Neuro CDI team',          uplift: '+AED 14K', guideline: 'AAN: GCS Day 2 → MCC eligible' },
+    { id: 'bs', init: 'B.S.', dept: 'Oncology',    risk: 'MED',      col: PURPLE, show: 0.62,
+      signal: 'ECOG 1→2 · chemo eligible', agent: 'PA Agent',      action: 'Pre-auth filed',    referral: 'Systemic therapy pathway', uplift: '+AED 27K', guideline: 'ESMO: ECOG 1→2 → systemic therapy' },
   ];
+
+  // AI Agent types shown in center hub
+  const agents = [
+    { name: 'CDI Agent',    icon: '📋', col: AMBER,  active: p >= 0.10 },
+    { name: 'Coding Agent', icon: '🔢', col: PURPLE, active: p >= 0.28 },
+    { name: 'PA Agent',     icon: '📤', col: GREEN,  active: p >= 0.46 },
+    { name: 'Ops Agent',    icon: '📊', col: TEAL,   active: p >= 0.64 },
+  ];
+
+  const summaryShow = p >= 0.80;
+
   return (
-    <ProductShell breadcrumb="Service Line Growth · Clinical Engagement" color={INDIGO}>
+    <ProductShell breadcrumb="AI Agent Workforce · Clinical Intelligence" color={INDIGO}>
       <div style={{ padding: '10px 14px', height: '100%', display: 'flex', flexDirection: 'column', gap: 8 }}>
 
-        {/* Header */}
-        <div style={{ display: 'flex', gap: 8, alignItems: 'flex-start' }}>
+        {/* ── Header ── */}
+        <div style={{ display: 'flex', gap: 8, alignItems: 'center', flexShrink: 0 }}>
           <div style={{ flex: 1 }}>
-            <div style={{ fontSize: 8, color: MUTED, fontWeight: 700, letterSpacing: 0.5 }}>CLINICAL DETERIORATION SIGNALS → OPS ENGAGEMENT QUEUE</div>
-            <div style={{ fontSize: 9, fontWeight: 600, color: TXT, marginTop: 2 }}>Docstribe reads patient deterioration and surfaces revenue engagement opportunities in real time — no lag, no reports</div>
+            <div style={{ fontSize: 8.5, fontWeight: 700, color: INDIGO, letterSpacing: 1, textTransform: 'uppercase' }}>AI Agent Workforce</div>
+            <div style={{ fontSize: 8, color: DIM, marginTop: 2 }}>Clinical signals → disease progression mapped → referrals + revenue surfaced · Day Zero</div>
           </div>
-          {progress >= 0.06 && (
-            <div style={{ background: `${INDIGO}15`, border: `1px solid ${INDIGO}40`, borderRadius: 8, padding: '6px 14px', textAlign: 'center', animation: 'dpBeatIn 0.4s ease both', flexShrink: 0 }}>
-              <div style={{ fontSize: 22, fontWeight: 900, color: INDIGO, fontFamily: 'Sora', lineHeight: 1 }}>4</div>
-              <div style={{ fontSize: 6, color: DIM }}>patients flagged</div>
+          {p >= 0.06 && (
+            <div style={{ background: `${INDIGO}15`, border: `1px solid ${INDIGO}40`, borderRadius: 10, padding: '6px 16px', textAlign: 'center', animation: 'dpSpringIn 0.5s ease both', flexShrink: 0 }}>
+              <div style={{ fontSize: 24, fontWeight: 900, color: INDIGO, fontFamily: 'Sora', lineHeight: 1 }}>4</div>
+              <div style={{ fontSize: 7, color: DIM }}>agents active</div>
             </div>
           )}
         </div>
 
-        {/* Column headers */}
-        <div style={{ display: 'flex', padding: '0 8px', borderBottom: `1px solid ${BORDER}` }}>
-          {[['Patient', 1], ['AI Profile', 2], ['Clinical Signal', 2], ['Revenue Opportunity', 2], ['Action', 1], ['Uplift', 1]].map(([h, f], i) => (
-            <div key={i} style={{ flex: f, fontSize: 7, color: i === 1 ? PURPLE : MUTED, fontWeight: 700, padding: '3px 0', letterSpacing: 0.3 }}>{h}</div>
-          ))}
-        </div>
+        {/* ── 3-column flow: Clinical Signals | AI Agents | Revenue Actions ── */}
+        <div style={{ flex: 1, display: 'flex', gap: 8, overflow: 'hidden' }}>
 
-        {/* Patient rows — one spotlit at a time */}
-        <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 6 }}>
-          {patients.map((p, i) => {
-            const visible = progress >= p.show;
-            const active = spot(progress, p.show, p.show + 0.18);
-            const past = progress > p.show + 0.18;
-            return (
-              <div key={i} style={{ ...glow(active, p.col, { borderRadius: 8, padding: '9px 10px', display: 'flex', alignItems: 'center' }), opacity: visible ? (past ? 0.55 : 1) : 0, transform: visible ? (active ? 'scale(1.02)' : 'scale(1)') : 'translateY(10px)', transition: 'all 0.5s cubic-bezier(0.34,1.2,0.64,1)' }}>
-                <div style={{ flex: 1, display: 'flex', gap: 6, alignItems: 'center' }}>
-                  <div style={{ width: 26, height: 26, borderRadius: '50%', background: `${p.col}20`, border: `1.5px solid ${p.col}45`, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-                    <span style={{ fontSize: 8, fontWeight: 900, color: p.col }}>{p.init}</span>
+          {/* ── LEFT: Clinical Signal Feed ── */}
+          <div style={{ flex: 1.1, display: 'flex', flexDirection: 'column', gap: 0, overflow: 'hidden' }}>
+            <div style={{ fontSize: 7.5, fontWeight: 700, color: MUTED, letterSpacing: 0.8, marginBottom: 6, textTransform: 'uppercase' }}>Clinical Signals</div>
+            <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 5 }}>
+              {signals.map((s, i) => {
+                const vis  = p >= s.show;
+                const act  = spot(p, s.show, s.show + 0.18);
+                return (
+                  <div key={i} style={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center', padding: '8px 10px', borderRadius: 9, background: act ? `${s.col}12` : vis ? `${s.col}06` : 'rgba(255,255,255,0.02)', border: `1px solid ${act ? s.col + '45' : vis ? s.col + '20' : 'rgba(255,255,255,0.05)'}`, opacity: vis ? 1 : 0.2, transform: vis ? 'translateX(0)' : 'translateX(-12px)', transition: 'all 0.55s cubic-bezier(0.34,1.2,0.64,1)', boxShadow: act ? `0 0 18px ${s.col}20` : 'none' }}>
+                    <div style={{ display: 'flex', gap: 7, alignItems: 'center', marginBottom: 3 }}>
+                      <div style={{ width: 24, height: 24, borderRadius: '50%', background: `${s.col}20`, border: `1.5px solid ${s.col}45`, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                        <span style={{ fontSize: 8, fontWeight: 900, color: s.col }}>{s.init}</span>
+                      </div>
+                      <div>
+                        <div style={{ fontSize: 9, fontWeight: 700, color: act ? s.col : TXT }}>{s.dept}</div>
+                        <span style={{ fontSize: 6.5, fontWeight: 800, color: s.risk === 'CRITICAL' ? RED : s.risk === 'HIGH' ? AMBER : GREEN }}>{s.risk}</span>
+                      </div>
+                    </div>
+                    <div style={{ fontSize: 9, color: act ? TXT : DIM, lineHeight: 1.4, fontWeight: act ? 600 : 400 }}>{s.signal}</div>
+                    <div style={{ fontSize: 6.5, color: `${s.col}90`, marginTop: 3, fontStyle: 'italic' }}>{s.guideline}</div>
                   </div>
-                  <div>
-                    <div style={{ fontSize: 8, fontWeight: 700, color: active ? p.col : TXT }}>{p.dept}</div>
-                    <Badge text={p.risk} color={p.risk === 'CRITICAL' ? RED : p.risk === 'HIGH' ? AMBER : GREEN} />
-                  </div>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* ── CENTER: AI Agent Hub ── */}
+          <div style={{ width: 90, flexShrink: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8, paddingTop: 24 }}>
+            <div style={{ fontSize: 6.5, fontWeight: 700, color: MUTED, letterSpacing: 0.8, textAlign: 'center', textTransform: 'uppercase', marginBottom: 2 }}>AI Agents</div>
+            {agents.map((ag, i) => (
+              <div key={i} style={{ width: 70, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 3, opacity: ag.active ? 1 : 0.25, transition: 'opacity 0.5s, transform 0.5s', transform: ag.active ? 'scale(1)' : 'scale(0.88)' }}>
+                <div style={{ width: 40, height: 40, borderRadius: '50%', background: ag.active ? `${ag.col}20` : 'rgba(255,255,255,0.04)', border: `1.5px solid ${ag.active ? ag.col + '60' : 'rgba(255,255,255,0.08)'}`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 16, boxShadow: ag.active ? `0 0 16px ${ag.col}35` : 'none', transition: 'all 0.5s', animation: ag.active ? 'dpPulse 2s ease-in-out infinite' : 'none' }}>
+                  {ag.icon}
                 </div>
-                {/* AI Profile column */}
-                <div style={{ flex: 2, paddingRight: 6 }}>
-                  <div style={{ display: 'flex', gap: 4, alignItems: 'center', marginBottom: 2 }}>
-                    <span style={{ fontSize: 6, fontWeight: 800, color: p.risk === 'CRITICAL' ? RED : p.risk === 'HIGH' ? AMBER : GREEN, background: `${p.risk === 'CRITICAL' ? RED : p.risk === 'HIGH' ? AMBER : GREEN}18`, borderRadius: 3, padding: '1px 4px', flexShrink: 0 }}>{p.risk}</span>
-                    <span style={{ fontSize: 7, color: PURPLE, fontWeight: 600 }}>{p.profile.referral}</span>
-                  </div>
-                  <div style={{ fontSize: 6.5, color: DIM, marginBottom: 1 }}>→ {p.profile.next}</div>
-                  <div style={{ fontSize: 6, color: `${PURPLE}90`, fontStyle: 'italic' }}>{p.profile.guideline}</div>
-                </div>
-                <div style={{ flex: 2, fontSize: 9, color: active ? TXT : DIM, fontWeight: active ? 600 : 400, paddingRight: 6 }}>{p.signal}</div>
-                <div style={{ flex: 2, fontSize: 8, color: DIM, paddingRight: 6 }}>{p.opportunity}</div>
-                <div style={{ flex: 1 }}>
-                  <span style={{ fontSize: 7, fontWeight: 800, color: p.actionCol, background: `${p.actionCol}18`, border: `1px solid ${p.actionCol}35`, borderRadius: 4, padding: '2px 7px' }}>{p.action}</span>
-                </div>
-                <div style={{ flex: 1, textAlign: 'right', fontSize: 11, fontWeight: 900, color: p.col, fontFamily: 'Sora' }}>{p.uplift}</div>
+                <div style={{ fontSize: 6.5, fontWeight: 700, color: ag.active ? ag.col : DIM, textAlign: 'center', letterSpacing: 0.3 }}>{ag.name}</div>
+                {/* Flow arrows left + right */}
+                {ag.active && (
+                  <>
+                    <div style={{ position: 'absolute', left: 0, width: '100%', height: 1 }} />
+                  </>
+                )}
               </div>
-            );
-          })}
+            ))}
+            {/* Central pulse */}
+            {p >= 0.18 && (
+              <div style={{ marginTop: 'auto', textAlign: 'center' }}>
+                <div style={{ fontSize: 6, color: INDIGO, fontWeight: 700, letterSpacing: 0.5 }}>PROCESSING</div>
+                <div style={{ display: 'flex', gap: 3, justifyContent: 'center', marginTop: 4 }}>
+                  {[0, 1, 2].map(i => (
+                    <div key={i} style={{ width: 4, height: 4, borderRadius: '50%', background: INDIGO, animation: `dpPulse 1.2s ease-in-out ${i * 0.3}s infinite` }} />
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+
+          {/* ── RIGHT: Revenue & Referral Actions ── */}
+          <div style={{ flex: 1.15, display: 'flex', flexDirection: 'column', gap: 0, overflow: 'hidden' }}>
+            <div style={{ fontSize: 7.5, fontWeight: 700, color: MUTED, letterSpacing: 0.8, marginBottom: 6, textTransform: 'uppercase' }}>Revenue Actions</div>
+            <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 5 }}>
+              {signals.map((s, i) => {
+                const vis  = p >= s.show + 0.08;
+                const act  = spot(p, s.show + 0.08, s.show + 0.28);
+                return (
+                  <div key={i} style={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center', padding: '8px 10px', borderRadius: 9, background: act ? `${s.col}12` : vis ? `${s.col}06` : 'rgba(255,255,255,0.02)', border: `1px solid ${act ? s.col + '45' : vis ? s.col + '20' : 'rgba(255,255,255,0.05)'}`, opacity: vis ? 1 : 0.15, transform: vis ? 'translateX(0)' : 'translateX(12px)', transition: 'all 0.55s cubic-bezier(0.34,1.2,0.64,1)', boxShadow: act ? `0 0 18px ${s.col}20` : 'none' }}>
+                    <div style={{ display: 'flex', gap: 6, alignItems: 'center', marginBottom: 4 }}>
+                      <span style={{ fontSize: 7, fontWeight: 800, color: s.col, background: `${s.col}18`, border: `1px solid ${s.col}35`, borderRadius: 4, padding: '2px 8px', flexShrink: 0 }}>{s.action}</span>
+                      <div style={{ fontSize: 7, color: DIM, flex: 1 }}>{s.agent}</div>
+                    </div>
+                    <div style={{ fontSize: 8.5, color: act ? TXT : DIM, fontWeight: 600, marginBottom: 2 }}>{s.referral}</div>
+                    <div style={{ fontSize: 16, fontWeight: 900, color: s.col, fontFamily: 'Sora', lineHeight: 1, letterSpacing: -0.5 }}>{s.uplift}</div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
         </div>
 
-        {/* Summary */}
-        {progress >= 0.78 && (
-          <div style={{ display: 'flex', gap: 8, animation: 'dpBeatIn 0.4s ease both' }}>
-            <div style={{ flex: 1, background: `${INDIGO}10`, border: `1px solid ${INDIGO}25`, borderRadius: 8, padding: '7px 12px', textAlign: 'center' }}>
-              <div style={{ fontSize: 20, fontWeight: 900, color: INDIGO, fontFamily: 'Sora' }}>AED 91K</div>
-              <div style={{ fontSize: 7, color: DIM }}>revenue opportunity · 4 patients · live</div>
+        {/* ── Measurable outcome strip ── */}
+        {summaryShow && (
+          <div style={{ display: 'flex', gap: 7, flexShrink: 0, animation: 'dpSpringIn 0.65s cubic-bezier(0.34,1.2,0.64,1) both' }}>
+            <div style={{ flex: 1, background: `${INDIGO}12`, border: `1px solid ${INDIGO}30`, borderRadius: 9, padding: '8px 12px', textAlign: 'center' }}>
+              <div style={{ fontSize: 22, fontWeight: 900, color: INDIGO, fontFamily: 'Sora', letterSpacing: -1 }}>AED 91K</div>
+              <div style={{ fontSize: 7, color: DIM, marginTop: 1 }}>revenue surfaced · 4 patients · live</div>
             </div>
-            <div style={{ flex: 1, background: `${TEAL}10`, border: `1px solid ${TEAL}25`, borderRadius: 8, padding: '7px 12px', textAlign: 'center' }}>
-              <div style={{ fontSize: 20, fontWeight: 900, color: TEAL, fontFamily: 'Sora' }}>Day 0</div>
-              <div style={{ fontSize: 7, color: DIM }}>clinical signal → ops team · no lag · no reports</div>
+            <div style={{ flex: 1, background: `${TEAL}10`, border: `1px solid ${TEAL}28`, borderRadius: 9, padding: '8px 12px', textAlign: 'center' }}>
+              <div style={{ fontSize: 22, fontWeight: 900, color: TEAL, fontFamily: 'Sora' }}>Day 0</div>
+              <div style={{ fontSize: 7, color: DIM, marginTop: 1 }}>signal → action · no lag · no reports</div>
             </div>
-            <div style={{ flex: 1, background: `${PURPLE}10`, border: `1px solid ${PURPLE}25`, borderRadius: 8, padding: '7px 12px', textAlign: 'center' }}>
-              <div style={{ fontSize: 13, fontWeight: 900, color: PURPLE, fontFamily: 'Sora', marginBottom: 2 }}>AI Profiles</div>
-              <div style={{ fontSize: 7, color: DIM }}>per-patient intelligence · risk · referral opportunity · clinical guidelines</div>
+            <div style={{ flex: 1.4, background: `${PURPLE}10`, border: `1px solid ${PURPLE}28`, borderRadius: 9, padding: '8px 12px', textAlign: 'center' }}>
+              <div style={{ fontSize: 11, fontWeight: 800, color: PURPLE, marginBottom: 2 }}>Predictable Revenue Pipeline</div>
+              <div style={{ fontSize: 7, color: DIM }}>clinical intelligence → referral triage → admission potential → DRG uplift — automated end to end</div>
             </div>
           </div>
         )}
@@ -1854,6 +1966,8 @@ function DashboardScreen({ progress }) {
 }
 
 /* ─── Scene router ───────────────────────────────────────────── */
+// Active scene IDs: 1(stat) 2(kpi) 4(eligibility) 6(ambient+CDI) 7(coding) 8(denial+recovery) 10(tower)
+// Removed: 3(cases) 5(ambient standalone) 9(claim standalone) 11(dashboard)
 function SceneVisual({ scene, progress }) {
   switch (scene.type) {
     case 'stat':      return <StatScene scene={scene} progress={progress} />;
@@ -1861,13 +1975,10 @@ function SceneVisual({ scene, progress }) {
     case 'dashboard': return <DashboardScreen progress={progress} />;
     case 'product':
       switch (scene.id) {
-        case 3:  return <CasesScreen       progress={progress} />;
         case 4:  return <EligibilityScreen progress={progress} />;
-        case 5:  return <AmbientScreen     progress={progress} />;
         case 6:  return <CDIScreen         progress={progress} />;
         case 7:  return <CodingScreen      progress={progress} />;
         case 8:  return <DenialScreen      progress={progress} />;
-        case 9:  return <ClaimScreen       progress={progress} />;
         case 10: return <TowerScreen       progress={progress} />;
         default: return null;
       }

@@ -396,61 +396,44 @@ const INTRO_ARTIFACT = {
 // ── /api/demo — UAE 11-scene pre-curated demonstration ───────────────────────
 // Defined here (before the startup IIFE) so it is initialized before the async
 // startup code references it synchronously.
+// 7-scene board demo — trimmed from 11 scenes for ~2:30 runtime
+// Removed: 3(cases) 5(ambient standalone) 9(claim standalone) 11(dashboard)
+// Merged: 5+6 → id 6 (Clinical Intelligence); 8+9 → id 8 (Denial & Recovery)
 const UAE_DEMO_SCENES = [
   {
-    id: 1, timecode: '0:00–0:10', journeyStage: 'opening',
+    id: 1, timecode: '0:00–0:12', journeyStage: 'opening',
     title: 'The Revenue Gap',
-    voText: 'In the UAE, twelve to eighteen percent of every hospital claim is denied. Sixty to seventy percent — entirely preventable. Four gaps: documentation, authorization, coding, claim edits. Docstribe closes every one. Before a single claim goes out.',
+    voText: 'In the UAE, twelve to eighteen percent of every hospital claim is denied. Sixty to seventy percent — entirely preventable. Four gaps: documentation, authorization, coding, claim edits. Someone has to close it.',
   },
   {
-    id: 2, timecode: '0:10–0:22', journeyStage: 'outcomes',
+    id: 2, timecode: '0:12–0:26', journeyStage: 'outcomes',
     title: 'Introducing Docstribe',
-    voText: 'This is Docstribe. Built by clinicians — thirty years of practice. A hundred hospitals across the US, UAE, and India. Ten million lives. That gap you just saw — the twelve to eighteen percent — we close it. Contractually. Denials fall thirty percent. Clean claim rate ninety-nine percent. CMI up by zero point one five. Sixty days. Guaranteed.',
+    voText: 'Docstribe. Built by clinicians — thirty years of practice, a hundred hospitals across the US, UAE, and India, ten million lives. That gap you just saw — we close it. Contractually. Denials fall thirty percent. Clean claim rate ninety-nine percent. CMI up by zero point one five. Sixty days. Guaranteed.',
   },
   {
-    id: 3, timecode: '0:22–0:32', journeyStage: 'platform',
-    title: 'One Unified Workspace',
-    voText: 'Docstribe connects with your existing EMR and HIS — no rip and replace. It builds a unified case workbench across OPD, IPD, and Emergency — for physicians, medical coders, and case managers. Two hundred live encounters. Every case tracked from order to payment. Zero leakage.',
-  },
-  {
-    id: 4, timecode: '0:32–0:42', journeyStage: 'pre-visit',
+    id: 4, timecode: '0:26–0:38', journeyStage: 'pre-visit',
     title: 'Pre-Visit Intelligence',
-    voText: 'A patient walks in. Docstribe pulls their insurance profile automatically — coverage, co-pay, network status — direct from the payer API. Eligibility confirmed before they reach the desk. For the inpatient needing pre-authorisation — PA filed at order entry, approved before care begins. No forms. No delays.',
+    voText: 'A patient walks in. Docstribe pulls their insurance profile automatically — coverage, co-pay, network status — direct from the payer API. Eligibility confirmed before they reach the desk. For inpatient — PA filed at order entry, approved before care begins. No forms. No delays.',
   },
   {
-    id: 5, timecode: '0:42–0:52', journeyStage: 'in-visit',
-    title: 'Ambient Clinical Intelligence',
-    voText: 'The physician speaks. The structured clinical note builds in real time — vital signs, ICD codes, comorbidities, all captured automatically. Feeding directly into NABIDH and DHA. The doctor never looks up from the patient. Documentation already done.',
+    id: 6, timecode: '0:38–0:58', journeyStage: 'ambient-cdi',
+    title: 'Clinical Intelligence',
+    voText: 'The physician speaks. The note builds itself — diagnoses, vitals, comorbidities, structured and coded in real time. Docstribe reads the note as it forms. A documentation gap surfaces automatically, grounded in clinical guidelines. One answer from the physician. Code corrected at the point of care. For inpatient — principal diagnosis confirmed, IR-DRG weight locked before discharge. Revenue that would have been lost, isn\'t.',
   },
   {
-    id: 6, timecode: '0:52–1:02', journeyStage: 'cdi',
-    title: 'CDI — Closing the Gap',
-    voText: 'While the physician is in the note, Docstribe surfaces a query — automatically, grounded in clinical guidelines. One answer. The documentation is locked and e-signed. Code corrected at the point of care. For inpatient — principal diagnosis confirmed before discharge. IR-DRG weight locked. Revenue that would have been lost, isn\'t.',
-  },
-  {
-    id: 7, timecode: '1:02–1:14', journeyStage: 'coding',
+    id: 7, timecode: '0:58–1:12', journeyStage: 'coding',
     title: 'AI-Powered Coding',
     voText: 'Every OPD claim — diagnoses ranked, procedure codes checked against payer NCCI and MUE edits before anything goes out. That cuts denials at source. For inpatient, the IR-DRG recalculates live while the patient is admitted — every complication captured today reflects in the DRG weight immediately. AED eighteen thousand four hundred more. Per case.',
   },
   {
-    id: 8, timecode: '1:14–1:24', journeyStage: 'denial-intel',
-    title: 'Denial Intelligence',
-    voText: 'The system does not stop there. It goes deeper — reading the claim language, payer by payer, batch by batch. Every denial has a pattern. Docstribe maps it. Up to ninety-one percent recoverable before the claim goes out. That is how the denial rate falls — not by chasing. By never losing.',
+    id: 8, timecode: '1:12–1:32', journeyStage: 'denial-recovery',
+    title: 'Denial Prevention & Recovery',
+    voText: 'The system goes deeper — reading the claim language payer by payer, batch by batch. Every denial has a pattern. Docstribe maps it — sixty-seven to ninety-one percent recoverable before the claim even goes out. And when a denial does land, one click. Contract read, clause found, appeal written. Thirty seconds. AED nineteen hundred, recovered.',
   },
   {
-    id: 9, timecode: '1:24–1:33', journeyStage: 'recovery',
-    title: 'One-Click Recovery',
-    voText: 'A denial lands. Historically, three weeks of follow-up. Now — one click. Docstribe reads the contract, finds the clause, writes the appeal letter. The whole thing. Thirty seconds. AED nineteen hundred in recovery.',
-  },
-  {
-    id: 10, timecode: '1:33–1:44', journeyStage: 'service-line',
-    title: 'Service Line Growth',
-    voText: 'Your ops team cannot watch every chart. Docstribe does. Oxygen dropping. Labs flagging a DRG escalation. Pre-auth ready for systemic therapy. Four patients — AED ninety-one thousand — surfaced as a live action list. Clinical signals, turned into revenue. Day Zero.',
-  },
-  {
-    id: 11, timecode: '1:44–1:58', journeyStage: 'dashboard',
-    title: 'Your RCM Intelligence Partner',
-    voText: 'This is not a generic platform. It is an intelligence framework that learns your hospital — your payers, your physicians, your case mix — and gets smarter with every claim, every signal, every patient. Clinical intelligence. Built for you.',
+    id: 10, timecode: '1:32–1:50', journeyStage: 'service-line',
+    title: 'Clinical Engagement',
+    voText: 'Your ops team cannot watch every chart. Docstribe does. Oxygen dropping. Labs flagging a DRG escalation. Pre-auth ready for systemic therapy. Four patients — AED ninety-one thousand — surfaced live, today. And this is not a generic platform. It learns your hospital, your payers, your physicians — and gets sharper with every claim.',
   },
 ];
 
