@@ -435,7 +435,7 @@ const UAE_DEMO_SCENES = [
   {
     id: 8, timecode: '1:14–1:24', journeyStage: 'denial-intel',
     title: 'Denial Intelligence',
-    voText: 'Every denial has a pattern. Docstribe maps it — payer by payer, batch by batch. Most is preventable. Up to ninety-one percent recoverable before the claim goes out. That is how the denial rate falls — not by chasing. By never losing.',
+    voText: 'The system does not stop there. It goes deeper — reading the claim language, payer by payer, batch by batch. Every denial has a pattern. Docstribe maps it. Up to ninety-one percent recoverable before the claim goes out. That is how the denial rate falls — not by chasing. By never losing.',
   },
   {
     id: 9, timecode: '1:24–1:33', journeyStage: 'recovery',

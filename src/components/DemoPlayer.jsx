@@ -187,8 +187,8 @@ const SCENES = [
     id: 8, type: 'product', color: RED,
     title: 'Denial Intelligence',
     breadcrumb: 'Payer Contract Intelligence',
-    // S1:5w S2:9w S3:6w S4:4w S5:10w S6:2w = 36w — fracs 0.14 0.39 0.56 0.67 0.94 1.00
-    vo: "Every denial has a pattern. Docstribe maps it — payer by payer, batch by batch. Most is preventable. Up to ninety-one percent recoverable before the claim goes out. That is how the denial rate falls — not by chasing. By never losing.",
+    // Bridge: system doesn't stop at coding → goes deeper into claim language payer by payer
+    vo: "The system does not stop there. It goes deeper — reading the claim language, payer by payer, batch by batch. Every denial has a pattern. Docstribe maps it. Up to ninety-one percent recoverable before the claim goes out. That is how the denial rate falls — not by chasing. By never losing.",
     beats: [
       { at: 0.08, stat: 'Per payer · per batch', sub: 'Daman · Thiqa · AXA Gulf · Oman Insurance' },
       { at: 0.60, stat: '67–91% recoverable',    sub: 'pre-submission · flagged before send' },
@@ -1910,8 +1910,8 @@ function Splash({ onPlay }) {
 
 /* ─── Scene stat strip — cinematic glass pill ─────────────────── */
 function SceneStatStrip({ scene, progress }) {
-  // Exclude stat/kpi (own big-number display), product (each screen has inline context), ambient
-  if (scene.type === 'stat' || scene.type === 'kpi' || scene.type === 'product') return null;
+  // Stat pill removed from all screens — each scene surface has its own inline context
+  return null;
   const fired = (scene.beats || []).slice().reverse().find(b => progress >= b.at);
   if (!fired) return null;
   return (
