@@ -403,17 +403,17 @@ const UAE_DEMO_SCENES = [
   {
     id: 1, timecode: '0:00–0:14', journeyStage: 'opening',
     title: 'The Revenue Gap',
-    voText: 'In the UAE, between twelve and eighteen percent of every hospital claim comes back denied. And sixty to seventy percent of those denials were entirely preventable. They trace back, every single time, to the same four failure points — how clinical notes are documented, whether authorizations are in place before care begins, how accurately codes reflect the encounter, and whether claims are validated before they go out. Four gaps. Costing your hospital millions. Someone has to close them.',
+    voText: 'In the UAE — twelve to eighteen percent of hospital claims are denied on first submission. Up to seventy percent of those denials are entirely preventable. Four root causes. Clinical documentation gaps. Missing authorizations. Coding errors. Claim edits that slip through unchecked. Someone has to close all four.',
   },
   {
     id: 2, timecode: '0:14–0:28', journeyStage: 'outcomes',
     title: 'Introducing Docstribe',
-    voText: "That's what Docstribe was built for. Thirty years of clinical practice, a hundred hospitals across the US, the UAE, and India, and ten million patient lives managed across all of them. We built this from the clinical side of these problems — and we close those gaps contractually. Denials fall by thirty percent. Clean claim rates reach ninety-nine percent. Case mix index rises by point fifteen. All within sixty days. Guaranteed.",
+    voText: "Docstribe is purposefully built to solve it. Built by doctors with more than thirty years of grounded clinical experience — not software engineers guessing at medicine. A hundred hospitals. Ten million patient lives. This is a clinician-built intelligence engine. Denials drop by thirty percent. Clean claim rates reach ninety-nine percent. Case mix index rises by point fifteen. Sixty days. Contractually guaranteed.",
   },
   {
     id: 4, timecode: '0:28–0:42', journeyStage: 'pre-visit',
     title: 'Pre-Visit Intelligence',
-    voText: 'The moment a patient walks through your door, Docstribe is already running. Coverage tier, co-pay, network status, active authorisations — all pulled live from the payer API, before the patient reaches the consultation desk. By the time the physician opens the chart, eligibility is fully confirmed. No calls to the insurer. No manual cross-checks. No surprises at the point of care.',
+    voText: "The moment a patient walks through your door, Docstribe is already running — connected through your hospital's existing payer API contracts. Coverage tier, co-pay, network status, active authorisations — all pulled live, before the patient reaches the consultation desk. No new payer contracts. No replacement systems. Just real-time eligibility through the APIs you already have.",
   },
   {
     id: 6, timecode: '0:42–1:00', journeyStage: 'ambient-cdi',
@@ -433,7 +433,7 @@ const UAE_DEMO_SCENES = [
   {
     id: 10, timecode: '1:32–1:52', journeyStage: 'service-line',
     title: 'Clinical Engagement',
-    voText: "Your ops team cannot watch every chart. Docstribe can. It sees a respiratory patient's oxygen levels slipping, catches labs that signal a DRG escalation in cardiology, flags a systemic therapy pre-auth ready to go in oncology — all simultaneously, all in real time. Four patients, surfaced automatically, today. And here's what makes this different: Docstribe doesn't stay generic. It learns your hospital, your payer mix, your physicians — and it gets sharper with every claim it touches.",
+    voText: "Four alerts. Surfaced automatically. Not from a template — from learning your hospital's case mix, your payer contracts, your denial patterns. Every department. Every physician. Every claim makes it sharper. Generic AI misses what is uniquely yours. The question worth asking: what revenue is your hospital not seeing right now?",
   },
 ];
 
