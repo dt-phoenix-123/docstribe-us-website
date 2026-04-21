@@ -81,7 +81,7 @@ function splitSentences(text) {
 function highlightCaption(text) {
   if (!text) return null;
   // Split on key terms — capturing group keeps the matched parts at odd indices
-  const pattern = /(twelve to eighteen|sixty to seventy|thirty percent|twenty-five percent|zero point fifteen|sixty.?day|one point four million|eighteen thousand four hundred|two hundred fourteen|four hundred twenty|one thousand nine hundred|ninety-one thousand|twenty-eight thousand five hundred|zero point nine four|one point three four|zero leakage|per payor.?per batch|personalized intelligence|built for you|one click|order entry|CARC \d+|ICD-10-CM|NABIDH|DHA|IR-DRG|CMI|Docstribe|guaranteed|\d+(?:\.\d+)?%)/gi;
+  const pattern = /(twelve to eighteen|sixty to seventy|thirty percent|twenty-five percent|zero point fifteen|sixty.?day|one point four million|eighteen thousand four hundred|two hundred fourteen|four hundred twenty|one thousand nine hundred|ninety-one thousand|twenty-eight thousand five hundred|zero point nine four|one point three four|zero leakage|per payor.?per batch|personalized intelligence|built for you|one click to submit|one click|order entry|zero manual entry|CARC \d+|ICD-10-CM|NABIDH|DHA|IR-DRG weight|IR-DRG|CMI|NCCI|MUE|Docstribe|guaranteed|Nephrology referral|Nephrology|Jardiance|HbA1c|CDI query|referral|three actions|nothing missed|\d+(?:\.\d+)?%)/gi;
   const parts = text.split(pattern);
   return parts.map((part, i) =>
     i % 2 === 1
@@ -134,7 +134,7 @@ const SCENES = [
     id: 6, type: 'product', color: AMBER,
     title: 'Clinical Intelligence',
     breadcrumb: 'Ambient Scribe · CDI',
-    vo: "While the doctor sees the patient, Docstribe is already working. It reads every clinical signal and maps the gaps. A Nephrology referral — not ordered. Jardiance — not prescribed. A follow-up HbA1c — not scheduled. Three actionable opportunities, surfaced before the patient leaves the room. Then the CDI query fires. The physician responds in five seconds. The code is corrected. Four thousand two hundred dirhams — captured at point of care.",
+    vo: "While the doctor sees the patient, Docstribe is already working. Three signals mapped. Three gaps found. A Nephrology referral — not yet ordered. Jardiance — not yet prescribed. A follow-up HbA1c — not scheduled. The physician acts on each — one click, three actions captured before the patient leaves the room. Then the CDI query fires: is this diabetes controlled or uncontrolled? The physician responds in five seconds. The code corrects. Four thousand two hundred dirhams — captured right there, at point of care.",
     beats: [
       { at: 0.06, stat: 'Listens live',          sub: 'physician-patient encounter · ambient · passive' },
       { at: 0.28, stat: 'Holistic profile built', sub: 'risk · next steps · codes · governance · real time' },
@@ -146,7 +146,7 @@ const SCENES = [
     id: 7, type: 'product', color: PURPLE,
     title: 'AI-Powered Coding',
     breadcrumb: 'ICD-10-CM · Smart Coding Engine',
-    vo: "Every diagnosis carries an ICD code. Every procedure, a CPT. Together they drive your IR-DRG weight — the multiplier that determines what your hospital gets paid per admission. Docstribe sequences and validates every one — running NCCI and MUE checks automatically. The weight lifts from zero point nine four to one point three four. Eighteen thousand four hundred dirhams — per case. That is what nothing missed looks like.",
+    vo: "Every diagnosis carries an ICD code. Every procedure, a CPT. Docstribe generates both automatically — zero manual entry. Together they drive your IR-DRG weight — the multiplier that decides what your hospital gets paid per admission. Every code is validated through NCCI and MUE checks. One click to submit. The weight lifts from zero point nine four to one point three four. Eighteen thousand four hundred dirhams — per case. That is what nothing missed looks like.",
     beats: [
       { at: 0.08, stat: 'NCCI + MUE applied',    sub: 'payer edits matched · codes validated before send' },
       { at: 0.36, stat: 'CC/MCC auto-captured',  sub: 'every complication documented before discharge' },
@@ -159,7 +159,7 @@ const SCENES = [
     title: 'Denial Prevention & Recovery',
     breadcrumb: 'Payer Contract Intelligence · Appeal Generator',
     // Merged denial intel + one-click recovery
-    vo: "Docstribe reads every claim through the lens of each payer's contract — batch by batch, rule by rule. Denials have patterns, and we map every one of them. Between sixty-seven and ninety-one percent of what would be denied can be caught and corrected before the claim even goes out. And when one does slip through, a single click pulls the contract, matches the clause, and drafts the appeal. Thirty seconds — not three weeks.",
+    vo: "It doesn't stop here. We go deeper — into every payer's contract, every batch, every rule. Denials have patterns, and Docstribe maps every one of them. Between sixty-seven and ninety-one percent of what would be denied is caught and corrected before the claim goes out. And when one does slip through, a single click pulls the contract, matches the clause, and drafts the appeal. Thirty seconds — not three weeks.",
     beats: [
       { at: 0.08, stat: 'Per payer · per batch', sub: 'Daman · Thiqa · AXA Gulf · Oman Insurance' },
       { at: 0.46, stat: '67–91% recoverable',    sub: 'pre-submission · flagged before send' },
@@ -1361,11 +1361,14 @@ function CDIScreen({ progress }) {
   const opp2Show   = p >= 0.43;       // Jardiance order card
   const opp3Show   = p >= 0.51;       // HbA1c retest card
 
-  const oppCount = (opp1Show ? 1 : 0) + (opp2Show ? 1 : 0) + (opp3Show ? 1 : 0);
+  const opp1Click  = p >= 0.41;       // Nephrology → Referral Sent ✓
+  const opp2Click  = p >= 0.49;       // Jardiance → Ordered ✓
+  const opp3Click  = p >= 0.55;       // HbA1c → Scheduled ✓
+  const oppCount   = opp3Click ? 3 : opp2Click ? 2 : opp1Click ? 1 : 0;
 
-  const drawerOpen = p >= 0.56;
-  const answered   = p >= 0.72;
-  const locked     = p >= 0.82;
+  const drawerOpen = p >= 0.61;       // pushed to show all 3 clicks first
+  const answered   = p >= 0.74;
+  const locked     = p >= 0.84;
 
   const enhancements = [
     { from: 'E11.9', to: 'E11.65', label: 'T2DM Uncontrolled — HbA1c 9.1%', badge: 'CC captured', col: RED,  show: answered },
@@ -1500,46 +1503,55 @@ function CDIScreen({ progress }) {
           <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 7, overflow: 'hidden' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexShrink: 0 }}>
               <span style={{ fontSize: 8, fontWeight: 800, color: AMBER, letterSpacing: 0.6 }}>OPPORTUNITY MAP — SURFACED BY DOCSTRIBE</span>
-              <span key={oppCount} style={{ fontSize: 7, fontWeight: 800, color: AMBER, background: `${AMBER}18`, border: `1px solid ${AMBER}40`, borderRadius: 10, padding: '2px 9px', animation: 'dpSpringIn 0.4s cubic-bezier(0.34,1.6,0.64,1) both' }}>{oppCount} of 3</span>
+              <span key={oppCount} style={{ fontSize: 7, fontWeight: 800, color: oppCount > 0 ? GREEN : AMBER, background: oppCount > 0 ? `${GREEN}14` : `${AMBER}18`, border: `1px solid ${oppCount > 0 ? GREEN + '40' : AMBER + '40'}`, borderRadius: 10, padding: '2px 9px', animation: 'dpSpringIn 0.4s cubic-bezier(0.34,1.6,0.64,1) both', transition: 'all 0.4s' }}>{oppCount} of 3 actioned</span>
             </div>
             {[
               {
-                show: opp1Show,
+                show: opp1Show, clicked: opp1Click,
                 icon: '🔵', title: 'Nephrology Consult',        type: 'Inter-dept Referral',
                 status: 'NOT ORDERED',    statusCol: RED,
                 guideline: 'KDIGO 2024',  guidelineCol: INDIGO,
                 reason: 'eGFR 68 — CKD Stage 3 requires nephrology co-management',
-                col: INDIGO,
+                col: INDIGO, actionLabel: 'Send Referral', doneLabel: 'Referral Sent ✓',
               },
               {
-                show: opp2Show,
+                show: opp2Show, clicked: opp2Click,
                 icon: '💊', title: 'Jardiance (Empagliflozin)', type: 'Missing Order',
                 status: 'NOT PRESCRIBED', statusCol: RED,
                 guideline: 'AHA/ACC 2023', guidelineCol: TEAL,
                 reason: 'SGLT2 inhibitor indicated for T2DM + CKD Stage 3',
-                col: TEAL,
+                col: TEAL, actionLabel: 'Order Now', doneLabel: 'Ordered ✓',
               },
               {
-                show: opp3Show,
+                show: opp3Show, clicked: opp3Click,
                 icon: '🔬', title: 'HbA1c Retest in 3 Months', type: 'Follow-up Required',
                 status: 'NOT SCHEDULED', statusCol: AMBER,
                 guideline: 'ADA 2024 §6.1', guidelineCol: PURPLE,
                 reason: 'Protocol mandates recheck after treatment intensification',
-                col: PURPLE,
+                col: PURPLE, actionLabel: 'Schedule', doneLabel: 'Scheduled ✓',
               },
             ].filter(opp => opp.show).map((opp, i) => (
-              <div key={i} style={{ display: 'flex', gap: 10, alignItems: 'flex-start', padding: '9px 12px', borderRadius: 10, background: `${opp.col}0a`, border: `1px solid ${opp.col}30`, animation: 'dpRowBlurIn 0.45s ease both', flexShrink: 0 }}>
-                <div style={{ fontSize: 16, flexShrink: 0 }}>{opp.icon}</div>
+              <div key={i} style={{ display: 'flex', gap: 10, alignItems: 'flex-start', padding: '9px 12px', borderRadius: 10, background: opp.clicked ? `${opp.col}10` : `${opp.col}0a`, border: `1px solid ${opp.clicked ? opp.col + '50' : opp.col + '30'}`, animation: 'dpRowBlurIn 0.45s ease both', flexShrink: 0, transition: 'background 0.4s, border-color 0.4s' }}>
+                <div style={{ fontSize: 16, flexShrink: 0, filter: opp.clicked ? `drop-shadow(0 0 4px ${opp.col}80)` : 'none', transition: 'filter 0.4s' }}>{opp.icon}</div>
                 <div style={{ flex: 1, minWidth: 0 }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 3 }}>
                     <span style={{ fontSize: 8, fontWeight: 700, color: opp.col }}>{opp.title}</span>
-                    <span style={{ fontSize: 6.5, fontWeight: 800, color: opp.statusCol, background: `${opp.statusCol}12`, border: `1px solid ${opp.statusCol}30`, borderRadius: 4, padding: '1px 6px', flexShrink: 0 }}>{opp.status}</span>
+                    <span style={{ fontSize: 6.5, fontWeight: 800, color: opp.clicked ? opp.col : opp.statusCol, background: opp.clicked ? `${opp.col}12` : `${opp.statusCol}12`, border: `1px solid ${opp.clicked ? opp.col + '30' : opp.statusCol + '30'}`, borderRadius: 4, padding: '1px 6px', flexShrink: 0, transition: 'all 0.4s' }}>
+                      {opp.clicked ? '✓ DONE' : opp.status}
+                    </span>
                   </div>
                   <div style={{ display: 'flex', gap: 6, alignItems: 'center', marginBottom: 3 }}>
                     <span style={{ fontSize: 6.5, color: MUTED }}>{opp.type}</span>
                     <span style={{ fontSize: 6.5, fontWeight: 700, color: opp.guidelineCol, background: `${opp.guidelineCol}10`, border: `1px solid ${opp.guidelineCol}25`, borderRadius: 10, padding: '1px 7px' }}>{opp.guideline}</span>
                   </div>
-                  <div style={{ fontSize: 7, color: DIM }}>{opp.reason}</div>
+                  <div style={{ fontSize: 7, color: DIM, marginBottom: 6 }}>{opp.reason}</div>
+                  {/* ── ACTION BUTTON ── */}
+                  <div key={opp.clicked ? 'done' : 'idle'} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 5, padding: '5px 10px', borderRadius: 6, background: opp.clicked ? `${opp.col}18` : `${opp.col}10`, border: `1px solid ${opp.clicked ? opp.col + '60' : opp.col + '35'}`, cursor: 'default', animation: opp.clicked ? 'dpClickPop 0.4s ease both' : 'dpSpringIn 0.4s ease both', transition: 'background 0.35s, border-color 0.35s', boxShadow: opp.clicked ? `0 0 10px ${opp.col}30` : 'none' }}>
+                    {!opp.clicked && <div style={{ width: 5, height: 5, borderRadius: '50%', background: opp.col, animation: 'dpPulse 1s ease-in-out infinite', flexShrink: 0 }} />}
+                    <span style={{ fontSize: 7.5, fontWeight: 800, color: opp.clicked ? opp.col : `${opp.col}cc`, letterSpacing: 0.3 }}>
+                      {opp.clicked ? opp.doneLabel : opp.actionLabel}
+                    </span>
+                  </div>
                 </div>
               </div>
             ))}
@@ -1586,7 +1598,7 @@ function CDIScreen({ progress }) {
                   {['E11.65 — Uncontrolled (HbA1c 9.1%)', 'E11.9 — Controlled / no complications'].map((opt, j) => {
                     const sel = j === 0 && (answered || locked);
                     return (
-                      <div key={j} style={{ display: 'flex', gap: 11, alignItems: 'flex-start', padding: '11px 14px', borderRadius: 10, background: sel ? `${GREEN}12` : 'rgba(0,0,0,0.03)', border: `1px solid ${sel ? GREEN + '45' : BORDER}`, transition: 'all 0.45s ease' }}>
+                      <div key={sel ? 'sel' : `opt-${j}`} style={{ display: 'flex', gap: 11, alignItems: 'flex-start', padding: '11px 14px', borderRadius: 10, background: sel ? `${GREEN}12` : 'rgba(0,0,0,0.03)', border: `1px solid ${sel ? GREEN + '45' : BORDER}`, transition: 'all 0.45s ease', animation: sel ? 'dpClickPop 0.4s ease both' : undefined }}>
                         <div style={{ width: 18, height: 18, borderRadius: '50%', border: `2px solid ${sel ? GREEN : BORDER}`, background: sel ? GREEN : 'transparent', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, marginTop: 1, transition: 'all 0.35s' }}>
                           {sel && <div style={{ width: 7, height: 7, borderRadius: '50%', background: '#fff' }} />}
                         </div>
@@ -1595,6 +1607,14 @@ function CDIScreen({ progress }) {
                     );
                   })}
                 </div>
+
+                {/* Physician response time */}
+                {answered && (
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 5, animation: 'dpBeatIn 0.35s ease both' }}>
+                    <div style={{ width: 5, height: 5, borderRadius: '50%', background: GREEN }} />
+                    <span style={{ fontSize: 7, fontWeight: 700, color: GREEN }}>Physician responded · 4.7s</span>
+                  </div>
+                )}
 
                 {/* Code enhancement */}
                 {enhancements.some(e => e.show) && (
@@ -1615,6 +1635,24 @@ function CDIScreen({ progress }) {
                       <div style={{ textAlign: 'center', paddingTop: 4, animation: 'dpSpringIn 0.7s cubic-bezier(0.34,1.4,0.64,1) both' }}>
                         <div style={{ fontSize: 28, fontWeight: 900, color: GREEN, fontFamily: 'Sora', letterSpacing: -1.5, lineHeight: 1, textShadow: 'none' }}>+AED 4,200</div>
                         <div style={{ fontSize: 9, color: DIM, marginTop: 4 }}>captured at point of care</div>
+                      </div>
+                    )}
+                    {locked && (
+                      <div style={{ borderTop: `1px solid ${GREEN}25`, paddingTop: 10, display: 'flex', flexDirection: 'column', gap: 6, animation: 'dpBeatIn 0.5s ease 0.2s both' }}>
+                        <div style={{ fontSize: 7, fontWeight: 800, color: GREEN, letterSpacing: 0.6 }}>OUTCOMES CAPTURED AT POINT OF CARE</div>
+                        {[
+                          { label: 'Nephrology referral sent',      col: INDIGO },
+                          { label: 'Jardiance order placed',         col: TEAL   },
+                          { label: 'HbA1c retest scheduled',         col: PURPLE },
+                          { label: 'Code E11.65 locked · E-signed',  col: GREEN  },
+                        ].map((item, i) => (
+                          <div key={i} style={{ display: 'flex', gap: 6, alignItems: 'center', animation: `dpRowBlurIn 0.4s ease ${i * 0.08}s both` }}>
+                            <div style={{ width: 14, height: 14, borderRadius: '50%', background: `${item.col}20`, border: `1.5px solid ${item.col}60`, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                              <span style={{ fontSize: 7, fontWeight: 900, color: item.col }}>✓</span>
+                            </div>
+                            <span style={{ fontSize: 7.5, fontWeight: 600, color: TXT }}>{item.label}</span>
+                          </div>
+                        ))}
                       </div>
                     )}
                   </div>
@@ -1684,7 +1722,16 @@ function CodingScreen({ progress }) {
   ];
 
   const showDRG    = p >= 0.54;
+  const showSubmit = p >= 0.70;
+  const submitted  = p >= 0.80;
   const showImpact = p >= 0.76;
+
+  const ipdCPT = [
+    { code: '99233', desc: 'Subsequent hospital care — high complexity', col: PURPLE, show: 0.56 },
+    { code: '71046', desc: 'Chest X-ray — 2 views',                      col: INDIGO, show: 0.62 },
+    { code: '94640', desc: 'Respiratory treatment — nebulizer therapy',   col: TEAL,   show: 0.67 },
+    { code: '85025', desc: 'CBC with differential',                       col: AMBER,  show: 0.71 },
+  ];
 
   return (
     <ProductShell breadcrumb="AI Coding · IR-DRG Engine" color={PURPLE}>
@@ -1701,17 +1748,20 @@ function CodingScreen({ progress }) {
             <div style={{ fontSize: 30, fontWeight: 900, color: showDRG ? PURPLE : DIM, fontFamily: 'Sora', lineHeight: 1, transition: 'color 0.8s', textShadow: showDRG ? `0 0 26px ${PURPLE}70` : 'none' }}>
               {showDRG ? <CountUp value="1.34" duration={800} key="drg" /> : '0.94'}
             </div>
-            <div style={{ fontSize: 7.5, color: showDRG ? GREEN : DIM, marginTop: 2, fontWeight: 700 }}>{showDRG ? '+0.40 · vs. baseline' : 'baseline · CCs unmapped'}</div>
+            <div style={{ fontSize: 7.5, color: showDRG ? GREEN : DIM, marginTop: 2, fontWeight: 700 }}>{showDRG ? '+42% uplift · vs. baseline' : 'baseline · CCs unmapped'}</div>
           </div>
         </div>
 
         {/* Two-column: ICD list | DRG computation */}
         <div style={{ display: 'flex', gap: 12, flex: 1, overflow: 'hidden' }}>
 
-          {/* ── LEFT: IPD ICD-10-CM ranked ── */}
-          <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 8, overflow: 'hidden' }}>
-            <div style={{ fontSize: 9, fontWeight: 800, color: PURPLE, letterSpacing: 0.6, flexShrink: 0 }}>ICD-10-CM — SEQUENCED &amp; RANKED</div>
-            <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 7 }}>
+          {/* ── LEFT: IPD ICD-10-CM + CPT ── */}
+          <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 8, overflow: 'auto' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexShrink: 0 }}>
+              <span style={{ fontSize: 9, fontWeight: 800, color: PURPLE, letterSpacing: 0.6 }}>ICD-10-CM + CPT</span>
+              <span style={{ fontSize: 6.5, fontWeight: 800, color: GREEN, background: `${GREEN}12`, border: `1px solid ${GREEN}30`, borderRadius: 10, padding: '2px 8px', animation: 'dpBeatIn 0.4s ease both' }}>AUTO-GENERATED · 0 MANUAL ENTRY</span>
+            </div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 7 }}>
               {ipdICD.map((c, i) => {
                 const vis = p >= c.show;
                 const act = p >= c.show && p < c.show + 0.12;
@@ -1738,6 +1788,22 @@ function CodingScreen({ progress }) {
                 ) : null;
               })}
             </div>
+
+            {/* ── CPT — Procedures ── */}
+            {showDRG && (
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 6, animation: 'dpBeatIn 0.5s ease both' }}>
+                <div style={{ fontSize: 8, fontWeight: 800, color: INDIGO, letterSpacing: 0.6, flexShrink: 0, marginTop: 4, borderTop: `1px solid ${BORDER}`, paddingTop: 6 }}>CPT — PROCEDURES</div>
+                {ipdCPT.map((c, i) => {
+                  const vis = p >= c.show;
+                  return vis ? (
+                    <div key={i} style={{ display: 'flex', gap: 8, alignItems: 'center', padding: '7px 10px', borderRadius: 8, background: `${c.col}08`, border: `1px solid ${c.col}22`, animation: 'dpRowBlurIn 0.4s ease both' }}>
+                      <span style={{ fontSize: 12, fontWeight: 900, color: c.col, fontFamily: 'Sora', flexShrink: 0, letterSpacing: -0.5 }}>{c.code}</span>
+                      <span style={{ fontSize: 9, color: TXT, flex: 1, lineHeight: 1.4 }}>{c.desc}</span>
+                    </div>
+                  ) : null;
+                })}
+              </div>
+            )}
           </div>
 
           {/* ── DIVIDER ── */}
@@ -1762,7 +1828,10 @@ function CodingScreen({ progress }) {
                     <div style={{ fontSize: 36, fontWeight: 900, color: PURPLE, fontFamily: 'Sora', lineHeight: 1, textShadow: `0 0 30px ${PURPLE}70` }}>
                       <CountUp value="1.34" duration={700} key="drg-after" />
                     </div>
-                    <div style={{ fontSize: 8, color: DIM, marginTop: 4 }}>J18.9 + J44.1 MCC + 2× CC</div>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: 2, marginTop: 4, alignItems: 'center' }}>
+                      <div style={{ fontSize: 8, color: DIM }}>All comorbidities captured ✓</div>
+                      <span style={{ fontSize: 9, fontWeight: 800, color: GREEN, background: `${GREEN}14`, border: `1px solid ${GREEN}30`, borderRadius: 8, padding: '2px 8px', animation: 'dpSpringIn 0.6s ease both' }}>+42% DRG uplift</span>
+                    </div>
                   </div>
                 </div>
 
@@ -1801,6 +1870,42 @@ function CodingScreen({ progress }) {
                 <div style={{ fontSize: 13, color: DIM }}>Mapping comorbidities…</div>
                 <div style={{ display: 'flex', gap: 5 }}>
                   {[0,1,2].map(i => <div key={i} style={{ width: 6, height: 6, borderRadius: '50%', background: PURPLE, animation: `dpPulse 1.2s ease ${i * 0.3}s infinite` }} />)}
+                </div>
+              </div>
+            )}
+
+            {/* One-click submission button */}
+            {showSubmit && (
+              <div style={{ animation: 'dpBeatIn 0.5s ease both' }}>
+                <div
+                  key={submitted ? 'submitted' : 'ready'}
+                  style={{
+                    display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8,
+                    padding: '10px 16px', borderRadius: 10,
+                    background: submitted ? `${GREEN}14` : `${PURPLE}14`,
+                    border: `1.5px solid ${submitted ? GREEN + '55' : PURPLE + '55'}`,
+                    cursor: 'default',
+                    animation: submitted ? 'dpClickPop 0.4s ease both' : 'dpSpringIn 0.55s cubic-bezier(0.34,1.4,0.64,1) both',
+                    transition: 'background 0.4s, border-color 0.4s',
+                    boxShadow: submitted ? `0 0 18px ${GREEN}30` : `0 0 14px ${PURPLE}20`,
+                  }}
+                >
+                  {submitted ? (
+                    <>
+                      <div style={{ width: 16, height: 16, borderRadius: '50%', background: `${GREEN}25`, border: `1.5px solid ${GREEN}60`, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                        <span style={{ fontSize: 8, color: GREEN, fontWeight: 900 }}>✓</span>
+                      </div>
+                      <div>
+                        <div style={{ fontSize: 9.5, fontWeight: 800, color: GREEN }}>Submitted to Payer</div>
+                        <div style={{ fontSize: 7, color: DIM, marginTop: 1 }}>Response received · 3.2s · NCCI/MUE cleared</div>
+                      </div>
+                    </>
+                  ) : (
+                    <>
+                      <div style={{ width: 6, height: 6, borderRadius: '50%', background: PURPLE, animation: 'dpPulse 1.1s ease-in-out infinite', flexShrink: 0 }} />
+                      <span style={{ fontSize: 9.5, fontWeight: 800, color: PURPLE }}>Submit Codes to Payer →</span>
+                    </>
+                  )}
                 </div>
               </div>
             )}
@@ -2769,6 +2874,12 @@ export default function DemoPlayer() {
           100% { transform:translateX(400%); }
         }
         @keyframes dpSlideInLeft { from { transform: translateX(-100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+        @keyframes dpClickPop {
+          0%   { transform: scale(1);    }
+          25%  { transform: scale(0.88); }
+          65%  { transform: scale(1.05); }
+          100% { transform: scale(1);    }
+        }
         @keyframes dpStatRing {
           0%   { transform:scale(0.5); opacity:0.7; }
           100% { transform:scale(2.8); opacity:0; }

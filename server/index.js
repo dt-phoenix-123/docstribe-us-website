@@ -418,17 +418,17 @@ const UAE_DEMO_SCENES = [
   {
     id: 6, timecode: '0:42–1:00', journeyStage: 'ambient-cdi',
     title: 'Clinical Intelligence',
-    voText: "While the doctor sees the patient, Docstribe is already working. It reads every clinical signal and maps the gaps. A Nephrology referral — not ordered. Jardiance — not prescribed. A follow-up HbA1c — not scheduled. Three actionable opportunities, surfaced before the patient leaves the room. Then the CDI query fires. The physician responds in five seconds. The code is corrected. Four thousand two hundred dirhams — captured at point of care.",
+    voText: "While the doctor sees the patient, Docstribe is already working. Three signals mapped. Three gaps found. A Nephrology referral — not yet ordered. Jardiance — not yet prescribed. A follow-up HbA1c — not scheduled. The physician acts on each — one click, three actions captured before the patient leaves the room. Then the CDI query fires: is this diabetes controlled or uncontrolled? The physician responds in five seconds. The code corrects. Four thousand two hundred dirhams — captured right there, at point of care.",
   },
   {
     id: 7, timecode: '1:00–1:14', journeyStage: 'coding',
     title: 'AI-Powered Coding',
-    voText: "Every diagnosis carries an ICD code. Every procedure, a CPT. Together they drive your IR-DRG weight — the multiplier that determines what your hospital gets paid per admission. Docstribe sequences and validates every one — running NCCI and MUE checks automatically. The weight lifts from zero point nine four to one point three four. Eighteen thousand four hundred dirhams — per case. That is what nothing missed looks like.",
+    voText: "Every diagnosis carries an ICD code. Every procedure, a CPT. Docstribe generates both automatically — zero manual entry. Together they drive your IR-DRG weight — the multiplier that decides what your hospital gets paid per admission. Every code is validated through NCCI and MUE checks. One click to submit. The weight lifts from zero point nine four to one point three four. Eighteen thousand four hundred dirhams — per case. That is what nothing missed looks like.",
   },
   {
     id: 8, timecode: '1:14–1:32', journeyStage: 'denial-recovery',
     title: 'Denial Prevention & Recovery',
-    voText: "Docstribe reads every claim through the lens of each payer's contract — batch by batch, rule by rule. Denials have patterns, and we map every one of them. Between sixty-seven and ninety-one percent of what would be denied can be caught and corrected before the claim even goes out. And when one does slip through, a single click pulls the contract, matches the clause, and drafts the appeal. Thirty seconds — not three weeks.",
+    voText: "It doesn't stop here. We go deeper — into every payer's contract, every batch, every rule. Denials have patterns, and Docstribe maps every one of them. Between sixty-seven and ninety-one percent of what would be denied is caught and corrected before the claim goes out. And when one does slip through, a single click pulls the contract, matches the clause, and drafts the appeal. Thirty seconds — not three weeks.",
   },
   {
     id: 10, timecode: '1:32–1:52', journeyStage: 'service-line',
