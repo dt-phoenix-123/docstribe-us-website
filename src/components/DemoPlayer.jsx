@@ -108,14 +108,14 @@ const SCENES = [
   {
     id: 2, type: 'kpi', color: TEAL,
     title: 'Introducing Docstribe',
-    vo: "Docstribe. Built by clinicians — thirty years of practice, a hundred hospitals across the US, UAE, and India, ten million lives. That gap you just saw — we close it. Contractually. Denials fall thirty percent. Clean claim rate ninety-nine percent. CMI up by zero point one five. Sixty days. Guaranteed.",
+    vo: "Docstribe. Thirty years of clinical practice. A hundred hospitals. Ten million lives. That gap you just saw — we close it. Contractually. Denials fall thirty percent. Clean claim rate, ninety-nine percent. Case mix index climbs. Sixty days. Guaranteed.",
     beats: [
-      { at: 0.04, stat: 'Docstribe',      sub: 'Clinical intelligence platform · clinician-built' },
-      { at: 0.20, stat: '100+ Hospitals', sub: 'US · UAE · India · live deployments' },
-      { at: 0.34, stat: '10M+ Lives',     sub: 'Patient population managed globally' },
-      { at: 0.50, stat: '↓30%',          sub: 'Denial rate reduction · 60 days · guaranteed' },
-      { at: 0.66, stat: '99%',           sub: 'Clean claim rate · first-pass submission' },
-      { at: 0.80, stat: '+0.15 CMI',     sub: 'Case mix index improvement · 60 days' },
+      { at: 0.04, stat: 'Docstribe',      sub: 'Clinical intelligence · clinician-built' },
+      { at: 0.22, stat: '100+ Hospitals', sub: 'US · UAE · India · live deployments' },
+      { at: 0.36, stat: '10M+ Lives',     sub: 'Patient population managed globally' },
+      { at: 0.52, stat: '↓30% Denials',  sub: '60 days · contractually guaranteed' },
+      { at: 0.68, stat: '99% Clean Rate', sub: 'first-pass claim submission' },
+      { at: 0.82, stat: 'CMI ↑',         sub: 'case mix index climbs · measurably · 60 days' },
     ],
   },
   {
@@ -134,24 +134,24 @@ const SCENES = [
     id: 6, type: 'product', color: AMBER,
     title: 'Clinical Intelligence',
     breadcrumb: 'Ambient Scribe · CDI',
-    vo: "Our ambient solution listens to the physician-patient encounter — and not just to structure the note. It builds a holistic patient profile. Risk stratification. Next steps. CDI queries. ICD and CPT codes — all grounded in clinical governance frameworks. The physician speaks. Docstribe builds the complete clinical picture, in real time, before the encounter even ends.",
+    vo: "Our ambient solution listens to the physician-patient encounter — not just to structure the note, but to build a holistic patient profile. Risk, next steps, codes — all grounded in clinical governance. When a documentation gap is detected, a CDI query is auto-raised. The physician answers it in real time. Documentation tightens. Charge capture improves. Before the encounter ends.",
     beats: [
       { at: 0.06, stat: 'Listens live',          sub: 'physician-patient encounter · ambient · passive' },
-      { at: 0.28, stat: 'Holistic profile built', sub: 'risk · next steps · CDI queries · codes · governance' },
-      { at: 0.56, stat: 'CDI query surfaced',     sub: 'documentation gap · ADA 2024 §6.1 · in-note' },
-      { at: 0.80, stat: '+AED 4,200',            sub: 'one clarification · complete picture · zero extra work' },
+      { at: 0.28, stat: 'Holistic profile built', sub: 'risk · next steps · codes · governance · real time' },
+      { at: 0.54, stat: 'CDI query auto-raised',  sub: 'gap detected · physician answers in real time' },
+      { at: 0.78, stat: 'Charge capture ↑',       sub: 'documentation tightened · at point of care' },
     ],
   },
   {
     id: 7, type: 'product', color: PURPLE,
     title: 'AI-Powered Coding',
     breadcrumb: 'ICD-10-CM · Smart Coding Engine',
-    vo: "Every claim coded precisely. NCCI and MUE edits applied — payer rules matched before a single code leaves the system. Then, through CC and MCC auto-capture, Docstribe runs IR-DRG analysis in real time, before discharge. Every complication identified today reflects in the DRG weight today. Pneumonia with COPD exacerbation — weight locked at one point three four. AED eighteen thousand four hundred. Per case. Every case.",
+    vo: "Every claim, coded with clinical precision. NCCI and MUE edits applied — payer rules matched before a code goes out. Then through CC and MCC auto-capture, Docstribe runs IR-DRG analysis before discharge. Every complication captured today lifts the DRG weight today. Pneumonia, COPD exacerbation, hypertension — DRG weight confirmed and locked. Significant uplift, per case. Every case.",
     beats: [
       { at: 0.08, stat: 'NCCI + MUE applied',    sub: 'payer edits matched · codes validated before send' },
-      { at: 0.34, stat: 'CC/MCC auto-captured',  sub: 'every complication documented before discharge' },
-      { at: 0.58, stat: 'IR-DRG real-time',       sub: 'runs live · weight updates as complications surface' },
-      { at: 0.86, stat: '+AED 18,400',            sub: 'per case · DRG 0.94 → 1.34 · locked before discharge' },
+      { at: 0.36, stat: 'CC/MCC auto-captured',  sub: 'every complication documented before discharge' },
+      { at: 0.60, stat: 'IR-DRG confirmed',       sub: 'DRG weight locked · before patient leaves' },
+      { at: 0.86, stat: 'Uplift per case',        sub: 'DRG 0.94 → 1.34 · real-time · every admission' },
     ],
   },
   {
@@ -172,12 +172,12 @@ const SCENES = [
     title: 'Clinical Engagement & Closing',
     breadcrumb: 'Service Line Growth · Clinical Engagement',
     // Folds in closing sentiment from removed scene 11
-    vo: "Your ops team cannot watch every chart. Docstribe does. Oxygen dropping. Labs flagging a DRG escalation. Pre-auth ready for systemic therapy. Four patients — AED ninety-one thousand — surfaced live, today. And this is not a generic platform. It learns your hospital, your payers, your physicians — and gets sharper with every claim.",
+    vo: "Your ops team cannot watch every chart. Docstribe does. Oxygen dropping. Labs pointing to a DRG escalation. Pre-auth ready for systemic therapy. Four patients surfaced, live, today — significant revenue, captured automatically. Docstribe is not a generic intelligence platform. It learns your hospital, your payers, your physicians — and gets sharper with every single claim.",
     beats: [
-      { at: 0.10, stat: 'Ops engagement queue', sub: 'clinical signals → revenue action · live' },
-      { at: 0.30, stat: '4 alerts · live now',   sub: 'Respiratory · Cardiology · Neurology · Oncology' },
-      { at: 0.52, stat: 'AED 91K opportunity',   sub: '4 patients · surfaced live · Day Zero' },
-      { at: 0.80, stat: 'Built for you.',         sub: 'learns your hospital · sharper every claim' },
+      { at: 0.10, stat: 'Ops queue · live',      sub: 'clinical signals → revenue action · Day Zero' },
+      { at: 0.32, stat: '4 alerts · now',         sub: 'Respiratory · Cardiology · Neurology · Oncology' },
+      { at: 0.54, stat: 'Auto-surfaced',           sub: '4 patients · significant revenue · captured live' },
+      { at: 0.78, stat: 'Built for you.',         sub: 'learns your hospital · sharper every claim' },
     ],
   },
 ];
@@ -1817,7 +1817,7 @@ function TowerScreen({ progress }) {
         {logoShow && (
           <div style={{ position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', background: 'radial-gradient(ellipse 85% 75% at 50% 50%, rgba(0,2,14,0.93) 0%, rgba(0,2,14,0.55) 100%)', zIndex: 30, animation: 'dpLogoReveal 1.4s cubic-bezier(0.34,1.1,0.64,1) both', backdropFilter: 'blur(6px)', borderRadius: 8, pointerEvents: 'none' }}>
             <div style={{ fontSize: 52, fontWeight: 900, fontFamily: 'Sora', background: `linear-gradient(135deg,#fff 10%,${TEAL} 48%,${INDIGO})`, WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', letterSpacing: -2.5, lineHeight: 1, filter: `drop-shadow(0 0 50px ${TEAL}55)` }}>Docstribe</div>
-            <div style={{ fontSize: 12, color: TEAL, fontWeight: 600, letterSpacing: 0.4, marginTop: 12, opacity: 0.92, fontStyle: 'italic', maxWidth: 440, textAlign: 'center', lineHeight: 1.5 }}>Not just an intelligence platform — your partner in revenue growth.</div>
+            <div style={{ fontSize: 12, color: TEAL, fontWeight: 600, letterSpacing: 0.4, marginTop: 12, opacity: 0.92, fontStyle: 'italic', maxWidth: 480, textAlign: 'center', lineHeight: 1.6 }}>Docstribe is not a generic intelligence platform — it's your partner in revenue growth.</div>
             <div style={{ display: 'flex', gap: 8, marginTop: 16, flexWrap: 'wrap', justifyContent: 'center' }}>
               {['↓30% Denials', '99% Clean Claim Rate', 'CMI +0.15', '60-Day Guarantee'].map((t, i) => (
                 <span key={i} style={{ fontSize: 8.5, fontWeight: 700, color: TEAL, background: `${TEAL}14`, border: `1px solid ${TEAL}35`, borderRadius: 20, padding: '5px 14px', animation: `dpSpringIn 0.5s cubic-bezier(0.34,1.4,0.64,1) ${0.12 + i * 0.1}s both` }}>{t}</span>

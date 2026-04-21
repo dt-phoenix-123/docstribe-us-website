@@ -408,7 +408,7 @@ const UAE_DEMO_SCENES = [
   {
     id: 2, timecode: '0:12–0:26', journeyStage: 'outcomes',
     title: 'Introducing Docstribe',
-    voText: 'Docstribe. Built by clinicians — thirty years of practice, a hundred hospitals across the US, UAE, and India, ten million lives. That gap you just saw — we close it. Contractually. Denials fall thirty percent. Clean claim rate ninety-nine percent. CMI up by zero point one five. Sixty days. Guaranteed.',
+    voText: 'Docstribe. Thirty years of clinical practice. A hundred hospitals. Ten million lives. That gap you just saw — we close it. Contractually. Denials fall thirty percent. Clean claim rate, ninety-nine percent. Case mix index climbs. Sixty days. Guaranteed.',
   },
   {
     id: 4, timecode: '0:26–0:38', journeyStage: 'pre-visit',
@@ -418,12 +418,12 @@ const UAE_DEMO_SCENES = [
   {
     id: 6, timecode: '0:38–0:58', journeyStage: 'ambient-cdi',
     title: 'Clinical Intelligence',
-    voText: 'Our ambient solution listens to the physician-patient encounter — and not just to structure the note. It builds a holistic patient profile. Risk stratification. Next steps. CDI queries. ICD and CPT codes — all grounded in clinical governance frameworks. The physician speaks. Docstribe builds the complete clinical picture, in real time, before the encounter even ends.',
+    voText: 'Our ambient solution listens to the physician-patient encounter — not just to structure the note, but to build a holistic patient profile. Risk, next steps, codes — all grounded in clinical governance. When a documentation gap is detected, a CDI query is auto-raised. The physician answers it in real time. Documentation tightens. Charge capture improves. Before the encounter ends.',
   },
   {
     id: 7, timecode: '0:58–1:12', journeyStage: 'coding',
     title: 'AI-Powered Coding',
-    voText: 'Every claim coded precisely. NCCI and MUE edits applied — payer rules matched before a single code leaves the system. Then, through CC and MCC auto-capture, Docstribe runs IR-DRG analysis in real time, before discharge. Every complication identified today reflects in the DRG weight today. Pneumonia with COPD exacerbation — weight locked at one point three four. AED eighteen thousand four hundred. Per case. Every case.',
+    voText: 'Every claim, coded with clinical precision. NCCI and MUE edits applied — payer rules matched before a code goes out. Then through CC and MCC auto-capture, Docstribe runs IR-DRG analysis before discharge. Every complication captured today lifts the DRG weight today. Pneumonia, COPD exacerbation, hypertension — DRG weight confirmed and locked. Significant uplift, per case. Every case.',
   },
   {
     id: 8, timecode: '1:12–1:32', journeyStage: 'denial-recovery',
@@ -433,7 +433,7 @@ const UAE_DEMO_SCENES = [
   {
     id: 10, timecode: '1:32–1:50', journeyStage: 'service-line',
     title: 'Clinical Engagement',
-    voText: 'Your ops team cannot watch every chart. Docstribe does. Oxygen dropping. Labs flagging a DRG escalation. Pre-auth ready for systemic therapy. Four patients — AED ninety-one thousand — surfaced live, today. And this is not a generic platform. It learns your hospital, your payers, your physicians — and gets sharper with every claim.',
+    voText: 'Your ops team cannot watch every chart. Docstribe does. Oxygen dropping. Labs pointing to a DRG escalation. Pre-auth ready for systemic therapy. Four patients surfaced, live, today — significant revenue, captured automatically. Docstribe is not a generic intelligence platform. It learns your hospital, your payers, your physicians — and gets sharper with every single claim.',
   },
 ];
 
