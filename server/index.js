@@ -413,17 +413,17 @@ const UAE_DEMO_SCENES = [
   {
     id: 4, timecode: '0:26–0:38', journeyStage: 'pre-visit',
     title: 'Pre-Visit Intelligence',
-    voText: 'A patient walks in. Docstribe pulls their insurance profile automatically — coverage, co-pay, network status — live from the payer API. Before they reach the desk, eligibility is confirmed. Network status. Active plan. Co-pay. All in seconds. No calls. No delays. No surprises.',
+    voText: 'From the time a patient walks in, our intelligence maps every element from their eligibility profile — coverage tier, co-pay, network status, active authorisations — pulled directly from the payer API, in real time. Before they reach the consultation desk, every financial and clinical variable is already confirmed. No phone calls. No manual lookups. No surprises.',
   },
   {
     id: 6, timecode: '0:38–0:58', journeyStage: 'ambient-cdi',
     title: 'Clinical Intelligence',
-    voText: 'The physician speaks. The note builds itself — diagnoses, vitals, comorbidities, structured and coded in real time. Docstribe reads the note as it forms. A documentation gap surfaces. Grounded in ADA clinical guidelines. One answer from the physician. Code corrected at the point of care. AED four thousand two hundred more — from a single clinical clarification.',
+    voText: 'Our ambient solution listens to the physician-patient encounter — and not just to structure the note. It builds a holistic patient profile. Risk stratification. Next steps. CDI queries. ICD and CPT codes — all grounded in clinical governance frameworks. The physician speaks. Docstribe builds the complete clinical picture, in real time, before the encounter even ends.',
   },
   {
     id: 7, timecode: '0:58–1:12', journeyStage: 'coding',
     title: 'AI-Powered Coding',
-    voText: 'Every code, sequenced. Every complication — MCC, CC — captured before discharge. The IR-DRG recalculates live, against NCCI and MUE edits, while the patient is still admitted. Pneumonia with COPD exacerbation — DRG weight locked at one point three four. AED eighteen thousand four hundred. Per case. Every case.',
+    voText: 'Every claim coded precisely. NCCI and MUE edits applied — payer rules matched before a single code leaves the system. Then, through CC and MCC auto-capture, Docstribe runs IR-DRG analysis in real time, before discharge. Every complication identified today reflects in the DRG weight today. Pneumonia with COPD exacerbation — weight locked at one point three four. AED eighteen thousand four hundred. Per case. Every case.',
   },
   {
     id: 8, timecode: '1:12–1:32', journeyStage: 'denial-recovery',

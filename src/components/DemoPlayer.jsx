@@ -122,36 +122,36 @@ const SCENES = [
     id: 4, type: 'product', color: GREEN,
     title: 'Pre-Visit Intelligence',
     breadcrumb: 'Eligibility & Pre-Authorisation',
-    vo: "A patient walks in. Docstribe pulls their insurance profile automatically — coverage, co-pay, network status — live from the payer API. Before they reach the desk, eligibility is confirmed. Network status. Active plan. Co-pay. All in seconds. No calls. No delays. No surprises.",
+    vo: "From the time a patient walks in, our intelligence maps every element from their eligibility profile — coverage tier, co-pay, network status, active authorisations — pulled directly from the payer API, in real time. Before they reach the consultation desk, every financial and clinical variable is already confirmed. No phone calls. No manual lookups. No surprises.",
     beats: [
-      { at: 0.10, stat: 'Auto-fetched',  sub: 'insurance profile pulled · no manual entry' },
-      { at: 0.36, stat: 'Eligible ✓',    sub: 'Daman Enhanced · co-pay AED 25 · In-network' },
-      { at: 0.62, stat: 'AED 25 co-pay', sub: 'confirmed before first consultation' },
-      { at: 0.85, stat: 'Zero admin.',    sub: 'no calls · no delays · no surprises' },
+      { at: 0.10, stat: 'Profile mapped',  sub: 'coverage · co-pay · network · authorisations · live' },
+      { at: 0.36, stat: 'Eligible ✓',      sub: 'Daman Enhanced · co-pay AED 25 · In-network' },
+      { at: 0.62, stat: 'All confirmed',    sub: 'before they reach the consultation desk' },
+      { at: 0.85, stat: 'Zero admin.',      sub: 'no calls · no lookups · no surprises' },
     ],
   },
   {
     id: 6, type: 'product', color: AMBER,
     title: 'Clinical Intelligence',
     breadcrumb: 'Ambient Scribe · CDI',
-    vo: "The physician speaks. The note builds itself — diagnoses, vitals, comorbidities, structured and coded in real time. Docstribe reads the note as it forms. A documentation gap surfaces. Grounded in ADA clinical guidelines. One answer from the physician. Code corrected at the point of care. AED four thousand two hundred more — from a single clinical clarification.",
+    vo: "Our ambient solution listens to the physician-patient encounter — and not just to structure the note. It builds a holistic patient profile. Risk stratification. Next steps. CDI queries. ICD and CPT codes — all grounded in clinical governance frameworks. The physician speaks. Docstribe builds the complete clinical picture, in real time, before the encounter even ends.",
     beats: [
-      { at: 0.06, stat: 'Note builds live',      sub: 'voice → structured ICD · zero physician effort' },
-      { at: 0.38, stat: 'Query auto-surfaces',   sub: 'documentation gap · ADA 2024 §6.1 · real time' },
-      { at: 0.62, stat: '✓ Code corrected',      sub: 'E11.9 → E11.65 CC captured · point of care' },
-      { at: 0.84, stat: '+AED 4,200',            sub: 'revenue · one clarification · zero extra effort' },
+      { at: 0.06, stat: 'Listens live',          sub: 'physician-patient encounter · ambient · passive' },
+      { at: 0.28, stat: 'Holistic profile built', sub: 'risk · next steps · CDI queries · codes · governance' },
+      { at: 0.56, stat: 'CDI query surfaced',     sub: 'documentation gap · ADA 2024 §6.1 · in-note' },
+      { at: 0.80, stat: '+AED 4,200',            sub: 'one clarification · complete picture · zero extra work' },
     ],
   },
   {
     id: 7, type: 'product', color: PURPLE,
     title: 'AI-Powered Coding',
     breadcrumb: 'ICD-10-CM · Smart Coding Engine',
-    vo: "Every code, sequenced. Every complication — MCC, CC — captured before discharge. The IR-DRG recalculates live, against NCCI and MUE edits, while the patient is still admitted. Pneumonia with COPD exacerbation — DRG weight locked at one point three four. AED eighteen thousand four hundred. Per case. Every case.",
+    vo: "Every claim coded precisely. NCCI and MUE edits applied — payer rules matched before a single code leaves the system. Then, through CC and MCC auto-capture, Docstribe runs IR-DRG analysis in real time, before discharge. Every complication identified today reflects in the DRG weight today. Pneumonia with COPD exacerbation — weight locked at one point three four. AED eighteen thousand four hundred. Per case. Every case.",
     beats: [
-      { at: 0.08, stat: 'ICD-10-CM sequenced',   sub: 'Principal · MCC · CC captured before discharge' },
-      { at: 0.30, stat: 'NCCI + MUE validated',  sub: 'payer edits matched · denials cut at source' },
-      { at: 0.56, stat: 'IR-DRG live',            sub: 'recalculates while patient is admitted' },
-      { at: 0.86, stat: '+AED 18,400',            sub: 'per case · DRG 0.94 → 1.34 · locked' },
+      { at: 0.08, stat: 'NCCI + MUE applied',    sub: 'payer edits matched · codes validated before send' },
+      { at: 0.34, stat: 'CC/MCC auto-captured',  sub: 'every complication documented before discharge' },
+      { at: 0.58, stat: 'IR-DRG real-time',       sub: 'runs live · weight updates as complications surface' },
+      { at: 0.86, stat: '+AED 18,400',            sub: 'per case · DRG 0.94 → 1.34 · locked before discharge' },
     ],
   },
   {
@@ -1698,7 +1698,7 @@ function TowerScreen({ progress }) {
 
   return (
     <ProductShell breadcrumb="AI Agent Workforce · Clinical Intelligence" color={INDIGO}>
-      <div style={{ padding: '10px 14px', height: '100%', display: 'flex', flexDirection: 'column', gap: 8, position: 'relative' }}>
+      <div style={{ padding: '10px 14px 38px', height: '100%', display: 'flex', flexDirection: 'column', gap: 8, position: 'relative' }}>
 
         {/* ── Header ── */}
         <div style={{ display: 'flex', gap: 8, alignItems: 'center', flexShrink: 0 }}>
@@ -1817,7 +1817,7 @@ function TowerScreen({ progress }) {
         {logoShow && (
           <div style={{ position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', background: 'radial-gradient(ellipse 85% 75% at 50% 50%, rgba(0,2,14,0.93) 0%, rgba(0,2,14,0.55) 100%)', zIndex: 30, animation: 'dpLogoReveal 1.4s cubic-bezier(0.34,1.1,0.64,1) both', backdropFilter: 'blur(6px)', borderRadius: 8, pointerEvents: 'none' }}>
             <div style={{ fontSize: 52, fontWeight: 900, fontFamily: 'Sora', background: `linear-gradient(135deg,#fff 10%,${TEAL} 48%,${INDIGO})`, WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', letterSpacing: -2.5, lineHeight: 1, filter: `drop-shadow(0 0 50px ${TEAL}55)` }}>Docstribe</div>
-            <div style={{ fontSize: 11, color: TEAL, fontWeight: 700, letterSpacing: 2.5, marginTop: 10, textTransform: 'uppercase', opacity: 0.92 }}>Clinical Intelligence · Revenue Certainty</div>
+            <div style={{ fontSize: 12, color: TEAL, fontWeight: 600, letterSpacing: 0.4, marginTop: 12, opacity: 0.92, fontStyle: 'italic', maxWidth: 440, textAlign: 'center', lineHeight: 1.5 }}>Not just an intelligence platform — your partner in revenue growth.</div>
             <div style={{ display: 'flex', gap: 8, marginTop: 16, flexWrap: 'wrap', justifyContent: 'center' }}>
               {['↓30% Denials', '99% Clean Claim Rate', 'CMI +0.15', '60-Day Guarantee'].map((t, i) => (
                 <span key={i} style={{ fontSize: 8.5, fontWeight: 700, color: TEAL, background: `${TEAL}14`, border: `1px solid ${TEAL}35`, borderRadius: 20, padding: '5px 14px', animation: `dpSpringIn 0.5s cubic-bezier(0.34,1.4,0.64,1) ${0.12 + i * 0.1}s both` }}>{t}</span>
