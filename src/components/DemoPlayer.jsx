@@ -1361,10 +1361,7 @@ function CDIScreen({ progress }) {
   const opp2Show   = p >= 0.43;       // Jardiance order card
   const opp3Show   = p >= 0.51;       // HbA1c retest card
 
-  const highlightDiag  = p >= 0.22 && p < 0.36;
-  const highlightVital = p >= 0.32 && p < 0.46;
-  const highlightGov   = p >= 0.42 && p < 0.56;
-  const highlightAI    = p >= 0.50 && p < 0.58;
+  const oppCount = (opp1Show ? 1 : 0) + (opp2Show ? 1 : 0) + (opp3Show ? 1 : 0);
 
   const drawerOpen = p >= 0.56;
   const answered   = p >= 0.72;
@@ -1501,7 +1498,10 @@ function CDIScreen({ progress }) {
         {/* Opportunity Map */}
         {opp1Show && !drawerOpen && (
           <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 7, overflow: 'hidden' }}>
-            <div style={{ fontSize: 8, fontWeight: 800, color: AMBER, letterSpacing: 0.6, flexShrink: 0 }}>OPPORTUNITY MAP — SURFACED BY DOCSTRIBE</div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexShrink: 0 }}>
+              <span style={{ fontSize: 8, fontWeight: 800, color: AMBER, letterSpacing: 0.6 }}>OPPORTUNITY MAP — SURFACED BY DOCSTRIBE</span>
+              <span key={oppCount} style={{ fontSize: 7, fontWeight: 800, color: AMBER, background: `${AMBER}18`, border: `1px solid ${AMBER}40`, borderRadius: 10, padding: '2px 9px', animation: 'dpSpringIn 0.4s cubic-bezier(0.34,1.6,0.64,1) both' }}>{oppCount} of 3</span>
+            </div>
             {[
               {
                 show: opp1Show,
