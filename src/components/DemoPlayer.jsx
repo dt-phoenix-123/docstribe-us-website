@@ -115,7 +115,7 @@ const SCENES = [
       { at: 0.36, stat: '10M+ Lives',     sub: 'Patient population managed globally' },
       { at: 0.52, stat: '↓30% Denials',  sub: '60 days · contractually guaranteed' },
       { at: 0.68, stat: '99% Clean Rate', sub: 'first-pass claim submission' },
-      { at: 0.82, stat: 'CMI ↑',         sub: 'case mix index climbs · measurably · 60 days' },
+      { at: 0.82, stat: '+0.15',          sub: 'CMI · case mix index improvement · 60 days' },
     ],
   },
   {
@@ -495,6 +495,9 @@ function KPIScene({ scene, progress }) {
                 {/* Active bloom behind number */}
                 {active && (
                   <div style={{ position: 'absolute', inset: -20, pointerEvents: 'none', background: `radial-gradient(ellipse 80% 80% at 50% 50%,${c}25 0%,transparent 70%)`, animation: 'dpBloom 1.5s ease-out both', borderRadius: 24, zIndex: 0 }} />
+                )}
+                {i === 2 && (
+                  <div style={{ fontSize: 10, fontWeight: 800, color: c, letterSpacing: 2, textTransform: 'uppercase', opacity: 0.72, position: 'relative', zIndex: 1 }}>CMI</div>
                 )}
                 <div style={{ fontSize: 48, fontWeight: 900, color: c, fontFamily: 'Sora', lineHeight: 1, letterSpacing: -2, position: 'relative', zIndex: 1, textShadow: active ? `0 0 30px ${c}80` : 'none' }}>
                   {show ? <CountUp value={b.stat} duration={700} key={`k${i}-${show}`} /> : b.stat}
