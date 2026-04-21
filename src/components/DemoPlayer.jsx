@@ -373,242 +373,207 @@ const Badge = ({ text, color }) => (
 
 /* ══════════════════ SCENE VISUALS ══════════════════════════════ */
 
-/* Scene 1 — Revenue gap: BIG numbers, one at a time — cinematic */
+/* Scene 1 — Revenue gap: Professional executive dashboard */
 function StatScene({ scene, progress }) {
-  const anyActive = scene.beats.some(b => spot(progress, b.at, b.at + 0.28));
-  const beat0Active = spot(progress, 0.04, 0.27);
-  const beat0Show   = progress >= 0.04;
-  const beat1Active = spot(progress, 0.27, 0.50);
-  const beat1Show   = progress >= 0.27;
-  const beat2Show   = progress >= 0.52;
-  const beat3Show   = progress >= 0.87;
+  const p = progress;
+  const beat0Show   = p >= 0.04;
+  const beat0Active = p >= 0.12;
+  const beat1Show   = p >= 0.38;
+  const beat1Active = p >= 0.46;
+  const beat2Show   = p >= 0.52;
+  const beat3Show   = p >= 0.87;
   const phase = beat3Show ? 3 : beat2Show ? 2 : 1;
 
-  // SVG donut helper — renders a percentage as a circular arc segment
-  const Donut = ({ pct, color, size = 54, stroke = 7, label, sub }) => {
-    const r = (size - stroke) / 2;
-    const circ = 2 * Math.PI * r;
-    const dash = (pct / 100) * circ;
-    return (
-      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4 }}>
-        <svg width={size} height={size} style={{ transform: 'rotate(-90deg)' }}>
-          <circle cx={size/2} cy={size/2} r={r} fill="none" stroke={`${color}20`} strokeWidth={stroke}/>
-          <circle cx={size/2} cy={size/2} r={r} fill="none" stroke={color} strokeWidth={stroke}
-            strokeDasharray={`${dash} ${circ}`} strokeLinecap="round"
-            style={{ transition: 'stroke-dasharray 1.2s cubic-bezier(0.34,1.2,0.64,1)' }}/>
-        </svg>
-        <div style={{ marginTop: -size/2 - 2, fontSize: 11, fontWeight: 900, color, lineHeight: 1, textAlign: 'center' }}>{label}</div>
-        <div style={{ marginTop: size/2 - 8, fontSize: 6, color: MUTED, textAlign: 'center', maxWidth: 56 }}>{sub}</div>
-      </div>
-    );
-  };
+  const GAP_ITEMS = [
+    { label: 'Clinical Documentation Gaps', pct: 38, sub: 'CC/MCC missed · DRG undercoded at discharge',  col: AMBER,  threshold: 0.52 },
+    { label: 'Missing Authorizations',       pct: 27, sub: 'Auth not captured at point of order entry',     col: INDIGO, threshold: 0.62 },
+    { label: 'Coding Errors',                pct: 22, sub: 'ICD/DRG mismatches · NCCI violations',         col: RED,    threshold: 0.71 },
+    { label: 'Claim Edit Failures',          pct: 13, sub: 'Payer edit rules · MUE limits unmet',          col: PURPLE, threshold: 0.80 },
+  ];
 
   return (
-    <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(160deg,#e6f2ff 0%,#edf8f4 40%,#f0ecff 80%,#e8f4ff 100%)', display: 'flex', flexDirection: 'column', fontFamily: 'Sora, sans-serif', overflow: 'hidden' }}>
+    <div style={{ position: 'absolute', inset: 0, background: '#f8fafc', display: 'flex', flexDirection: 'column', fontFamily: 'Sora, sans-serif', overflow: 'hidden' }}>
 
-      {/* Background effects — only these use absolute */}
-      <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none', background: `radial-gradient(ellipse 60% 50% at 50% 50%,${TEAL}10 0%,transparent 70%)`, animation: 'dpBreath 4s ease-in-out infinite' }} />
-      <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none', backgroundImage: 'linear-gradient(rgba(100,116,139,0.06) 1px,transparent 1px),linear-gradient(90deg,rgba(100,116,139,0.06) 1px,transparent 1px)', backgroundSize: '56px 56px', animation: 'dpGridBreathe 6s ease-in-out infinite' }} />
-      {anyActive && <div key={`bloom-${progress.toFixed(1)}`} style={{ position: 'absolute', inset: 0, pointerEvents: 'none', background: `radial-gradient(ellipse 55% 35% at 50% 50%,${TEAL}12 0%,transparent 60%)`, animation: 'dpBloom 1.8s ease-out both' }} />}
+      {/* Subtle grid background */}
+      <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none', backgroundImage: 'linear-gradient(rgba(148,163,184,0.07) 1px,transparent 1px),linear-gradient(90deg,rgba(148,163,184,0.07) 1px,transparent 1px)', backgroundSize: '40px 40px' }} />
 
-      {/* ── ALL CONTENT in-flow, no absolute positioning ── */}
-      <div style={{ position: 'relative', zIndex: 1, display: 'flex', flexDirection: 'column', height: '100%', padding: '10px 16px 10px' }}>
+      <div style={{ position: 'relative', zIndex: 1, display: 'flex', flexDirection: 'column', height: '100%', padding: '12px 18px 12px' }}>
 
-        {/* TOP BAR — animated denial rhythm strip */}
-        <div style={{ display: 'flex', gap: 6, alignItems: 'center', flexShrink: 0, paddingBottom: 8, marginBottom: 10, borderBottom: `1px solid ${BORDER}`, opacity: progress >= 0.02 ? 1 : 0, transition: 'opacity 0.8s ease' }}>
-          <span style={{ fontSize: 6.5, color: MUTED, fontWeight: 700, letterSpacing: 0.5, marginRight: 2, flexShrink: 0 }}>CLAIM FLOW</span>
-          {/* 14 claims — positions 5 and 11 are denied (≈14% rate) */}
-          {Array.from({length:14},(_,i)=>{
-            const denied = i===4 || i===11;
-            return (
-              <div key={i} style={{ position:'relative', flexShrink:0 }}>
-                <div style={{ width: denied ? 32 : 24, height: 11, borderRadius: 5, background: denied ? `${RED}18` : `${TEAL}12`, border: `1px solid ${denied ? RED+'55' : TEAL+'28'}`, boxShadow: denied && beat0Active ? `0 0 10px ${RED}55` : 'none', animation: `dpSpringIn 0.4s ease ${i*0.06}s both`, transition: 'box-shadow 0.4s' }}/>
-                {denied && beat0Active && (
-                  <div style={{ position:'absolute', inset:0, display:'flex', alignItems:'center', justifyContent:'center' }}>
-                    <span style={{ fontSize:5.5, fontWeight:900, color:RED, letterSpacing:0.5, animation:'dpPulse 1.2s ease-in-out infinite' }}>✕</span>
+        {/* Document header row */}
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 10, flexShrink: 0, opacity: p >= 0.02 ? 1 : 0, transition: 'opacity 0.8s ease', borderBottom: `1px solid ${BORDER}`, paddingBottom: 8 }}>
+          <div>
+            <div style={{ fontSize: 6.5, fontWeight: 700, color: MUTED, letterSpacing: 1.5, textTransform: 'uppercase' }}>UAE Healthcare · Revenue Intelligence Brief · 2024</div>
+            <div style={{ fontSize: 5.5, color: `${MUTED}80`, marginTop: 1 }}>Hospital Revenue Cycle Performance — Docstribe Analytics</div>
+          </div>
+          {/* Claim flow mini strip */}
+          <div style={{ display: 'flex', gap: 3, alignItems: 'center' }}>
+            <span style={{ fontSize: 6, color: MUTED, fontWeight: 600, letterSpacing: 0.4, marginRight: 4 }}>CLAIM FLOW</span>
+            {Array.from({length: 14}, (_, i) => {
+              const denied = i === 4 || i === 11;
+              return (
+                <div key={i} style={{ width: denied ? 24 : 17, height: 8, borderRadius: 3, background: denied ? `${RED}18` : `${TEAL}12`, border: `1px solid ${denied ? RED + '45' : TEAL + '22'}`, boxShadow: denied && beat0Active ? `0 0 7px ${RED}50` : 'none', transition: 'box-shadow 0.4s', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  {denied && beat0Active && <span style={{ fontSize: 4.5, fontWeight: 900, color: RED }}>✕</span>}
+                </div>
+              );
+            })}
+            <span style={{ fontSize: 6, color: RED, fontWeight: 700, marginLeft: 4, opacity: p >= 0.04 ? 1 : 0, transition: 'opacity 0.5s' }}>2 in 14 denied</span>
+          </div>
+        </div>
+
+        {/* MAIN CONTENT */}
+        <div style={{ flex: 1, display: 'flex', flexDirection: 'column', minHeight: 0 }}>
+
+          {/* ── PHASE 1: Two KPI cards side by side ── */}
+          {phase === 1 && (
+            <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 10 }}>
+              <div style={{ fontSize: 6, fontWeight: 700, color: MUTED, letterSpacing: 1.2, textTransform: 'uppercase', opacity: beat0Show ? 1 : 0, transition: 'opacity 0.4s' }}>Key Performance Indicators</div>
+              <div style={{ display: 'flex', gap: 12, flex: 1, minHeight: 0 }}>
+
+                {/* KPI 1 — Denial Rate */}
+                {beat0Show && (
+                  <div style={{ flex: 1, background: '#fff', border: `1px solid ${RED}25`, borderTop: `3px solid ${RED}`, borderRadius: 10, padding: '14px 16px', boxShadow: beat0Active ? `0 4px 20px ${RED}12, 0 2px 8px rgba(0,0,0,0.06)` : '0 2px 8px rgba(0,0,0,0.04)', transition: 'box-shadow 0.5s', animation: 'dpBeatIn 0.6s ease both', display: 'flex', flexDirection: 'column', gap: 6 }}>
+                    <div style={{ fontSize: 6, fontWeight: 700, color: MUTED, letterSpacing: 1, textTransform: 'uppercase' }}>First-Pass Denial Rate · UAE</div>
+                    <div style={{ fontSize: 42, fontWeight: 900, color: beat0Active ? RED : `${RED}55`, lineHeight: 1, letterSpacing: -2, transition: 'color 0.6s', fontFamily: 'Sora' }}>
+                      <CountUp value="12–18%" duration={900} key={`b0-${beat0Show}`}/>
+                    </div>
+                    <div style={{ fontSize: 8, color: DIM, lineHeight: 1.5 }}>of UAE hospital claims<br/>denied on first submission</div>
+                    {/* Progress bar */}
+                    <div style={{ height: 3, borderRadius: 2, background: `${RED}12`, overflow: 'hidden', marginTop: 4 }}>
+                      <div style={{ height: '100%', width: beat0Active ? '18%' : '3%', background: `linear-gradient(90deg,${RED},${AMBER})`, borderRadius: 2, transition: 'width 1.4s cubic-bezier(0.34,1.2,0.64,1)', boxShadow: `0 0 5px ${RED}50` }}/>
+                    </div>
+                    <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                      <span style={{ fontSize: 5.5, color: MUTED }}>0%</span>
+                      <span style={{ fontSize: 5.5, color: MUTED }}>UAE avg 18%</span>
+                      <span style={{ fontSize: 5.5, color: MUTED }}>100%</span>
+                    </div>
+                    {beat0Active && p >= 0.14 && (
+                      <div style={{ marginTop: 4, padding: '8px 10px', background: `${RED}08`, border: `1px solid ${RED}20`, borderRadius: 7, animation: 'dpBeatIn 0.5s ease both' }}>
+                        <div style={{ fontSize: 5.5, color: MUTED, letterSpacing: 0.8, textTransform: 'uppercase', marginBottom: 2 }}>Annual Revenue at Risk</div>
+                        <div style={{ fontSize: 13, fontWeight: 900, color: RED, fontFamily: 'Sora' }}>AED <CountUp value="2.4M+" duration={1200}/></div>
+                        <div style={{ fontSize: 6, color: DIM, marginTop: 1 }}>per facility · avoidable revenue loss</div>
+                      </div>
+                    )}
+                    {/* Sample denied claim */}
+                    {beat0Active && p >= 0.16 && !beat1Show && (
+                      <div style={{ borderRadius: 8, background: 'rgba(255,255,255,0.95)', border: `1.5px solid ${RED}50`, boxShadow: `0 2px 12px ${RED}12`, padding: '8px 10px', animation: 'dpSpringIn 0.6s cubic-bezier(0.34,1.4,0.64,1) both' }}>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 6 }}>
+                          <span style={{ fontSize: 6, fontWeight: 700, color: MUTED, letterSpacing: 0.4 }}>CLAIM · AE-24-8821</span>
+                          <span style={{ fontSize: 9.5, fontWeight: 900, color: RED, letterSpacing: 1.5, border: `1.5px solid ${RED}`, borderRadius: 4, padding: '1px 5px', background: `${RED}08` }}>DENIED</span>
+                        </div>
+                        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '3px 12px' }}>
+                          {[['Patient','F.H. · 42F'],['Payer','Daman'],['Amount','AED 2,450'],['Service','Endocrinology']].map(([k,v]) => (
+                            <div key={k} style={{ display: 'flex', justifyContent: 'space-between' }}>
+                              <span style={{ fontSize: 5.5, color: MUTED }}>{k}</span>
+                              <span style={{ fontSize: 6, fontWeight: 700, color: TXT }}>{v}</span>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                )}
+
+                {/* KPI 2 — Preventable denials */}
+                {beat1Show && (
+                  <div style={{ flex: 1, background: '#fff', border: `1px solid ${AMBER}25`, borderTop: `3px solid ${AMBER}`, borderRadius: 10, padding: '14px 16px', boxShadow: beat1Active ? `0 4px 20px ${AMBER}12, 0 2px 8px rgba(0,0,0,0.06)` : '0 2px 8px rgba(0,0,0,0.04)', transition: 'box-shadow 0.5s', animation: 'dpBeatIn 0.6s ease both', display: 'flex', flexDirection: 'column', gap: 6 }}>
+                    <div style={{ fontSize: 6, fontWeight: 700, color: MUTED, letterSpacing: 1, textTransform: 'uppercase' }}>Entirely Preventable</div>
+                    <div style={{ fontSize: 42, fontWeight: 900, color: beat1Active ? AMBER : `${AMBER}55`, lineHeight: 1, letterSpacing: -2, transition: 'color 0.6s', fontFamily: 'Sora' }}>
+                      <CountUp value="60–70%" duration={900} key={`b1-${beat1Show}`}/>
+                    </div>
+                    <div style={{ fontSize: 8, color: DIM, lineHeight: 1.5 }}>of those denials<br/>avoidable before submission</div>
+                    {/* Arc gauge */}
+                    {p >= 0.42 && (() => {
+                      const R = 38, cx = 56, cy = 44, circ = Math.PI * R;
+                      return (
+                        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginTop: 4, animation: 'dpBeatIn 0.5s ease both' }}>
+                          <svg width="112" height="56" viewBox="0 0 112 56" style={{ overflow: 'visible' }}>
+                            <path d={`M ${cx-R} ${cy} A ${R} ${R} 0 0 1 ${cx+R} ${cy}`} fill="none" stroke={`${MUTED}18`} strokeWidth="8" strokeLinecap="round"/>
+                            <path d={`M ${cx-R} ${cy} A ${R} ${R} 0 0 1 ${cx+R} ${cy}`} fill="none" stroke={AMBER} strokeWidth="8" strokeLinecap="round"
+                              strokeDasharray={`${beat1Active ? circ * 0.65 : 0} ${circ}`}
+                              style={{ transition: 'stroke-dasharray 1.5s cubic-bezier(0.34,1.2,0.64,1) 0.15s', filter: `drop-shadow(0 0 4px ${AMBER}55)` }}/>
+                            <text x={cx} y={cy - 7} fontSize="16" fontWeight="900" textAnchor="middle" fill={beat1Active ? AMBER : `${MUTED}40`} style={{ transition: 'fill 0.5s', fontFamily: 'Sora' }}>65%</text>
+                          </svg>
+                          <div style={{ display: 'flex', gap: 12, marginTop: 2 }}>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
+                              <div style={{ width: 6, height: 6, borderRadius: '50%', background: AMBER }} />
+                              <span style={{ fontSize: 6, fontWeight: 700, color: AMBER }}>Preventable 65%</span>
+                            </div>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
+                              <div style={{ width: 6, height: 6, borderRadius: '50%', background: `${MUTED}40` }} />
+                              <span style={{ fontSize: 6, color: MUTED }}>Unavoidable 35%</span>
+                            </div>
+                          </div>
+                        </div>
+                      );
+                    })()}
                   </div>
                 )}
               </div>
-            );
-          })}
-          <span style={{ fontSize: 7, color: RED, fontWeight: 700, marginLeft: 4, opacity: progress >= 0.04 ? 1 : 0, transition: 'opacity 0.5s', flexShrink: 0 }}>2 in 14 denied</span>
-          <div style={{ flex: 1 }} />
-          <span style={{ fontSize: 7, fontWeight: 800, color: `${TEAL}45`, letterSpacing: 2, flexShrink: 0 }}>DOCSTRIBE</span>
-        </div>
-
-        {/* MAIN AREA */}
-        <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 10, minHeight: 0 }}>
-
-          {/* ═══ PHASE 1: Vertical — stat on top, artifact below, one by one ═══ */}
-          {phase === 1 && (
-            <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 8, padding: '4px 20px', overflow: 'hidden' }}>
-
-              {/* Beat 0 — big stat, then claim card below */}
-              {beat0Show && (
-                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 5, opacity: beat1Show ? 0.28 : 1, transition: 'opacity 0.6s ease', animation: 'dpBeatIn 0.6s ease both', width: '100%' }}>
-                  <div style={{ fontSize: 6, fontWeight: 700, color: MUTED, letterSpacing: 1, textTransform: 'uppercase', textAlign: 'center' }}>First-Pass Denial Rate · UAE</div>
-                  <div style={{ fontSize: beat1Show ? 30 : 52, fontWeight: 900, lineHeight: 1, letterSpacing: -2, color: beat0Active ? RED : DIM, transition: 'all 0.55s ease', animation: 'dpEmergeStat 0.9s cubic-bezier(0.34,1.2,0.64,1) both', textAlign: 'center' }}>
-                    <CountUp value="12–18%" duration={900} key={`b0-${beat0Show}`}/>
-                  </div>
-                  {!beat1Show && <div style={{ fontSize: 8, color: DIM, textAlign: 'center' }}>of UAE hospital claims denied on first submission</div>}
-                  {!beat1Show && (
-                    <div style={{ width: 110, height: 3, borderRadius: 2, background: `${RED}18`, overflow: 'hidden' }}>
-                      <div style={{ height: '100%', width: beat0Active ? '18%' : '4%', background: `linear-gradient(90deg,${RED},${AMBER})`, borderRadius: 2, transition: 'width 1.4s cubic-bezier(0.34,1.2,0.64,1)', boxShadow: `0 0 5px ${RED}50` }}/>
-                    </div>
-                  )}
-                  {beat0Active && progress >= 0.12 && !beat1Show && (
-                    <div style={{ fontSize: 7.5, color: RED, fontWeight: 700, animation: 'dpBeatIn 0.5s ease both', textAlign: 'center' }}>
-                      ≈ AED <CountUp value="2.4M" duration={1200}/> in avoidable revenue loss / year
-                    </div>
-                  )}
-                  {/* Claim card — springs in after stat, vanishes when beat1 arrives */}
-                  {progress >= 0.10 && !beat1Show && (
-                    <div style={{ borderRadius: 10, background: 'rgba(255,255,255,0.95)', border: `1px solid ${beat0Active ? RED+'55' : BORDER}`, boxShadow: beat0Active ? `0 4px 20px ${RED}18,0 2px 8px rgba(0,0,0,0.06)` : '0 2px 6px rgba(0,0,0,0.05)', padding: '10px 14px', width: '100%', maxWidth: 300, transition: 'all 0.5s ease', animation: 'dpSpringIn 0.6s cubic-bezier(0.34,1.4,0.64,1) both' }}>
-                      <div style={{ fontSize: 6.5, fontWeight: 700, color: MUTED, letterSpacing: 0.4, marginBottom: 6 }}>CLAIM · AE-24-8821</div>
-                      <div style={{ display: 'flex', gap: 20, marginBottom: 5 }}>
-                        <div style={{ display: 'flex', flexDirection: 'column', gap: 2.5 }}>
-                          {[['Patient','F.H. · 42F'],['Payer','Daman']].map(([k,v]) => (
-                            <div key={k} style={{ display: 'flex', justifyContent: 'space-between', gap: 12 }}>
-                              <span style={{ fontSize: 6, color: MUTED }}>{k}</span>
-                              <span style={{ fontSize: 6, fontWeight: 700, color: TXT }}>{v}</span>
-                            </div>
-                          ))}
-                        </div>
-                        <div style={{ display: 'flex', flexDirection: 'column', gap: 2.5 }}>
-                          {[['Amount','AED 2,450'],['Service','Endocrinology']].map(([k,v]) => (
-                            <div key={k} style={{ display: 'flex', justifyContent: 'space-between', gap: 12 }}>
-                              <span style={{ fontSize: 6, color: MUTED }}>{k}</span>
-                              <span style={{ fontSize: 6, fontWeight: 700, color: TXT }}>{v}</span>
-                            </div>
-                          ))}
-                        </div>
-                      </div>
-                      <div style={{ height: 1, background: BORDER, margin: '4px 0' }}/>
-                      {beat0Active ? (
-                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', border: `2px solid ${RED}`, borderRadius: 5, padding: '4px 0', background: `${RED}08`, animation: 'dpSpringIn 0.5s cubic-bezier(0.34,1.6,0.64,1) both' }}>
-                          <span style={{ fontSize: 11, fontWeight: 900, color: RED, letterSpacing: 2 }}>DENIED</span>
-                        </div>
-                      ) : (
-                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', border: `1px solid ${BORDER}`, borderRadius: 5, padding: '3px 0' }}>
-                          <span style={{ fontSize: 7, color: MUTED, fontWeight: 600 }}>Filed</span>
-                        </div>
-                      )}
-                    </div>
-                  )}
-                </div>
-              )}
-
-              {/* Beat 1 — 60-70% stat + animated speedometer gauge */}
-              {beat1Show && (
-                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 5, animation: 'dpSpringIn 0.65s cubic-bezier(0.34,1.4,0.64,1) both', width: '100%' }}>
-                  <div style={{ fontSize: 6, fontWeight: 700, color: MUTED, letterSpacing: 1, textTransform: 'uppercase', textAlign: 'center' }}>Of Those Denials — Entirely Preventable</div>
-                  <div style={{ fontSize: 48, fontWeight: 900, lineHeight: 1, letterSpacing: -2, color: AMBER, textAlign: 'center' }}>
-                    <CountUp value="60–70%" duration={900} key={`b1-${beat1Show}`}/>
-                  </div>
-                  <div style={{ fontSize: 8, color: DIM, textAlign: 'center' }}>a root cause that could have been caught before submission</div>
-                  {/* Speedometer gauge — needle sweeps to 65% as beat1 activates */}
-                  {progress >= 0.32 && (() => {
-                    const R = 50, cx = 80, cy = 60, circ = Math.PI * R;
-                    return (
-                      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', animation: 'dpSpringIn 0.6s cubic-bezier(0.34,1.4,0.64,1) both' }}>
-                        <svg width="160" height="78" viewBox="0 0 160 78" style={{ overflow: 'visible' }}>
-                          {/* Grey track = unavoidable portion */}
-                          <path d={`M ${cx-R} ${cy} A ${R} ${R} 0 0 1 ${cx+R} ${cy}`} fill="none" stroke={`${MUTED}25`} strokeWidth="11" strokeLinecap="round"/>
-                          {/* Red arc = preventable — animates to 65% on beat active */}
-                          <path d={`M ${cx-R} ${cy} A ${R} ${R} 0 0 1 ${cx+R} ${cy}`} fill="none" stroke={RED} strokeWidth="11" strokeLinecap="round"
-                            strokeDasharray={`${beat1Active ? circ*0.65 : 0} ${circ}`}
-                            style={{ transition:'stroke-dasharray 1.5s cubic-bezier(0.34,1.2,0.64,1) 0.15s', filter:`drop-shadow(0 0 5px ${RED}60)` }}/>
-                          {/* Needle — CSS rotate: -90° = left (0%), 0° = top (50%), +90° = right (100%), 27° = 65% */}
-                          <line x1={cx} y1={cy} x2={cx} y2={cy-(R-7)} stroke={beat1Active ? RED : `${MUTED}50`} strokeWidth="2.5" strokeLinecap="round"
-                            style={{ transformOrigin:`${cx}px ${cy}px`, transform:`rotate(${beat1Active ? 27 : -90}deg)`, transition:'transform 1.5s cubic-bezier(0.34,1.2,0.64,1) 0.15s,stroke 0.4s' }}/>
-                          {/* Pivot */}
-                          <circle cx={cx} cy={cy} r="5" fill={beat1Active ? RED : `${MUTED}50`} style={{ transition:'fill 0.4s' }}/>
-                          {/* Scale endpoints */}
-                          <text x={cx-R-2} y={cy+15} fontSize="7" fill={MUTED} fontWeight="600" textAnchor="middle">0%</text>
-                          <text x={cx+R+2} y={cy+15} fontSize="7" fill={MUTED} fontWeight="600" textAnchor="middle">100%</text>
-                          {/* Live reading */}
-                          <text x={cx} y={cy-7} fontSize="17" fontWeight="900" textAnchor="middle" fill={beat1Active ? RED : `${MUTED}40`} style={{ transition:'fill 0.5s' }}>65%</text>
-                        </svg>
-                        <div style={{ display:'flex', gap:14, marginTop:-2 }}>
-                          <div style={{ display:'flex', alignItems:'center', gap:3 }}>
-                            <div style={{ width:7, height:7, borderRadius:'50%', background:RED }}/>
-                            <span style={{ fontSize:6.5, fontWeight:700, color:RED }}>Preventable 65%</span>
-                          </div>
-                          <div style={{ display:'flex', alignItems:'center', gap:3 }}>
-                            <div style={{ width:7, height:7, borderRadius:'50%', background:`${MUTED}50` }}/>
-                            <span style={{ fontSize:6.5, color:MUTED }}>Unavoidable 35%</span>
-                          </div>
-                        </div>
-                      </div>
-                    );
-                  })()}
-                </div>
-              )}
-
             </div>
           )}
 
-          {/* ═══ PHASE 2: Vertical timeline — 4 root causes revealed one by one ═══ */}
-          {phase === 2 && (() => {
-            const GAP_ITEMS = [
-              { label: 'Clinical Documentation Gaps', icon: '📋', pct: 38, sub: 'CC/MCC missed · DRG undercoded at discharge', col: AMBER,  threshold: 0.52 },
-              { label: 'Missing Authorizations',      icon: '🔐', pct: 27, sub: 'Auth not captured at order entry',            col: INDIGO, threshold: 0.62 },
-              { label: 'Coding Errors',               icon: '💻', pct: 22, sub: 'ICD/DRG mismatches · NCCI violations',        col: RED,    threshold: 0.71 },
-              { label: 'Claim Edit Failures',         icon: '📤', pct: 13, sub: 'Payer edit rules · MUE limits unmet',          col: PURPLE, threshold: 0.80 },
-            ];
-            return (
-              <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', minHeight: 0 }}>
-                {/* Header label */}
-                <div style={{ fontSize: 7, fontWeight: 700, color: MUTED, letterSpacing: 1.2, textTransform: 'uppercase', marginBottom: 10, animation: 'dpBeatIn 0.5s ease both' }}>
-                  4 Root Causes · Same pattern · Every time
-                </div>
-                {/* Timeline list */}
-                <div style={{ position: 'relative', width: '100%', maxWidth: 420 }}>
-                  {/* Vertical connecting line */}
-                  <div style={{ position: 'absolute', left: 15, top: 10, bottom: 10, width: 2, background: `linear-gradient(180deg,${AMBER}40,${INDIGO}40,${RED}40,${PURPLE}40)`, borderRadius: 1 }}/>
-                  {GAP_ITEMS.map(({ label, icon, pct, sub, col, threshold }, i) => {
-                    const visible = progress >= threshold;
+          {/* ── PHASE 2: Horizontal bar chart root causes ── */}
+          {phase === 2 && (
+            <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 10 }}>
+              <div style={{ display: 'flex', alignItems: 'baseline', gap: 10 }}>
+                <div style={{ fontSize: 7, fontWeight: 700, color: MUTED, letterSpacing: 1.2, textTransform: 'uppercase', animation: 'dpBeatIn 0.5s ease both' }}>Denial Root Cause Analysis · Pattern Breakdown</div>
+                <div style={{ height: 1, flex: 1, background: BORDER }} />
+              </div>
+              <div style={{ display: 'flex', gap: 14, flex: 1, minHeight: 0 }}>
+                {/* Bar chart */}
+                <div style={{ flex: 2, display: 'flex', flexDirection: 'column', justifyContent: 'center', gap: 14 }}>
+                  {GAP_ITEMS.map(({ label, pct, sub, col, threshold }, i) => {
+                    const visible = p >= threshold;
                     if (!visible) return null;
-                    const barActive = progress >= threshold + 0.04;
+                    const barActive = p >= threshold + 0.04;
                     return (
-                      <div key={label} style={{ display: 'flex', gap: 12, marginBottom: 10, position: 'relative', alignItems: 'flex-start', animation: 'dpSpringIn 0.55s cubic-bezier(0.34,1.4,0.64,1) both' }}>
-                        {/* Timeline dot */}
-                        <div style={{ flexShrink: 0, width: 30, display: 'flex', flexDirection: 'column', alignItems: 'center', paddingTop: 2 }}>
-                          <div style={{ width: 14, height: 14, borderRadius: '50%', background: col, border: `2px solid rgba(255,255,255,0.9)`, boxShadow: `0 0 10px ${col}60`, zIndex: 1, flexShrink: 0 }}/>
-                        </div>
-                        {/* Content card */}
-                        <div style={{ flex: 1, background: 'rgba(255,255,255,0.88)', border: `1px solid ${col}30`, borderLeft: `3px solid ${col}`, borderRadius: 9, padding: '8px 12px', boxShadow: `0 2px 8px rgba(0,0,0,0.06)` }}>
-                          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 8, marginBottom: 3 }}>
-                            <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-                              <span style={{ fontSize: 14 }}>{icon}</span>
-                              <span style={{ fontSize: 7.5, fontWeight: 800, color: col, lineHeight: 1.2 }}>{label}</span>
-                            </div>
-                            <span style={{ fontSize: 22, fontWeight: 900, color: col, lineHeight: 1, flexShrink: 0 }}>{pct}%</span>
+                      <div key={label} style={{ animation: 'dpBeatIn 0.5s ease both' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 4 }}>
+                          <div style={{ display: 'flex', alignItems: 'center', gap: 7 }}>
+                            <div style={{ width: 3, height: 16, borderRadius: 2, background: col, flexShrink: 0 }} />
+                            <span style={{ fontSize: 8.5, fontWeight: 700, color: TXT }}>{label}</span>
                           </div>
-                          <div style={{ fontSize: 6, color: DIM, marginBottom: 5 }}>{sub}</div>
-                          <div style={{ height: 4, borderRadius: 2, background: `${col}15`, overflow: 'hidden' }}>
-                            <div style={{ height: '100%', borderRadius: 2, background: `linear-gradient(90deg,${col},${col}bb)`, width: barActive ? `${pct}%` : '0%', transition: 'width 1.1s cubic-bezier(0.34,1.2,0.64,1)', boxShadow: `0 0 5px ${col}55` }}/>
-                          </div>
+                          <span style={{ fontSize: 14, fontWeight: 900, color: col, fontFamily: 'Sora', lineHeight: 1 }}>{pct}%</span>
                         </div>
+                        <div style={{ height: 6, borderRadius: 3, background: `${col}12`, overflow: 'hidden', marginLeft: 10 }}>
+                          <div style={{ height: '100%', borderRadius: 3, background: `linear-gradient(90deg,${col},${col}bb)`, width: barActive ? `${pct}%` : '0%', transition: 'width 1.1s cubic-bezier(0.34,1.2,0.64,1)', boxShadow: `0 0 6px ${col}45` }}/>
+                        </div>
+                        <div style={{ fontSize: 6, color: DIM, marginTop: 2, marginLeft: 10 }}>{sub}</div>
                       </div>
                     );
                   })}
                 </div>
+                {/* Summary panel */}
+                {p >= 0.84 && (
+                  <div style={{ width: 100, background: '#fff', border: `1px solid ${BORDER}`, borderRadius: 10, padding: '14px 10px', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 6, animation: 'dpBeatIn 0.6s ease both', boxShadow: '0 2px 10px rgba(0,0,0,0.06)', flexShrink: 0 }}>
+                    <div style={{ fontSize: 5.5, fontWeight: 700, color: MUTED, letterSpacing: 1, textTransform: 'uppercase', textAlign: 'center' }}>Total Addressable</div>
+                    <div style={{ fontSize: 30, fontWeight: 900, color: TEAL, fontFamily: 'Sora', lineHeight: 1 }}>87%</div>
+                    <div style={{ fontSize: 6, color: DIM, textAlign: 'center', lineHeight: 1.5 }}>of denials<br/>addressable with<br/>Docstribe</div>
+                  </div>
+                )}
               </div>
-            );
-          })()}
+            </div>
+          )}
 
-          {/* ═══ PHASE 3: Resolution + Docstribe bridge ═══ */}
+          {/* ── PHASE 3: Bridge to solution ── */}
           {phase === 3 && (
-            <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 12, animation: 'dpSpringIn 0.8s cubic-bezier(0.34,1.4,0.64,1) both' }}>
-              <div style={{ width: 52, height: 52, borderRadius: '50%', background: `${TEAL}14`, border: `2.5px solid ${TEAL}55`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 24, boxShadow: `0 0 22px ${TEAL}40`, animation: 'dpBreath 2.5s ease-in-out infinite' }}>🔒</div>
+            <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 14, animation: 'dpSpringIn 0.8s cubic-bezier(0.34,1.4,0.64,1) both' }}>
+              <div style={{ width: 48, height: 48, borderRadius: '50%', background: `${TEAL}14`, border: `2px solid ${TEAL}55`, display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: `0 0 22px ${TEAL}40`, animation: 'dpBreath 2.5s ease-in-out infinite' }}>
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+                  <rect x="3" y="11" width="18" height="11" rx="2" stroke={TEAL} strokeWidth="2"/>
+                  <path d="M7 11V7a5 5 0 0 1 10 0v4" stroke={TEAL} strokeWidth="2" strokeLinecap="round"/>
+                </svg>
+              </div>
               <div style={{ textAlign: 'center' }}>
-                <div style={{ fontSize: 26, fontWeight: 900, color: TXT, letterSpacing: -0.5, lineHeight: 1.1, animation: 'dpEmergeStat 0.9s ease both' }}>Someone has to close all four.</div>
+                <div style={{ fontSize: 24, fontWeight: 900, color: TXT, letterSpacing: -0.5, lineHeight: 1.2, animation: 'dpEmergeStat 0.9s ease both' }}>Someone has to close all four.</div>
                 <div style={{ fontSize: 11, color: TEAL, fontWeight: 700, marginTop: 8, animation: 'dpBeatIn 0.7s ease 0.4s both' }}>Docstribe is built precisely to solve all four.</div>
               </div>
-              <div style={{ display: 'flex', gap: 7, flexWrap: 'wrap', justifyContent: 'center' }}>
-                {[['CDI ✓',AMBER],['Auth ✓',INDIGO],['Coding ✓',RED],['Edits ✓',PURPLE]].map(([label,col],i) => (
-                  <span key={i} style={{ fontSize: 8.5, fontWeight: 700, color: col, background: `${col}10`, border: `1px solid ${col}35`, borderRadius: 20, padding: '3px 10px', animation: `dpSpringIn 0.5s cubic-bezier(0.34,1.4,0.64,1) ${0.3+i*0.09}s both` }}>{label}</span>
+              <div style={{ display: 'flex', gap: 8 }}>
+                {[['CDI', AMBER], ['Auth', INDIGO], ['Coding', RED], ['Edits', PURPLE]].map(([label, col], i) => (
+                  <div key={i} style={{ padding: '8px 14px', background: '#fff', border: `1px solid ${col}30`, borderTop: `2.5px solid ${col}`, borderRadius: 8, animation: `dpSpringIn 0.5s cubic-bezier(0.34,1.4,0.64,1) ${0.3 + i * 0.09}s both`, boxShadow: `0 2px 8px ${col}10` }}>
+                    <div style={{ fontSize: 8, fontWeight: 800, color: col }}>{label}</div>
+                    <div style={{ fontSize: 6, color: DIM, marginTop: 1 }}>Solved ✓</div>
+                  </div>
                 ))}
               </div>
             </div>
@@ -1366,9 +1331,9 @@ function CDIScreen({ progress }) {
   const opp3Click  = p >= 0.55;       // HbA1c → Scheduled ✓
   const oppCount   = opp3Click ? 3 : opp2Click ? 2 : opp1Click ? 1 : 0;
 
-  const drawerOpen = p >= 0.61;       // pushed to show all 3 clicks first
-  const answered   = p >= 0.74;
-  const locked     = p >= 0.84;
+  const drawerOpen = p >= 0.61;
+  const answered   = p >= 0.67;
+  const locked     = p >= 0.78;
 
   const enhancements = [
     { from: 'E11.9', to: 'E11.65', label: 'T2DM Uncontrolled — HbA1c 9.1%', badge: 'CC captured', col: RED,  show: answered },
@@ -1476,85 +1441,95 @@ function CDIScreen({ progress }) {
           <PatientProfileCard patient={patient} progress={p} showFrom={0.16} />
         </div>
 
-        {/* Signal Assessment Grid */}
-        {signalShow && !drawerOpen && (
-          <div style={{ display: 'flex', gap: 8, flexShrink: 0, animation: 'dpBeatIn 0.5s ease both' }}>
-            {[
-              { label: 'HbA1c', value: '9.1% ↑', col: RED,    risk: 'HIGH'     },
-              { label: 'eGFR',  value: '68 ↓',   col: INDIGO, risk: 'WATCH'    },
-              { label: 'BP',    value: '142/88',  col: AMBER,  risk: 'ELEVATED' },
-            ].map((sig, i) => (
-              <div key={i} style={{ flex: 1, background: `${sig.col}0c`, border: `1px solid ${sig.col}35`, borderRadius: 9, padding: '8px 10px', animation: `dpSpringIn 0.5s cubic-bezier(0.34,1.4,0.64,1) ${i * 0.10}s both` }}>
-                <div style={{ fontSize: 7, fontWeight: 700, color: MUTED, letterSpacing: 0.5, marginBottom: 2 }}>{sig.label}</div>
-                <div style={{ fontSize: 18, fontWeight: 900, color: sig.col, fontFamily: 'Sora', lineHeight: 1.2 }}>{sig.value}</div>
-                <span style={{ fontSize: 6.5, fontWeight: 800, color: sig.col, background: `${sig.col}18`, border: `1px solid ${sig.col}30`, borderRadius: 4, padding: '2px 6px' }}>{sig.risk}</span>
-              </div>
-            ))}
-            <div style={{ flex: 1.2, background: `${RED}10`, border: `2px solid ${RED}45`, borderRadius: 9, padding: '8px 10px', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', animation: 'dpSpringIn 0.5s cubic-bezier(0.34,1.4,0.64,1) 0.30s both' }}>
-              <div style={{ fontSize: 7, fontWeight: 700, color: MUTED, letterSpacing: 0.5, marginBottom: 3 }}>COMPOSITE RISK</div>
-              <div style={{ fontSize: 16, fontWeight: 900, color: RED, letterSpacing: -0.5 }}>HIGH</div>
-              <div style={{ fontSize: 6.5, color: DIM, textAlign: 'center', marginTop: 2 }}>Multi-comorbidity · 3 signals</div>
-            </div>
-          </div>
-        )}
+        {/* ── Below-patient: two columns when opp cards appear ── */}
+        {!drawerOpen && signalShow && (
+          <div style={{ flex: 1, display: 'flex', gap: 10, overflow: 'hidden' }}>
 
-        {/* Opportunity Map */}
-        {opp1Show && !drawerOpen && (
-          <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 7, overflow: 'hidden' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexShrink: 0 }}>
-              <span style={{ fontSize: 8, fontWeight: 800, color: AMBER, letterSpacing: 0.6 }}>OPPORTUNITY MAP — SURFACED BY DOCSTRIBE</span>
-              <span key={oppCount} style={{ fontSize: 7, fontWeight: 800, color: oppCount > 0 ? GREEN : AMBER, background: oppCount > 0 ? `${GREEN}14` : `${AMBER}18`, border: `1px solid ${oppCount > 0 ? GREEN + '40' : AMBER + '40'}`, borderRadius: 10, padding: '2px 9px', animation: 'dpSpringIn 0.4s cubic-bezier(0.34,1.6,0.64,1) both', transition: 'all 0.4s' }}>{oppCount} of 3 actioned</span>
-            </div>
-            {[
-              {
-                show: opp1Show, clicked: opp1Click,
-                icon: '🔵', title: 'Nephrology Consult',        type: 'Inter-dept Referral',
-                status: 'NOT ORDERED',    statusCol: RED,
-                guideline: 'KDIGO 2024',  guidelineCol: INDIGO,
-                reason: 'eGFR 68 — CKD Stage 3 requires nephrology co-management',
-                col: INDIGO, actionLabel: 'Send Referral', doneLabel: 'Referral Sent ✓',
-              },
-              {
-                show: opp2Show, clicked: opp2Click,
-                icon: '💊', title: 'Jardiance (Empagliflozin)', type: 'Missing Order',
-                status: 'NOT PRESCRIBED', statusCol: RED,
-                guideline: 'AHA/ACC 2023', guidelineCol: TEAL,
-                reason: 'SGLT2 inhibitor indicated for T2DM + CKD Stage 3',
-                col: TEAL, actionLabel: 'Order Now', doneLabel: 'Ordered ✓',
-              },
-              {
-                show: opp3Show, clicked: opp3Click,
-                icon: '🔬', title: 'HbA1c Retest in 3 Months', type: 'Follow-up Required',
-                status: 'NOT SCHEDULED', statusCol: AMBER,
-                guideline: 'ADA 2024 §6.1', guidelineCol: PURPLE,
-                reason: 'Protocol mandates recheck after treatment intensification',
-                col: PURPLE, actionLabel: 'Schedule', doneLabel: 'Scheduled ✓',
-              },
-            ].filter(opp => opp.show).map((opp, i) => (
-              <div key={i} style={{ display: 'flex', gap: 10, alignItems: 'flex-start', padding: '9px 12px', borderRadius: 10, background: opp.clicked ? `${opp.col}10` : `${opp.col}0a`, border: `1px solid ${opp.clicked ? opp.col + '50' : opp.col + '30'}`, animation: 'dpRowBlurIn 0.45s ease both', flexShrink: 0, transition: 'background 0.4s, border-color 0.4s' }}>
-                <div style={{ fontSize: 16, flexShrink: 0, filter: opp.clicked ? `drop-shadow(0 0 4px ${opp.col}80)` : 'none', transition: 'filter 0.4s' }}>{opp.icon}</div>
-                <div style={{ flex: 1, minWidth: 0 }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 3 }}>
-                    <span style={{ fontSize: 8, fontWeight: 700, color: opp.col }}>{opp.title}</span>
-                    <span style={{ fontSize: 6.5, fontWeight: 800, color: opp.clicked ? opp.col : opp.statusCol, background: opp.clicked ? `${opp.col}12` : `${opp.statusCol}12`, border: `1px solid ${opp.clicked ? opp.col + '30' : opp.statusCol + '30'}`, borderRadius: 4, padding: '1px 6px', flexShrink: 0, transition: 'all 0.4s' }}>
-                      {opp.clicked ? '✓ DONE' : opp.status}
-                    </span>
-                  </div>
-                  <div style={{ display: 'flex', gap: 6, alignItems: 'center', marginBottom: 3 }}>
-                    <span style={{ fontSize: 6.5, color: MUTED }}>{opp.type}</span>
-                    <span style={{ fontSize: 6.5, fontWeight: 700, color: opp.guidelineCol, background: `${opp.guidelineCol}10`, border: `1px solid ${opp.guidelineCol}25`, borderRadius: 10, padding: '1px 7px' }}>{opp.guideline}</span>
-                  </div>
-                  <div style={{ fontSize: 7, color: DIM, marginBottom: 6 }}>{opp.reason}</div>
-                  {/* ── ACTION BUTTON ── */}
-                  <div key={opp.clicked ? 'done' : 'idle'} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 5, padding: '5px 10px', borderRadius: 6, background: opp.clicked ? `${opp.col}18` : `${opp.col}10`, border: `1px solid ${opp.clicked ? opp.col + '60' : opp.col + '35'}`, cursor: 'default', animation: opp.clicked ? 'dpClickPop 0.4s ease both' : 'dpSpringIn 0.4s ease both', transition: 'background 0.35s, border-color 0.35s', boxShadow: opp.clicked ? `0 0 10px ${opp.col}30` : 'none' }}>
-                    {!opp.clicked && <div style={{ width: 5, height: 5, borderRadius: '50%', background: opp.col, animation: 'dpPulse 1s ease-in-out infinite', flexShrink: 0 }} />}
-                    <span style={{ fontSize: 7.5, fontWeight: 800, color: opp.clicked ? opp.col : `${opp.col}cc`, letterSpacing: 0.3 }}>
-                      {opp.clicked ? opp.doneLabel : opp.actionLabel}
-                    </span>
+            {/* LEFT — Clinical signals */}
+            <div style={{ width: opp1Show ? '42%' : '100%', flexShrink: 0, display: 'flex', flexDirection: 'column', gap: 6, transition: 'width 0.5s ease', overflow: 'hidden' }}>
+              <div style={{ fontSize: 7, fontWeight: 700, color: AMBER, letterSpacing: 0.8, textTransform: 'uppercase', flexShrink: 0 }}>Clinical Signals</div>
+              {[
+                { label: 'HbA1c', value: '9.1% ↑', col: RED,    risk: 'HIGH'     },
+                { label: 'eGFR',  value: '68 ↓',   col: INDIGO, risk: 'WATCH'    },
+                { label: 'BP',    value: '142/88',  col: AMBER,  risk: 'ELEVATED' },
+              ].map((sig, i) => (
+                <div key={i} style={{ background: `${sig.col}0c`, border: `1px solid ${sig.col}30`, borderRadius: 8, padding: '7px 10px', animation: `dpSpringIn 0.5s ease ${i * 0.1}s both`, flexShrink: 0 }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <div>
+                      <div style={{ fontSize: 6, color: MUTED, letterSpacing: 0.5, marginBottom: 2 }}>{sig.label}</div>
+                      <div style={{ fontSize: 16, fontWeight: 900, color: sig.col, fontFamily: 'Sora', lineHeight: 1 }}>{sig.value}</div>
+                    </div>
+                    <span style={{ fontSize: 6, fontWeight: 800, color: sig.col, background: `${sig.col}18`, border: `1px solid ${sig.col}25`, borderRadius: 4, padding: '2px 5px' }}>{sig.risk}</span>
                   </div>
                 </div>
+              ))}
+              <div style={{ background: `${RED}10`, border: `2px solid ${RED}40`, borderRadius: 8, padding: '7px 10px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexShrink: 0 }}>
+                <div>
+                  <div style={{ fontSize: 6, fontWeight: 700, color: MUTED, letterSpacing: 0.5 }}>COMPOSITE RISK</div>
+                  <div style={{ fontSize: 6, color: DIM, marginTop: 1 }}>Multi-comorbidity · 3 signals</div>
+                </div>
+                <div style={{ fontSize: 15, fontWeight: 900, color: RED }}>HIGH</div>
               </div>
-            ))}
+            </div>
+
+            {/* RIGHT — Physician actionables */}
+            {opp1Show && (
+              <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 7, overflow: 'auto', animation: 'dpSlideInLeft 0.5s ease both' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexShrink: 0 }}>
+                  <span style={{ fontSize: 8, fontWeight: 800, color: AMBER, letterSpacing: 0.6 }}>PHYSICIAN ACTIONABLES</span>
+                  <span key={oppCount} style={{ fontSize: 7, fontWeight: 800, color: oppCount > 0 ? GREEN : AMBER, background: oppCount > 0 ? `${GREEN}14` : `${AMBER}18`, border: `1px solid ${oppCount > 0 ? GREEN + '40' : AMBER + '40'}`, borderRadius: 10, padding: '2px 9px', animation: 'dpSpringIn 0.4s cubic-bezier(0.34,1.6,0.64,1) both', transition: 'all 0.4s' }}>{oppCount} of 3 actioned</span>
+                </div>
+                {[
+                  {
+                    show: opp1Show, clicked: opp1Click,
+                    icon: '🔵', title: 'Nephrology Consult',        type: 'Inter-dept Referral',
+                    status: 'NOT ORDERED',    statusCol: RED,
+                    guideline: 'KDIGO 2024',  guidelineCol: INDIGO,
+                    reason: 'eGFR 68 — CKD Stage 3 requires nephrology co-management',
+                    col: INDIGO, actionLabel: 'Send Referral', doneLabel: 'Referral Sent ✓',
+                  },
+                  {
+                    show: opp2Show, clicked: opp2Click,
+                    icon: '💊', title: 'Jardiance (Empagliflozin)', type: 'Missing Order',
+                    status: 'NOT PRESCRIBED', statusCol: RED,
+                    guideline: 'AHA/ACC 2023', guidelineCol: TEAL,
+                    reason: 'SGLT2 inhibitor indicated for T2DM + CKD Stage 3',
+                    col: TEAL, actionLabel: 'Order Now', doneLabel: 'Ordered ✓',
+                  },
+                  {
+                    show: opp3Show, clicked: opp3Click,
+                    icon: '🔬', title: 'HbA1c Retest in 3 Months', type: 'Follow-up Required',
+                    status: 'NOT SCHEDULED', statusCol: AMBER,
+                    guideline: 'ADA 2024 §6.1', guidelineCol: PURPLE,
+                    reason: 'Protocol mandates recheck after treatment intensification',
+                    col: PURPLE, actionLabel: 'Schedule', doneLabel: 'Scheduled ✓',
+                  },
+                ].filter(opp => opp.show).map((opp, i) => (
+                  <div key={i} style={{ display: 'flex', gap: 10, alignItems: 'flex-start', padding: '9px 12px', borderRadius: 10, background: opp.clicked ? `${opp.col}10` : `${opp.col}0a`, border: `1px solid ${opp.clicked ? opp.col + '50' : opp.col + '30'}`, animation: 'dpRowBlurIn 0.45s ease both', flexShrink: 0, transition: 'background 0.4s, border-color 0.4s' }}>
+                    <div style={{ fontSize: 16, flexShrink: 0, filter: opp.clicked ? `drop-shadow(0 0 4px ${opp.col}80)` : 'none', transition: 'filter 0.4s' }}>{opp.icon}</div>
+                    <div style={{ flex: 1, minWidth: 0 }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 3 }}>
+                        <span style={{ fontSize: 8, fontWeight: 700, color: opp.col }}>{opp.title}</span>
+                        <span style={{ fontSize: 6.5, fontWeight: 800, color: opp.clicked ? opp.col : opp.statusCol, background: opp.clicked ? `${opp.col}12` : `${opp.statusCol}12`, border: `1px solid ${opp.clicked ? opp.col + '30' : opp.statusCol + '30'}`, borderRadius: 4, padding: '1px 6px', flexShrink: 0, transition: 'all 0.4s' }}>
+                          {opp.clicked ? '✓ DONE' : opp.status}
+                        </span>
+                      </div>
+                      <div style={{ display: 'flex', gap: 6, alignItems: 'center', marginBottom: 3 }}>
+                        <span style={{ fontSize: 6.5, color: MUTED }}>{opp.type}</span>
+                        <span style={{ fontSize: 6.5, fontWeight: 700, color: opp.guidelineCol, background: `${opp.guidelineCol}10`, border: `1px solid ${opp.guidelineCol}25`, borderRadius: 10, padding: '1px 7px' }}>{opp.guideline}</span>
+                      </div>
+                      <div style={{ fontSize: 7, color: DIM, marginBottom: 6 }}>{opp.reason}</div>
+                      <div key={opp.clicked ? 'done' : 'idle'} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 5, padding: '5px 10px', borderRadius: 6, background: opp.clicked ? `${opp.col}18` : `${opp.col}10`, border: `1px solid ${opp.clicked ? opp.col + '60' : opp.col + '35'}`, cursor: 'default', animation: opp.clicked ? 'dpClickPop 0.4s ease both' : 'dpSpringIn 0.4s ease both', transition: 'background 0.35s, border-color 0.35s', boxShadow: opp.clicked ? `0 0 10px ${opp.col}30` : 'none' }}>
+                        {!opp.clicked && <div style={{ width: 5, height: 5, borderRadius: '50%', background: opp.col, animation: 'dpPulse 1s ease-in-out infinite', flexShrink: 0 }} />}
+                        <span style={{ fontSize: 7.5, fontWeight: 800, color: opp.clicked ? opp.col : `${opp.col}cc`, letterSpacing: 0.3 }}>
+                          {opp.clicked ? opp.doneLabel : opp.actionLabel}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
         )}
 
@@ -1727,10 +1702,10 @@ function CodingScreen({ progress }) {
   const showImpact = p >= 0.76;
 
   const ipdCPT = [
-    { code: '99233', desc: 'Subsequent hospital care — high complexity', col: PURPLE, show: 0.56 },
-    { code: '71046', desc: 'Chest X-ray — 2 views',                      col: INDIGO, show: 0.62 },
-    { code: '94640', desc: 'Respiratory treatment — nebulizer therapy',   col: TEAL,   show: 0.67 },
-    { code: '85025', desc: 'CBC with differential',                       col: AMBER,  show: 0.71 },
+    { code: '99233', desc: 'Subsequent hospital care — high complexity', col: PURPLE, show: 0.14 },
+    { code: '71046', desc: 'Chest X-ray — 2 views',                      col: INDIGO, show: 0.26 },
+    { code: '94640', desc: 'Respiratory treatment — nebulizer therapy',   col: TEAL,   show: 0.38 },
+    { code: '85025', desc: 'CBC with differential',                       col: AMBER,  show: 0.49 },
   ];
 
   return (
@@ -1789,16 +1764,16 @@ function CodingScreen({ progress }) {
               })}
             </div>
 
-            {/* ── CPT — Procedures ── */}
-            {showDRG && (
-              <div style={{ display: 'flex', flexDirection: 'column', gap: 6, animation: 'dpBeatIn 0.5s ease both' }}>
+            {/* ── CPT — Procedures (appear early, synced to VO "Every procedure, a CPT") ── */}
+            {p >= 0.12 && (
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 5 }}>
                 <div style={{ fontSize: 8, fontWeight: 800, color: INDIGO, letterSpacing: 0.6, flexShrink: 0, marginTop: 4, borderTop: `1px solid ${BORDER}`, paddingTop: 6 }}>CPT — PROCEDURES</div>
                 {ipdCPT.map((c, i) => {
                   const vis = p >= c.show;
                   return vis ? (
-                    <div key={i} style={{ display: 'flex', gap: 8, alignItems: 'center', padding: '7px 10px', borderRadius: 8, background: `${c.col}08`, border: `1px solid ${c.col}22`, animation: 'dpRowBlurIn 0.4s ease both' }}>
-                      <span style={{ fontSize: 12, fontWeight: 900, color: c.col, fontFamily: 'Sora', flexShrink: 0, letterSpacing: -0.5 }}>{c.code}</span>
-                      <span style={{ fontSize: 9, color: TXT, flex: 1, lineHeight: 1.4 }}>{c.desc}</span>
+                    <div key={i} style={{ display: 'flex', gap: 8, alignItems: 'center', padding: '6px 10px', borderRadius: 8, background: `${c.col}08`, border: `1px solid ${c.col}22`, animation: 'dpRowBlurIn 0.4s ease both' }}>
+                      <span style={{ fontSize: 11, fontWeight: 900, color: c.col, fontFamily: 'Sora', flexShrink: 0, letterSpacing: -0.5 }}>{c.code}</span>
+                      <span style={{ fontSize: 8.5, color: TXT, flex: 1, lineHeight: 1.4 }}>{c.desc}</span>
                     </div>
                   ) : null;
                 })}
