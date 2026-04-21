@@ -328,13 +328,13 @@ function PatientProfileCard({ patient, progress, showFrom = 0 }) {
 function ProductShell({ breadcrumb, color, children }) {
   const nav = ['◉','⊞','◷','⚡','⚙'];
   return (
-    <div style={{ position: 'absolute', inset: 0, display: 'flex', background: BLUE, fontFamily: 'Sora,sans-serif' }}>
-      {/* Sidebar — light frosted */}
-      <div style={{ width: 42, flexShrink: 0, background: 'linear-gradient(180deg,#f1f5f9 0%,#e8edf5 100%)', borderRight: `1px solid ${BORDER}`, display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '10px 0', gap: 3, backdropFilter: 'blur(20px)' }}>
+    <div style={{ position: 'absolute', inset: 0, display: 'flex', background: `linear-gradient(160deg,${color}07 0%,#f4f8ff 55%,#f0f5fb 100%)`, fontFamily: 'Sora,sans-serif' }}>
+      {/* Sidebar — clinical blue panel */}
+      <div style={{ width: 42, flexShrink: 0, background: 'linear-gradient(180deg,#d8e8f8 0%,#c8d9ef 100%)', borderRight: '1px solid rgba(0,0,0,0.12)', display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '10px 0', gap: 3 }}>
         {/* Logo with glow */}
         <div style={{ width: 24, height: 24, borderRadius: 7, marginBottom: 12, background: `linear-gradient(135deg,${color},${INDIGO})`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 11, fontWeight: 900, color: '#fff', boxShadow: `0 0 14px ${color}50` }}>D</div>
         {nav.map((ic, i) => (
-          <div key={i} style={{ width: 26, height: 26, borderRadius: 6, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 11, opacity: i === 0 ? 1 : 0.22, background: i === 0 ? `${color}28` : 'transparent', color: i === 0 ? color : DIM, boxShadow: i === 0 ? `inset 2px 0 0 ${color}` : 'none', position: 'relative' }}>
+          <div key={i} style={{ width: 26, height: 26, borderRadius: 6, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 11, opacity: i === 0 ? 1 : 0.35, background: i === 0 ? 'rgba(255,255,255,0.55)' : 'transparent', color: i === 0 ? color : '#4a6fa5', boxShadow: i === 0 ? `inset 2px 0 0 ${color}, 0 2px 8px rgba(0,0,0,0.10)` : 'none', position: 'relative' }}>
             {ic}
             {/* Micro glow dot on active nav item */}
             {i === 0 && <div style={{ position: 'absolute', right: 3, top: 3, width: 4, height: 4, borderRadius: '50%', background: color, boxShadow: `0 0 6px ${color}` }} />}
@@ -377,9 +377,9 @@ const Badge = ({ text, color }) => (
 function StatScene({ scene, progress }) {
   const anyActive = scene.beats.some(b => spot(progress, b.at, b.at + 0.28));
   return (
-    <div style={{ position: 'absolute', inset: 0, background: 'radial-gradient(ellipse 90% 65% at 50% 45%,#f8fafc 0%,#f1f5f9 100%)', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 28 }}>
+    <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(160deg,#e6f2ff 0%,#edf8f4 40%,#f0ecff 80%,#e8f4ff 100%)', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 28 }}>
       {/* Breathing ambient glow */}
-      <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none', background: `radial-gradient(ellipse 60% 50% at 50% 50%,${TEAL}08 0%,transparent 70%)`, animation: 'dpBreath 4s ease-in-out infinite' }} />
+      <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none', background: `radial-gradient(ellipse 60% 50% at 50% 50%,${TEAL}14 0%,transparent 70%)`, animation: 'dpBreath 4s ease-in-out infinite' }} />
       {/* Animated grid */}
       <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none', backgroundImage: 'linear-gradient(rgba(100,116,139,0.07) 1px,transparent 1px),linear-gradient(90deg,rgba(100,116,139,0.07) 1px,transparent 1px)', backgroundSize: '56px 56px', animation: 'dpGridBreathe 6s ease-in-out infinite' }} />
       {/* Beat bloom flash */}
@@ -419,7 +419,7 @@ function StatScene({ scene, progress }) {
             {active && !isLast && (
               <div style={{ position: 'absolute', width: 140, height: 140, borderRadius: '50%', border: `2px solid ${TEAL}40`, animation: 'dpStatRing 1.4s ease-out infinite', pointerEvents: 'none', zIndex: 0 }} />
             )}
-            <div style={{ fontSize, fontWeight: 900, letterSpacing: isLast ? -0.5 : -2, fontFamily: 'Sora', lineHeight: 1.0, color: isLast ? TEAL : TXT, transition: 'color 0.4s ease', background: isLast && active ? `linear-gradient(135deg,${TEAL},${INDIGO})` : 'none', WebkitBackgroundClip: isLast && active ? 'text' : 'unset', WebkitTextFillColor: isLast && active ? 'transparent' : 'unset', position: 'relative', zIndex: 1 }}>
+            <div style={{ fontSize, fontWeight: 900, letterSpacing: isLast ? -0.5 : -2, fontFamily: 'Sora', lineHeight: 1.0, color: active ? TEAL : (isLast ? TEAL : DIM), transition: 'color 0.4s ease', background: isLast && active ? `linear-gradient(135deg,${TEAL},${INDIGO})` : 'none', WebkitBackgroundClip: isLast && active ? 'text' : 'unset', WebkitTextFillColor: isLast && active ? 'transparent' : 'unset', position: 'relative', zIndex: 1 }}>
               {show ? <CountUp value={b.stat} duration={900} key={`${i}-${show}`} /> : b.stat}
             </div>
             <div style={{ fontSize: isLast ? 14 : 11, color: isLast ? TXT : DIM, fontFamily: 'Sora', textAlign: 'center', maxWidth: 480, letterSpacing: 0.2, fontWeight: isLast ? 500 : 400 }}>{b.sub}</div>
@@ -441,7 +441,7 @@ function KPIScene({ scene, progress }) {
   const colors = [RED, GREEN, PURPLE];
 
   return (
-    <div style={{ position: 'absolute', inset: 0, background: 'radial-gradient(ellipse 80% 60% at 50% 40%,#f8fafc 0%,#f1f5f9 100%)', overflow: 'hidden' }}>
+    <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(160deg,#e8f2ff 0%,#f0f8f4 40%,#ece8ff 80%,#e8f0ff 100%)', overflow: 'hidden' }}>
 
       {/* ── Phase 1: Introducing Docstribe ── */}
       <div style={{ position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 20, padding: '0 48px', opacity: introOpacity, transition: 'opacity 0.6s ease', pointerEvents: introOpacity < 0.1 ? 'none' : 'auto' }}>
@@ -490,7 +490,7 @@ function KPIScene({ scene, progress }) {
             const active = spot(progress, b.at, b.at + 0.16);
             const c = colors[i];
             return (
-              <div key={i} style={{ background: active ? `linear-gradient(160deg,${c}10,${c}04)` : 'rgba(255,255,255,0.92)', border: `1px solid ${c}${active ? '60' : show ? '25' : '10'}`, borderRadius: 16, padding: '22px 20px', minWidth: 130, flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8, opacity: show ? (active ? 1 : 0.72) : 0, animation: show ? `dpSpringIn 0.65s cubic-bezier(0.34,1.4,0.64,1) both` : 'none', boxShadow: active ? `0 0 0 2px ${c}50, 0 4px 20px ${c}22, 0 4px 16px rgba(0,0,0,0.08), inset 0 1px 0 ${c}20` : '0 1px 6px rgba(0,0,0,0.08)', transform: active ? 'scale(1.07)' : 'scale(1)', transition: 'transform 0.4s ease, opacity 0.4s ease, box-shadow 0.4s ease, background 0.4s ease', position: 'relative', overflow: 'hidden' }}>
+              <div key={i} style={{ background: active ? `linear-gradient(160deg,${c}10,${c}04)` : 'rgba(255,255,255,0.95)', border: `1px solid ${c}${active ? '60' : show ? '25' : '10'}`, borderTop: `3px solid ${c}${active ? 'cc' : show ? '80' : '30'}`, borderRadius: 16, padding: '22px 20px', minWidth: 130, flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8, opacity: show ? (active ? 1 : 0.72) : 0, animation: show ? `dpSpringIn 0.65s cubic-bezier(0.34,1.4,0.64,1) both` : 'none', boxShadow: active ? `0 0 0 2px ${c}50, 0 4px 20px ${c}22, 0 4px 16px rgba(0,0,0,0.08), inset 0 1px 0 ${c}20` : '0 1px 6px rgba(0,0,0,0.08)', transform: active ? 'scale(1.07)' : 'scale(1)', transition: 'transform 0.4s ease, opacity 0.4s ease, box-shadow 0.4s ease, background 0.4s ease', position: 'relative', overflow: 'hidden' }}>
                 {/* Active bloom behind number */}
                 {active && (
                   <div style={{ position: 'absolute', inset: -20, pointerEvents: 'none', background: `radial-gradient(ellipse 80% 80% at 50% 50%,${c}25 0%,transparent 70%)`, animation: 'dpBloom 1.5s ease-out both', borderRadius: 24, zIndex: 0 }} />
@@ -842,7 +842,7 @@ function AmbientScreen({ progress }) {
 
       {/* ── Mic intro phase ── */}
       {micOpacity > 0.01 && (
-        <div style={{ position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 16, background: 'radial-gradient(ellipse 70% 60% at 50% 45%,#f8fafc 0%,#f1f5f9 100%)', opacity: micOpacity, transition: 'opacity 0.4s ease', zIndex: 10, pointerEvents: micOpacity < 0.05 ? 'none' : 'auto' }}>
+        <div style={{ position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 16, background: 'radial-gradient(ellipse 70% 60% at 50% 45%,#e8f0ff 0%,#f0f5ff 100%)', opacity: micOpacity, transition: 'opacity 0.4s ease', zIndex: 10, pointerEvents: micOpacity < 0.05 ? 'none' : 'auto' }}>
           <div style={{ position: 'absolute', inset: 0, background: `radial-gradient(ellipse 50% 40% at 50% 50%,${INDIGO}08 0%,transparent 70%)`, animation: 'dpBreath 3s ease-in-out infinite', pointerEvents: 'none' }} />
           <div style={{ position: 'relative', zIndex: 1 }}>
             <div style={{ width: 64, height: 64, borderRadius: '50%', background: `linear-gradient(135deg,${INDIGO}30,${TEAL}18)`, border: `2px solid ${INDIGO}60`, display: 'flex', alignItems: 'center', justifyContent: 'center', animation: 'dpPulse 1.4s ease-in-out infinite', boxShadow: `0 0 40px ${INDIGO}40, 0 0 80px ${INDIGO}20` }}>
@@ -1121,7 +1121,7 @@ function CDIScreen({ progress }) {
 
       {/* ── Phase 1: Mic intro ── */}
       {micOpacity > 0.01 && (
-        <div style={{ position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 18, background: 'radial-gradient(ellipse 70% 60% at 50% 45%,#f8fafc 0%,#f1f5f9 100%)', opacity: micOpacity, transition: 'opacity 0.35s ease', zIndex: 10, pointerEvents: micOpacity < 0.05 ? 'none' : 'auto' }}>
+        <div style={{ position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 18, background: 'radial-gradient(ellipse 70% 60% at 50% 45%,#e8f0ff 0%,#f0f5ff 100%)', opacity: micOpacity, transition: 'opacity 0.35s ease', zIndex: 10, pointerEvents: micOpacity < 0.05 ? 'none' : 'auto' }}>
           <div style={{ position: 'absolute', inset: 0, background: `radial-gradient(ellipse 50% 40% at 50% 50%,${INDIGO}08 0%,transparent 70%)`, animation: 'dpBreath 3s ease-in-out infinite', pointerEvents: 'none' }} />
           {/* Mic with pulse rings */}
           <div style={{ position: 'relative', zIndex: 1 }}>
@@ -1171,7 +1171,7 @@ function CDIScreen({ progress }) {
           {/* IR-DRG badge */}
           <div style={{ background: locked ? `${PURPLE}18` : 'rgba(0,0,0,0.04)', border: `1px solid ${locked ? PURPLE + '50' : BORDER}`, borderRadius: 10, padding: '5px 16px', textAlign: 'center', flexShrink: 0, transition: 'all 0.6s' }}>
             <div style={{ fontSize: 7.5, color: MUTED, letterSpacing: 0.8, marginBottom: 1 }}>IR-DRG</div>
-            <div style={{ fontSize: 26, fontWeight: 900, color: locked ? PURPLE : DIM, fontFamily: 'Sora', lineHeight: 1, transition: 'color 0.8s', textShadow: locked ? `0 0 24px ${PURPLE}70` : 'none' }}>
+            <div style={{ fontSize: 26, fontWeight: 900, color: locked ? PURPLE : DIM, fontFamily: 'Sora', lineHeight: 1, transition: 'color 0.8s', textShadow: 'none' }}>
               {locked ? <CountUp value={locked ? '1.04' : '0.82'} duration={600} key={locked ? 'locked' : 'base'} /> : '0.82'}
             </div>
             {locked && <div style={{ fontSize: 8, color: GREEN, fontWeight: 700, marginTop: 2, animation: 'dpBeatIn 0.4s ease both' }}>+AED 4,200</div>}
@@ -1193,13 +1193,13 @@ function CDIScreen({ progress }) {
 
         {/* ── Phase 3: Main workspace with CDI drawer ── */}
         {drawerOpen && (
-          <div style={{ flex: 1, display: 'flex', overflow: 'hidden', borderRadius: 12, border: `1px solid ${AMBER}30`, background: 'rgba(4,8,22,0.50)', minHeight: 0 }}>
+          <div style={{ flex: 1, display: 'flex', overflow: 'hidden', borderRadius: 12, border: `1px solid ${AMBER}30`, background: 'rgba(255,255,255,0.60)', minHeight: 0 }}>
 
             {/* ── LEFT DRAWER — CDI Query ── */}
             <div style={{
               width: '46%', flexShrink: 0, overflow: 'hidden',
               borderRight: `1px solid ${AMBER}30`,
-              background: `linear-gradient(170deg, ${AMBER}0c 0%, rgba(4,8,22,0.72) 100%)`,
+              background: `linear-gradient(170deg,${AMBER}08 0%,rgba(255,250,240,0.97) 100%)`,
               animation: 'dpSlideInLeft 0.6s cubic-bezier(0.34,1.05,0.64,1) both',
             }}>
               <div style={{ padding: '14px 16px', height: '100%', display: 'flex', flexDirection: 'column', gap: 11, overflowY: 'auto', boxSizing: 'border-box' }}>
@@ -1258,7 +1258,7 @@ function CDIScreen({ progress }) {
                     ))}
                     {locked && (
                       <div style={{ textAlign: 'center', paddingTop: 4, animation: 'dpSpringIn 0.7s cubic-bezier(0.34,1.4,0.64,1) both' }}>
-                        <div style={{ fontSize: 28, fontWeight: 900, color: GREEN, fontFamily: 'Sora', letterSpacing: -1.5, lineHeight: 1, textShadow: `0 0 32px ${GREEN}55` }}>+AED 4,200</div>
+                        <div style={{ fontSize: 28, fontWeight: 900, color: GREEN, fontFamily: 'Sora', letterSpacing: -1.5, lineHeight: 1, textShadow: 'none' }}>+AED 4,200</div>
                         <div style={{ fontSize: 9, color: DIM, marginTop: 4 }}>captured at point of care</div>
                       </div>
                     )}
@@ -1967,7 +1967,7 @@ function SceneVisual({ scene, progress }) {
 /* ─── Intro Splash ───────────────────────────────────────────── */
 function Splash({ onPlay }) {
   return (
-    <div onClick={onPlay} style={{ position: 'absolute', inset: 0, zIndex: 30, background: 'radial-gradient(ellipse 80% 60% at 50% 45%, #f8fafc 0%, #f1f5f9 100%)', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 14, cursor: 'pointer', fontFamily: 'Sora, sans-serif' }}>
+    <div onClick={onPlay} style={{ position: 'absolute', inset: 0, zIndex: 30, background: 'radial-gradient(ellipse 90% 80% at 50% 45%,#e6f2ff 0%,#edf8f4 35%,#ece8ff 70%,#f0f5ff 100%)', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 14, cursor: 'pointer', fontFamily: 'Sora, sans-serif' }}>
       <div style={{ position: 'absolute', inset: 0, opacity: 0.04, backgroundImage: 'linear-gradient(rgba(100,116,139,0.07) 1px,transparent 1px),linear-gradient(90deg,rgba(100,116,139,0.07) 1px,transparent 1px)', backgroundSize: '48px 48px' }} />
       {/* Breathing ambient */}
       <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none', background: `radial-gradient(ellipse 55% 45% at 50% 50%,${TEAL}07 0%,transparent 70%)`, animation: 'dpBreath 4s ease-in-out infinite' }} />
