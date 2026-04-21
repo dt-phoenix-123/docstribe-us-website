@@ -403,7 +403,7 @@ const UAE_DEMO_SCENES = [
   {
     id: 1, timecode: '0:00–0:14', journeyStage: 'opening',
     title: 'The Revenue Gap',
-    voText: 'In the UAE — twelve to eighteen percent of hospital claims are denied on first submission. Up to seventy percent of those denials are entirely preventable. Four root causes. Clinical documentation gaps. Missing authorizations. Coding errors. Claim edits that slip through unchecked. Someone has to close all four.',
+    voText: 'In the UAE — twelve to eighteen percent of hospital claims are denied on first submission. That is three point five million dirhams in avoidable revenue loss per facility every year. World-class systems stay below five percent. Sixty-five percent of those denials are entirely preventable — caught before the claim ever leaves the building. Four root causes. Clinical documentation gaps. Missing authorizations. Coding errors. Claim edits that slip through unchecked. Eighty-seven percent of it is addressable. Someone has to close all four.',
   },
   {
     id: 2, timecode: '0:14–0:28', journeyStage: 'outcomes',
