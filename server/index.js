@@ -408,7 +408,7 @@ const UAE_DEMO_SCENES = [
   {
     id: 2, timecode: '0:12–0:26', journeyStage: 'outcomes',
     title: 'Introducing Docstribe',
-    voText: 'Docstribe. Thirty years of clinical practice. A hundred hospitals. Ten million lives. That gap you just saw — we close it. Contractually. Denials fall thirty percent. Clean claim rate, ninety-nine percent. Case mix index climbs. Sixty days. Guaranteed.',
+    voText: 'Docstribe. Thirty years of clinical practice. A hundred hospitals. Ten million lives. That gap you just saw — we close it. Contractually. Denials fall thirty percent. Clean claim rate, ninety-nine percent. CMI up by point fifteen. Sixty days. Guaranteed.',
   },
   {
     id: 4, timecode: '0:26–0:38', journeyStage: 'pre-visit',
@@ -423,7 +423,7 @@ const UAE_DEMO_SCENES = [
   {
     id: 7, timecode: '0:58–1:12', journeyStage: 'coding',
     title: 'AI-Powered Coding',
-    voText: 'Every claim, coded with clinical precision. NCCI and MUE edits applied — payer rules matched before a code goes out. Then through CC and MCC auto-capture, Docstribe runs IR-DRG analysis before discharge. Every complication captured today lifts the DRG weight today. Pneumonia, COPD exacerbation, hypertension — DRG weight confirmed and locked. Significant uplift, per case. Every case.',
+    voText: 'Before a claim goes for submission, all payer edits — NCCI and MUE — are applied. Then IR-DRG is calculated dynamically, based on CC and MCC capture. Every complication documented today lifts the weight today. Weight locked before discharge. Significant uplift — per case, every case.',
   },
   {
     id: 8, timecode: '1:12–1:32', journeyStage: 'denial-recovery',

@@ -108,7 +108,7 @@ const SCENES = [
   {
     id: 2, type: 'kpi', color: TEAL,
     title: 'Introducing Docstribe',
-    vo: "Docstribe. Thirty years of clinical practice. A hundred hospitals. Ten million lives. That gap you just saw — we close it. Contractually. Denials fall thirty percent. Clean claim rate, ninety-nine percent. Case mix index climbs. Sixty days. Guaranteed.",
+    vo: "Docstribe. Thirty years of clinical practice. A hundred hospitals. Ten million lives. That gap you just saw — we close it. Contractually. Denials fall thirty percent. Clean claim rate, ninety-nine percent. CMI up by point fifteen. Sixty days. Guaranteed.",
     beats: [
       { at: 0.04, stat: 'Docstribe',      sub: 'Clinical intelligence · clinician-built' },
       { at: 0.22, stat: '100+ Hospitals', sub: 'US · UAE · India · live deployments' },
@@ -146,7 +146,7 @@ const SCENES = [
     id: 7, type: 'product', color: PURPLE,
     title: 'AI-Powered Coding',
     breadcrumb: 'ICD-10-CM · Smart Coding Engine',
-    vo: "Every claim, coded with clinical precision. NCCI and MUE edits applied — payer rules matched before a code goes out. Then through CC and MCC auto-capture, Docstribe runs IR-DRG analysis before discharge. Every complication captured today lifts the DRG weight today. Pneumonia, COPD exacerbation, hypertension — DRG weight confirmed and locked. Significant uplift, per case. Every case.",
+    vo: "Before a claim goes for submission, all payer edits — NCCI and MUE — are applied. Then IR-DRG is calculated dynamically, based on CC and MCC capture. Every complication documented today lifts the weight today. Weight locked before discharge. Significant uplift — per case, every case.",
     beats: [
       { at: 0.08, stat: 'NCCI + MUE applied',    sub: 'payer edits matched · codes validated before send' },
       { at: 0.36, stat: 'CC/MCC auto-captured',  sub: 'every complication documented before discharge' },
@@ -2032,9 +2032,10 @@ function SceneStatStrip({ scene, progress }) {
 }
 
 /* ─── Sentence caption — sits at very bottom, above nav ─────── */
+/* Caption now renders BELOW the video — no overlap with any screen */
 function Caption({ sentence }) {
   return (
-    <div key={sentence} style={{ position: 'absolute', bottom: 10, left: '6%', right: '6%', zIndex: 12, textAlign: 'center', fontSize: 11, fontFamily: 'Sora', color: 'rgba(255,255,255,0.52)', fontStyle: 'italic', lineHeight: 1.5, textShadow: '0 1px 10px rgba(0,0,0,1)', animation: 'dpFadeCaption 0.4s ease both' }}>
+    <div key={sentence} style={{ textAlign: 'center', fontSize: 11, fontFamily: 'Sora', color: 'rgba(255,255,255,0.42)', fontStyle: 'italic', lineHeight: 1.55, animation: 'dpFadeCaption 0.35s ease both' }}>
       {highlightCaption(sentence)}
     </div>
   );
@@ -2217,7 +2218,6 @@ export default function DemoPlayer() {
               <div style={{ height: '100%', width: `${totalPct}%`, background: `linear-gradient(90deg,${scene.color},${INDIGO})`, transition: 'width 0.15s linear' }} />
             </div>
 
-            {isPlaying && <Caption sentence={currentSentence} />}
             <SceneStatStrip scene={scene} progress={progress} />
 
             {/* Click-to-pause flash icon */}
@@ -2245,7 +2245,12 @@ export default function DemoPlayer() {
           </div>
         </div>
 
-        <div style={{ display: 'flex', justifyContent: 'center', gap: 5, marginTop: 14, flexWrap: 'wrap' }}>
+        {/* ── Subtitle bar — below video, never overlaps screen content ── */}
+        <div style={{ minHeight: 32, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '5px 28px', marginTop: 6 }}>
+          {isPlaying && currentSentence && <Caption sentence={currentSentence} />}
+        </div>
+
+        <div style={{ display: 'flex', justifyContent: 'center', gap: 5, marginTop: 4, flexWrap: 'wrap' }}>
           {SCENES.map((s, i) => {
             const active = i === idx;
             const past   = i < idx;
