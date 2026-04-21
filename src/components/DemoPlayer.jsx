@@ -122,37 +122,36 @@ const SCENES = [
     id: 4, type: 'product', color: GREEN,
     title: 'Pre-Visit Intelligence',
     breadcrumb: 'Eligibility & Pre-Authorisation',
-    vo: "A patient walks in. Docstribe pulls their insurance profile automatically — coverage, co-pay, network status — direct from the payer API. Eligibility confirmed before they reach the desk. For inpatient — PA filed at order entry, approved before care begins. No forms. No delays.",
+    vo: "A patient walks in. Docstribe pulls their insurance profile automatically — coverage, co-pay, network status — live from the payer API. Before they reach the desk, eligibility is confirmed. Network status. Active plan. Co-pay. All in seconds. No calls. No delays. No surprises.",
     beats: [
-      { at: 0.10, stat: 'Auto-fetched',    sub: 'insurance profile pulled · no manual entry' },
-      { at: 0.33, stat: 'Eligible ✓',      sub: 'co-pay · network · coverage confirmed' },
-      { at: 0.72, stat: 'PA filed · 0.3s', sub: 'auto-submitted at order entry' },
-      { at: 0.86, stat: 'PA APPROVED',     sub: 'AED 28,500 authorised · admission cleared' },
+      { at: 0.10, stat: 'Auto-fetched',  sub: 'insurance profile pulled · no manual entry' },
+      { at: 0.36, stat: 'Eligible ✓',    sub: 'Daman Enhanced · co-pay AED 25 · In-network' },
+      { at: 0.62, stat: 'AED 25 co-pay', sub: 'confirmed before first consultation' },
+      { at: 0.85, stat: 'Zero admin.',    sub: 'no calls · no delays · no surprises' },
     ],
   },
   {
     id: 6, type: 'product', color: AMBER,
     title: 'Clinical Intelligence',
     breadcrumb: 'Ambient Scribe · CDI',
-    // Absorbs ambient scribe narrative + CDI query story
-    vo: "The physician speaks. The note builds itself — diagnoses, vitals, comorbidities, structured and coded in real time. Docstribe reads the note as it forms. A documentation gap surfaces automatically, grounded in clinical guidelines. One answer from the physician. Code corrected at the point of care. For inpatient — principal diagnosis confirmed, IR-DRG weight locked before discharge. Revenue that would have been lost, isn't.",
+    vo: "The physician speaks. The note builds itself — diagnoses, vitals, comorbidities, structured and coded in real time. Docstribe reads the note as it forms. A documentation gap surfaces. Grounded in ADA clinical guidelines. One answer from the physician. Code corrected at the point of care. AED four thousand two hundred more — from a single clinical clarification.",
     beats: [
-      { at: 0.06, stat: 'Note builds live',       sub: 'voice → structured ICD · zero physician effort' },
-      { at: 0.35, stat: 'Query auto-surfaces',    sub: 'documentation gap detected · in-note · real time' },
-      { at: 0.58, stat: '✓ Locked · E-signed',    sub: 'ICD corrected · charge captured at point of care' },
-      { at: 0.76, stat: 'IR-DRG locked',          sub: 'IPD principal Dx confirmed before discharge' },
+      { at: 0.06, stat: 'Note builds live',      sub: 'voice → structured ICD · zero physician effort' },
+      { at: 0.38, stat: 'Query auto-surfaces',   sub: 'documentation gap · ADA 2024 §6.1 · real time' },
+      { at: 0.62, stat: '✓ Code corrected',      sub: 'E11.9 → E11.65 CC captured · point of care' },
+      { at: 0.84, stat: '+AED 4,200',            sub: 'revenue · one clarification · zero extra effort' },
     ],
   },
   {
     id: 7, type: 'product', color: PURPLE,
     title: 'AI-Powered Coding',
     breadcrumb: 'ICD-10-CM · Smart Coding Engine',
-    vo: "Every OPD claim — diagnoses ranked, procedure codes checked against payer NCCI and MUE edits before anything goes out. That cuts denials at source. For inpatient, the IR-DRG recalculates live while the patient is admitted — every complication captured today reflects in the DRG weight immediately. AED eighteen thousand four hundred more. Per case.",
+    vo: "Every code, sequenced. Every complication — MCC, CC — captured before discharge. The IR-DRG recalculates live, against NCCI and MUE edits, while the patient is still admitted. Pneumonia with COPD exacerbation — DRG weight locked at one point three four. AED eighteen thousand four hundred. Per case. Every case.",
     beats: [
-      { at: 0.06, stat: 'ICD-10-CM ranked',      sub: 'OPD diagnoses · symbols suppressed' },
-      { at: 0.28, stat: 'NCCI + MUE validated',  sub: 'payer edits matched · denials cut at source' },
-      { at: 0.58, stat: 'IR-DRG live',            sub: 'recalculates while patient is admitted' },
-      { at: 0.88, stat: '+AED 18,400',            sub: 'per case · zero manual backlog' },
+      { at: 0.08, stat: 'ICD-10-CM sequenced',   sub: 'Principal · MCC · CC captured before discharge' },
+      { at: 0.30, stat: 'NCCI + MUE validated',  sub: 'payer edits matched · denials cut at source' },
+      { at: 0.56, stat: 'IR-DRG live',            sub: 'recalculates while patient is admitted' },
+      { at: 0.86, stat: '+AED 18,400',            sub: 'per case · DRG 0.94 → 1.34 · locked' },
     ],
   },
   {
@@ -656,169 +655,118 @@ function EligChipRow({ chips, apisActive, apiNames, p }) {
 /* Scene 4 — Eligibility: animated flowchart journey, no patient names */
 function EligibilityScreen({ progress }) {
   const p = progress;
-  const ipdPhase = p >= 0.48;
 
-  // Flow steps for OPD and IPD journeys
-  const opdFlow = [
-    { label: 'Patient In',     icon: '🏥', show: 0.02 },
-    { label: 'EMR Auto-Fetch', icon: '📋', show: 0.10, api: false },
-    { label: 'Payer API',      icon: '🔗', show: 0.18, api: true  },
-    { label: 'Eligibility',    icon: '🔍', show: 0.26, api: false },
-    { label: 'Cleared ✓',      icon: '✅', show: 0.40, api: false },
-  ];
-  const ipdFlow = [
-    { label: 'Patient In',     icon: '🏥', show: 0.50 },
-    { label: 'EMR Auto-Fetch', icon: '📋', show: 0.57, api: false },
-    { label: 'Payer API',      icon: '🔗', show: 0.63, api: true  },
-    { label: 'PA Filed',       icon: '📤', show: 0.72, api: false },
-    { label: 'PA Approved',    icon: '✅', show: 0.84, api: false },
+  // OPD-only flow — 5 steps across the full screen
+  const flow = [
+    { label: 'Patient Arrives',  icon: '🏥', show: 0.04 },
+    { label: 'EMR Auto-Fetch',   icon: '📋', show: 0.14, api: false },
+    { label: 'Payer API Live',   icon: '🔗', show: 0.26, api: true  },
+    { label: 'Eligibility Check',icon: '🔍', show: 0.38, api: false },
+    { label: 'Cleared ✓',        icon: '✅', show: 0.52, api: false },
   ];
 
-  // Status result chips (OPD)
-  const opdResults = [
-    { label: 'Insurance',  value: 'Active',              icon: '✓', col: GREEN,  show: 0.28 },
-    { label: 'Network',    value: 'In-Network',           icon: '✓', col: GREEN,  show: 0.30 },
-    { label: 'Co-pay',     value: 'AED 50 / visit',       icon: '◎', col: AMBER,  show: 0.32 },
-    { label: 'Pre-auth',   value: 'Not Required ✓',       icon: '✓', col: GREEN,  show: 0.34 },
-    { label: 'Deductible', value: 'AED 6,550 remaining',  icon: '◎', col: INDIGO, show: 0.36 },
-    { label: 'Coverage',   value: 'DM + HTN Covered',     icon: '✓', col: TEAL,   show: 0.38 },
-  ];
-  // Status result chips (IPD)
-  const ipdResults = [
-    { label: 'Insurance',  value: 'Active',                   icon: '✓',  col: GREEN,  show: 0.64 },
-    { label: 'Network',    value: 'SEHA Network',              icon: '✓',  col: GREEN,  show: 0.66 },
-    { label: 'Admission',  value: 'Inpatient eligible',        icon: '✓',  col: TEAL,   show: 0.68 },
-    { label: 'Pre-auth',   value: 'REQUIRED — AED 28,500',     icon: '⚠',  col: AMBER,  show: 0.72, hero: true },
-    { label: 'PA Filed',   value: 'THQ-2024-189234 · 0.3s',   icon: '→',  col: INDIGO, show: 0.78 },
-    { label: 'PA Status',  value: 'APPROVED',                  icon: '✅', col: GREEN,  show: 0.84, hero: true },
-  ];
+  const apiActive = p >= 0.26 && p < 0.38;
+  const cleared   = p >= 0.52;
 
-  const flow     = ipdPhase ? ipdFlow    : opdFlow;
-  const results  = ipdPhase ? ipdResults : opdResults;
-  const col      = ipdPhase ? AMBER      : GREEN;
-  const cleared  = ipdPhase ? p >= 0.84  : p >= 0.40;
-  const apiActive = ipdPhase ? (p >= 0.63 && p < 0.72) : (p >= 0.18 && p < 0.26);
+  // Status result cards — appear after API check, full-width tiles
+  const results = [
+    { label: 'Insurance Status', value: 'Active · Daman Enhanced',  icon: '✓',  col: GREEN,  show: 0.40, hero: false },
+    { label: 'Network',          value: 'In-Network',                icon: '✓',  col: GREEN,  show: 0.43, hero: false },
+    { label: 'Co-pay',           value: 'AED 50 / visit',            icon: '◎',  col: AMBER,  show: 0.46, hero: false },
+    { label: 'Pre-auth',         value: 'Not Required ✓',            icon: '✓',  col: GREEN,  show: 0.49, hero: false },
+    { label: 'Deductible',       value: 'AED 6,550 remaining',       icon: '◎',  col: INDIGO, show: 0.52, hero: false },
+    { label: 'Coverage',         value: 'DM · HTN · CKD — Covered',  icon: '✓',  col: TEAL,   show: 0.55, hero: false },
+  ];
 
   return (
     <ProductShell breadcrumb="Eligibility & Pre-Authorisation" color={GREEN}>
-      <div style={{ padding: '10px 14px', height: '100%', display: 'flex', flexDirection: 'column', gap: 8, overflow: 'hidden' }}>
+      <div style={{ padding: '14px 18px', height: '100%', display: 'flex', flexDirection: 'column', gap: 14, overflow: 'hidden' }}>
 
-        {/* Live header */}
-        <div style={{ display: 'flex', gap: 8, alignItems: 'center', flexShrink: 0 }}>
-          <div style={{ width: 6, height: 6, borderRadius: '50%', background: GREEN, boxShadow: `0 0 8px ${GREEN}`, animation: 'dpPulse 1s ease infinite' }} />
-          <span style={{ fontSize: 8, fontWeight: 700, color: GREEN, letterSpacing: 0.5 }}>ELIGIBILITY ENGINE LIVE</span>
-          <span style={{ fontSize: 7, color: MUTED }}>· Payer API · NABIDH · DHA Benefits Registry</span>
+        {/* ── Header ── */}
+        <div style={{ display: 'flex', gap: 10, alignItems: 'center', flexShrink: 0 }}>
+          <div style={{ width: 8, height: 8, borderRadius: '50%', background: GREEN, boxShadow: `0 0 10px ${GREEN}`, animation: 'dpPulse 1s ease infinite' }} />
+          <span style={{ fontSize: 10, fontWeight: 700, color: GREEN, letterSpacing: 0.5 }}>ELIGIBILITY ENGINE LIVE</span>
+          <span style={{ fontSize: 9, color: MUTED }}>· Payer API · NABIDH · DHA Benefits Registry</span>
           <div style={{ flex: 1 }} />
-          <span style={{ fontSize: 7, color: MUTED }}>19 Apr 2025 · 09:12 GST</span>
+          <span style={{ fontSize: 8, color: MUTED }}>19 Apr 2025 · 09:12 GST</span>
         </div>
 
-        {/* Phase tabs */}
-        <div style={{ display: 'flex', gap: 6, flexShrink: 0 }}>
-          <div style={{ display: 'flex', gap: 5, alignItems: 'center', background: !ipdPhase ? `${GREEN}14` : 'rgba(0,0,0,0.14)', border: `1px solid ${!ipdPhase ? GREEN + '40' : BORDER}`, borderRadius: 20, padding: '3px 11px', transition: 'all 0.5s' }}>
-            <div style={{ width: 5, height: 5, borderRadius: '50%', background: !ipdPhase ? GREEN : DIM, transition: 'background 0.4s' }} />
-            <span style={{ fontSize: 7, fontWeight: 800, color: !ipdPhase ? GREEN : DIM }}>OPD · Endocrinology</span>
-            <span style={{ fontSize: 6.5, color: MUTED }}> · Daman Enhanced</span>
-            {p >= 0.40 && <span style={{ fontSize: 7, color: GREEN }}>✓</span>}
+        {/* ── Patient byte ── */}
+        <div style={{ display: 'flex', gap: 14, alignItems: 'center', background: 'rgba(0,0,0,0.22)', border: `1px solid ${cleared ? GREEN + '40' : BORDER}`, borderRadius: 14, padding: '14px 18px', transition: 'border-color 0.6s', flexShrink: 0 }}>
+          <div style={{ width: 52, height: 52, borderRadius: '50%', background: `${GREEN}22`, border: `2.5px solid ${GREEN}55`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 24, boxShadow: `0 0 18px ${GREEN}30`, flexShrink: 0 }}>🩺</div>
+          <div>
+            <div style={{ fontSize: 14, fontWeight: 800, color: TXT, marginBottom: 3 }}>F · 42 yrs · Endocrinology OPD</div>
+            <div style={{ display: 'flex', gap: 8 }}>
+              <span style={{ fontSize: 10, fontWeight: 700, color: GREEN, background: `${GREEN}14`, border: `1px solid ${GREEN}30`, borderRadius: 20, padding: '2px 10px' }}>Daman Enhanced</span>
+              <span style={{ fontSize: 10, color: MUTED }}>MRN: UH-2024-4821</span>
+            </div>
           </div>
-          {p >= 0.48 && (
-            <div style={{ display: 'flex', gap: 5, alignItems: 'center', background: `${AMBER}14`, border: `1px solid ${AMBER}40`, borderRadius: 20, padding: '3px 11px', animation: 'dpBeatIn 0.4s ease both' }}>
-              <div style={{ width: 5, height: 5, borderRadius: '50%', background: AMBER, animation: 'dpPulse 1.2s ease-in-out infinite' }} />
-              <span style={{ fontSize: 7, fontWeight: 800, color: AMBER }}>IPD · Respiratory</span>
-              <span style={{ fontSize: 6.5, color: MUTED }}> · Thiqa SEHA</span>
-              {p >= 0.84 && <span style={{ fontSize: 7, color: GREEN }}>✓</span>}
-            </div>
-          )}
         </div>
 
-        {/* ── Journey card ── */}
-        <div style={{ flexShrink: 0, background: 'rgba(0,0,0,0.18)', border: `1px solid ${cleared ? col + '38' : BORDER}`, borderRadius: 12, padding: '10px 14px', transition: 'border-color 0.6s ease', boxShadow: cleared ? `0 0 20px ${col}10` : 'none' }}>
-          <div style={{ display: 'flex', gap: 12, alignItems: 'center' }}>
+        {/* ── Journey flowchart — full width, large nodes ── */}
+        <div style={{ flexShrink: 0, padding: '10px 0' }}>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+            {flow.flatMap((step, i) => {
+              const vis    = p >= step.show;
+              const next   = flow[i + 1];
+              const active = vis && next && p < next.show;
+              const isLast = i === flow.length - 1;
+              const lineOn = next && p >= next.show;
 
-            {/* Patient byte — small info card, no name */}
-            <div key={ipdPhase ? 'ipd' : 'opd'} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4, flexShrink: 0, animation: 'dpSpringIn 0.5s cubic-bezier(0.34,1.4,0.64,1) both' }}>
-              <div style={{ width: 36, height: 36, borderRadius: '50%', background: `${col}22`, border: `2px solid ${col}55`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 17, boxShadow: `0 0 14px ${col}30` }}>
-                {ipdPhase ? '🫁' : '🩺'}
-              </div>
-              <div style={{ textAlign: 'center' }}>
-                <div style={{ fontSize: 8, fontWeight: 700, color: TXT }}>{ipdPhase ? 'M · 58 yrs' : 'F · 42 yrs'}</div>
-                <div style={{ fontSize: 6.5, color: DIM }}>{ipdPhase ? 'Respiratory · IPD' : 'Endocrinology · OPD'}</div>
-                <div style={{ marginTop: 3, background: `${col}14`, border: `1px solid ${col}30`, borderRadius: 4, padding: '2px 7px' }}>
-                  <span style={{ fontSize: 6.5, fontWeight: 800, color: col }}>{ipdPhase ? 'Thiqa SEHA' : 'Daman Enhanced'}</span>
-                </div>
-              </div>
-            </div>
-
-            {/* Flow nodes + animated connectors */}
-            <div style={{ flex: 1, display: 'flex', alignItems: 'center' }}>
-              {flow.flatMap((step, i) => {
-                const vis    = p >= step.show;
-                const next   = flow[i + 1];
-                const active = vis && next && p < next.show;
-                const isLast = i === flow.length - 1;
-                const lineOn = next && p >= next.show;
-
-                const nodeEl = (
-                  <div key={`n${i}`} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 3, flexShrink: 0, opacity: vis ? 1 : 0.15, transition: 'opacity 0.4s, transform 0.35s', transform: vis ? 'scale(1)' : 'scale(0.82)' }}>
-                    <div style={{ width: 32, height: 32, borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 14, background: vis ? (active ? `${col}24` : `${col}12`) : 'rgba(255,255,255,0.03)', border: `2px solid ${vis ? (active ? col : col + '55') : BORDER}`, boxShadow: active ? `0 0 18px ${col}45, 0 0 40px ${col}15` : 'none', transition: 'all 0.4s ease' }}>
-                      {step.icon}
-                    </div>
-                    <span style={{ fontSize: 5.5, fontWeight: active ? 800 : 600, color: vis ? (active ? col : `${col}bb`) : DIM, whiteSpace: 'nowrap', transition: 'color 0.4s' }}>
-                      {step.label}
-                    </span>
+              const nodeEl = (
+                <div key={`n${i}`} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6, flexShrink: 0, opacity: vis ? 1 : 0.18, transition: 'opacity 0.45s, transform 0.4s', transform: vis ? 'scale(1)' : 'scale(0.78)' }}>
+                  <div style={{ width: 52, height: 52, borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 22, background: vis ? (active ? `${GREEN}28` : `${GREEN}14`) : 'rgba(255,255,255,0.03)', border: `2.5px solid ${vis ? (active ? GREEN : GREEN + '60') : BORDER}`, boxShadow: active ? `0 0 24px ${GREEN}55, 0 0 50px ${GREEN}18` : 'none', transition: 'all 0.4s ease' }}>
+                    {step.icon}
+                  </div>
+                  <div style={{ textAlign: 'center' }}>
+                    <div style={{ fontSize: 9, fontWeight: active ? 800 : 600, color: vis ? (active ? GREEN : `${GREEN}cc`) : DIM, whiteSpace: 'nowrap', transition: 'color 0.4s' }}>{step.label}</div>
                     {step.api && vis && (
-                      <span style={{ fontSize: 6, color: apiActive ? TEAL : `${GREEN}80`, fontWeight: 700, lineHeight: 1 }}>
-                        {apiActive ? '⟳ ···' : '✓'}
-                      </span>
+                      <div style={{ fontSize: 8, color: apiActive ? TEAL : `${GREEN}90`, fontWeight: 700, marginTop: 2 }}>{apiActive ? '⟳ calling payer API…' : '✓ responded'}</div>
                     )}
                   </div>
-                );
+                </div>
+              );
 
-                if (isLast) return [nodeEl];
+              if (isLast) return [nodeEl];
 
-                const arrowEl = (
-                  <div key={`a${i}`} style={{ flex: 1, height: 2, borderRadius: 1, background: lineOn ? `linear-gradient(90deg,${col}55,${col}25)` : `${BORDER}35`, margin: '0 3px', marginBottom: 18, transition: 'background 0.5s ease', position: 'relative', overflow: 'hidden' }}>
-                    {lineOn && (
-                      <div style={{ position: 'absolute', inset: 0, background: `linear-gradient(90deg,transparent 0%,${col}70 50%,transparent 100%)`, animation: 'dpChromeShimmer 1.2s ease-out both' }} />
-                    )}
-                  </div>
-                );
+              const arrowEl = (
+                <div key={`a${i}`} style={{ flex: 1, height: 3, borderRadius: 2, background: lineOn ? `linear-gradient(90deg,${GREEN}60,${GREEN}28)` : `${BORDER}40`, margin: '0 6px', marginBottom: 28, transition: 'background 0.55s ease', position: 'relative', overflow: 'hidden' }}>
+                  {lineOn && <div style={{ position: 'absolute', inset: 0, background: `linear-gradient(90deg,transparent,${GREEN}80,transparent)`, animation: 'dpChromeShimmer 1.4s ease-out both' }} />}
+                </div>
+              );
 
-                return [nodeEl, arrowEl];
-              })}
-            </div>
+              return [nodeEl, arrowEl];
+            })}
           </div>
         </div>
 
-        {/* ── Status results ── */}
-        <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 6, overflow: 'hidden' }}>
+        {/* ── Status result tiles ── */}
+        <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 8, overflow: 'hidden' }}>
           {results.some(r => p >= r.show) && (
-            <div style={{ fontSize: 7, fontWeight: 700, color: DIM, letterSpacing: 0.4, flexShrink: 0 }}>
-              {ipdPhase ? 'IPD ELIGIBILITY · PRE-AUTH RESULTS' : 'OPD ELIGIBILITY RESULTS'} · REAL-TIME
-            </div>
+            <div style={{ fontSize: 9, fontWeight: 700, color: DIM, letterSpacing: 0.5, flexShrink: 0 }}>OPD ELIGIBILITY RESULTS · REAL-TIME</div>
           )}
-          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, alignContent: 'flex-start' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 8, alignContent: 'start' }}>
             {results.map((r, i) => p >= r.show && (
-              <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 6, background: `${r.col}${r.hero ? '1e' : '10'}`, border: `1px solid ${r.col}${r.hero ? '55' : '28'}`, borderRadius: r.hero ? 8 : 20, padding: r.hero ? '6px 14px' : '4px 11px', animation: 'dpSpringIn 0.5s cubic-bezier(0.34,1.4,0.64,1) both', boxShadow: r.hero ? `0 0 18px ${r.col}35, 0 0 50px ${r.col}12` : 'none', flexShrink: 0 }}>
-                <span style={{ fontSize: r.hero ? 9 : 7.5, fontWeight: 900, color: r.col }}>{r.icon}</span>
-                <span style={{ fontSize: r.hero ? 8 : 7, color: MUTED, fontWeight: 600 }}>{r.label}:</span>
-                <span style={{ fontSize: r.hero ? 10 : 8, fontWeight: r.hero ? 900 : 700, color: r.hero ? r.col : TXT, fontFamily: r.hero ? 'Sora' : 'inherit' }}>{r.value}</span>
+              <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 10, background: `${r.col}10`, border: `1px solid ${r.col}30`, borderRadius: 10, padding: '10px 14px', animation: 'dpSpringIn 0.5s cubic-bezier(0.34,1.4,0.64,1) both' }}>
+                <span style={{ fontSize: 14, fontWeight: 900, color: r.col, flexShrink: 0 }}>{r.icon}</span>
+                <div>
+                  <div style={{ fontSize: 8, color: MUTED, fontWeight: 600, marginBottom: 2 }}>{r.label}</div>
+                  <div style={{ fontSize: 11, fontWeight: 800, color: r.col }}>{r.value}</div>
+                </div>
               </div>
             ))}
           </div>
         </div>
 
-        {/* ── Cleared / Approved banner ── */}
+        {/* ── Cleared banner ── */}
         {cleared && (
-          <div style={{ flexShrink: 0, display: 'flex', justifyContent: 'center', animation: 'dpSpringIn 0.6s cubic-bezier(0.34,1.4,0.64,1) both' }}>
-            <div style={{ background: `${GREEN}18`, border: `1px solid ${GREEN}55`, borderRadius: 24, padding: '6px 22px', boxShadow: `0 0 24px ${GREEN}25, 0 0 60px ${GREEN}08`, display: 'flex', gap: 8, alignItems: 'center' }}>
-              <div style={{ width: 7, height: 7, borderRadius: '50%', background: GREEN, boxShadow: `0 0 10px ${GREEN}`, animation: 'dpPulse 1.5s ease-in-out infinite' }} />
-              <span style={{ fontSize: 9, fontWeight: 900, color: GREEN }}>
-                {ipdPhase ? '✅ PA Approved · AED 28,500 authorised · Admission cleared' : '✅ Eligibility cleared · No authorisation needed · Visit confirmed'}
-              </span>
+          <div style={{ flexShrink: 0, display: 'flex', justifyContent: 'center', animation: 'dpSpringIn 0.7s cubic-bezier(0.34,1.4,0.64,1) both' }}>
+            <div style={{ background: `${GREEN}18`, border: `1px solid ${GREEN}55`, borderRadius: 30, padding: '10px 28px', boxShadow: `0 0 28px ${GREEN}28`, display: 'flex', gap: 10, alignItems: 'center' }}>
+              <div style={{ width: 9, height: 9, borderRadius: '50%', background: GREEN, boxShadow: `0 0 12px ${GREEN}`, animation: 'dpPulse 1.5s ease-in-out infinite' }} />
+              <span style={{ fontSize: 13, fontWeight: 900, color: GREEN }}>✅ Eligibility cleared · No authorisation needed · Visit confirmed</span>
             </div>
           </div>
         )}
-
       </div>
     </ProductShell>
   );
@@ -1107,390 +1055,404 @@ function CDIQueryCard({ col, title, sub, question, guidelinePills, opts, answere
   );
 }
 
-/* Scene 6 — Clinical Intelligence: ambient note builds live → CDI left drawer slides in → ICD/CPT enhanced */
+/* Scene 6 — Clinical Intelligence: mic → patient profile → risk/governance → OPD CDI drawer */
 function CDIScreen({ progress }) {
   const p = progress;
 
-  const ipdPhase      = p >= 0.50;
-  const opdQueryShows = p >= 0.22;
-  const opdAnswered   = p >= 0.36;
-  const opdLocked     = p >= 0.46;
-  const ipdQueryShows = p >= 0.62;
-  const ipdAnswered   = p >= 0.77;
-  const ipdLocked     = p >= 0.86;
-  const drawerOpen    = ipdPhase ? ipdQueryShows : opdQueryShows;
-  const queryColor    = ipdPhase ? TEAL : AMBER;
-  const drgValue      = ipdLocked ? '1.34' : opdLocked ? '1.04' : '0.82';
-  const totalCapture  = ipdLocked ? '+AED 14,000' : opdLocked ? '+AED 4,200' : '';
+  // Phase 1: mic animation (0-0.16 visible, fades by 0.20)
+  // Phase 2: patient profile + risk + governance (0.16-0.54)
+  // Phase 3: CDI drawer slides in from left (0.54+), OPD only
+  const micOpacity     = p < 0.10 ? 1 : p > 0.18 ? 0 : 1 - (p - 0.10) / 0.08;
+  const contentOpacity = p < 0.15 ? 0 : p > 0.22 ? 1 : (p - 0.15) / 0.07;
+  const isListening    = p >= 0.06 && p < 0.18;
 
-  const opdNoteLines = [
-    { text: '"HbA1c nine point one. Definitely uncontrolled. She needs intensification."', show: 0.04 },
-    { text: 'BP 142/88. eGFR 68 — CKD Stage 3 territory. Adjusting Metformin, adding Jardiance.', show: 0.11 },
-    { text: 'Nephrology referral flagged. Impression: Type 2 DM — hyperglycaemia.', show: 0.18, cursor: true },
-  ];
-  const ipdNoteLines = [
-    { text: 'Admission: shortness of breath · SpO₂ 88% on arrival', show: 0.52 },
-    { text: 'PMH: COPD (FEV1 52%) · smoker 30 pack-years · prior exacerbation ×2', show: 0.58 },
-    { text: 'CXR: right-lower-lobe opacity — pneumonia likely. Impression: COPD exacerbation.', show: 0.63, cursor: true },
+  const highlightDiag  = p >= 0.22 && p < 0.36;
+  const highlightVital = p >= 0.32 && p < 0.46;
+  const highlightGov   = p >= 0.42 && p < 0.56;
+  const highlightAI    = p >= 0.50 && p < 0.58;
+
+  const drawerOpen = p >= 0.56;
+  const answered   = p >= 0.72;
+  const locked     = p >= 0.82;
+
+  const enhancements = [
+    { from: 'E11.9', to: 'E11.65', label: 'T2DM Uncontrolled — HbA1c 9.1%', badge: 'CC captured', col: RED,  show: answered },
+    { from: 'CPT 99214', to: '99214 + 83036', label: 'HbA1c lab — MUE ✓ separate', badge: '+CPT',    col: TEAL, show: locked },
   ];
 
-  const opdEnhancements = [
-    { from: 'E11.9', to: 'E11.65', label: 'T2DM Uncontrolled (HbA1c 9.1%)', badge: 'CC captured', col: RED,    show: opdAnswered },
-    { from: 'CPT 99214', to: '99214 + 83036', label: 'HbA1c lab billed separately — MUE ✓', badge: '+CPT', col: TEAL, show: opdLocked },
+  // Physician note lines (build during CDI phase)
+  const noteLines = [
+    { text: '"HbA1c nine point one. Definitely uncontrolled. Needs intensification."', show: 0.56 },
+    { text: 'BP 142/88. eGFR 68 — CKD Stage 3. Adding Jardiance. Nephrology referral.', show: 0.63 },
+    { text: 'Impression: Type 2 DM — hyperglycaemia.', show: 0.68, cursor: true },
   ];
-  const ipdEnhancements = [
-    { from: 'J44.1 principal', to: 'J18.9 principal', label: 'Pneumonia sequenced as primary', badge: 'MCC locked', col: RED,    show: ipdAnswered },
-    { from: 'IR-DRG 0.94',    to: 'IR-DRG 1.34',      label: 'J44.1 + I10 + E11.9 = MCC+2×CC',  badge: '+0.40 wt', col: PURPLE, show: ipdLocked },
-  ];
-  const enhancements = ipdPhase ? ipdEnhancements : opdEnhancements;
-  const locked = ipdPhase ? ipdLocked : opdLocked;
+
+  const patient = {
+    name: 'Fatima Hassan', initials: 'FH', age: 'F/42', type: 'OPD', dept: 'Endocrinology',
+    mrn: 'UH-2024-4821', payer: 'Daman', payerPlan: 'Enhanced',
+    risk: 'HIGH',
+    diagnoses: [
+      { code: 'E11.65', label: 'T2DM uncontrolled', col: RED },
+      { code: 'N18.3',  label: 'CKD Stage 3',       col: INDIGO },
+      { code: 'I10',    label: 'Hypertension',       col: AMBER },
+    ],
+    vitals: [
+      { label: 'HbA1c', value: '9.1% ↑', col: RED },
+      { label: 'BP',    value: '142/88',  col: AMBER },
+      { label: 'eGFR',  value: '68 ↓',   col: INDIGO },
+    ],
+    governance: {
+      nabidh: true, dha: true, jawda: true, auditReady: false,
+      cdiScore: 62, docScore: 74,
+      protocol: 'ADA 2024 §10.3: HbA1c >9% → intensify + nephrology if eGFR <60',
+    },
+    financial: { pending: 'AED 2,450', authRef: 'DM-2024-01', authStatus: 'approved' },
+    aiProfile: {
+      referral: 'Nephrology consult',
+      next: 'Jardiance Rx + CDI query pending',
+      guideline: 'ADA 2024: SGLT2 at eGFR 60→45 + nephrology co-management',
+    },
+  };
 
   return (
     <ProductShell breadcrumb="Ambient Scribe · CDI" color={AMBER}>
-      <div style={{ padding: '10px 14px', height: '100%', display: 'flex', flexDirection: 'column', gap: 8, overflow: 'hidden' }}>
 
-        {/* ── Top bar: scene label + IR-DRG ── */}
-        <div style={{ display: 'flex', gap: 12, alignItems: 'center', flexShrink: 0 }}>
+      {/* ── Phase 1: Mic intro ── */}
+      {micOpacity > 0.01 && (
+        <div style={{ position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 18, background: 'radial-gradient(ellipse 70% 60% at 50% 45%,#04091e 0%,#000 80%)', opacity: micOpacity, transition: 'opacity 0.35s ease', zIndex: 10, pointerEvents: micOpacity < 0.05 ? 'none' : 'auto' }}>
+          <div style={{ position: 'absolute', inset: 0, background: `radial-gradient(ellipse 50% 40% at 50% 50%,${INDIGO}08 0%,transparent 70%)`, animation: 'dpBreath 3s ease-in-out infinite', pointerEvents: 'none' }} />
+          {/* Mic with pulse rings */}
+          <div style={{ position: 'relative', zIndex: 1 }}>
+            <div style={{ width: 72, height: 72, borderRadius: '50%', background: `linear-gradient(135deg,${INDIGO}30,${TEAL}18)`, border: `2px solid ${INDIGO}60`, display: 'flex', alignItems: 'center', justifyContent: 'center', animation: 'dpPulse 1.4s ease-in-out infinite', boxShadow: `0 0 40px ${INDIGO}45, 0 0 80px ${INDIGO}20` }}>
+              <svg width="32" height="32" viewBox="0 0 24 24" fill="none">
+                <rect x="9" y="2" width="6" height="12" rx="3" fill={INDIGO} opacity="0.9" />
+                <path d="M5 11a7 7 0 0 0 14 0" stroke={TEAL} strokeWidth="1.5" strokeLinecap="round" fill="none" />
+                <line x1="12" y1="18" x2="12" y2="22" stroke={TEAL} strokeWidth="1.5" strokeLinecap="round" />
+                <line x1="9" y1="22" x2="15" y2="22" stroke={TEAL} strokeWidth="1.5" strokeLinecap="round" />
+              </svg>
+            </div>
+            {[0, 1, 2].map(i => (
+              <div key={i} style={{ position: 'absolute', inset: -10 * i - 10, borderRadius: '50%', border: `1px solid ${INDIGO}${30 - i * 8}`, animation: `dpStatRing ${1.6 + i * 0.4}s ease-out ${i * 0.3}s infinite`, pointerEvents: 'none' }} />
+            ))}
+          </div>
+          {/* Live badge */}
+          <div style={{ display: 'flex', gap: 7, alignItems: 'center', background: `${RED}12`, border: `1px solid ${RED}35`, borderRadius: 20, padding: '5px 16px', animation: 'dpBeatIn 0.4s ease 0.3s both', position: 'relative', zIndex: 1 }}>
+            <div style={{ width: 6, height: 6, borderRadius: '50%', background: RED, boxShadow: `0 0 6px ${RED}`, animation: 'dpPulse 1s ease infinite' }} />
+            <span style={{ fontSize: 9, fontWeight: 800, color: RED, letterSpacing: 0.8 }}>AMBIENT SESSION LIVE</span>
+          </div>
+          {/* Waveform bars */}
+          <div style={{ display: 'flex', gap: 2.5, alignItems: 'flex-end', height: 26, position: 'relative', zIndex: 1 }}>
+            {Array.from({ length: 32 }, (_, i) => (
+              <div key={i} style={{ width: 3.5, background: `linear-gradient(180deg,${INDIGO},${TEAL}60)`, borderRadius: 2, opacity: isListening ? 0.8 : 0.2, height: `${20 + Math.sin(i * 0.9 + p * 45) * 70}%`, transition: 'height 0.08s ease, opacity 0.4s ease' }} />
+            ))}
+          </div>
+          <div style={{ fontSize: 11, color: DIM, letterSpacing: 0.5, position: 'relative', zIndex: 1 }}>Physician voice → structured clinical note</div>
+          <div style={{ display: 'flex', gap: 10, position: 'relative', zIndex: 1, animation: 'dpBeatIn 0.4s ease 0.6s both' }}>
+            {[['NABIDH ✓', INDIGO], ['DHA Licensed ✓', TEAL], ['HL7 FHIR ✓', GREEN]].map(([l, c]) => (
+              <span key={l} style={{ fontSize: 8.5, fontWeight: 700, color: c, background: `${c}12`, border: `1px solid ${c}30`, borderRadius: 5, padding: '3px 10px' }}>{l}</span>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* ── Phase 2+3: Patient view + CDI drawer ── */}
+      <div style={{ padding: '10px 12px', height: '100%', display: 'flex', flexDirection: 'column', gap: 8, overflow: 'hidden', opacity: contentOpacity, transition: 'opacity 0.5s ease' }}>
+
+        {/* Top bar */}
+        <div style={{ display: 'flex', gap: 10, alignItems: 'center', flexShrink: 0 }}>
           <div style={{ flex: 1 }}>
-            <div style={{ fontSize: 8.5, fontWeight: 700, color: AMBER, letterSpacing: 1, textTransform: 'uppercase' }}>Clinical Intelligence</div>
-            <div style={{ fontSize: 8, color: DIM, marginTop: 2 }}>
-              {drawerOpen ? 'CDI query surfaced · documentation gap auto-detected' : 'Physician speaking · note building in real time'}
+            <div style={{ fontSize: 9, fontWeight: 700, color: AMBER, letterSpacing: 0.8, textTransform: 'uppercase' }}>Clinical Intelligence · Ambient Scribe + CDI</div>
+            <div style={{ fontSize: 8, color: DIM, marginTop: 1 }}>
+              {drawerOpen ? 'CDI query surfaced automatically — ICD captured at point of care' : 'Patient profile live · risk mapped · governance active'}
             </div>
           </div>
-          <div style={{ background: locked ? `${PURPLE}18` : 'rgba(0,0,0,0.28)', border: `1px solid ${locked ? PURPLE + '50' : BORDER}`, borderRadius: 10, padding: '6px 18px', textAlign: 'center', flexShrink: 0, transition: 'border-color 0.6s, background 0.6s' }}>
-            <div style={{ fontSize: 7, color: MUTED, letterSpacing: 1, marginBottom: 2 }}>IR-DRG</div>
+          {/* IR-DRG badge */}
+          <div style={{ background: locked ? `${PURPLE}18` : 'rgba(0,0,0,0.28)', border: `1px solid ${locked ? PURPLE + '50' : BORDER}`, borderRadius: 10, padding: '5px 16px', textAlign: 'center', flexShrink: 0, transition: 'all 0.6s' }}>
+            <div style={{ fontSize: 7.5, color: MUTED, letterSpacing: 0.8, marginBottom: 1 }}>IR-DRG</div>
             <div style={{ fontSize: 26, fontWeight: 900, color: locked ? PURPLE : DIM, fontFamily: 'Sora', lineHeight: 1, transition: 'color 0.8s', textShadow: locked ? `0 0 24px ${PURPLE}70` : 'none' }}>
-              {locked ? <CountUp value={drgValue} duration={600} key={drgValue} /> : '0.82'}
+              {locked ? <CountUp value={locked ? '1.04' : '0.82'} duration={600} key={locked ? 'locked' : 'base'} /> : '0.82'}
             </div>
-            {totalCapture && <div style={{ fontSize: 7.5, color: GREEN, fontWeight: 700, marginTop: 2, animation: 'dpBeatIn 0.4s ease both' }}>{totalCapture}</div>}
+            {locked && <div style={{ fontSize: 8, color: GREEN, fontWeight: 700, marginTop: 2, animation: 'dpBeatIn 0.4s ease both' }}>+AED 4,200</div>}
           </div>
         </div>
 
-        {/* ── Main workspace: drawer + note ── */}
-        <div style={{ flex: 1, display: 'flex', overflow: 'hidden', borderRadius: 12, border: `1px solid ${BORDER}`, background: 'rgba(4,8,22,0.55)' }}>
+        {/* Patient profile card — prominent, bigger */}
+        <div style={{ flexShrink: 0 }}>
+          <PatientProfileCard patient={patient} progress={p} showFrom={0.16} />
+        </div>
 
-          {/* ── LEFT DRAWER — slides in when query surfaces ── */}
-          <div style={{
-            width: drawerOpen ? '46%' : '0%',
-            flexShrink: 0,
-            overflow: 'hidden',
-            transition: 'width 0.6s cubic-bezier(0.34,1.05,0.64,1)',
-            borderRight: drawerOpen ? `1px solid ${queryColor}35` : 'none',
-            background: drawerOpen
-              ? `linear-gradient(170deg, ${queryColor}0d 0%, rgba(4,8,22,0.70) 100%)`
-              : 'transparent',
-          }}>
-            <div style={{ width: '100%', padding: '14px 16px', height: '100%', display: 'flex', flexDirection: 'column', gap: 12, overflowY: 'auto', boxSizing: 'border-box' }}>
+        {/* Phase indicator */}
+        {p >= 0.16 && !drawerOpen && (
+          <div style={{ display: 'flex', gap: 5, alignItems: 'center', background: `${AMBER}10`, border: `1px solid ${AMBER}28`, borderRadius: 7, padding: '4px 10px', flexShrink: 0, animation: 'dpBeatIn 0.4s ease both' }}>
+            <div style={{ width: 5, height: 5, borderRadius: '50%', background: AMBER, animation: 'dpPulse 1.2s ease-in-out infinite' }} />
+            <span style={{ fontSize: 8, fontWeight: 700, color: AMBER, letterSpacing: 0.3 }}>Docstribe reading note · documentation gap being assessed…</span>
+          </div>
+        )}
 
-              {/* Drawer header */}
-              <div style={{ display: 'flex', gap: 10, alignItems: 'flex-start' }}>
-                <div style={{ width: 30, height: 30, borderRadius: '50%', background: `${queryColor}1a`, border: `1.5px solid ${queryColor}55`, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, fontSize: 14 }}>⚡</div>
-                <div style={{ flex: 1 }}>
-                  <div style={{ fontSize: 10, fontWeight: 800, color: queryColor, letterSpacing: 0.2 }}>
-                    {ipdPhase ? 'Principal Diagnosis Query' : 'Documentation Gap Detected'}
+        {/* ── Phase 3: Main workspace with CDI drawer ── */}
+        {drawerOpen && (
+          <div style={{ flex: 1, display: 'flex', overflow: 'hidden', borderRadius: 12, border: `1px solid ${AMBER}30`, background: 'rgba(4,8,22,0.50)', minHeight: 0 }}>
+
+            {/* ── LEFT DRAWER — CDI Query ── */}
+            <div style={{
+              width: '46%', flexShrink: 0, overflow: 'hidden',
+              borderRight: `1px solid ${AMBER}30`,
+              background: `linear-gradient(170deg, ${AMBER}0c 0%, rgba(4,8,22,0.72) 100%)`,
+              animation: 'dpSlideInLeft 0.6s cubic-bezier(0.34,1.05,0.64,1) both',
+            }}>
+              <div style={{ padding: '14px 16px', height: '100%', display: 'flex', flexDirection: 'column', gap: 11, overflowY: 'auto', boxSizing: 'border-box' }}>
+                {/* Header */}
+                <div style={{ display: 'flex', gap: 10, alignItems: 'flex-start' }}>
+                  <div style={{ width: 32, height: 32, borderRadius: '50%', background: `${AMBER}1c`, border: `1.5px solid ${AMBER}60`, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, fontSize: 15 }}>⚡</div>
+                  <div style={{ flex: 1 }}>
+                    <div style={{ fontSize: 10.5, fontWeight: 800, color: AMBER }}>Documentation Gap Detected</div>
+                    <div style={{ fontSize: 8, color: DIM, marginTop: 1 }}>OPD · in-note · auto-surfaced · no disruption</div>
                   </div>
-                  <div style={{ fontSize: 7.5, color: DIM, marginTop: 1 }}>
-                    {ipdPhase ? 'IPD · sequencing conflict · auto-surfaced' : 'OPD · in-note · no disruption'}
+                  {locked && <span style={{ fontSize: 8, fontWeight: 800, color: GREEN, background: `${GREEN}1c`, border: `1px solid ${GREEN}45`, borderRadius: 6, padding: '3px 10px', animation: 'dpSpringIn 0.5s ease both', flexShrink: 0 }}>🔒 E-signed</span>}
+                </div>
+
+                {/* Question */}
+                <div style={{ fontSize: 14, fontWeight: 700, color: TXT, lineHeight: 1.45, borderLeft: `3px solid ${AMBER}`, paddingLeft: 12 }}>
+                  Is this Type 2 DM controlled or uncontrolled?
+                </div>
+
+                {/* Guideline */}
+                <div style={{ display: 'flex', gap: 6 }}>
+                  <div style={{ display: 'inline-flex', alignItems: 'center', gap: 6, background: `${PURPLE}12`, border: `1px solid ${PURPLE}30`, borderRadius: 20, padding: '5px 14px' }}>
+                    <div style={{ width: 5, height: 5, borderRadius: '50%', background: PURPLE }} />
+                    <span style={{ fontSize: 9, fontWeight: 700, color: PURPLE }}>ADA 2024 §6.1</span>
                   </div>
                 </div>
-                {locked && (
-                  <span style={{ fontSize: 7.5, fontWeight: 800, color: GREEN, background: `${GREEN}1a`, border: `1px solid ${GREEN}40`, borderRadius: 6, padding: '3px 9px', animation: 'dpSpringIn 0.5s ease both', flexShrink: 0 }}>🔒 E-signed</span>
+
+                {/* Options */}
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+                  {['E11.65 — Uncontrolled (HbA1c 9.1%)', 'E11.9 — Controlled / no complications'].map((opt, j) => {
+                    const sel = j === 0 && (answered || locked);
+                    return (
+                      <div key={j} style={{ display: 'flex', gap: 11, alignItems: 'flex-start', padding: '11px 14px', borderRadius: 10, background: sel ? `${GREEN}12` : 'rgba(255,255,255,0.03)', border: `1px solid ${sel ? GREEN + '45' : 'rgba(255,255,255,0.07)'}`, transition: 'all 0.45s ease' }}>
+                        <div style={{ width: 18, height: 18, borderRadius: '50%', border: `2px solid ${sel ? GREEN : 'rgba(255,255,255,0.2)'}`, background: sel ? GREEN : 'transparent', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, marginTop: 1, transition: 'all 0.35s' }}>
+                          {sel && <div style={{ width: 7, height: 7, borderRadius: '50%', background: '#fff' }} />}
+                        </div>
+                        <span style={{ fontSize: 11, fontWeight: sel ? 700 : 400, color: sel ? TXT : DIM, lineHeight: 1.4, transition: 'all 0.35s' }}>{opt}</span>
+                      </div>
+                    );
+                  })}
+                </div>
+
+                {/* Code enhancement */}
+                {enhancements.some(e => e.show) && (
+                  <div style={{ borderTop: `1px solid rgba(255,255,255,0.08)`, paddingTop: 12, display: 'flex', flexDirection: 'column', gap: 8 }}>
+                    <div style={{ fontSize: 8, fontWeight: 800, color: GREEN, letterSpacing: 1, textTransform: 'uppercase' }}>Code Enhancement</div>
+                    {enhancements.filter(e => e.show).map((e, i) => (
+                      <div key={i} style={{ padding: '10px 13px', borderRadius: 10, background: `${e.col}0a`, border: `1px solid ${e.col}22`, animation: 'dpSpringIn 0.6s cubic-bezier(0.34,1.4,0.64,1) both' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: 9, marginBottom: 4 }}>
+                          <span style={{ fontSize: 10, color: `${RED}bb`, textDecoration: 'line-through', fontFamily: 'Sora' }}>{e.from}</span>
+                          <span style={{ fontSize: 12, color: MUTED }}>→</span>
+                          <span style={{ fontSize: 14, fontWeight: 900, color: GREEN, fontFamily: 'Sora' }}>{e.to}</span>
+                          <span style={{ marginLeft: 'auto', fontSize: 7.5, fontWeight: 800, color: e.col, background: `${e.col}18`, border: `1px solid ${e.col}30`, borderRadius: 5, padding: '2px 8px', flexShrink: 0 }}>{e.badge}</span>
+                        </div>
+                        <div style={{ fontSize: 8.5, color: DIM }}>{e.label}</div>
+                      </div>
+                    ))}
+                    {locked && (
+                      <div style={{ textAlign: 'center', paddingTop: 4, animation: 'dpSpringIn 0.7s cubic-bezier(0.34,1.4,0.64,1) both' }}>
+                        <div style={{ fontSize: 28, fontWeight: 900, color: GREEN, fontFamily: 'Sora', letterSpacing: -1.5, lineHeight: 1, textShadow: `0 0 32px ${GREEN}55` }}>+AED 4,200</div>
+                        <div style={{ fontSize: 9, color: DIM, marginTop: 4 }}>captured at point of care</div>
+                      </div>
+                    )}
+                  </div>
                 )}
               </div>
+            </div>
 
-              {/* Clinical question — large, readable */}
-              <div style={{ fontSize: 13, fontWeight: 700, color: TXT, lineHeight: 1.5, borderLeft: `3px solid ${queryColor}`, paddingLeft: 12, paddingTop: 2, paddingBottom: 2 }}>
-                {ipdPhase
-                  ? 'What was the primary reason for this admission?'
-                  : 'Is this Type 2 DM controlled or uncontrolled?'}
+            {/* ── RIGHT — Physician note (building live) ── */}
+            <div style={{ flex: 1, display: 'flex', flexDirection: 'column', padding: '14px 16px', gap: 10, minWidth: 0 }}>
+              <div style={{ display: 'flex', gap: 8, alignItems: 'center', flexShrink: 0 }}>
+                <div style={{ width: 7, height: 7, borderRadius: '50%', background: AMBER, animation: 'dpPulse 1.3s ease-in-out infinite', flexShrink: 0 }} />
+                <span style={{ fontSize: 9, fontWeight: 700, color: `${TXT}80`, letterSpacing: 0.6 }}>OPD PHYSICIAN NOTE · IN PROGRESS</span>
               </div>
-
-              {/* Guideline source pills */}
-              <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
-                {(ipdPhase
-                  ? [['ATS/IDSA CAP 2019', PURPLE], ['Thiqa SEHA Policy', TEAL]]
-                  : [['ADA 2024 §6.1', PURPLE]]
-                ).map(([label, c]) => (
-                  <div key={label} style={{ display: 'inline-flex', alignItems: 'center', gap: 5, background: `${c}12`, border: `1px solid ${c}30`, borderRadius: 20, padding: '4px 12px' }}>
-                    <div style={{ width: 4, height: 4, borderRadius: '50%', background: c }} />
-                    <span style={{ fontSize: 8, fontWeight: 700, color: c }}>{label}</span>
+              <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 11 }}>
+                {noteLines.map((line, i) => p >= line.show && (
+                  <div key={i} style={{ fontSize: 12, color: line.cursor ? `${TXT}d5` : TXT, lineHeight: 1.7, animation: 'dpRowBlurIn 0.55s ease both' }}>
+                    {line.text}
+                    {line.cursor && !answered && (
+                      <span style={{ color: AMBER, animation: 'dpPulse 1s ease-in-out infinite' }}> ▌</span>
+                    )}
                   </div>
                 ))}
               </div>
-
-              {/* Answer options */}
-              <div style={{ display: 'flex', flexDirection: 'column', gap: 7 }}>
-                {(ipdPhase
-                  ? ['J18.9 — Pneumonia (primary reason for admission)', 'J44.1 — COPD exacerbation (pre-existing)']
-                  : ['E11.65 — Uncontrolled (HbA1c 9.1%)', 'E11.9 — Controlled / no complications']
-                ).map((opt, j) => {
-                  const sel = j === 0 && ((ipdPhase ? ipdAnswered : opdAnswered) || locked);
-                  return (
-                    <div key={j} style={{ display: 'flex', gap: 10, alignItems: 'flex-start', padding: '10px 13px', borderRadius: 9, background: sel ? `${GREEN}12` : 'rgba(255,255,255,0.03)', border: `1px solid ${sel ? GREEN + '45' : 'rgba(255,255,255,0.07)'}`, transition: 'all 0.45s ease' }}>
-                      <div style={{ width: 17, height: 17, borderRadius: '50%', border: `2px solid ${sel ? GREEN : 'rgba(255,255,255,0.2)'}`, background: sel ? GREEN : 'transparent', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, marginTop: 1, transition: 'all 0.35s' }}>
-                        {sel && <div style={{ width: 6, height: 6, borderRadius: '50%', background: '#fff' }} />}
+              <div style={{ flexShrink: 0, display: 'flex', flexDirection: 'column', gap: 6 }}>
+                {!locked && drawerOpen && (
+                  <div style={{ display: 'flex', gap: 7, alignItems: 'center', animation: 'dpBeatIn 0.3s ease both' }}>
+                    <div style={{ width: 7, height: 7, borderRadius: '50%', background: AMBER, boxShadow: `0 0 9px ${AMBER}` }} />
+                    <span style={{ fontSize: 9, color: AMBER, fontWeight: 700 }}>Gap detected → CDI query surfaced ←</span>
+                  </div>
+                )}
+                {locked && (
+                  <div style={{ display: 'flex', gap: 7, alignItems: 'center', animation: 'dpBeatIn 0.3s ease both' }}>
+                    <span style={{ fontSize: 10, color: GREEN, fontWeight: 700 }}>✓ Query answered · note updated · charge captured</span>
+                  </div>
+                )}
+                {p >= 0.86 && (
+                  <div style={{ display: 'flex', gap: 12, alignItems: 'center', borderTop: `1px solid rgba(255,255,255,0.07)`, paddingTop: 8, animation: 'dpBeatIn 0.5s ease both' }}>
+                    {[['NABIDH ✓', INDIGO], ['DHA ✓', TEAL], ['FHIR R4 ✓', GREEN]].map(([l, c]) => (
+                      <div key={l} style={{ display: 'flex', gap: 5, alignItems: 'center' }}>
+                        <div style={{ width: 6, height: 6, borderRadius: '50%', background: c, boxShadow: `0 0 6px ${c}` }} />
+                        <span style={{ fontSize: 8.5, fontWeight: 700, color: c }}>{l}</span>
                       </div>
-                      <span style={{ fontSize: 10, fontWeight: sel ? 600 : 400, color: sel ? TXT : DIM, lineHeight: 1.4, transition: 'all 0.35s' }}>{opt}</span>
-                    </div>
-                  );
-                })}
+                    ))}
+                  </div>
+                )}
               </div>
-
-              {/* Code enhancement section */}
-              {enhancements.some(e => e.show) && (
-                <div style={{ borderTop: `1px solid rgba(255,255,255,0.08)`, paddingTop: 12, display: 'flex', flexDirection: 'column', gap: 8 }}>
-                  <div style={{ fontSize: 7.5, fontWeight: 800, color: GREEN, letterSpacing: 1, textTransform: 'uppercase' }}>Code Enhancement</div>
-                  {enhancements.filter(e => e.show).map((e, i) => (
-                    <div key={i} style={{ padding: '9px 12px', borderRadius: 9, background: `${e.col}0a`, border: `1px solid ${e.col}22`, animation: 'dpSpringIn 0.6s cubic-bezier(0.34,1.4,0.64,1) both' }}>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 4 }}>
-                        <span style={{ fontSize: 9.5, color: `${RED}bb`, textDecoration: 'line-through', fontFamily: 'Sora' }}>{e.from}</span>
-                        <span style={{ fontSize: 11, color: MUTED }}>→</span>
-                        <span style={{ fontSize: 12, fontWeight: 900, color: GREEN, fontFamily: 'Sora' }}>{e.to}</span>
-                        <span style={{ marginLeft: 'auto', fontSize: 7, fontWeight: 800, color: e.col, background: `${e.col}18`, border: `1px solid ${e.col}30`, borderRadius: 5, padding: '2px 8px', flexShrink: 0 }}>{e.badge}</span>
-                      </div>
-                      <div style={{ fontSize: 8, color: DIM }}>{e.label}</div>
-                    </div>
-                  ))}
-                  {locked && (
-                    <div style={{ textAlign: 'center', paddingTop: 4, animation: 'dpSpringIn 0.7s cubic-bezier(0.34,1.4,0.64,1) both' }}>
-                      <div style={{ fontSize: 24, fontWeight: 900, color: GREEN, fontFamily: 'Sora', letterSpacing: -1.5, lineHeight: 1, textShadow: `0 0 30px ${GREEN}55` }}>
-                        {ipdPhase ? '+AED 9,800' : '+AED 4,200'}
-                      </div>
-                      <div style={{ fontSize: 8, color: DIM, marginTop: 4 }}>captured at point of care</div>
-                    </div>
-                  )}
-                </div>
-              )}
             </div>
           </div>
-
-          {/* ── RIGHT — Physician Note ── */}
-          <div style={{ flex: 1, display: 'flex', flexDirection: 'column', padding: '14px 16px', gap: 10, minWidth: 0 }}>
-
-            {/* Note heading */}
-            <div style={{ display: 'flex', gap: 8, alignItems: 'center', flexShrink: 0 }}>
-              <div style={{ width: 7, height: 7, borderRadius: '50%', background: AMBER, animation: 'dpPulse 1.3s ease-in-out infinite', flexShrink: 0 }} />
-              <span style={{ fontSize: 8.5, fontWeight: 700, color: `${TXT}80`, letterSpacing: 0.8 }}>
-                {ipdPhase ? 'IPD PHYSICIAN NOTE · IN PROGRESS' : 'OPD PHYSICIAN NOTE · IN PROGRESS'}
-              </span>
-            </div>
-
-            {/* Note lines — larger, readable */}
-            <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 10 }}>
-              {(ipdPhase ? ipdNoteLines : opdNoteLines).map((line, i) => p >= line.show && (
-                <div key={i} style={{ fontSize: 11.5, color: line.cursor ? `${TXT}d0` : TXT, lineHeight: 1.7, animation: 'dpRowBlurIn 0.55s ease both', fontWeight: 400 }}>
-                  {line.text}
-                  {line.cursor && !(ipdPhase ? ipdAnswered : opdAnswered) && (
-                    <span style={{ color: AMBER, animation: 'dpPulse 1s ease-in-out infinite' }}> ▌</span>
-                  )}
-                </div>
-              ))}
-            </div>
-
-            {/* Status indicators */}
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 6, flexShrink: 0 }}>
-              {(ipdPhase ? (p >= 0.55 && !ipdQueryShows) : (p >= 0.06 && !opdQueryShows)) && (
-                <div style={{ display: 'flex', gap: 7, alignItems: 'center', animation: 'dpBeatIn 0.4s ease both' }}>
-                  <div style={{ width: 6, height: 6, borderRadius: '50%', background: AMBER, animation: 'dpPulse 1.2s ease-in-out infinite' }} />
-                  <span style={{ fontSize: 8.5, color: `${AMBER}90` }}>Docstribe reading note in real time…</span>
-                </div>
-              )}
-              {drawerOpen && !locked && (
-                <div style={{ display: 'flex', gap: 7, alignItems: 'center', animation: 'dpBeatIn 0.3s ease both' }}>
-                  <div style={{ width: 6, height: 6, borderRadius: '50%', background: queryColor, boxShadow: `0 0 8px ${queryColor}` }} />
-                  <span style={{ fontSize: 8.5, color: queryColor, fontWeight: 600 }}>Gap detected → CDI query surfaced</span>
-                </div>
-              )}
-              {locked && (
-                <div style={{ display: 'flex', gap: 7, alignItems: 'center', animation: 'dpBeatIn 0.3s ease both' }}>
-                  <span style={{ fontSize: 9, color: GREEN, fontWeight: 700 }}>✓ Query answered · note updated · charge captured</span>
-                </div>
-              )}
-
-              {/* Compliance strip */}
-              {p >= 0.70 && (
-                <div style={{ display: 'flex', gap: 12, alignItems: 'center', borderTop: `1px solid rgba(255,255,255,0.07)`, paddingTop: 8, animation: 'dpBeatIn 0.5s ease both' }}>
-                  {[['NABIDH ✓', INDIGO], ['DHA ✓', TEAL], ['FHIR R4 ✓', GREEN]].map(([l, c]) => (
-                    <div key={l} style={{ display: 'flex', gap: 5, alignItems: 'center' }}>
-                      <div style={{ width: 5, height: 5, borderRadius: '50%', background: c, boxShadow: `0 0 5px ${c}` }} />
-                      <span style={{ fontSize: 8, fontWeight: 700, color: c }}>{l}</span>
-                    </div>
-                  ))}
-                </div>
-              )}
-            </div>
-          </div>
-        </div>
+        )}
       </div>
     </ProductShell>
   );
 }
 
-/* Scene 7 — AI Coding: ICD-10-CM, CPT, NCCI/MUE edits, IR-DRG scoring */
+/* Scene 7 — AI Coding: IPD-focused, inpatient ICD sequencing + live IR-DRG + big fonts */
 function CodingScreen({ progress }) {
-  const showOPD    = progress >= 0.06;
-  const showIPD    = progress >= 0.30;
-  const showCPT    = progress >= 0.22;
-  const showNCCI   = progress >= 0.38;
-  const showDRG    = progress >= 0.48;
-  const showImpact = progress >= 0.68;
+  const p = progress;
 
-  const opdICD = [
-    { code: 'E11.65', desc: 'Type 2 DM — uncontrolled hyperglycaemia', type: 'Principal', conf: 96, col: RED,    show: 0.08 },
-    { code: 'I10',    desc: 'Essential (primary) hypertension',          type: 'CC',       conf: 92, col: AMBER,  show: 0.13 },
-    { code: 'N18.3',  desc: 'CKD — Stage 3 (creatinine 1.4)',            type: 'CC',       conf: 84, col: INDIGO, show: 0.18 },
-  ];
-  const opdCPT = [
-    { code: '99214', desc: 'E/M Office Visit — Level 4 (complex)', units: 1, mueLimit: 1, ncci: 'Standalone — no conflict', col: TEAL,   show: 0.24 },
-    { code: '83036', desc: 'HbA1c measurement (laboratory)',         units: 1, mueLimit: 1, ncci: 'Allowed with 99214 — separate service', col: AMBER,  show: 0.28 },
-    { code: '82570', desc: 'Creatinine — serum (renal function)',     units: 1, mueLimit: 1, ncci: 'Allowed with 83036 — different analyte', col: INDIGO, show: 0.33 },
-  ];
-  const ipdICD = [
-    { code: 'J18.9', desc: 'Pneumonia — unspecified organism (principal)', type: 'Principal', conf: 97, col: RED,    show: 0.32 },
-    { code: 'J44.1', desc: 'COPD with acute exacerbation',                  type: 'MCC',      conf: 94, col: AMBER,  show: 0.37 },
-    { code: 'I10',   desc: 'Essential hypertension',                         type: 'CC',       conf: 90, col: TEAL,   show: 0.42 },
-    { code: 'E11.9', desc: 'Type 2 DM — without complications',              type: 'CC',       conf: 81, col: PURPLE, show: 0.46 },
-  ];
   const typeColor = (t) => t === 'Principal' ? TEAL : t === 'MCC' ? RED : t === 'CC' ? AMBER : MUTED;
 
+  // IPD patient: Pneumonia + COPD + comorbidities
+  const ipdICD = [
+    { code: 'J18.9', desc: 'Pneumonia — unspecified organism',  type: 'Principal', conf: 97, col: RED,    show: 0.06 },
+    { code: 'J44.1', desc: 'COPD with acute exacerbation',       type: 'MCC',      conf: 94, col: AMBER,  show: 0.20 },
+    { code: 'I10',   desc: 'Essential hypertension',              type: 'CC',       conf: 90, col: TEAL,   show: 0.33 },
+    { code: 'E11.9', desc: 'Type 2 DM — without complications',   type: 'CC',       conf: 81, col: PURPLE, show: 0.44 },
+  ];
+
+  const showDRG    = p >= 0.54;
+  const showImpact = p >= 0.76;
+
   return (
-    <ProductShell breadcrumb="ICD-10-CM · Smart Coding Engine" color={PURPLE}>
-      <div style={{ padding: '10px 13px', height: '100%', display: 'flex', flexDirection: 'column', gap: 8 }}>
+    <ProductShell breadcrumb="AI Coding · IR-DRG Engine" color={PURPLE}>
+      <div style={{ padding: '12px 16px', height: '100%', display: 'flex', flexDirection: 'column', gap: 10, overflow: 'hidden' }}>
 
-        {/* Two-column layout: OPD left, IPD right */}
-        <div style={{ display: 'flex', gap: 10, flex: 1, overflow: 'hidden' }}>
+        {/* Header */}
+        <div style={{ display: 'flex', gap: 12, alignItems: 'center', flexShrink: 0 }}>
+          <div style={{ flex: 1 }}>
+            <div style={{ fontSize: 9, fontWeight: 700, color: PURPLE, letterSpacing: 1, textTransform: 'uppercase' }}>Inpatient AI Coding · IR-DRG Live</div>
+            <div style={{ fontSize: 8.5, color: DIM, marginTop: 2 }}>K.A. · 58 yrs · Respiratory IPD · Thiqa SEHA · MRN: UH-2024-5512</div>
+          </div>
+          <div style={{ background: showDRG ? `${PURPLE}18` : 'rgba(0,0,0,0.25)', border: `1px solid ${showDRG ? PURPLE + '50' : BORDER}`, borderRadius: 10, padding: '6px 18px', textAlign: 'center', flexShrink: 0, transition: 'all 0.7s' }}>
+            <div style={{ fontSize: 8, color: MUTED, letterSpacing: 0.8, marginBottom: 1 }}>IR-DRG WEIGHT</div>
+            <div style={{ fontSize: 30, fontWeight: 900, color: showDRG ? PURPLE : DIM, fontFamily: 'Sora', lineHeight: 1, transition: 'color 0.8s', textShadow: showDRG ? `0 0 26px ${PURPLE}70` : 'none' }}>
+              {showDRG ? <CountUp value="1.34" duration={800} key="drg" /> : '0.94'}
+            </div>
+            <div style={{ fontSize: 7.5, color: showDRG ? GREEN : DIM, marginTop: 2, fontWeight: 700 }}>{showDRG ? '+0.40 · vs. baseline' : 'baseline · CCs unmapped'}</div>
+          </div>
+        </div>
 
-          {/* ── OPD Column ── */}
-          <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 7, overflow: 'hidden' }}>
+        {/* Two-column: ICD list | DRG computation */}
+        <div style={{ display: 'flex', gap: 12, flex: 1, overflow: 'hidden' }}>
 
-            {/* OPD ICD-10-CM */}
-            {showOPD && (
-              <div style={{ animation: 'dpBeatIn 0.4s ease both' }}>
-                <div style={{ fontSize: 7.5, fontWeight: 700, color: PURPLE, letterSpacing: 0.5, marginBottom: 5 }}>F.H. (OPD) — ICD-10-CM RANKED</div>
-                {opdICD.map((c, i) => {
-                  const vis = progress >= c.show;
-                  const act = progress >= c.show && progress < c.show + 0.10;
-                  return vis ? (
-                    <div key={i} style={{ display: 'flex', gap: 7, alignItems: 'center', padding: '4px 8px', marginBottom: 3, borderRadius: 7, background: act ? `${c.col}14` : `${c.col}07`, border: `1px solid ${act ? c.col + '50' : BORDER}`, transition: 'all 0.4s ease', animation: 'dpBeatIn 0.4s ease both' }}>
-                      <div style={{ display: 'flex', flex: 1, gap: 6, alignItems: 'center' }}>
-                        <span style={{ fontSize: 10, fontWeight: 900, color: c.col, fontFamily: 'Sora', width: 46, flexShrink: 0 }}>{c.code}</span>
-                        <span style={{ fontSize: 7.5, color: TXT, flex: 1, lineHeight: 1.3 }}>{c.desc}</span>
-                      </div>
-                      <span style={{ fontSize: 6, fontWeight: 800, color: typeColor(c.type), background: `${typeColor(c.type)}18`, border: `1px solid ${typeColor(c.type)}30`, borderRadius: 3, padding: '1px 5px', flexShrink: 0 }}>{c.type}</span>
-                      <div style={{ width: 52, height: 4, background: 'rgba(255,255,255,0.06)', borderRadius: 2, overflow: 'hidden', flexShrink: 0 }}>
+          {/* ── LEFT: IPD ICD-10-CM ranked ── */}
+          <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 8, overflow: 'hidden' }}>
+            <div style={{ fontSize: 9, fontWeight: 800, color: PURPLE, letterSpacing: 0.6, flexShrink: 0 }}>ICD-10-CM — SEQUENCED &amp; RANKED</div>
+            <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 7 }}>
+              {ipdICD.map((c, i) => {
+                const vis = p >= c.show;
+                const act = p >= c.show && p < c.show + 0.12;
+                return vis ? (
+                  <div key={i} style={{ display: 'flex', gap: 10, alignItems: 'center', padding: '10px 13px', borderRadius: 10, background: act ? `${c.col}16` : `${c.col}08`, border: `1px solid ${act ? c.col + '55' : c.col + '22'}`, transition: 'all 0.45s ease', animation: 'dpRowBlurIn 0.45s ease both', boxShadow: act ? `0 0 18px ${c.col}28` : 'none' }}>
+                    {/* Sequence number */}
+                    <div style={{ width: 26, height: 26, borderRadius: '50%', background: `${c.col}22`, border: `1.5px solid ${c.col}50`, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                      <span style={{ fontSize: 11, fontWeight: 900, color: c.col }}>{i + 1}</span>
+                    </div>
+                    {/* Code */}
+                    <span style={{ fontSize: 15, fontWeight: 900, color: c.col, fontFamily: 'Sora', flexShrink: 0, letterSpacing: -0.5 }}>{c.code}</span>
+                    {/* Description */}
+                    <span style={{ fontSize: 10, color: act ? TXT : `${TXT}cc`, flex: 1, lineHeight: 1.4 }}>{c.desc}</span>
+                    {/* Type badge */}
+                    <span style={{ fontSize: 8, fontWeight: 800, color: typeColor(c.type), background: `${typeColor(c.type)}18`, border: `1px solid ${typeColor(c.type)}35`, borderRadius: 5, padding: '3px 9px', flexShrink: 0 }}>{c.type}</span>
+                    {/* Confidence bar */}
+                    <div style={{ width: 56, display: 'flex', flexDirection: 'column', gap: 2, flexShrink: 0 }}>
+                      <div style={{ height: 4, background: 'rgba(255,255,255,0.06)', borderRadius: 2, overflow: 'hidden' }}>
                         <div style={{ height: '100%', width: `${c.conf}%`, background: c.col, borderRadius: 2 }} />
                       </div>
-                      <span style={{ fontSize: 7, fontWeight: 700, color: c.col, width: 28, textAlign: 'right' }}>{c.conf}%</span>
+                      <span style={{ fontSize: 8, fontWeight: 700, color: c.col, textAlign: 'right' }}>{c.conf}%</span>
                     </div>
-                  ) : null;
-                })}
-              </div>
-            )}
-
-            {/* CPT codes */}
-            {showCPT && (
-              <div style={{ animation: 'dpBeatIn 0.4s ease both' }}>
-                <div style={{ fontSize: 7.5, fontWeight: 700, color: TEAL, letterSpacing: 0.5, marginBottom: 5 }}>CPT PROCEDURE CODES</div>
-                {opdCPT.map((c, i) => {
-                  const vis = progress >= c.show;
-                  return vis ? (
-                    <div key={i} style={{ display: 'flex', gap: 6, alignItems: 'center', padding: '4px 8px', marginBottom: 3, borderRadius: 7, background: `${c.col}08`, border: `1px solid ${BORDER}`, animation: 'dpBeatIn 0.4s ease both' }}>
-                      <span style={{ fontSize: 10, fontWeight: 900, color: c.col, fontFamily: 'Sora', width: 46, flexShrink: 0 }}>{c.code}</span>
-                      <span style={{ fontSize: 7.5, color: TXT, flex: 1 }}>{c.desc}</span>
-                      <span style={{ fontSize: 6, color: GREEN, fontWeight: 700, background: `${GREEN}12`, border: `1px solid ${GREEN}25`, borderRadius: 3, padding: '1px 6px' }}>×{c.units} · MUE ✓</span>
-                    </div>
-                  ) : null;
-                })}
-              </div>
-            )}
-
-            {/* NCCI edits */}
-            {showNCCI && (
-              <div style={{ background: `${GREEN}08`, border: `1px solid ${GREEN}28`, borderRadius: 8, padding: '7px 10px', animation: 'dpSpringIn 0.5s cubic-bezier(0.34,1.4,0.64,1) both' }}>
-                <div style={{ fontSize: 7, fontWeight: 700, color: GREEN, letterSpacing: 0.5, marginBottom: 4 }}>NCCI / MUE EDIT RESULTS</div>
-                {[
-                  { pair: '99214 + 83036', status: 'Allowed', detail: 'Distinct service — no bundling conflict', col: GREEN },
-                  { pair: '83036 + 82570', status: 'Allowed', detail: 'Different analytes — permitted together', col: GREEN },
-                  { pair: '99214 units',   status: 'MUE Pass', detail: '1 unit claimed · limit: 1/day · within policy', col: TEAL },
-                ].map((e, i) => (
-                  <div key={i} style={{ display: 'flex', gap: 7, alignItems: 'center', marginBottom: i < 2 ? 3 : 0 }}>
-                    <span style={{ fontSize: 7.5, fontWeight: 700, color: e.col, fontFamily: 'Sora', flexShrink: 0 }}>{e.status}</span>
-                    <span style={{ fontSize: 7, color: MUTED, fontWeight: 700, flexShrink: 0 }}>{e.pair}</span>
-                    <span style={{ fontSize: 6.5, color: DIM, flex: 1 }}>{e.detail}</span>
                   </div>
-                ))}
-              </div>
-            )}
+                ) : null;
+              })}
+            </div>
           </div>
 
-          {/* ── Divider ── */}
+          {/* ── DIVIDER ── */}
           <div style={{ width: 1, background: BORDER, flexShrink: 0 }} />
 
-          {/* ── IPD Column ── */}
-          <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 7, overflow: 'hidden' }}>
+          {/* ── RIGHT: IR-DRG weight computation ── */}
+          <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 10, overflow: 'hidden' }}>
+            <div style={{ fontSize: 9, fontWeight: 800, color: MUTED, letterSpacing: 0.6, flexShrink: 0 }}>IR-DRG WEIGHT — LIVE COMPUTATION</div>
 
-            {/* IPD ICD-10-CM */}
-            {showIPD && (
-              <div style={{ animation: 'dpBeatIn 0.5s ease both' }}>
-                <div style={{ fontSize: 7.5, fontWeight: 700, color: PURPLE, letterSpacing: 0.5, marginBottom: 5 }}>K.A. (IPD) — ICD-10-CM SEQUENCED</div>
-                {ipdICD.map((c, i) => {
-                  const vis = progress >= c.show;
-                  const act = progress >= c.show && progress < c.show + 0.10;
-                  return vis ? (
-                    <div key={i} style={{ display: 'flex', gap: 7, alignItems: 'center', padding: '4px 8px', marginBottom: 3, borderRadius: 7, background: act ? `${c.col}14` : `${c.col}07`, border: `1px solid ${act ? c.col + '50' : BORDER}`, transition: 'all 0.4s ease', animation: 'dpBeatIn 0.4s ease both' }}>
-                      <div style={{ width: 14, height: 14, borderRadius: '50%', background: `${c.col}20`, border: `1px solid ${c.col}40`, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-                        <span style={{ fontSize: 6, fontWeight: 900, color: c.col }}>{i + 1}</span>
-                      </div>
-                      <span style={{ fontSize: 10, fontWeight: 900, color: c.col, fontFamily: 'Sora', width: 46, flexShrink: 0 }}>{c.code}</span>
-                      <span style={{ fontSize: 7.5, color: TXT, flex: 1, lineHeight: 1.3 }}>{c.desc}</span>
-                      <span style={{ fontSize: 6, fontWeight: 800, color: typeColor(c.type), background: `${typeColor(c.type)}18`, border: `1px solid ${typeColor(c.type)}30`, borderRadius: 3, padding: '1px 5px', flexShrink: 0 }}>{c.type}</span>
-                    </div>
-                  ) : null;
-                })}
-              </div>
-            )}
-
-            {/* IR-DRG weight computation */}
-            {showDRG && (
-              <div style={{ animation: 'dpBeatIn 0.5s ease both' }}>
-                <div style={{ fontSize: 7.5, fontWeight: 700, color: MUTED, letterSpacing: 0.5, marginBottom: 6 }}>IR-DRG WEIGHT COMPUTATION</div>
-                <div style={{ display: 'flex', gap: 8, alignItems: 'center', marginBottom: 7 }}>
-                  <div style={{ flex: 1, background: `${RED}0a`, border: `1px solid ${RED}25`, borderRadius: 8, padding: '10px', textAlign: 'center' }}>
-                    <div style={{ fontSize: 7, color: MUTED, marginBottom: 3 }}>BEFORE CDI</div>
-                    <div style={{ fontSize: 28, fontWeight: 900, color: RED, fontFamily: 'Sora', lineHeight: 1 }}>0.94</div>
-                    <div style={{ fontSize: 6.5, color: DIM, marginTop: 2 }}>J18.9 only · CCs missed</div>
+            {showDRG ? (
+              <>
+                {/* Before / After tiles */}
+                <div style={{ display: 'flex', gap: 10, alignItems: 'center' }}>
+                  <div style={{ flex: 1, background: `${RED}0c`, border: `1px solid ${RED}28`, borderRadius: 12, padding: '14px 12px', textAlign: 'center', animation: 'dpBeatIn 0.4s ease both' }}>
+                    <div style={{ fontSize: 9, color: MUTED, marginBottom: 5, letterSpacing: 0.5 }}>BEFORE CDI</div>
+                    <div style={{ fontSize: 36, fontWeight: 900, color: RED, fontFamily: 'Sora', lineHeight: 1 }}>0.94</div>
+                    <div style={{ fontSize: 8, color: DIM, marginTop: 4 }}>J18.9 only · CCs missed</div>
                   </div>
-                  <div style={{ fontSize: 20, color: PURPLE, flexShrink: 0 }}>→</div>
-                  <div style={{ flex: 1, background: `${PURPLE}10`, border: `1px solid ${PURPLE}40`, borderRadius: 8, padding: '10px', textAlign: 'center', boxShadow: `0 0 20px ${PURPLE}20` }}>
-                    <div style={{ fontSize: 7, color: MUTED, marginBottom: 3 }}>AFTER CDI</div>
-                    <div style={{ fontSize: 28, fontWeight: 900, color: PURPLE, fontFamily: 'Sora', lineHeight: 1 }}>
+                  <div style={{ fontSize: 24, color: PURPLE, flexShrink: 0 }}>→</div>
+                  <div style={{ flex: 1, background: `${PURPLE}12`, border: `1px solid ${PURPLE}45`, borderRadius: 12, padding: '14px 12px', textAlign: 'center', boxShadow: `0 0 24px ${PURPLE}22`, animation: 'dpSpringIn 0.55s ease both' }}>
+                    <div style={{ fontSize: 9, color: MUTED, marginBottom: 5, letterSpacing: 0.5 }}>AFTER CDI</div>
+                    <div style={{ fontSize: 36, fontWeight: 900, color: PURPLE, fontFamily: 'Sora', lineHeight: 1, textShadow: `0 0 30px ${PURPLE}70` }}>
                       <CountUp value="1.34" duration={700} key="drg-after" />
                     </div>
-                    <div style={{ fontSize: 6.5, color: DIM, marginTop: 2 }}>J18.9 + J44.1 MCC + 2× CC</div>
+                    <div style={{ fontSize: 8, color: DIM, marginTop: 4 }}>J18.9 + J44.1 MCC + 2× CC</div>
                   </div>
                 </div>
-                {/* CC/MCC contribution breakdown */}
-                <div style={{ display: 'flex', gap: 5, marginBottom: 5 }}>
+
+                {/* CC/MCC breakdown pills */}
+                <div style={{ display: 'flex', gap: 7 }}>
                   {[
-                    { label: 'Base DRG', val: '0.94', col: MUTED },
-                    { label: 'MCC (J44.1)', val: '+0.22', col: RED },
-                    { label: 'CC (I10)', val: '+0.10', col: AMBER },
-                    { label: 'CC (E11.9)', val: '+0.08', col: TEAL },
+                    { label: 'Base DRG',   val: '0.94',  col: MUTED },
+                    { label: 'MCC (J44.1)',val: '+0.22', col: RED },
+                    { label: 'CC (I10)',   val: '+0.10', col: AMBER },
+                    { label: 'CC (E11.9)',  val: '+0.08', col: TEAL },
                   ].map(({ label, val, col }) => (
-                    <div key={label} style={{ flex: 1, background: `${col}08`, border: `1px solid ${col}20`, borderRadius: 5, padding: '4px 6px', textAlign: 'center' }}>
-                      <div style={{ fontSize: 8.5, fontWeight: 900, color: col, fontFamily: 'Sora' }}>{val}</div>
-                      <div style={{ fontSize: 5.5, color: DIM, marginTop: 1 }}>{label}</div>
+                    <div key={label} style={{ flex: 1, background: `${col}0a`, border: `1px solid ${col}25`, borderRadius: 8, padding: '7px 8px', textAlign: 'center' }}>
+                      <div style={{ fontSize: 14, fontWeight: 900, color: col, fontFamily: 'Sora' }}>{val}</div>
+                      <div style={{ fontSize: 7, color: DIM, marginTop: 2 }}>{label}</div>
                     </div>
                   ))}
+                </div>
+
+                {/* NCCI/MUE mini check */}
+                <div style={{ background: `${GREEN}08`, border: `1px solid ${GREEN}25`, borderRadius: 9, padding: '9px 12px', animation: 'dpBeatIn 0.4s ease both' }}>
+                  <div style={{ fontSize: 8, fontWeight: 700, color: GREEN, letterSpacing: 0.5, marginBottom: 5 }}>NCCI / MUE EDITS — PRE-SUBMISSION</div>
+                  {[
+                    { check: 'Principal + MCC pairing', status: 'Validated ✓', col: GREEN },
+                    { check: 'CC combination (I10 + E11.9)', status: 'Allowed ✓', col: GREEN },
+                    { check: 'MUE unit limits', status: 'Within policy ✓', col: TEAL },
+                  ].map((e, i) => (
+                    <div key={i} style={{ display: 'flex', gap: 8, alignItems: 'center', marginBottom: i < 2 ? 4 : 0 }}>
+                      <span style={{ fontSize: 9.5, fontWeight: 700, color: e.col, flexShrink: 0 }}>{e.status}</span>
+                      <span style={{ fontSize: 9, color: DIM, flex: 1 }}>{e.check}</span>
+                    </div>
+                  ))}
+                </div>
+              </>
+            ) : (
+              <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', flexDirection: 'column', gap: 10, opacity: 0.4 }}>
+                <div style={{ fontSize: 13, color: DIM }}>Mapping comorbidities…</div>
+                <div style={{ display: 'flex', gap: 5 }}>
+                  {[0,1,2].map(i => <div key={i} style={{ width: 6, height: 6, borderRadius: '50%', background: PURPLE, animation: `dpPulse 1.2s ease ${i * 0.3}s infinite` }} />)}
                 </div>
               </div>
             )}
 
             {/* Revenue impact */}
             {showImpact && (
-              <div style={{ textAlign: 'center', animation: 'dpSpringIn 0.65s cubic-bezier(0.34,1.4,0.64,1) both' }}>
-                <div style={{ fontSize: 30, fontWeight: 900, color: GREEN, fontFamily: 'Sora', letterSpacing: -1.5, lineHeight: 1, textShadow: `0 0 50px ${GREEN}80` }}>+AED 18,400</div>
-                <div style={{ fontSize: 7, color: DIM, marginTop: 3, letterSpacing: 0.3 }}>additional revenue · per case · on every case</div>
+              <div style={{ textAlign: 'center', animation: 'dpSpringIn 0.7s cubic-bezier(0.34,1.4,0.64,1) both', paddingTop: 4 }}>
+                <div style={{ fontSize: 36, fontWeight: 900, color: GREEN, fontFamily: 'Sora', letterSpacing: -2, lineHeight: 1, textShadow: `0 0 50px ${GREEN}80` }}>+AED 18,400</div>
+                <div style={{ fontSize: 9, color: DIM, marginTop: 4 }}>per case · captured live while patient is admitted</div>
               </div>
             )}
           </div>
@@ -1732,10 +1694,11 @@ function TowerScreen({ progress }) {
   ];
 
   const summaryShow = p >= 0.80;
+  const logoShow    = p >= 0.90;
 
   return (
     <ProductShell breadcrumb="AI Agent Workforce · Clinical Intelligence" color={INDIGO}>
-      <div style={{ padding: '10px 14px', height: '100%', display: 'flex', flexDirection: 'column', gap: 8 }}>
+      <div style={{ padding: '10px 14px', height: '100%', display: 'flex', flexDirection: 'column', gap: 8, position: 'relative' }}>
 
         {/* ── Header ── */}
         <div style={{ display: 'flex', gap: 8, alignItems: 'center', flexShrink: 0 }}>
@@ -1846,6 +1809,19 @@ function TowerScreen({ progress }) {
             <div style={{ flex: 1.4, background: `${PURPLE}10`, border: `1px solid ${PURPLE}28`, borderRadius: 9, padding: '8px 12px', textAlign: 'center' }}>
               <div style={{ fontSize: 11, fontWeight: 800, color: PURPLE, marginBottom: 2 }}>Predictable Revenue Pipeline</div>
               <div style={{ fontSize: 7, color: DIM }}>clinical intelligence → referral triage → admission potential → DRG uplift — automated end to end</div>
+            </div>
+          </div>
+        )}
+
+        {/* ── Docstribe closing wordmark ── */}
+        {logoShow && (
+          <div style={{ position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', background: 'radial-gradient(ellipse 85% 75% at 50% 50%, rgba(0,2,14,0.93) 0%, rgba(0,2,14,0.55) 100%)', zIndex: 30, animation: 'dpLogoReveal 1.4s cubic-bezier(0.34,1.1,0.64,1) both', backdropFilter: 'blur(6px)', borderRadius: 8, pointerEvents: 'none' }}>
+            <div style={{ fontSize: 52, fontWeight: 900, fontFamily: 'Sora', background: `linear-gradient(135deg,#fff 10%,${TEAL} 48%,${INDIGO})`, WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', letterSpacing: -2.5, lineHeight: 1, filter: `drop-shadow(0 0 50px ${TEAL}55)` }}>Docstribe</div>
+            <div style={{ fontSize: 11, color: TEAL, fontWeight: 700, letterSpacing: 2.5, marginTop: 10, textTransform: 'uppercase', opacity: 0.92 }}>Clinical Intelligence · Revenue Certainty</div>
+            <div style={{ display: 'flex', gap: 8, marginTop: 16, flexWrap: 'wrap', justifyContent: 'center' }}>
+              {['↓30% Denials', '99% Clean Claim Rate', 'CMI +0.15', '60-Day Guarantee'].map((t, i) => (
+                <span key={i} style={{ fontSize: 8.5, fontWeight: 700, color: TEAL, background: `${TEAL}14`, border: `1px solid ${TEAL}35`, borderRadius: 20, padding: '5px 14px', animation: `dpSpringIn 0.5s cubic-bezier(0.34,1.4,0.64,1) ${0.12 + i * 0.1}s both` }}>{t}</span>
+              ))}
             </div>
           </div>
         )}
@@ -2074,14 +2050,16 @@ export default function DemoPlayer() {
   const [started,    setStarted]    = useState(false);
   const [exitIdx,    setExitIdx]    = useState(null);
   const [sentIdx,    setSentIdx]    = useState(0);
+  const [clickHint,  setClickHint]  = useState(null); // 'play' | 'pause' | null
 
-  const audioCtxRef = useRef(null);
-  const analyserRef = useRef(null);
-  const sourceRef   = useRef(null);
-  const rafRef      = useRef(null);
-  const t0Ref       = useRef(0);
-  const durRef      = useRef(0);
-  const firedRef    = useRef(new Set());
+  const audioCtxRef    = useRef(null);
+  const analyserRef    = useRef(null);
+  const sourceRef      = useRef(null);
+  const rafRef         = useRef(null);
+  const t0Ref          = useRef(0);
+  const durRef         = useRef(0);
+  const firedRef       = useRef(new Set());
+  const clickHintTimer = useRef(null);
 
   const scene     = SCENES[idx];
   const sentences = splitSentences(scene.vo);
@@ -2196,6 +2174,15 @@ export default function DemoPlayer() {
   const handleFirstPlay = () => { setSplashDone(true); playScene(0); };
   const togglePlay = () => { if (isPlaying) stopAudio(); else playScene(idx); };
 
+  const handleViewportClick = () => {
+    if (!splashDone || !started || loading) return;
+    const hint = isPlaying ? 'pause' : 'play';
+    setClickHint(hint);
+    clearTimeout(clickHintTimer.current);
+    clickHintTimer.current = setTimeout(() => setClickHint(null), 900);
+    togglePlay();
+  };
+
   const totalPct = ((idx + progress) / SCENES.length) * 100;
   const currentSentence = sentences[sentIdx] || '';
 
@@ -2211,7 +2198,7 @@ export default function DemoPlayer() {
         <div style={{ position: 'absolute', inset: -2, borderRadius: 14, boxShadow: `0 0 80px ${scene.color}14, 0 0 140px rgba(0,0,0,0.7)`, pointerEvents: 'none', zIndex: 0 }} />
 
         <div style={{ position: 'relative', width: '100%', paddingTop: '56.25%', borderRadius: 12, overflow: 'hidden', border: `1px solid rgba(255,255,255,0.06)`, boxShadow: '0 24px 80px rgba(0,0,0,0.75)', background: '#000' }}>
-          <div style={{ position: 'absolute', inset: 0 }}>
+          <div style={{ position: 'absolute', inset: 0, cursor: splashDone && started ? 'pointer' : 'default' }} onClick={handleViewportClick}>
             {!splashDone && <Splash onPlay={handleFirstPlay} />}
 
             {exitIdx !== null && (
@@ -2233,16 +2220,27 @@ export default function DemoPlayer() {
             {isPlaying && <Caption sentence={currentSentence} />}
             <SceneStatStrip scene={scene} progress={progress} />
 
-            <div style={{ position: 'absolute', bottom: 26, right: 14, zIndex: 25, display: 'flex', gap: 5 }}>
-              <button onClick={() => idx > 0 && goTo(idx - 1)} disabled={idx === 0} style={{ width: 26, height: 26, borderRadius: 5, border: `1px solid ${BORDER}`, background: 'rgba(0,0,0,0.6)', color: idx === 0 ? '#1e293b' : DIM, fontSize: 13, cursor: idx === 0 ? 'default' : 'pointer', backdropFilter: 'blur(8px)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>‹</button>
-              <button onClick={togglePlay} disabled={loading} style={{ height: 26, padding: '0 14px', borderRadius: 5, border: `1px solid ${scene.color}40`, background: isPlaying ? 'rgba(248,113,113,0.12)' : `linear-gradient(135deg,${scene.color}1e,${INDIGO}16)`, color: isPlaying ? '#f87171' : scene.color, fontSize: 10, fontWeight: 700, cursor: loading ? 'wait' : 'pointer', backdropFilter: 'blur(8px)', display: 'flex', alignItems: 'center', gap: 5, boxShadow: !isPlaying && !loading ? `0 0 14px ${scene.color}20` : 'none', transition: 'all 0.2s' }}>
-                {loading
-                  ? <div style={{ width: 9, height: 9, borderRadius: '50%', border: `2px solid ${scene.color}40`, borderTopColor: scene.color, animation: 'dpSpin 0.7s linear infinite' }} />
-                  : isPlaying
-                    ? <><svg width="8" height="8" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="4" width="4" height="16" /><rect x="14" y="4" width="4" height="16" /></svg>Pause</>
-                    : <><svg width="8" height="8" viewBox="0 0 24 24" fill="currentColor"><polygon points="5,3 19,12 5,21" /></svg>{started ? 'Play' : '▶ Play Demo'}</>}
-              </button>
-              <button onClick={() => idx < SCENES.length - 1 && goTo(idx + 1)} disabled={idx === SCENES.length - 1} style={{ width: 26, height: 26, borderRadius: 5, border: `1px solid ${BORDER}`, background: 'rgba(0,0,0,0.6)', color: idx === SCENES.length - 1 ? '#1e293b' : DIM, fontSize: 13, cursor: idx === SCENES.length - 1 ? 'default' : 'pointer', backdropFilter: 'blur(8px)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>›</button>
+            {/* Click-to-pause flash icon */}
+            {clickHint && (
+              <div key={clickHint + Date.now()} style={{ position: 'absolute', inset: 0, zIndex: 40, display: 'flex', alignItems: 'center', justifyContent: 'center', pointerEvents: 'none', animation: 'dpClickHintFade 0.9s ease-out both' }}>
+                <div style={{ width: 68, height: 68, borderRadius: '50%', background: 'rgba(0,0,0,0.72)', backdropFilter: 'blur(12px)', border: '1px solid rgba(255,255,255,0.12)', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: `0 0 40px ${scene.color}30, 0 8px 32px rgba(0,0,0,0.6)` }}>
+                  {clickHint === 'pause'
+                    ? <svg width="22" height="22" viewBox="0 0 24 24" fill="white"><rect x="6" y="4" width="4" height="16" /><rect x="14" y="4" width="4" height="16" /></svg>
+                    : <svg width="22" height="22" viewBox="0 0 24 24" fill="white" style={{ marginLeft: 3 }}><polygon points="5,3 19,12 5,21" /></svg>
+                  }
+                </div>
+              </div>
+            )}
+
+            {/* Loading spinner overlay */}
+            {loading && (
+              <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%,-50%)', zIndex: 45, width: 36, height: 36, borderRadius: '50%', border: `3px solid ${scene.color}28`, borderTopColor: scene.color, animation: 'dpSpin 0.7s linear infinite', pointerEvents: 'none' }} />
+            )}
+
+            {/* Nav buttons — bottom right, no play/pause */}
+            <div style={{ position: 'absolute', bottom: 16, right: 14, zIndex: 25, display: 'flex', gap: 5 }} onClick={e => e.stopPropagation()}>
+              <button onClick={() => idx > 0 && goTo(idx - 1)} disabled={idx === 0} style={{ width: 28, height: 28, borderRadius: 6, border: `1px solid ${BORDER}`, background: 'rgba(0,0,0,0.68)', color: idx === 0 ? '#1e293b' : DIM, fontSize: 15, cursor: idx === 0 ? 'default' : 'pointer', backdropFilter: 'blur(10px)', display: 'flex', alignItems: 'center', justifyContent: 'center', transition: 'color 0.2s' }}>‹</button>
+              <button onClick={() => idx < SCENES.length - 1 && goTo(idx + 1)} disabled={idx === SCENES.length - 1} style={{ width: 28, height: 28, borderRadius: 6, border: `1px solid ${BORDER}`, background: 'rgba(0,0,0,0.68)', color: idx === SCENES.length - 1 ? '#1e293b' : DIM, fontSize: 15, cursor: idx === SCENES.length - 1 ? 'default' : 'pointer', backdropFilter: 'blur(10px)', display: 'flex', alignItems: 'center', justifyContent: 'center', transition: 'color 0.2s' }}>›</button>
             </div>
           </div>
         </div>
@@ -2320,6 +2318,7 @@ export default function DemoPlayer() {
           0%   { transform:translateX(-200%); }
           100% { transform:translateX(400%); }
         }
+        @keyframes dpSlideInLeft { from { transform: translateX(-100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
         @keyframes dpStatRing {
           0%   { transform:scale(0.5); opacity:0.7; }
           100% { transform:scale(2.8); opacity:0; }
@@ -2329,6 +2328,17 @@ export default function DemoPlayer() {
           55%  { opacity:1; transform:scale(1.08) translateY(-4px); }
           75%  { transform:scale(0.97) translateY(1px); }
           100% { opacity:1; transform:scale(1) translateY(0); }
+        }
+        @keyframes dpClickHintFade {
+          0%   { opacity:0; transform:scale(0.75); }
+          18%  { opacity:1; transform:scale(1.05); }
+          55%  { opacity:1; transform:scale(1); }
+          100% { opacity:0; transform:scale(1.15); }
+        }
+        @keyframes dpLogoReveal {
+          0%   { opacity:0; transform:scale(0.92) translateY(18px); filter:blur(16px); }
+          55%  { opacity:1; filter:blur(2px); }
+          100% { opacity:1; transform:scale(1) translateY(0); filter:blur(0); }
         }
       `}</style>
     </section>

@@ -413,17 +413,17 @@ const UAE_DEMO_SCENES = [
   {
     id: 4, timecode: '0:26–0:38', journeyStage: 'pre-visit',
     title: 'Pre-Visit Intelligence',
-    voText: 'A patient walks in. Docstribe pulls their insurance profile automatically — coverage, co-pay, network status — direct from the payer API. Eligibility confirmed before they reach the desk. For inpatient — PA filed at order entry, approved before care begins. No forms. No delays.',
+    voText: 'A patient walks in. Docstribe pulls their insurance profile automatically — coverage, co-pay, network status — live from the payer API. Before they reach the desk, eligibility is confirmed. Network status. Active plan. Co-pay. All in seconds. No calls. No delays. No surprises.',
   },
   {
     id: 6, timecode: '0:38–0:58', journeyStage: 'ambient-cdi',
     title: 'Clinical Intelligence',
-    voText: 'The physician speaks. The note builds itself — diagnoses, vitals, comorbidities, structured and coded in real time. Docstribe reads the note as it forms. A documentation gap surfaces automatically, grounded in clinical guidelines. One answer from the physician. Code corrected at the point of care. For inpatient — principal diagnosis confirmed, IR-DRG weight locked before discharge. Revenue that would have been lost, isn\'t.',
+    voText: 'The physician speaks. The note builds itself — diagnoses, vitals, comorbidities, structured and coded in real time. Docstribe reads the note as it forms. A documentation gap surfaces. Grounded in ADA clinical guidelines. One answer from the physician. Code corrected at the point of care. AED four thousand two hundred more — from a single clinical clarification.',
   },
   {
     id: 7, timecode: '0:58–1:12', journeyStage: 'coding',
     title: 'AI-Powered Coding',
-    voText: 'Every OPD claim — diagnoses ranked, procedure codes checked against payer NCCI and MUE edits before anything goes out. That cuts denials at source. For inpatient, the IR-DRG recalculates live while the patient is admitted — every complication captured today reflects in the DRG weight immediately. AED eighteen thousand four hundred more. Per case.',
+    voText: 'Every code, sequenced. Every complication — MCC, CC — captured before discharge. The IR-DRG recalculates live, against NCCI and MUE edits, while the patient is still admitted. Pneumonia with COPD exacerbation — DRG weight locked at one point three four. AED eighteen thousand four hundred. Per case. Every case.',
   },
   {
     id: 8, timecode: '1:12–1:32', journeyStage: 'denial-recovery',
