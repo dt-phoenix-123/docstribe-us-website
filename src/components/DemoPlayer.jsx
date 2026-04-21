@@ -66,8 +66,8 @@ function glow(active, color, extra = {}) {
       ? `0 0 0 1px ${color}20, 0 0 18px ${color}28, 0 0 40px ${color}12, 0 8px 32px rgba(0,0,0,0.12), inset 0 1px 0 ${color}25`
       : '0 2px 8px rgba(0,0,0,0.08)',
     background: active
-      ? `linear-gradient(135deg, ${color}18, ${color}08)`
-      : `${color}06`,
+      ? `linear-gradient(135deg, ${color}14, ${color}06)`
+      : 'rgba(255,255,255,0.80)',
     ...extra,
   };
 }
@@ -207,12 +207,12 @@ function PatientProfileCard({ patient, progress, showFrom = 0 }) {
 
   return (
     <div style={{
-      background: 'linear-gradient(135deg,rgba(4,8,20,0.97),rgba(6,12,28,0.94))',
-      border: `1px solid ${riskColor}35`,
+      background: 'rgba(255,255,255,0.95)',
+      border: `1px solid ${riskColor}30`,
       borderRadius: 12, padding: '9px 13px',
       animation: 'dpSpringIn 0.55s cubic-bezier(0.34,1.4,0.64,1) both',
       flexShrink: 0,
-      boxShadow: `0 0 0 1px ${riskColor}10, 0 4px 24px rgba(0,0,0,0.45)`,
+      boxShadow: `0 0 0 1px ${riskColor}08, 0 4px 16px rgba(0,0,0,0.08)`,
       transition: 'border-color 0.4s ease',
     }}>
 
@@ -258,7 +258,7 @@ function PatientProfileCard({ patient, progress, showFrom = 0 }) {
       {showGovernance && (
         <div style={{
           background: govActive ? `linear-gradient(135deg,${TEAL}14,${INDIGO}09)` : 'rgba(0,0,0,0.04)',
-          border: `1px solid ${govActive ? `${TEAL}45` : 'rgba(255,255,255,0.05)'}`,
+          border: `1px solid ${govActive ? `${TEAL}45` : BORDER}`,
           borderRadius: 8, padding: '7px 10px', marginBottom: 6,
           boxShadow: govActive ? `0 0 20px ${TEAL}18, inset 0 0 12px ${TEAL}08` : 'none',
           transition: 'all 0.7s ease',
@@ -281,7 +281,7 @@ function PatientProfileCard({ patient, progress, showFrom = 0 }) {
                   <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 6, color: MUTED, marginBottom: 2 }}>
                     <span>{l} Score</span><span style={{ color: c, fontWeight: 700 }}>{v}%</span>
                   </div>
-                  <div style={{ height: 3, background: 'rgba(255,255,255,0.05)', borderRadius: 2, overflow: 'hidden' }}>
+                  <div style={{ height: 3, background: 'rgba(0,0,0,0.08)', borderRadius: 2, overflow: 'hidden' }}>
                     <div style={{ height: '100%', width: govActive ? `${v}%` : '0%', background: `linear-gradient(90deg,${c},${c}99)`, borderRadius: 2, transition: 'width 1.2s cubic-bezier(0.34,1.2,0.64,1)' }} />
                   </div>
                 </div>
@@ -378,11 +378,11 @@ const Badge = ({ text, color }) => (
 function StatScene({ scene, progress }) {
   const anyActive = scene.beats.some(b => spot(progress, b.at, b.at + 0.28));
   return (
-    <div style={{ position: 'absolute', inset: 0, background: 'radial-gradient(ellipse 90% 65% at 50% 45%,#eef4ff 0%,#e2eaf8 75%)', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 28 }}>
+    <div style={{ position: 'absolute', inset: 0, background: 'radial-gradient(ellipse 90% 65% at 50% 45%,#f8fafc 0%,#f1f5f9 100%)', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 28 }}>
       {/* Breathing ambient glow */}
       <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none', background: `radial-gradient(ellipse 60% 50% at 50% 50%,${TEAL}08 0%,transparent 70%)`, animation: 'dpBreath 4s ease-in-out infinite' }} />
       {/* Animated grid */}
-      <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none', backgroundImage: 'linear-gradient(rgba(0,163,136,0.12) 1px,transparent 1px),linear-gradient(90deg,rgba(0,163,136,0.12) 1px,transparent 1px)', backgroundSize: '56px 56px', animation: 'dpGridBreathe 6s ease-in-out infinite' }} />
+      <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none', backgroundImage: 'linear-gradient(rgba(100,116,139,0.07) 1px,transparent 1px),linear-gradient(90deg,rgba(100,116,139,0.07) 1px,transparent 1px)', backgroundSize: '56px 56px', animation: 'dpGridBreathe 6s ease-in-out infinite' }} />
       {/* Beat bloom flash */}
       {anyActive && (
         <div key={`bloom-${progress.toFixed(1)}`} style={{ position: 'absolute', inset: 0, pointerEvents: 'none', background: `radial-gradient(ellipse 60% 40% at 50% 50%,${TEAL}18 0%,transparent 60%)`, animation: 'dpBloom 1.8s ease-out both', zIndex: 1 }} />
@@ -415,12 +415,12 @@ function StatScene({ scene, progress }) {
         const isLast = i === scene.beats.length - 1; // "Zero leakage." = index 3
         const fontSize = i === 0 ? 96 : i === 1 ? 76 : 28;
         return (
-          <div key={i} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8, opacity: show ? 1 : 0, animation: show ? `dpEmergeStat 0.9s cubic-bezier(0.34,1.2,0.64,1) both` : 'none', filter: show && !active && !isLast ? 'brightness(0.5)' : 'brightness(1)', position: 'relative', zIndex: 2 }}>
+          <div key={i} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8, opacity: show && !active && !isLast ? 0.42 : show ? 1 : 0, animation: show ? `dpEmergeStat 0.9s cubic-bezier(0.34,1.2,0.64,1) both` : 'none', position: 'relative', zIndex: 2 }}>
             {/* Emanating ring on active big stats */}
             {active && !isLast && (
-              <div style={{ position: 'absolute', width: 140, height: 140, borderRadius: '50%', border: `2px solid ${TEAL}55`, animation: 'dpStatRing 1.4s ease-out infinite', pointerEvents: 'none', zIndex: 0 }} />
+              <div style={{ position: 'absolute', width: 140, height: 140, borderRadius: '50%', border: `2px solid ${TEAL}40`, animation: 'dpStatRing 1.4s ease-out infinite', pointerEvents: 'none', zIndex: 0 }} />
             )}
-            <div style={{ fontSize, fontWeight: 900, letterSpacing: isLast ? -0.5 : -2, fontFamily: 'Sora', lineHeight: 1.0, color: isLast ? TEAL : '#fff', textShadow: active ? `0 0 40px ${TEAL}cc, 0 0 100px ${TEAL}50, 0 0 180px ${TEAL}20` : !isLast ? `0 0 40px ${TEAL}30` : 'none', transition: 'text-shadow 0.5s ease', background: isLast && active ? `linear-gradient(135deg,${TEAL},${INDIGO})` : 'none', WebkitBackgroundClip: isLast && active ? 'text' : 'unset', WebkitTextFillColor: isLast && active ? 'transparent' : 'unset', position: 'relative', zIndex: 1 }}>
+            <div style={{ fontSize, fontWeight: 900, letterSpacing: isLast ? -0.5 : -2, fontFamily: 'Sora', lineHeight: 1.0, color: isLast ? TEAL : TXT, transition: 'color 0.4s ease', background: isLast && active ? `linear-gradient(135deg,${TEAL},${INDIGO})` : 'none', WebkitBackgroundClip: isLast && active ? 'text' : 'unset', WebkitTextFillColor: isLast && active ? 'transparent' : 'unset', position: 'relative', zIndex: 1 }}>
               {show ? <CountUp value={b.stat} duration={900} key={`${i}-${show}`} /> : b.stat}
             </div>
             <div style={{ fontSize: isLast ? 14 : 11, color: isLast ? TXT : DIM, fontFamily: 'Sora', textAlign: 'center', maxWidth: 480, letterSpacing: 0.2, fontWeight: isLast ? 500 : 400 }}>{b.sub}</div>
@@ -442,7 +442,7 @@ function KPIScene({ scene, progress }) {
   const colors = [RED, GREEN, PURPLE];
 
   return (
-    <div style={{ position: 'absolute', inset: 0, background: 'radial-gradient(ellipse 80% 60% at 50% 40%,#eef4ff 0%,#e2eaf8 75%)', overflow: 'hidden' }}>
+    <div style={{ position: 'absolute', inset: 0, background: 'radial-gradient(ellipse 80% 60% at 50% 40%,#f8fafc 0%,#f1f5f9 100%)', overflow: 'hidden' }}>
 
       {/* ── Phase 1: Introducing Docstribe ── */}
       <div style={{ position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 20, padding: '0 48px', opacity: introOpacity, transition: 'opacity 0.6s ease', pointerEvents: introOpacity < 0.1 ? 'none' : 'auto' }}>
@@ -491,7 +491,7 @@ function KPIScene({ scene, progress }) {
             const active = spot(progress, b.at, b.at + 0.16);
             const c = colors[i];
             return (
-              <div key={i} style={{ background: `linear-gradient(135deg,${c}18,${c}08)`, border: `1px solid ${c}${active ? '70' : show ? '28' : '10'}`, borderRadius: 16, padding: '22px 20px', minWidth: 130, flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8, opacity: show ? 1 : 0, animation: show ? `dpSpringIn 0.65s cubic-bezier(0.34,1.4,0.64,1) both` : 'none', boxShadow: active ? `0 0 0 1px ${c}20, 0 0 48px ${c}40, 0 0 80px ${c}18, 0 8px 32px rgba(0,0,0,0.5), inset 0 1px 0 ${c}25` : '0 2px 12px rgba(0,0,0,0.3)', filter: show && !active ? 'brightness(0.65)' : 'brightness(1)', transform: active ? 'scale(1.07)' : 'scale(1)', transition: 'transform 0.4s ease, filter 0.4s ease, box-shadow 0.4s ease', position: 'relative', overflow: 'hidden' }}>
+              <div key={i} style={{ background: active ? `linear-gradient(160deg,${c}10,${c}04)` : 'rgba(255,255,255,0.92)', border: `1px solid ${c}${active ? '60' : show ? '25' : '10'}`, borderRadius: 16, padding: '22px 20px', minWidth: 130, flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8, opacity: show ? (active ? 1 : 0.72) : 0, animation: show ? `dpSpringIn 0.65s cubic-bezier(0.34,1.4,0.64,1) both` : 'none', boxShadow: active ? `0 0 0 2px ${c}50, 0 4px 20px ${c}22, 0 4px 16px rgba(0,0,0,0.08), inset 0 1px 0 ${c}20` : '0 1px 6px rgba(0,0,0,0.08)', transform: active ? 'scale(1.07)' : 'scale(1)', transition: 'transform 0.4s ease, opacity 0.4s ease, box-shadow 0.4s ease, background 0.4s ease', position: 'relative', overflow: 'hidden' }}>
                 {/* Active bloom behind number */}
                 {active && (
                   <div style={{ position: 'absolute', inset: -20, pointerEvents: 'none', background: `radial-gradient(ellipse 80% 80% at 50% 50%,${c}25 0%,transparent 70%)`, animation: 'dpBloom 1.5s ease-out both', borderRadius: 24, zIndex: 0 }} />
@@ -499,7 +499,7 @@ function KPIScene({ scene, progress }) {
                 {i === 2 && (
                   <div style={{ fontSize: 10, fontWeight: 800, color: c, letterSpacing: 2, textTransform: 'uppercase', opacity: 0.72, position: 'relative', zIndex: 1 }}>CMI</div>
                 )}
-                <div style={{ fontSize: 48, fontWeight: 900, color: c, fontFamily: 'Sora', lineHeight: 1, letterSpacing: -2, position: 'relative', zIndex: 1, textShadow: active ? `0 0 30px ${c}80` : 'none' }}>
+                <div style={{ fontSize: 48, fontWeight: 900, color: c, fontFamily: 'Sora', lineHeight: 1, letterSpacing: -2, position: 'relative', zIndex: 1 }}>
                   {show ? <CountUp value={b.stat} duration={700} key={`k${i}-${show}`} /> : b.stat}
                 </div>
                 <div style={{ width: 22, height: 2, borderRadius: 1, background: c, position: 'relative', zIndex: 1 }} />
@@ -718,7 +718,7 @@ function EligibilityScreen({ progress }) {
 
               const nodeEl = (
                 <div key={`n${i}`} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6, flexShrink: 0, opacity: vis ? 1 : 0.18, transition: 'opacity 0.45s, transform 0.4s', transform: vis ? 'scale(1)' : 'scale(0.78)' }}>
-                  <div style={{ width: 52, height: 52, borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 22, background: vis ? (active ? `${GREEN}28` : `${GREEN}14`) : 'rgba(255,255,255,0.03)', border: `2.5px solid ${vis ? (active ? GREEN : GREEN + '60') : BORDER}`, boxShadow: active ? `0 0 24px ${GREEN}55, 0 0 50px ${GREEN}18` : 'none', transition: 'all 0.4s ease' }}>
+                  <div style={{ width: 52, height: 52, borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 22, background: vis ? (active ? `${GREEN}28` : `${GREEN}14`) : 'rgba(0,0,0,0.03)', border: `2.5px solid ${vis ? (active ? GREEN : GREEN + '60') : BORDER}`, boxShadow: active ? `0 0 24px ${GREEN}55, 0 0 50px ${GREEN}18` : 'none', transition: 'all 0.4s ease' }}>
                     {step.icon}
                   </div>
                   <div style={{ textAlign: 'center' }}>
@@ -843,7 +843,7 @@ function AmbientScreen({ progress }) {
 
       {/* ── Mic intro phase ── */}
       {micOpacity > 0.01 && (
-        <div style={{ position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 16, background: 'radial-gradient(ellipse 70% 60% at 50% 45%,#eef4ff 0%,#e8edf5 80%)', opacity: micOpacity, transition: 'opacity 0.4s ease', zIndex: 10, pointerEvents: micOpacity < 0.05 ? 'none' : 'auto' }}>
+        <div style={{ position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 16, background: 'radial-gradient(ellipse 70% 60% at 50% 45%,#f8fafc 0%,#f1f5f9 100%)', opacity: micOpacity, transition: 'opacity 0.4s ease', zIndex: 10, pointerEvents: micOpacity < 0.05 ? 'none' : 'auto' }}>
           <div style={{ position: 'absolute', inset: 0, background: `radial-gradient(ellipse 50% 40% at 50% 50%,${INDIGO}08 0%,transparent 70%)`, animation: 'dpBreath 3s ease-in-out infinite', pointerEvents: 'none' }} />
           <div style={{ position: 'relative', zIndex: 1 }}>
             <div style={{ width: 64, height: 64, borderRadius: '50%', background: `linear-gradient(135deg,${INDIGO}30,${TEAL}18)`, border: `2px solid ${INDIGO}60`, display: 'flex', alignItems: 'center', justifyContent: 'center', animation: 'dpPulse 1.4s ease-in-out infinite', boxShadow: `0 0 40px ${INDIGO}40, 0 0 80px ${INDIGO}20` }}>
@@ -1032,7 +1032,7 @@ function CDIQueryCard({ col, title, sub, question, guidelinePills, opts, answere
         {opts.map((opt, j) => {
           const selected = j === 0 && (answered || locked);
           return (
-            <div key={j} style={{ display: 'flex', gap: 8, alignItems: 'center', padding: '8px 11px', borderRadius: 7, background: selected ? `${GREEN}14` : 'rgba(255,255,255,0.04)', border: `1px solid ${selected ? GREEN + '50' : BORDER + '30'}`, transition: 'all 0.4s ease' }}>
+            <div key={j} style={{ display: 'flex', gap: 8, alignItems: 'center', padding: '8px 11px', borderRadius: 7, background: selected ? `${GREEN}14` : 'rgba(0,0,0,0.03)', border: `1px solid ${selected ? GREEN + '50' : BORDER}`, transition: 'all 0.4s ease' }}>
               <div style={{ width: 14, height: 14, borderRadius: '50%', border: `1.5px solid ${selected ? GREEN : MUTED}`, background: selected ? GREEN : 'transparent', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, transition: 'all 0.3s' }}>
                 {selected && <div style={{ width: 5, height: 5, borderRadius: '50%', background: '#fff' }} />}
               </div>
@@ -1122,7 +1122,7 @@ function CDIScreen({ progress }) {
 
       {/* ── Phase 1: Mic intro ── */}
       {micOpacity > 0.01 && (
-        <div style={{ position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 18, background: 'radial-gradient(ellipse 70% 60% at 50% 45%,#eef4ff 0%,#e8edf5 80%)', opacity: micOpacity, transition: 'opacity 0.35s ease', zIndex: 10, pointerEvents: micOpacity < 0.05 ? 'none' : 'auto' }}>
+        <div style={{ position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 18, background: 'radial-gradient(ellipse 70% 60% at 50% 45%,#f8fafc 0%,#f1f5f9 100%)', opacity: micOpacity, transition: 'opacity 0.35s ease', zIndex: 10, pointerEvents: micOpacity < 0.05 ? 'none' : 'auto' }}>
           <div style={{ position: 'absolute', inset: 0, background: `radial-gradient(ellipse 50% 40% at 50% 50%,${INDIGO}08 0%,transparent 70%)`, animation: 'dpBreath 3s ease-in-out infinite', pointerEvents: 'none' }} />
           {/* Mic with pulse rings */}
           <div style={{ position: 'relative', zIndex: 1 }}>
@@ -1232,8 +1232,8 @@ function CDIScreen({ progress }) {
                   {['E11.65 — Uncontrolled (HbA1c 9.1%)', 'E11.9 — Controlled / no complications'].map((opt, j) => {
                     const sel = j === 0 && (answered || locked);
                     return (
-                      <div key={j} style={{ display: 'flex', gap: 11, alignItems: 'flex-start', padding: '11px 14px', borderRadius: 10, background: sel ? `${GREEN}12` : 'rgba(255,255,255,0.03)', border: `1px solid ${sel ? GREEN + '45' : 'rgba(255,255,255,0.07)'}`, transition: 'all 0.45s ease' }}>
-                        <div style={{ width: 18, height: 18, borderRadius: '50%', border: `2px solid ${sel ? GREEN : 'rgba(255,255,255,0.2)'}`, background: sel ? GREEN : 'transparent', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, marginTop: 1, transition: 'all 0.35s' }}>
+                      <div key={j} style={{ display: 'flex', gap: 11, alignItems: 'flex-start', padding: '11px 14px', borderRadius: 10, background: sel ? `${GREEN}12` : 'rgba(0,0,0,0.03)', border: `1px solid ${sel ? GREEN + '45' : BORDER}`, transition: 'all 0.45s ease' }}>
+                        <div style={{ width: 18, height: 18, borderRadius: '50%', border: `2px solid ${sel ? GREEN : BORDER}`, background: sel ? GREEN : 'transparent', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, marginTop: 1, transition: 'all 0.35s' }}>
                           {sel && <div style={{ width: 7, height: 7, borderRadius: '50%', background: '#fff' }} />}
                         </div>
                         <span style={{ fontSize: 11, fontWeight: sel ? 700 : 400, color: sel ? TXT : DIM, lineHeight: 1.4, transition: 'all 0.35s' }}>{opt}</span>
@@ -1244,7 +1244,7 @@ function CDIScreen({ progress }) {
 
                 {/* Code enhancement */}
                 {enhancements.some(e => e.show) && (
-                  <div style={{ borderTop: `1px solid rgba(255,255,255,0.08)`, paddingTop: 12, display: 'flex', flexDirection: 'column', gap: 8 }}>
+                  <div style={{ borderTop: `1px solid ${BORDER}`, paddingTop: 12, display: 'flex', flexDirection: 'column', gap: 8 }}>
                     <div style={{ fontSize: 8, fontWeight: 800, color: GREEN, letterSpacing: 1, textTransform: 'uppercase' }}>Code Enhancement</div>
                     {enhancements.filter(e => e.show).map((e, i) => (
                       <div key={i} style={{ padding: '10px 13px', borderRadius: 10, background: `${e.col}0a`, border: `1px solid ${e.col}22`, animation: 'dpSpringIn 0.6s cubic-bezier(0.34,1.4,0.64,1) both' }}>
@@ -1297,7 +1297,7 @@ function CDIScreen({ progress }) {
                   </div>
                 )}
                 {p >= 0.86 && (
-                  <div style={{ display: 'flex', gap: 12, alignItems: 'center', borderTop: `1px solid rgba(255,255,255,0.07)`, paddingTop: 8, animation: 'dpBeatIn 0.5s ease both' }}>
+                  <div style={{ display: 'flex', gap: 12, alignItems: 'center', borderTop: `1px solid ${BORDER}`, paddingTop: 8, animation: 'dpBeatIn 0.5s ease both' }}>
                     {[['NABIDH ✓', INDIGO], ['DHA ✓', TEAL], ['FHIR R4 ✓', GREEN]].map(([l, c]) => (
                       <div key={l} style={{ display: 'flex', gap: 5, alignItems: 'center' }}>
                         <div style={{ width: 6, height: 6, borderRadius: '50%', background: c, boxShadow: `0 0 6px ${c}` }} />
@@ -1375,7 +1375,7 @@ function CodingScreen({ progress }) {
                     <span style={{ fontSize: 8, fontWeight: 800, color: typeColor(c.type), background: `${typeColor(c.type)}18`, border: `1px solid ${typeColor(c.type)}35`, borderRadius: 5, padding: '3px 9px', flexShrink: 0 }}>{c.type}</span>
                     {/* Confidence bar */}
                     <div style={{ width: 56, display: 'flex', flexDirection: 'column', gap: 2, flexShrink: 0 }}>
-                      <div style={{ height: 4, background: 'rgba(255,255,255,0.06)', borderRadius: 2, overflow: 'hidden' }}>
+                      <div style={{ height: 4, background: 'rgba(0,0,0,0.08)', borderRadius: 2, overflow: 'hidden' }}>
                         <div style={{ height: '100%', width: `${c.conf}%`, background: c.col, borderRadius: 2 }} />
                       </div>
                       <span style={{ fontSize: 8, fontWeight: 700, color: c.col, textAlign: 'right' }}>{c.conf}%</span>
@@ -1620,7 +1620,7 @@ function ClaimScreen({ progress }) {
           <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 6 }}>
             <div style={{ fontSize: 8, color: MUTED, fontWeight: 700, letterSpacing: 0.5, flexShrink: 0 }}>APPEAL BUILDER · ONE CLICK</div>
             {steps.map((s, i) => (
-              <div key={i} style={{ flex: 1, display: 'flex', gap: 8, alignItems: 'center', padding: '8px 10px', background: s.done ? `${s.col}12` : 'rgba(255,255,255,0.02)', border: `1px solid ${s.done ? s.col + '40' : BORDER}`, borderRadius: 8, transition: 'all 0.5s ease' }}>
+              <div key={i} style={{ flex: 1, display: 'flex', gap: 8, alignItems: 'center', padding: '8px 10px', background: s.done ? `${s.col}12` : 'rgba(0,0,0,0.02)', border: `1px solid ${s.done ? s.col + '40' : BORDER}`, borderRadius: 8, transition: 'all 0.5s ease' }}>
                 <div style={{ width: 20, height: 20, borderRadius: '50%', border: `1.5px solid ${s.done ? s.col : MUTED}`, background: s.done ? `${s.col}22` : 'transparent', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, transition: 'all 0.4s ease' }}>
                   <span style={{ fontSize: 9, color: s.done ? s.col : MUTED, fontWeight: 800 }}>{s.done ? '✓' : i + 1}</span>
                 </div>
@@ -1728,7 +1728,7 @@ function TowerScreen({ progress }) {
                 const vis  = p >= s.show;
                 const act  = spot(p, s.show, s.show + 0.18);
                 return (
-                  <div key={i} style={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center', padding: '8px 10px', borderRadius: 9, background: act ? `${s.col}12` : vis ? `${s.col}06` : 'rgba(255,255,255,0.02)', border: `1px solid ${act ? s.col + '45' : vis ? s.col + '20' : 'rgba(255,255,255,0.05)'}`, opacity: vis ? 1 : 0.2, transform: vis ? 'translateX(0)' : 'translateX(-12px)', transition: 'all 0.55s cubic-bezier(0.34,1.2,0.64,1)', boxShadow: act ? `0 0 18px ${s.col}20` : 'none' }}>
+                  <div key={i} style={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center', padding: '8px 10px', borderRadius: 9, background: act ? `${s.col}12` : vis ? `${s.col}06` : 'rgba(0,0,0,0.02)', border: `1px solid ${act ? s.col + '45' : vis ? s.col + '20' : BORDER}`, opacity: vis ? 1 : 0.2, transform: vis ? 'translateX(0)' : 'translateX(-12px)', transition: 'all 0.55s cubic-bezier(0.34,1.2,0.64,1)', boxShadow: act ? `0 0 18px ${s.col}20` : 'none' }}>
                     <div style={{ display: 'flex', gap: 7, alignItems: 'center', marginBottom: 3 }}>
                       <div style={{ width: 24, height: 24, borderRadius: '50%', background: `${s.col}20`, border: `1.5px solid ${s.col}45`, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
                         <span style={{ fontSize: 8, fontWeight: 900, color: s.col }}>{s.init}</span>
@@ -1751,7 +1751,7 @@ function TowerScreen({ progress }) {
             <div style={{ fontSize: 6.5, fontWeight: 700, color: MUTED, letterSpacing: 0.8, textAlign: 'center', textTransform: 'uppercase', marginBottom: 2 }}>AI Agents</div>
             {agents.map((ag, i) => (
               <div key={i} style={{ width: 70, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 3, opacity: ag.active ? 1 : 0.25, transition: 'opacity 0.5s, transform 0.5s', transform: ag.active ? 'scale(1)' : 'scale(0.88)' }}>
-                <div style={{ width: 40, height: 40, borderRadius: '50%', background: ag.active ? `${ag.col}20` : 'rgba(255,255,255,0.04)', border: `1.5px solid ${ag.active ? ag.col + '60' : 'rgba(255,255,255,0.08)'}`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 16, boxShadow: ag.active ? `0 0 16px ${ag.col}35` : 'none', transition: 'all 0.5s', animation: ag.active ? 'dpPulse 2s ease-in-out infinite' : 'none' }}>
+                <div style={{ width: 40, height: 40, borderRadius: '50%', background: ag.active ? `${ag.col}20` : 'rgba(0,0,0,0.04)', border: `1.5px solid ${ag.active ? ag.col + '60' : BORDER}`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 16, boxShadow: ag.active ? `0 0 16px ${ag.col}35` : 'none', transition: 'all 0.5s', animation: ag.active ? 'dpPulse 2s ease-in-out infinite' : 'none' }}>
                   {ag.icon}
                 </div>
                 <div style={{ fontSize: 6.5, fontWeight: 700, color: ag.active ? ag.col : DIM, textAlign: 'center', letterSpacing: 0.3 }}>{ag.name}</div>
@@ -1784,7 +1784,7 @@ function TowerScreen({ progress }) {
                 const vis  = p >= s.show + 0.08;
                 const act  = spot(p, s.show + 0.08, s.show + 0.28);
                 return (
-                  <div key={i} style={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center', padding: '8px 10px', borderRadius: 9, background: act ? `${s.col}12` : vis ? `${s.col}06` : 'rgba(255,255,255,0.02)', border: `1px solid ${act ? s.col + '45' : vis ? s.col + '20' : 'rgba(255,255,255,0.05)'}`, opacity: vis ? 1 : 0.15, transform: vis ? 'translateX(0)' : 'translateX(12px)', transition: 'all 0.55s cubic-bezier(0.34,1.2,0.64,1)', boxShadow: act ? `0 0 18px ${s.col}20` : 'none' }}>
+                  <div key={i} style={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center', padding: '8px 10px', borderRadius: 9, background: act ? `${s.col}12` : vis ? `${s.col}06` : 'rgba(0,0,0,0.02)', border: `1px solid ${act ? s.col + '45' : vis ? s.col + '20' : BORDER}`, opacity: vis ? 1 : 0.15, transform: vis ? 'translateX(0)' : 'translateX(12px)', transition: 'all 0.55s cubic-bezier(0.34,1.2,0.64,1)', boxShadow: act ? `0 0 18px ${s.col}20` : 'none' }}>
                     <div style={{ display: 'flex', gap: 6, alignItems: 'center', marginBottom: 4 }}>
                       <span style={{ fontSize: 7, fontWeight: 800, color: s.col, background: `${s.col}18`, border: `1px solid ${s.col}35`, borderRadius: 4, padding: '2px 8px', flexShrink: 0 }}>{s.action}</span>
                       <div style={{ fontSize: 7, color: DIM, flex: 1 }}>{s.agent}</div>
@@ -1968,8 +1968,8 @@ function SceneVisual({ scene, progress }) {
 /* ─── Intro Splash ───────────────────────────────────────────── */
 function Splash({ onPlay }) {
   return (
-    <div onClick={onPlay} style={{ position: 'absolute', inset: 0, zIndex: 30, background: 'radial-gradient(ellipse 80% 60% at 50% 45%, #eef4ff 0%, #e8edf5 70%)', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 14, cursor: 'pointer', fontFamily: 'Sora, sans-serif' }}>
-      <div style={{ position: 'absolute', inset: 0, opacity: 0.04, backgroundImage: 'linear-gradient(rgba(0,163,136,0.12) 1px,transparent 1px),linear-gradient(90deg,rgba(0,163,136,0.12) 1px,transparent 1px)', backgroundSize: '48px 48px' }} />
+    <div onClick={onPlay} style={{ position: 'absolute', inset: 0, zIndex: 30, background: 'radial-gradient(ellipse 80% 60% at 50% 45%, #f8fafc 0%, #f1f5f9 100%)', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 14, cursor: 'pointer', fontFamily: 'Sora, sans-serif' }}>
+      <div style={{ position: 'absolute', inset: 0, opacity: 0.04, backgroundImage: 'linear-gradient(rgba(100,116,139,0.07) 1px,transparent 1px),linear-gradient(90deg,rgba(100,116,139,0.07) 1px,transparent 1px)', backgroundSize: '48px 48px' }} />
       {/* Breathing ambient */}
       <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none', background: `radial-gradient(ellipse 55% 45% at 50% 50%,${TEAL}07 0%,transparent 70%)`, animation: 'dpBreath 4s ease-in-out infinite' }} />
       <div style={{ fontSize: 9, fontWeight: 700, color: `${TEAL}90`, letterSpacing: 3, textTransform: 'uppercase' }}>Clinical Intelligence Platform</div>
@@ -2012,12 +2012,12 @@ function SceneStatStrip({ scene, progress }) {
         transform: 'translateX(-50%)',
         zIndex: 15,
         display: 'flex', gap: 10, alignItems: 'center',
-        background: 'linear-gradient(135deg,rgba(2,5,18,0.96),rgba(6,10,28,0.92))',
+        background: 'rgba(255,255,255,0.92)',
         backdropFilter: 'blur(20px)',
         borderRadius: 24,
         padding: '8px 22px',
-        border: `1px solid ${scene.color}60`,
-        boxShadow: `0 0 0 1px ${scene.color}20, 0 0 28px ${scene.color}30, 0 8px 40px rgba(0,0,0,0.7), inset 0 1px 0 ${scene.color}20`,
+        border: `1px solid ${scene.color}40`,
+        boxShadow: `0 0 0 1px ${scene.color}15, 0 4px 16px ${scene.color}18, 0 4px 20px rgba(0,0,0,0.08), inset 0 1px 0 rgba(255,255,255,0.9)`,
         pointerEvents: 'none',
         animation: 'dpSpringIn 0.5s cubic-bezier(0.34,1.4,0.64,1) both',
         maxWidth: '76%', whiteSpace: 'nowrap',
@@ -2026,7 +2026,7 @@ function SceneStatStrip({ scene, progress }) {
       {/* Bloom dot */}
       <div style={{ width: 8, height: 8, borderRadius: '50%', background: scene.color, boxShadow: `0 0 12px ${scene.color}, 0 0 24px ${scene.color}80`, flexShrink: 0, animation: 'dpPulse 1.6s ease-in-out infinite' }} />
       {/* Stat — hero scale */}
-      <span style={{ fontSize: 18, fontWeight: 900, color: scene.color, fontFamily: 'Sora', letterSpacing: -0.5, textShadow: `0 0 20px ${scene.color}80` }}>
+      <span style={{ fontSize: 18, fontWeight: 900, color: scene.color, fontFamily: 'Sora', letterSpacing: -0.5 }}>
         {fired.stat}
       </span>
       {fired.sub && <span style={{ fontSize: 9, color: DIM, overflow: 'hidden', textOverflow: 'ellipsis' }}>· {fired.sub}</span>}
@@ -2217,7 +2217,7 @@ export default function DemoPlayer() {
 
             <div style={{ position: 'absolute', inset: 0, zIndex: 3, background: 'radial-gradient(ellipse 90% 80% at 50% 50%, transparent 50%, rgba(0,0,0,0.05) 100%)', pointerEvents: 'none' }} />
 
-            <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 2, zIndex: 25, background: 'rgba(0,0,0,0.3)' }}>
+            <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 2, zIndex: 25, background: 'rgba(0,0,0,0.10)' }}>
               <div style={{ height: '100%', width: `${totalPct}%`, background: `linear-gradient(90deg,${scene.color},${INDIGO})`, transition: 'width 0.15s linear' }} />
             </div>
 
