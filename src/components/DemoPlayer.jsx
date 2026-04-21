@@ -41,17 +41,17 @@ function b64ToArrayBuffer(b64) {
 }
 
 /* ─── Design tokens ─────────────────────────────────────────── */
-const TEAL   = '#00cba8';
-const BLUE   = '#0d1526';
-const AMBER  = '#f59e0b';
-const RED    = '#ef4444';
-const GREEN  = '#10b981';
-const PURPLE = '#a855f7';
-const INDIGO = '#4d8aff';
-const TXT    = '#e2e8f0';
-const DIM    = '#94a3b8';
-const MUTED  = '#475569';
-const BORDER = 'rgba(255,255,255,0.07)';
+const TEAL   = '#00a389';  // deepened slightly for light-bg contrast
+const BLUE   = '#f8fafc';  // light surface (was dark #0d1526)
+const AMBER  = '#d97706';  // deepened for light-bg contrast
+const RED    = '#dc2626';
+const GREEN  = '#059669';
+const PURPLE = '#7c3aed';
+const INDIGO = '#3b6fd4';  // deepened slightly for light-bg contrast
+const TXT    = '#0f172a';  // dark slate (was light #e2e8f0)
+const DIM    = '#475569';  // medium-dark (was light-muted #94a3b8)
+const MUTED  = '#64748b';  // subdued (was very dark #475569)
+const BORDER = 'rgba(0,0,0,0.09)';  // subtle dark border (was white)
 
 /* ─── Spotlight: is this element the current focal point? ────── */
 const spot = (p, from, to = Math.min(from + 0.20, 1)) => p >= from && p <= to;
@@ -61,10 +61,10 @@ function glow(active, color, extra = {}) {
   return {
     transition: 'all 0.55s cubic-bezier(0.34,1.2,0.64,1)',
     transform: active ? 'scale(1.035)' : 'scale(1)',
-    border: active ? `1px solid ${color}80` : `1px solid rgba(255,255,255,0.07)`,
+    border: active ? `1px solid ${color}80` : `1px solid rgba(0,0,0,0.09)`,
     boxShadow: active
-      ? `0 0 0 1px ${color}20, 0 0 22px ${color}35, 0 0 60px ${color}18, 0 8px 32px rgba(0,0,0,0.55), inset 0 1px 0 ${color}25`
-      : '0 2px 8px rgba(0,0,0,0.25)',
+      ? `0 0 0 1px ${color}20, 0 0 18px ${color}28, 0 0 40px ${color}12, 0 8px 32px rgba(0,0,0,0.12), inset 0 1px 0 ${color}25`
+      : '0 2px 8px rgba(0,0,0,0.08)',
     background: active
       ? `linear-gradient(135deg, ${color}18, ${color}08)`
       : `${color}06`,
@@ -257,7 +257,7 @@ function PatientProfileCard({ patient, progress, showFrom = 0 }) {
       {/* ── Row 3: Clinical Governance — glows when first active ── */}
       {showGovernance && (
         <div style={{
-          background: govActive ? `linear-gradient(135deg,${TEAL}14,${INDIGO}09)` : 'rgba(0,0,0,0.35)',
+          background: govActive ? `linear-gradient(135deg,${TEAL}14,${INDIGO}09)` : 'rgba(0,0,0,0.04)',
           border: `1px solid ${govActive ? `${TEAL}45` : 'rgba(255,255,255,0.05)'}`,
           borderRadius: 8, padding: '7px 10px', marginBottom: 6,
           boxShadow: govActive ? `0 0 20px ${TEAL}18, inset 0 0 12px ${TEAL}08` : 'none',
@@ -314,7 +314,7 @@ function PatientProfileCard({ patient, progress, showFrom = 0 }) {
             <div style={{ fontSize: 5.5, color: AMBER, fontWeight: 700, letterSpacing: 0.5, marginBottom: 2 }}>NEXT STEP</div>
             <div style={{ fontSize: 7.5, color: aiActive ? TXT : DIM, fontWeight: 600, transition: 'color 0.5s ease' }}>{aiProfile.next}</div>
           </div>
-          <div style={{ flex: 2, background: 'rgba(0,0,0,0.2)', border: `1px solid ${BORDER}`, borderRadius: 5, padding: '5px 8px' }}>
+          <div style={{ flex: 2, background: 'rgba(0,0,0,0.04)', border: `1px solid ${BORDER}`, borderRadius: 5, padding: '5px 8px' }}>
             <div style={{ fontSize: 5.5, color: MUTED, fontWeight: 700, letterSpacing: 0.5, marginBottom: 2 }}>CLINICAL GUIDELINE</div>
             <div style={{ fontSize: 6.5, color: DIM, fontStyle: 'italic', lineHeight: 1.4 }}>{aiProfile.guideline}</div>
           </div>
@@ -329,8 +329,8 @@ function ProductShell({ breadcrumb, color, children }) {
   const nav = ['◉','⊞','◷','⚡','⚙'];
   return (
     <div style={{ position: 'absolute', inset: 0, display: 'flex', background: BLUE, fontFamily: 'Sora,sans-serif' }}>
-      {/* Sidebar — frosted glass with gradient */}
-      <div style={{ width: 42, flexShrink: 0, background: 'linear-gradient(180deg,rgba(4,8,20,0.98) 0%,rgba(6,10,22,0.95) 100%)', borderRight: `1px solid ${BORDER}`, display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '10px 0', gap: 3, backdropFilter: 'blur(20px)' }}>
+      {/* Sidebar — light frosted */}
+      <div style={{ width: 42, flexShrink: 0, background: 'linear-gradient(180deg,#f1f5f9 0%,#e8edf5 100%)', borderRight: `1px solid ${BORDER}`, display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '10px 0', gap: 3, backdropFilter: 'blur(20px)' }}>
         {/* Logo with glow */}
         <div style={{ width: 24, height: 24, borderRadius: 7, marginBottom: 12, background: `linear-gradient(135deg,${color},${INDIGO})`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 11, fontWeight: 900, color: '#fff', boxShadow: `0 0 14px ${color}50` }}>D</div>
         {nav.map((ic, i) => (
@@ -344,19 +344,19 @@ function ProductShell({ breadcrumb, color, children }) {
       {/* Main panel */}
       <div style={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
         {/* Header bar with chrome shimmer */}
-        <div style={{ height: 34, flexShrink: 0, borderBottom: `1px solid ${BORDER}`, display: 'flex', alignItems: 'center', padding: '0 12px', gap: 6, background: 'linear-gradient(180deg,rgba(4,8,20,0.92) 0%,rgba(8,14,32,0.82) 100%)', position: 'relative', overflow: 'hidden' }}>
+        <div style={{ height: 34, flexShrink: 0, borderBottom: `1px solid ${BORDER}`, display: 'flex', alignItems: 'center', padding: '0 12px', gap: 6, background: 'linear-gradient(180deg,#ffffff 0%,#f8fafc 100%)', position: 'relative', overflow: 'hidden' }}>
           {/* Shimmer sweep */}
-          <div style={{ position: 'absolute', top: 0, left: 0, bottom: 0, width: '30%', background: 'linear-gradient(90deg,transparent,rgba(255,255,255,0.04),transparent)', animation: 'dpChromeShimmer 3.5s ease-in-out infinite', pointerEvents: 'none' }} />
+          <div style={{ position: 'absolute', top: 0, left: 0, bottom: 0, width: '30%', background: 'linear-gradient(90deg,transparent,rgba(0,0,0,0.03),transparent)', animation: 'dpChromeShimmer 3.5s ease-in-out infinite', pointerEvents: 'none' }} />
           <span style={{ fontSize: 8, color: MUTED }}>Docstribe</span>
-          <span style={{ fontSize: 8, color: '#1e293b' }}>›</span>
+          <span style={{ fontSize: 8, color: '#94a3b8' }}>›</span>
           <span style={{ fontSize: 10, fontWeight: 700, color: TXT }}>{breadcrumb}</span>
           <div style={{ flex: 1 }} />
           {/* Status dots */}
-          {[color, INDIGO, '#1e293b'].map((c, i) => <div key={i} style={{ width: 5, height: 5, borderRadius: '50%', background: c, boxShadow: i === 0 ? `0 0 6px ${c}` : 'none' }} />)}
+          {[color, INDIGO, '#e2e8f0'].map((c, i) => <div key={i} style={{ width: 5, height: 5, borderRadius: '50%', background: c, boxShadow: i === 0 ? `0 0 6px ${c}` : 'none' }} />)}
         </div>
         {/* Content area with scan-line texture */}
         <div style={{ flex: 1, overflow: 'hidden', position: 'relative' }}>
-          <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none', zIndex: 50, backgroundImage: 'repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,0.055) 2px,rgba(0,0,0,0.055) 4px)', backgroundSize: '100% 4px' }} />
+          <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none', zIndex: 50, backgroundImage: 'repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,0.018) 2px,rgba(0,0,0,0.018) 4px)', backgroundSize: '100% 4px' }} />
           {children}
         </div>
       </div>
@@ -378,11 +378,11 @@ const Badge = ({ text, color }) => (
 function StatScene({ scene, progress }) {
   const anyActive = scene.beats.some(b => spot(progress, b.at, b.at + 0.28));
   return (
-    <div style={{ position: 'absolute', inset: 0, background: 'radial-gradient(ellipse 90% 65% at 50% 45%,#030816 0%,#000 75%)', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 28 }}>
+    <div style={{ position: 'absolute', inset: 0, background: 'radial-gradient(ellipse 90% 65% at 50% 45%,#eef4ff 0%,#e2eaf8 75%)', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 28 }}>
       {/* Breathing ambient glow */}
       <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none', background: `radial-gradient(ellipse 60% 50% at 50% 50%,${TEAL}08 0%,transparent 70%)`, animation: 'dpBreath 4s ease-in-out infinite' }} />
       {/* Animated grid */}
-      <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none', backgroundImage: 'linear-gradient(rgba(0,203,168,0.5) 1px,transparent 1px),linear-gradient(90deg,rgba(0,203,168,0.5) 1px,transparent 1px)', backgroundSize: '56px 56px', animation: 'dpGridBreathe 6s ease-in-out infinite' }} />
+      <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none', backgroundImage: 'linear-gradient(rgba(0,163,136,0.12) 1px,transparent 1px),linear-gradient(90deg,rgba(0,163,136,0.12) 1px,transparent 1px)', backgroundSize: '56px 56px', animation: 'dpGridBreathe 6s ease-in-out infinite' }} />
       {/* Beat bloom flash */}
       {anyActive && (
         <div key={`bloom-${progress.toFixed(1)}`} style={{ position: 'absolute', inset: 0, pointerEvents: 'none', background: `radial-gradient(ellipse 60% 40% at 50% 50%,${TEAL}18 0%,transparent 60%)`, animation: 'dpBloom 1.8s ease-out both', zIndex: 1 }} />
@@ -442,14 +442,14 @@ function KPIScene({ scene, progress }) {
   const colors = [RED, GREEN, PURPLE];
 
   return (
-    <div style={{ position: 'absolute', inset: 0, background: 'radial-gradient(ellipse 80% 60% at 50% 40%,#060f24 0%,#000 75%)', overflow: 'hidden' }}>
+    <div style={{ position: 'absolute', inset: 0, background: 'radial-gradient(ellipse 80% 60% at 50% 40%,#eef4ff 0%,#e2eaf8 75%)', overflow: 'hidden' }}>
 
       {/* ── Phase 1: Introducing Docstribe ── */}
       <div style={{ position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 20, padding: '0 48px', opacity: introOpacity, transition: 'opacity 0.6s ease', pointerEvents: introOpacity < 0.1 ? 'none' : 'auto' }}>
 
         <div style={{ fontSize: 9, fontWeight: 700, color: `${TEAL}80`, letterSpacing: 3, textTransform: 'uppercase' }}>Clinical Intelligence · Proven at Scale</div>
 
-        <div style={{ fontSize: 54, fontWeight: 900, background: `linear-gradient(135deg,#fff 35%,${TEAL} 65%,${INDIGO})`, WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', letterSpacing: -1.5, lineHeight: 1, animation: 'dpSpringIn 0.8s cubic-bezier(0.34,1.4,0.64,1) both' }}>
+        <div style={{ fontSize: 54, fontWeight: 900, background: `linear-gradient(135deg,#0f172a 35%,${TEAL} 65%,${INDIGO})`, WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', letterSpacing: -1.5, lineHeight: 1, animation: 'dpSpringIn 0.8s cubic-bezier(0.34,1.4,0.64,1) both' }}>
           Docstribe
         </div>
 
@@ -629,7 +629,7 @@ function EligChipRow({ chips, apisActive, apiNames, p }) {
         {apiNames.map((api) => {
           const apiDone = p >= chips[0].show;
           return (
-            <div key={api} style={{ display: 'flex', gap: 5, alignItems: 'center', background: `rgba(0,0,0,0.22)`, border: `1px solid ${apiDone ? TEAL + '35' : BORDER}`, borderRadius: 20, padding: '3px 10px', transition: 'border-color 0.4s', animation: 'dpBeatIn 0.4s ease both' }}>
+            <div key={api} style={{ display: 'flex', gap: 5, alignItems: 'center', background: `rgba(0,0,0,0.04)`, border: `1px solid ${apiDone ? TEAL + '35' : BORDER}`, borderRadius: 20, padding: '3px 10px', transition: 'border-color 0.4s', animation: 'dpBeatIn 0.4s ease both' }}>
               <div style={{ width: 5, height: 5, borderRadius: '50%', background: apisActive ? TEAL : (apiDone ? GREEN : MUTED), animation: apisActive ? 'dpPulse 0.9s ease infinite' : 'none', boxShadow: apisActive ? `0 0 6px ${TEAL}` : 'none', transition: 'background 0.4s, box-shadow 0.4s' }} />
               <span style={{ fontSize: 7, fontWeight: 700, color: apisActive ? TEAL : (apiDone ? GREEN : DIM), transition: 'color 0.4s' }}>{api}</span>
               {apisActive && <span style={{ fontSize: 7, color: `${TEAL}80` }}>···</span>}
@@ -695,7 +695,7 @@ function EligibilityScreen({ progress }) {
         </div>
 
         {/* ── Patient byte ── */}
-        <div style={{ display: 'flex', gap: 14, alignItems: 'center', background: 'rgba(0,0,0,0.22)', border: `1px solid ${cleared ? GREEN + '40' : BORDER}`, borderRadius: 14, padding: '14px 18px', transition: 'border-color 0.6s', flexShrink: 0 }}>
+        <div style={{ display: 'flex', gap: 14, alignItems: 'center', background: 'rgba(0,0,0,0.04)', border: `1px solid ${cleared ? GREEN + '40' : BORDER}`, borderRadius: 14, padding: '14px 18px', transition: 'border-color 0.6s', flexShrink: 0 }}>
           <div style={{ width: 52, height: 52, borderRadius: '50%', background: `${GREEN}22`, border: `2.5px solid ${GREEN}55`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 24, boxShadow: `0 0 18px ${GREEN}30`, flexShrink: 0 }}>🩺</div>
           <div>
             <div style={{ fontSize: 14, fontWeight: 800, color: TXT, marginBottom: 3 }}>F · 42 yrs · Endocrinology OPD</div>
@@ -843,7 +843,7 @@ function AmbientScreen({ progress }) {
 
       {/* ── Mic intro phase ── */}
       {micOpacity > 0.01 && (
-        <div style={{ position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 16, background: 'radial-gradient(ellipse 70% 60% at 50% 45%,#04091e 0%,#000 80%)', opacity: micOpacity, transition: 'opacity 0.4s ease', zIndex: 10, pointerEvents: micOpacity < 0.05 ? 'none' : 'auto' }}>
+        <div style={{ position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 16, background: 'radial-gradient(ellipse 70% 60% at 50% 45%,#eef4ff 0%,#e8edf5 80%)', opacity: micOpacity, transition: 'opacity 0.4s ease', zIndex: 10, pointerEvents: micOpacity < 0.05 ? 'none' : 'auto' }}>
           <div style={{ position: 'absolute', inset: 0, background: `radial-gradient(ellipse 50% 40% at 50% 50%,${INDIGO}08 0%,transparent 70%)`, animation: 'dpBreath 3s ease-in-out infinite', pointerEvents: 'none' }} />
           <div style={{ position: 'relative', zIndex: 1 }}>
             <div style={{ width: 64, height: 64, borderRadius: '50%', background: `linear-gradient(135deg,${INDIGO}30,${TEAL}18)`, border: `2px solid ${INDIGO}60`, display: 'flex', alignItems: 'center', justifyContent: 'center', animation: 'dpPulse 1.4s ease-in-out infinite', boxShadow: `0 0 40px ${INDIGO}40, 0 0 80px ${INDIGO}20` }}>
@@ -911,7 +911,7 @@ function AmbientScreen({ progress }) {
           <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 6, overflow: 'hidden' }}>
 
             {/* Live transcript — highlights when being spoken */}
-            <div style={{ background: `rgba(0,0,0,0.28)`, border: `1px solid ${highlightTranscript ? `${INDIGO}50` : BORDER}`, borderRadius: 7, padding: '7px 9px', flexShrink: 0, transition: 'border-color 0.5s', boxShadow: highlightTranscript ? `0 0 12px ${INDIGO}15` : 'none' }}>
+            <div style={{ background: `rgba(0,0,0,0.04)`, border: `1px solid ${highlightTranscript ? `${INDIGO}50` : BORDER}`, borderRadius: 7, padding: '7px 9px', flexShrink: 0, transition: 'border-color 0.5s', boxShadow: highlightTranscript ? `0 0 12px ${INDIGO}15` : 'none' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 5 }}>
                 <div style={{ fontSize: 7, fontWeight: 700, color: highlightTranscript ? INDIGO : MUTED, letterSpacing: 0.4, transition: 'color 0.4s' }}>LIVE TRANSCRIPT</div>
                 {highlightTranscript && <div style={{ fontSize: 6, fontWeight: 700, color: RED, animation: 'dpPulse 1s ease infinite' }}>● REC</div>}
@@ -1122,7 +1122,7 @@ function CDIScreen({ progress }) {
 
       {/* ── Phase 1: Mic intro ── */}
       {micOpacity > 0.01 && (
-        <div style={{ position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 18, background: 'radial-gradient(ellipse 70% 60% at 50% 45%,#04091e 0%,#000 80%)', opacity: micOpacity, transition: 'opacity 0.35s ease', zIndex: 10, pointerEvents: micOpacity < 0.05 ? 'none' : 'auto' }}>
+        <div style={{ position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 18, background: 'radial-gradient(ellipse 70% 60% at 50% 45%,#eef4ff 0%,#e8edf5 80%)', opacity: micOpacity, transition: 'opacity 0.35s ease', zIndex: 10, pointerEvents: micOpacity < 0.05 ? 'none' : 'auto' }}>
           <div style={{ position: 'absolute', inset: 0, background: `radial-gradient(ellipse 50% 40% at 50% 50%,${INDIGO}08 0%,transparent 70%)`, animation: 'dpBreath 3s ease-in-out infinite', pointerEvents: 'none' }} />
           {/* Mic with pulse rings */}
           <div style={{ position: 'relative', zIndex: 1 }}>
@@ -1170,7 +1170,7 @@ function CDIScreen({ progress }) {
             </div>
           </div>
           {/* IR-DRG badge */}
-          <div style={{ background: locked ? `${PURPLE}18` : 'rgba(0,0,0,0.28)', border: `1px solid ${locked ? PURPLE + '50' : BORDER}`, borderRadius: 10, padding: '5px 16px', textAlign: 'center', flexShrink: 0, transition: 'all 0.6s' }}>
+          <div style={{ background: locked ? `${PURPLE}18` : 'rgba(0,0,0,0.04)', border: `1px solid ${locked ? PURPLE + '50' : BORDER}`, borderRadius: 10, padding: '5px 16px', textAlign: 'center', flexShrink: 0, transition: 'all 0.6s' }}>
             <div style={{ fontSize: 7.5, color: MUTED, letterSpacing: 0.8, marginBottom: 1 }}>IR-DRG</div>
             <div style={{ fontSize: 26, fontWeight: 900, color: locked ? PURPLE : DIM, fontFamily: 'Sora', lineHeight: 1, transition: 'color 0.8s', textShadow: locked ? `0 0 24px ${PURPLE}70` : 'none' }}>
               {locked ? <CountUp value={locked ? '1.04' : '0.82'} duration={600} key={locked ? 'locked' : 'base'} /> : '0.82'}
@@ -1342,7 +1342,7 @@ function CodingScreen({ progress }) {
             <div style={{ fontSize: 9, fontWeight: 700, color: PURPLE, letterSpacing: 1, textTransform: 'uppercase' }}>Inpatient AI Coding · IR-DRG Live</div>
             <div style={{ fontSize: 8.5, color: DIM, marginTop: 2 }}>K.A. · 58 yrs · Respiratory IPD · Thiqa SEHA · MRN: UH-2024-5512</div>
           </div>
-          <div style={{ background: showDRG ? `${PURPLE}18` : 'rgba(0,0,0,0.25)', border: `1px solid ${showDRG ? PURPLE + '50' : BORDER}`, borderRadius: 10, padding: '6px 18px', textAlign: 'center', flexShrink: 0, transition: 'all 0.7s' }}>
+          <div style={{ background: showDRG ? `${PURPLE}18` : 'rgba(0,0,0,0.03)', border: `1px solid ${showDRG ? PURPLE + '50' : BORDER}`, borderRadius: 10, padding: '6px 18px', textAlign: 'center', flexShrink: 0, transition: 'all 0.7s' }}>
             <div style={{ fontSize: 8, color: MUTED, letterSpacing: 0.8, marginBottom: 1 }}>IR-DRG WEIGHT</div>
             <div style={{ fontSize: 30, fontWeight: 900, color: showDRG ? PURPLE : DIM, fontFamily: 'Sora', lineHeight: 1, transition: 'color 0.8s', textShadow: showDRG ? `0 0 26px ${PURPLE}70` : 'none' }}>
               {showDRG ? <CountUp value="1.34" duration={800} key="drg" /> : '0.94'}
@@ -1547,7 +1547,7 @@ function DenialScreen({ progress }) {
 
         {/* ── Appeal Snapshot — product transition showing one-click recovery ── */}
         {progress >= 0.76 && (
-          <div style={{ position: 'relative', background: 'rgba(0,0,0,0.25)', border: `1px solid ${TEAL}30`, borderRadius: 10, padding: '10px 14px', animation: 'dpSpringIn 0.65s cubic-bezier(0.34,1.2,0.64,1) both', overflow: 'hidden' }}>
+          <div style={{ position: 'relative', background: 'rgba(0,0,0,0.03)', border: `1px solid ${TEAL}30`, borderRadius: 10, padding: '10px 14px', animation: 'dpSpringIn 0.65s cubic-bezier(0.34,1.2,0.64,1) both', overflow: 'hidden' }}>
             {/* Subtle shimmer sweep */}
             <div style={{ position: 'absolute', inset: 0, background: `linear-gradient(90deg, transparent 0%, ${TEAL}08 50%, transparent 100%)`, animation: 'dpChromeShimmer 2.4s ease-in-out infinite', pointerEvents: 'none' }} />
             <div style={{ fontSize: 7.5, fontWeight: 800, color: TEAL, letterSpacing: 0.8, marginBottom: 8, textTransform: 'uppercase' }}>One-Click Recovery · Patient F.H. · Daman CARC 97</div>
@@ -1880,7 +1880,7 @@ function DashboardScreen({ progress }) {
         {/* Brand wordmark — always at the TOP so it never overlaps the stat strip */}
         {headerShow && (
           <div style={{ flexShrink: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 5, animation: 'dpBeatIn 0.9s cubic-bezier(0.34,1.2,0.64,1) both' }}>
-            <div style={{ fontSize: 30, fontWeight: 900, fontFamily: 'Sora', background: `linear-gradient(135deg,#fff 20%,${TEAL} 55%,${INDIGO})`, WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', letterSpacing: -1.5, lineHeight: 1 }}>Docstribe</div>
+            <div style={{ fontSize: 30, fontWeight: 900, fontFamily: 'Sora', background: `linear-gradient(135deg,#0f172a 20%,${TEAL} 55%,${INDIGO})`, WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', letterSpacing: -1.5, lineHeight: 1 }}>Docstribe</div>
             <div style={{ display: 'flex', gap: 6, alignItems: 'center', flexWrap: 'wrap', justifyContent: 'center' }}>
               {[['Clinical Intelligence', TEAL], ['Financial Integrity', INDIGO], ['Built for You', PURPLE]].map(([t, c], i) => (
                 <span key={i} style={{ fontSize: 8, fontWeight: 700, color: c, background: `${c}14`, border: `1px solid ${c}30`, borderRadius: 20, padding: '3px 10px' }}>{t}</span>
@@ -1968,12 +1968,12 @@ function SceneVisual({ scene, progress }) {
 /* ─── Intro Splash ───────────────────────────────────────────── */
 function Splash({ onPlay }) {
   return (
-    <div onClick={onPlay} style={{ position: 'absolute', inset: 0, zIndex: 30, background: 'radial-gradient(ellipse 80% 60% at 50% 45%, #06102a 0%, #000 70%)', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 14, cursor: 'pointer', fontFamily: 'Sora, sans-serif' }}>
-      <div style={{ position: 'absolute', inset: 0, opacity: 0.04, backgroundImage: 'linear-gradient(rgba(0,203,168,0.3) 1px,transparent 1px),linear-gradient(90deg,rgba(0,203,168,0.3) 1px,transparent 1px)', backgroundSize: '48px 48px' }} />
+    <div onClick={onPlay} style={{ position: 'absolute', inset: 0, zIndex: 30, background: 'radial-gradient(ellipse 80% 60% at 50% 45%, #eef4ff 0%, #e8edf5 70%)', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 14, cursor: 'pointer', fontFamily: 'Sora, sans-serif' }}>
+      <div style={{ position: 'absolute', inset: 0, opacity: 0.04, backgroundImage: 'linear-gradient(rgba(0,163,136,0.12) 1px,transparent 1px),linear-gradient(90deg,rgba(0,163,136,0.12) 1px,transparent 1px)', backgroundSize: '48px 48px' }} />
       {/* Breathing ambient */}
       <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none', background: `radial-gradient(ellipse 55% 45% at 50% 50%,${TEAL}07 0%,transparent 70%)`, animation: 'dpBreath 4s ease-in-out infinite' }} />
       <div style={{ fontSize: 9, fontWeight: 700, color: `${TEAL}90`, letterSpacing: 3, textTransform: 'uppercase' }}>Clinical Intelligence Platform</div>
-      <div style={{ fontSize: 44, fontWeight: 900, background: `linear-gradient(135deg,#fff 40%,${TEAL})`, WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', letterSpacing: -1.5, lineHeight: 1 }}>Docstribe</div>
+      <div style={{ fontSize: 44, fontWeight: 900, background: `linear-gradient(135deg,#0f172a 40%,${TEAL})`, WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', letterSpacing: -1.5, lineHeight: 1 }}>Docstribe</div>
       <div style={{ fontSize: 12, fontWeight: 600, color: TXT, textAlign: 'center', maxWidth: 460, lineHeight: 1.65 }}>
         Deployed across the US, UAE &amp; India — personalized clinical intelligence<br />
         for every patient, every payer, every physician.
@@ -2038,7 +2038,7 @@ function SceneStatStrip({ scene, progress }) {
 /* Caption now renders BELOW the video — no overlap with any screen */
 function Caption({ sentence }) {
   return (
-    <div key={sentence} style={{ textAlign: 'center', fontSize: 11, fontFamily: 'Sora', color: 'rgba(255,255,255,0.42)', fontStyle: 'italic', lineHeight: 1.55, animation: 'dpFadeCaption 0.35s ease both' }}>
+    <div key={sentence} style={{ textAlign: 'center', fontSize: 11, fontFamily: 'Sora', color: 'rgba(0,0,0,0.50)', fontStyle: 'italic', lineHeight: 1.55, animation: 'dpFadeCaption 0.35s ease both' }}>
       {highlightCaption(sentence)}
     </div>
   );
@@ -2199,9 +2199,9 @@ export default function DemoPlayer() {
       </div>
 
       <div style={{ maxWidth: 1080, margin: '0 auto', position: 'relative' }}>
-        <div style={{ position: 'absolute', inset: -2, borderRadius: 14, boxShadow: `0 0 80px ${scene.color}14, 0 0 140px rgba(0,0,0,0.7)`, pointerEvents: 'none', zIndex: 0 }} />
+        <div style={{ position: 'absolute', inset: -2, borderRadius: 14, boxShadow: `0 0 40px ${scene.color}18, 0 8px 30px rgba(0,0,0,0.08)`, pointerEvents: 'none', zIndex: 0 }} />
 
-        <div style={{ position: 'relative', width: '100%', paddingTop: '56.25%', borderRadius: 12, overflow: 'hidden', border: `1px solid rgba(255,255,255,0.06)`, boxShadow: '0 24px 80px rgba(0,0,0,0.75)', background: '#000' }}>
+        <div style={{ position: 'relative', width: '100%', paddingTop: '56.25%', borderRadius: 12, overflow: 'hidden', border: `1px solid rgba(0,0,0,0.08)`, boxShadow: '0 8px 32px rgba(0,0,0,0.10)', background: '#f8fafc' }}>
           <div style={{ position: 'absolute', inset: 0, cursor: splashDone && started ? 'pointer' : 'default' }} onClick={handleViewportClick}>
             {!splashDone && <Splash onPlay={handleFirstPlay} />}
 
@@ -2215,7 +2215,7 @@ export default function DemoPlayer() {
               <SceneVisual scene={scene} progress={progress} />
             </div>
 
-            <div style={{ position: 'absolute', inset: 0, zIndex: 3, background: 'radial-gradient(ellipse 90% 80% at 50% 50%, transparent 50%, rgba(0,0,0,0.4) 100%)', pointerEvents: 'none' }} />
+            <div style={{ position: 'absolute', inset: 0, zIndex: 3, background: 'radial-gradient(ellipse 90% 80% at 50% 50%, transparent 50%, rgba(0,0,0,0.05) 100%)', pointerEvents: 'none' }} />
 
             <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 2, zIndex: 25, background: 'rgba(0,0,0,0.3)' }}>
               <div style={{ height: '100%', width: `${totalPct}%`, background: `linear-gradient(90deg,${scene.color},${INDIGO})`, transition: 'width 0.15s linear' }} />
@@ -2242,8 +2242,8 @@ export default function DemoPlayer() {
 
             {/* Nav buttons — bottom right, no play/pause */}
             <div style={{ position: 'absolute', bottom: 16, right: 14, zIndex: 25, display: 'flex', gap: 5 }} onClick={e => e.stopPropagation()}>
-              <button onClick={() => idx > 0 && goTo(idx - 1)} disabled={idx === 0} style={{ width: 28, height: 28, borderRadius: 6, border: `1px solid ${BORDER}`, background: 'rgba(0,0,0,0.68)', color: idx === 0 ? '#1e293b' : DIM, fontSize: 15, cursor: idx === 0 ? 'default' : 'pointer', backdropFilter: 'blur(10px)', display: 'flex', alignItems: 'center', justifyContent: 'center', transition: 'color 0.2s' }}>‹</button>
-              <button onClick={() => idx < SCENES.length - 1 && goTo(idx + 1)} disabled={idx === SCENES.length - 1} style={{ width: 28, height: 28, borderRadius: 6, border: `1px solid ${BORDER}`, background: 'rgba(0,0,0,0.68)', color: idx === SCENES.length - 1 ? '#1e293b' : DIM, fontSize: 15, cursor: idx === SCENES.length - 1 ? 'default' : 'pointer', backdropFilter: 'blur(10px)', display: 'flex', alignItems: 'center', justifyContent: 'center', transition: 'color 0.2s' }}>›</button>
+              <button onClick={() => idx > 0 && goTo(idx - 1)} disabled={idx === 0} style={{ width: 28, height: 28, borderRadius: 6, border: `1px solid ${BORDER}`, background: 'rgba(255,255,255,0.88)', color: idx === 0 ? '#cbd5e1' : DIM, fontSize: 15, cursor: idx === 0 ? 'default' : 'pointer', backdropFilter: 'blur(10px)', display: 'flex', alignItems: 'center', justifyContent: 'center', transition: 'color 0.2s', boxShadow: '0 1px 4px rgba(0,0,0,0.10)' }}>‹</button>
+              <button onClick={() => idx < SCENES.length - 1 && goTo(idx + 1)} disabled={idx === SCENES.length - 1} style={{ width: 28, height: 28, borderRadius: 6, border: `1px solid ${BORDER}`, background: 'rgba(255,255,255,0.88)', color: idx === SCENES.length - 1 ? '#cbd5e1' : DIM, fontSize: 15, cursor: idx === SCENES.length - 1 ? 'default' : 'pointer', backdropFilter: 'blur(10px)', display: 'flex', alignItems: 'center', justifyContent: 'center', transition: 'color 0.2s', boxShadow: '0 1px 4px rgba(0,0,0,0.10)' }}>›</button>
             </div>
           </div>
         </div>
@@ -2258,7 +2258,7 @@ export default function DemoPlayer() {
             const active = i === idx;
             const past   = i < idx;
             return (
-              <button key={i} onClick={() => goTo(i)} title={s.title} style={{ height: 5, width: active ? 20 : 5, borderRadius: 3, border: 'none', padding: 0, cursor: 'pointer', background: active ? s.color : past ? `${s.color}55` : 'rgba(255,255,255,0.12)', boxShadow: active ? `0 0 8px ${s.color}80` : 'none', transition: 'all 0.3s ease', flexShrink: 0 }} />
+              <button key={i} onClick={() => goTo(i)} title={s.title} style={{ height: 5, width: active ? 20 : 5, borderRadius: 3, border: 'none', padding: 0, cursor: 'pointer', background: active ? s.color : past ? `${s.color}55` : 'rgba(0,0,0,0.15)', boxShadow: active ? `0 0 8px ${s.color}80` : 'none', transition: 'all 0.3s ease', flexShrink: 0 }} />
             );
           })}
         </div>
