@@ -97,7 +97,7 @@ const SCENES = [
   {
     id: 1, type: 'stat', color: TEAL,
     title: 'The Revenue Gap',
-    vo: "In the UAE, twelve to eighteen percent of every hospital claim is denied. Sixty to seventy percent — entirely preventable. Four gaps: documentation, authorization, coding, claim edits. Someone has to close it.",
+    vo: "In the UAE, between twelve and eighteen percent of every hospital claim comes back denied. And sixty to seventy percent of those denials were entirely preventable. They trace back, every single time, to the same four failure points — how clinical notes are documented, whether authorizations are in place before care begins, how accurately codes reflect the encounter, and whether claims are validated before they go out. Four gaps. Costing your hospital millions. Someone has to close them.",
     beats: [
       { at: 0.04, stat: '12–18%',       sub: 'UAE hospital claims denied on first submission' },
       { at: 0.38, stat: '60–70%',       sub: 'of those denials entirely preventable' },
@@ -108,7 +108,7 @@ const SCENES = [
   {
     id: 2, type: 'kpi', color: TEAL,
     title: 'Introducing Docstribe',
-    vo: "Docstribe. Thirty years of clinical practice. A hundred hospitals. Ten million lives. That gap you just saw — we close it. Contractually. Denials fall thirty percent. Clean claim rate, ninety-nine percent. CMI up by point fifteen. Sixty days. Guaranteed.",
+    vo: "That's what Docstribe was built for. Thirty years of clinical practice, a hundred hospitals across the US, the UAE, and India, and ten million patient lives managed across all of them. We built this from the clinical side of these problems — and we close those gaps contractually. Denials fall by thirty percent. Clean claim rates reach ninety-nine percent. Case mix index rises by point fifteen. All within sixty days. Guaranteed.",
     beats: [
       { at: 0.04, stat: 'Docstribe',      sub: 'Clinical intelligence · clinician-built' },
       { at: 0.22, stat: '100+ Hospitals', sub: 'US · UAE · India · live deployments' },
@@ -122,7 +122,7 @@ const SCENES = [
     id: 4, type: 'product', color: GREEN,
     title: 'Pre-Visit Intelligence',
     breadcrumb: 'Eligibility & Pre-Authorisation',
-    vo: "From the time a patient walks in, our intelligence maps every element from their eligibility profile — coverage tier, co-pay, network status, active authorisations — pulled directly from the payer API, in real time. Before they reach the consultation desk, every financial and clinical variable is already confirmed. No phone calls. No manual lookups. No surprises.",
+    vo: "The moment a patient walks through your door, Docstribe is already running. Coverage tier, co-pay, network status, active authorisations — all pulled live from the payer API, before the patient reaches the consultation desk. By the time the physician opens the chart, eligibility is fully confirmed. No calls to the insurer. No manual cross-checks. No surprises at the point of care.",
     beats: [
       { at: 0.10, stat: 'Profile mapped',  sub: 'coverage · co-pay · network · authorisations · live' },
       { at: 0.36, stat: 'Eligible ✓',      sub: 'Daman Enhanced · co-pay AED 25 · In-network' },
@@ -134,7 +134,7 @@ const SCENES = [
     id: 6, type: 'product', color: AMBER,
     title: 'Clinical Intelligence',
     breadcrumb: 'Ambient Scribe · CDI',
-    vo: "Our ambient solution listens to the physician-patient encounter — not just to structure the note, but to build a holistic patient profile. Risk, next steps, codes — all grounded in clinical governance. When a documentation gap is detected, a CDI query is auto-raised. The physician answers it in real time. Documentation tightens. Charge capture improves. Before the encounter ends.",
+    vo: "Docstribe listens to the physician-patient encounter in real time — not just to transcribe, but to build a complete clinical picture. Risk stratification, comorbidities, next steps, ICD and CPT codes, all structured automatically and grounded in clinical governance. And when a documentation gap surfaces, Docstribe raises a CDI query on the spot. The physician answers in real time, the code gets corrected, and the charge is captured — before the encounter is even over.",
     beats: [
       { at: 0.06, stat: 'Listens live',          sub: 'physician-patient encounter · ambient · passive' },
       { at: 0.28, stat: 'Holistic profile built', sub: 'risk · next steps · codes · governance · real time' },
@@ -146,7 +146,7 @@ const SCENES = [
     id: 7, type: 'product', color: PURPLE,
     title: 'AI-Powered Coding',
     breadcrumb: 'ICD-10-CM · Smart Coding Engine',
-    vo: "Before a claim goes for submission, all payer edits — NCCI and MUE — are applied. Then IR-DRG is calculated dynamically, based on CC and MCC capture. Every complication documented today lifts the weight today. Weight locked before discharge. Significant uplift — per case, every case.",
+    vo: "Before any claim leaves the system, Docstribe runs every applicable payer edit — NCCI and MUE validations, applied automatically. And as complications are captured during the admission, the IR-DRG is recalculated in real time. Every CC and MCC documented today changes the DRG weight today. By the time the patient is discharged, the weight is locked, the code is clean, and the revenue is fully secured.",
     beats: [
       { at: 0.08, stat: 'NCCI + MUE applied',    sub: 'payer edits matched · codes validated before send' },
       { at: 0.36, stat: 'CC/MCC auto-captured',  sub: 'every complication documented before discharge' },
@@ -159,7 +159,7 @@ const SCENES = [
     title: 'Denial Prevention & Recovery',
     breadcrumb: 'Payer Contract Intelligence · Appeal Generator',
     // Merged denial intel + one-click recovery
-    vo: "The system goes deeper — reading the claim language payer by payer, batch by batch. Every denial has a pattern. Docstribe maps it — sixty-seven to ninety-one percent recoverable before the claim even goes out. And when a denial does land, one click. Contract read, clause found, appeal written. Thirty seconds. AED nineteen hundred, recovered.",
+    vo: "Docstribe reads every claim through the lens of each payer's contract — batch by batch, rule by rule. Denials have patterns, and we map every one of them. Between sixty-seven and ninety-one percent of what would be denied can be caught and corrected before the claim even goes out. And when one does slip through, a single click pulls the contract, matches the clause, and drafts the appeal. Thirty seconds — not three weeks.",
     beats: [
       { at: 0.08, stat: 'Per payer · per batch', sub: 'Daman · Thiqa · AXA Gulf · Oman Insurance' },
       { at: 0.46, stat: '67–91% recoverable',    sub: 'pre-submission · flagged before send' },
@@ -172,7 +172,7 @@ const SCENES = [
     title: 'Clinical Engagement & Closing',
     breadcrumb: 'Service Line Growth · Clinical Engagement',
     // Folds in closing sentiment from removed scene 11
-    vo: "Your ops team cannot watch every chart. Docstribe does. Oxygen dropping. Labs pointing to a DRG escalation. Pre-auth ready for systemic therapy. Four patients surfaced, live, today — significant revenue, captured automatically. Docstribe is not a generic intelligence platform. It learns your hospital, your payers, your physicians — and gets sharper with every single claim.",
+    vo: "Your ops team cannot watch every chart. Docstribe can. It sees a respiratory patient's oxygen levels slipping, catches labs that signal a DRG escalation in cardiology, flags a systemic therapy pre-auth ready to go in oncology — all simultaneously, all in real time. Four patients, surfaced automatically, today. And here's what makes this different: Docstribe doesn't stay generic. It learns your hospital, your payer mix, your physicians — and it gets sharper with every claim it touches.",
     beats: [
       { at: 0.10, stat: 'Ops queue · live',      sub: 'clinical signals → revenue action · Day Zero' },
       { at: 0.32, stat: '4 alerts · now',         sub: 'Respiratory · Cardiology · Neurology · Oncology' },
