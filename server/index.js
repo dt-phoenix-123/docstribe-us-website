@@ -418,12 +418,12 @@ const UAE_DEMO_SCENES = [
   {
     id: 6, timecode: '0:42–1:00', journeyStage: 'ambient-cdi',
     title: 'Clinical Intelligence',
-    voText: 'Docstribe listens to the physician-patient encounter in real time — not just to transcribe, but to build a complete clinical picture. Risk stratification, comorbidities, next steps, ICD and CPT codes, all structured automatically and grounded in clinical governance. And when a documentation gap surfaces, Docstribe raises a CDI query on the spot. The physician answers in real time, the code gets corrected, and the charge is captured — before the encounter is even over.',
+    voText: "While the doctor sees the patient, Docstribe is already working. It reads every clinical signal and maps the gaps. A Nephrology referral — not ordered. Jardiance — not prescribed. A follow-up HbA1c — not scheduled. Three actionable opportunities, surfaced before the patient leaves the room. Then the CDI query fires. The physician responds in five seconds. The code is corrected. Four thousand two hundred dirhams — captured at point of care.",
   },
   {
     id: 7, timecode: '1:00–1:14', journeyStage: 'coding',
     title: 'AI-Powered Coding',
-    voText: 'Before any claim leaves the system, Docstribe runs every applicable payer edit — NCCI and MUE validations, applied automatically. And as complications are captured during the admission, the IR-DRG is recalculated in real time. Every CC and MCC documented today changes the DRG weight today. By the time the patient is discharged, the weight is locked, the code is clean, and the revenue is fully secured.',
+    voText: "Every diagnosis carries an ICD code. Every procedure, a CPT. Together they drive your IR-DRG weight — the multiplier that determines what your hospital gets paid per admission. Docstribe sequences and validates every one — running NCCI and MUE checks automatically. The weight lifts from zero point nine four to one point three four. Eighteen thousand four hundred dirhams — per case. That is what nothing missed looks like.",
   },
   {
     id: 8, timecode: '1:14–1:32', journeyStage: 'denial-recovery',

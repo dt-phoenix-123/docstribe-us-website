@@ -134,7 +134,7 @@ const SCENES = [
     id: 6, type: 'product', color: AMBER,
     title: 'Clinical Intelligence',
     breadcrumb: 'Ambient Scribe · CDI',
-    vo: "Docstribe listens to the physician-patient encounter in real time — not just to transcribe, but to build a complete clinical picture. Risk stratification, comorbidities, next steps, ICD and CPT codes, all structured automatically and grounded in clinical governance. And when a documentation gap surfaces, Docstribe raises a CDI query on the spot. The physician answers in real time, the code gets corrected, and the charge is captured — before the encounter is even over.",
+    vo: "While the doctor sees the patient, Docstribe is already working. It reads every clinical signal and maps the gaps. A Nephrology referral — not ordered. Jardiance — not prescribed. A follow-up HbA1c — not scheduled. Three actionable opportunities, surfaced before the patient leaves the room. Then the CDI query fires. The physician responds in five seconds. The code is corrected. Four thousand two hundred dirhams — captured at point of care.",
     beats: [
       { at: 0.06, stat: 'Listens live',          sub: 'physician-patient encounter · ambient · passive' },
       { at: 0.28, stat: 'Holistic profile built', sub: 'risk · next steps · codes · governance · real time' },
@@ -146,7 +146,7 @@ const SCENES = [
     id: 7, type: 'product', color: PURPLE,
     title: 'AI-Powered Coding',
     breadcrumb: 'ICD-10-CM · Smart Coding Engine',
-    vo: "Before any claim leaves the system, Docstribe runs every applicable payer edit — NCCI and MUE validations, applied automatically. And as complications are captured during the admission, the IR-DRG is recalculated in real time. Every CC and MCC documented today changes the DRG weight today. By the time the patient is discharged, the weight is locked, the code is clean, and the revenue is fully secured.",
+    vo: "Every diagnosis carries an ICD code. Every procedure, a CPT. Together they drive your IR-DRG weight — the multiplier that determines what your hospital gets paid per admission. Docstribe sequences and validates every one — running NCCI and MUE checks automatically. The weight lifts from zero point nine four to one point three four. Eighteen thousand four hundred dirhams — per case. That is what nothing missed looks like.",
     beats: [
       { at: 0.08, stat: 'NCCI + MUE applied',    sub: 'payer edits matched · codes validated before send' },
       { at: 0.36, stat: 'CC/MCC auto-captured',  sub: 'every complication documented before discharge' },
@@ -1356,6 +1356,11 @@ function CDIScreen({ progress }) {
   const contentOpacity = p < 0.15 ? 0 : p > 0.22 ? 1 : (p - 0.15) / 0.07;
   const isListening    = p >= 0.06 && p < 0.18;
 
+  const signalShow = p >= 0.22;       // signal assessment grid
+  const opp1Show   = p >= 0.35;       // Nephrology referral card
+  const opp2Show   = p >= 0.43;       // Jardiance order card
+  const opp3Show   = p >= 0.51;       // HbA1c retest card
+
   const highlightDiag  = p >= 0.22 && p < 0.36;
   const highlightVital = p >= 0.32 && p < 0.46;
   const highlightGov   = p >= 0.42 && p < 0.56;
@@ -1453,7 +1458,7 @@ function CDIScreen({ progress }) {
           <div style={{ flex: 1 }}>
             <div style={{ fontSize: 9, fontWeight: 700, color: AMBER, letterSpacing: 0.8, textTransform: 'uppercase' }}>Clinical Intelligence · Ambient Scribe + CDI</div>
             <div style={{ fontSize: 8, color: DIM, marginTop: 1 }}>
-              {drawerOpen ? 'CDI query surfaced automatically — ICD captured at point of care' : 'Patient profile live · risk mapped · governance active'}
+              {drawerOpen ? 'CDI query surfaced automatically — ICD captured at point of care' : opp1Show ? '3 clinical gaps surfaced · referral · medication · follow-up' : signalShow ? 'Signals assessed · risk mapped · gaps being surfaced…' : 'Patient profile live · reading clinical signals…'}
             </div>
           </div>
           {/* IR-DRG badge */}
@@ -1471,11 +1476,73 @@ function CDIScreen({ progress }) {
           <PatientProfileCard patient={patient} progress={p} showFrom={0.16} />
         </div>
 
-        {/* Phase indicator */}
-        {p >= 0.16 && !drawerOpen && (
-          <div style={{ display: 'flex', gap: 5, alignItems: 'center', background: `${AMBER}10`, border: `1px solid ${AMBER}28`, borderRadius: 7, padding: '4px 10px', flexShrink: 0, animation: 'dpBeatIn 0.4s ease both' }}>
-            <div style={{ width: 5, height: 5, borderRadius: '50%', background: AMBER, animation: 'dpPulse 1.2s ease-in-out infinite' }} />
-            <span style={{ fontSize: 8, fontWeight: 700, color: AMBER, letterSpacing: 0.3 }}>Docstribe reading note · documentation gap being assessed…</span>
+        {/* Signal Assessment Grid */}
+        {signalShow && !drawerOpen && (
+          <div style={{ display: 'flex', gap: 8, flexShrink: 0, animation: 'dpBeatIn 0.5s ease both' }}>
+            {[
+              { label: 'HbA1c', value: '9.1% ↑', col: RED,    risk: 'HIGH'     },
+              { label: 'eGFR',  value: '68 ↓',   col: INDIGO, risk: 'WATCH'    },
+              { label: 'BP',    value: '142/88',  col: AMBER,  risk: 'ELEVATED' },
+            ].map((sig, i) => (
+              <div key={i} style={{ flex: 1, background: `${sig.col}0c`, border: `1px solid ${sig.col}35`, borderRadius: 9, padding: '8px 10px', animation: `dpSpringIn 0.5s cubic-bezier(0.34,1.4,0.64,1) ${i * 0.10}s both` }}>
+                <div style={{ fontSize: 7, fontWeight: 700, color: MUTED, letterSpacing: 0.5, marginBottom: 2 }}>{sig.label}</div>
+                <div style={{ fontSize: 18, fontWeight: 900, color: sig.col, fontFamily: 'Sora', lineHeight: 1.2 }}>{sig.value}</div>
+                <span style={{ fontSize: 6.5, fontWeight: 800, color: sig.col, background: `${sig.col}18`, border: `1px solid ${sig.col}30`, borderRadius: 4, padding: '2px 6px' }}>{sig.risk}</span>
+              </div>
+            ))}
+            <div style={{ flex: 1.2, background: `${RED}10`, border: `2px solid ${RED}45`, borderRadius: 9, padding: '8px 10px', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', animation: 'dpSpringIn 0.5s cubic-bezier(0.34,1.4,0.64,1) 0.30s both' }}>
+              <div style={{ fontSize: 7, fontWeight: 700, color: MUTED, letterSpacing: 0.5, marginBottom: 3 }}>COMPOSITE RISK</div>
+              <div style={{ fontSize: 16, fontWeight: 900, color: RED, letterSpacing: -0.5 }}>HIGH</div>
+              <div style={{ fontSize: 6.5, color: DIM, textAlign: 'center', marginTop: 2 }}>Multi-comorbidity · 3 signals</div>
+            </div>
+          </div>
+        )}
+
+        {/* Opportunity Map */}
+        {opp1Show && !drawerOpen && (
+          <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 7, overflow: 'hidden' }}>
+            <div style={{ fontSize: 8, fontWeight: 800, color: AMBER, letterSpacing: 0.6, flexShrink: 0 }}>OPPORTUNITY MAP — SURFACED BY DOCSTRIBE</div>
+            {[
+              {
+                show: opp1Show,
+                icon: '🔵', title: 'Nephrology Consult',        type: 'Inter-dept Referral',
+                status: 'NOT ORDERED',    statusCol: RED,
+                guideline: 'KDIGO 2024',  guidelineCol: INDIGO,
+                reason: 'eGFR 68 — CKD Stage 3 requires nephrology co-management',
+                col: INDIGO,
+              },
+              {
+                show: opp2Show,
+                icon: '💊', title: 'Jardiance (Empagliflozin)', type: 'Missing Order',
+                status: 'NOT PRESCRIBED', statusCol: RED,
+                guideline: 'AHA/ACC 2023', guidelineCol: TEAL,
+                reason: 'SGLT2 inhibitor indicated for T2DM + CKD Stage 3',
+                col: TEAL,
+              },
+              {
+                show: opp3Show,
+                icon: '🔬', title: 'HbA1c Retest in 3 Months', type: 'Follow-up Required',
+                status: 'NOT SCHEDULED', statusCol: AMBER,
+                guideline: 'ADA 2024 §6.1', guidelineCol: PURPLE,
+                reason: 'Protocol mandates recheck after treatment intensification',
+                col: PURPLE,
+              },
+            ].filter(opp => opp.show).map((opp, i) => (
+              <div key={i} style={{ display: 'flex', gap: 10, alignItems: 'flex-start', padding: '9px 12px', borderRadius: 10, background: `${opp.col}0a`, border: `1px solid ${opp.col}30`, animation: 'dpRowBlurIn 0.45s ease both', flexShrink: 0 }}>
+                <div style={{ fontSize: 16, flexShrink: 0 }}>{opp.icon}</div>
+                <div style={{ flex: 1, minWidth: 0 }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 3 }}>
+                    <span style={{ fontSize: 8, fontWeight: 700, color: opp.col }}>{opp.title}</span>
+                    <span style={{ fontSize: 6.5, fontWeight: 800, color: opp.statusCol, background: `${opp.statusCol}12`, border: `1px solid ${opp.statusCol}30`, borderRadius: 4, padding: '1px 6px', flexShrink: 0 }}>{opp.status}</span>
+                  </div>
+                  <div style={{ display: 'flex', gap: 6, alignItems: 'center', marginBottom: 3 }}>
+                    <span style={{ fontSize: 6.5, color: MUTED }}>{opp.type}</span>
+                    <span style={{ fontSize: 6.5, fontWeight: 700, color: opp.guidelineCol, background: `${opp.guidelineCol}10`, border: `1px solid ${opp.guidelineCol}25`, borderRadius: 10, padding: '1px 7px' }}>{opp.guideline}</span>
+                  </div>
+                  <div style={{ fontSize: 7, color: DIM }}>{opp.reason}</div>
+                </div>
+              </div>
+            ))}
           </div>
         )}
 
@@ -1495,7 +1562,7 @@ function CDIScreen({ progress }) {
                 <div style={{ display: 'flex', gap: 10, alignItems: 'flex-start' }}>
                   <div style={{ width: 32, height: 32, borderRadius: '50%', background: `${AMBER}1c`, border: `1.5px solid ${AMBER}60`, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, fontSize: 15 }}>⚡</div>
                   <div style={{ flex: 1 }}>
-                    <div style={{ fontSize: 10.5, fontWeight: 800, color: AMBER }}>Documentation Gap Detected</div>
+                    <div style={{ fontSize: 10.5, fontWeight: 800, color: AMBER }}>CDI Query — Code Doesn't Match Clinical Picture</div>
                     <div style={{ fontSize: 8, color: DIM, marginTop: 1 }}>OPD · in-note · auto-surfaced · no disruption</div>
                   </div>
                   {locked && <span style={{ fontSize: 8, fontWeight: 800, color: GREEN, background: `${GREEN}1c`, border: `1px solid ${GREEN}45`, borderRadius: 6, padding: '3px 10px', animation: 'dpSpringIn 0.5s ease both', flexShrink: 0 }}>🔒 E-signed</span>}
@@ -2414,6 +2481,7 @@ export default function DemoPlayer() {
   const durRef         = useRef(0);
   const firedRef       = useRef(new Set());
   const clickHintTimer = useRef(null);
+  const audioCacheRef  = useRef(new Map()); // sceneId → decoded AudioBuffer
 
   const scene     = SCENES[idx];
   const sentences = splitSentences(scene.vo);
@@ -2453,9 +2521,27 @@ export default function DemoPlayer() {
     }, 800);
   }, []);
 
+  const prefetchScene = useCallback(async (sceneIdx) => {
+    if (sceneIdx >= SCENES.length) return;
+    const s = SCENES[sceneIdx];
+    if (audioCacheRef.current.has(s.id)) return; // already cached
+    if (!audioCtxRef.current || audioCtxRef.current.state === 'closed') return;
+    try {
+      const res = await fetch('/api/demo', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ sceneId: s.id }),
+      });
+      if (!res.ok) return;
+      const { audio } = await res.json();
+      const buf = await audioCtxRef.current.decodeAudioData(b64ToArrayBuffer(audio));
+      audioCacheRef.current.set(s.id, buf);
+    } catch {} // best-effort — silent failure is fine
+  }, []);
+
   const playScene = useCallback(async (sceneIdx) => {
     const s = SCENES[sceneIdx];
-    setLoading(true);
+    const cached = audioCacheRef.current.get(s.id);
+    if (!cached) setLoading(true); // only show spinner when we must fetch
     setStarted(true);
     firedRef.current = new Set();
     try {
@@ -2469,13 +2555,17 @@ export default function DemoPlayer() {
       }
       if (audioCtxRef.current.state === 'suspended') await audioCtxRef.current.resume();
 
-      const res = await fetch('/api/demo', {
-        method: 'POST', headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ sceneId: s.id }),
-      });
-      if (!res.ok) throw new Error('audio fetch failed');
-      const { audio } = await res.json();
-      const buf = await audioCtxRef.current.decodeAudioData(b64ToArrayBuffer(audio));
+      let buf = cached;
+      if (!buf) {
+        const res = await fetch('/api/demo', {
+          method: 'POST', headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ sceneId: s.id }),
+        });
+        if (!res.ok) throw new Error('audio fetch failed');
+        const { audio } = await res.json();
+        buf = await audioCtxRef.current.decodeAudioData(b64ToArrayBuffer(audio));
+        audioCacheRef.current.set(s.id, buf); // store for instant replay
+      }
 
       if (sourceRef.current) { try { sourceRef.current.stop(); } catch {} }
       cancelAnimationFrame(rafRef.current);
@@ -2514,11 +2604,13 @@ export default function DemoPlayer() {
         else { setIsPlaying(false); autoAdvance(); }
       };
       rafRef.current = requestAnimationFrame(tick);
+      // Prefetch next scene in background so it's ready instantly
+      prefetchScene(sceneIdx + 1);
     } catch (err) {
       console.error('DemoPlayer error:', err);
       setLoading(false); setIsPlaying(false);
     }
-  }, [autoAdvance]);
+  }, [autoAdvance, prefetchScene]);
 
   useEffect(() => {
     if (started && !isPlaying && !loading) playScene(idx);
