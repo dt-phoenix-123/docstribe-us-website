@@ -354,9 +354,8 @@ function ProductShell({ breadcrumb, color, children }) {
           {/* Status dots */}
           {[color, INDIGO, '#e2e8f0'].map((c, i) => <div key={i} style={{ width: 5, height: 5, borderRadius: '50%', background: c, boxShadow: i === 0 ? `0 0 6px ${c}` : 'none' }} />)}
         </div>
-        {/* Content area with scan-line texture */}
+        {/* Content area */}
         <div style={{ flex: 1, overflow: 'hidden', position: 'relative' }}>
-          <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none', zIndex: 50, backgroundImage: 'repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,0.018) 2px,rgba(0,0,0,0.018) 4px)', backgroundSize: '100% 4px' }} />
           {children}
         </div>
       </div>
