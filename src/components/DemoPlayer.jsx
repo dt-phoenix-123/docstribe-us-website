@@ -702,16 +702,13 @@ function KPIScene({ scene, progress }) {
           {progress >= 0.46 && (
             <div style={{ display: 'flex', gap: 8, justifyContent: 'center', animation: 'dpBeatIn 0.5s ease both' }}>
               {[
-                { flag: '🇺🇸', label: 'USA',   hosp: '42+ hospitals', col: TEAL   },
-                { flag: '🇦🇪', label: 'UAE',   hosp: '38+ hospitals', col: AMBER  },
-                { flag: '🇮🇳', label: 'India', hosp: '25+ hospitals', col: INDIGO },
+                { flag: '🇺🇸', label: 'USA',   col: TEAL   },
+                { flag: '🇦🇪', label: 'UAE',   col: AMBER  },
+                { flag: '🇮🇳', label: 'India', col: INDIGO },
               ].map((g, i) => (
-                <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '5px 12px', background: `${g.col}0c`, border: `1px solid ${g.col}28`, borderRadius: 20, animation: `dpSpringIn 0.4s cubic-bezier(0.34,1.4,0.64,1) ${i * 0.10}s both` }}>
+                <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '5px 14px', background: `${g.col}0c`, border: `1px solid ${g.col}28`, borderRadius: 20, animation: `dpSpringIn 0.4s cubic-bezier(0.34,1.4,0.64,1) ${i * 0.10}s both` }}>
                   <span style={{ fontSize: 14 }}>{g.flag}</span>
-                  <div>
-                    <div style={{ fontSize: 7.5, fontWeight: 800, color: g.col }}>{g.label}</div>
-                    <div style={{ fontSize: 6, color: MUTED }}>{g.hosp}</div>
-                  </div>
+                  <div style={{ fontSize: 8, fontWeight: 800, color: g.col }}>{g.label}</div>
                 </div>
               ))}
             </div>
