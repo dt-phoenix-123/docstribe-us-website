@@ -140,49 +140,75 @@ async function getSceneAudio(sceneId) {
   return { wavPath: cachedWav, duration: dur };
 }
 
-// ─── Render one scene ─────────────────────────────────────────────────────────
+// ─── Render one scene (with resume support) ──────────────────────────────────
 async function renderScene(browser, sceneId) {
+  const sceneSlot = String(ALL_SCENES.indexOf(sceneId) + 1).padStart(2, '0');
+  const sceneOut  = path.join(OUT_DIR, `scene_${sceneSlot}_id${sceneId}.mp4`);
+  const sceneFrameDir = path.join(FRAMES_DIR, `scene_${sceneId}`);
+
   log(`\n┌── Scene ${sceneId} ─────────────────────────────────────────────`);
+
+  // ── SCENE-LEVEL RESUME: MP4 already exists → skip entirely ──
+  if (fs.existsSync(sceneOut)) {
+    log(`│  ⏭  Already rendered — skipping (delete to re-render):`);
+    log(`│     ${path.basename(sceneOut)}`);
+    log(`└── ✓ skipped`);
+    return sceneOut;
+  }
 
   const { wavPath, duration } = await getSceneAudio(sceneId);
   const totalFrames = Math.ceil(duration * FPS);
   log(`│  Audio: ${duration.toFixed(3)}s  →  ${totalFrames} frames at ${FPS}fps`);
 
-  // Create frames subdirectory for this scene
-  const sceneFrameDir = path.join(FRAMES_DIR, `scene_${sceneId}`);
+  // ── FRAME-LEVEL RESUME: count PNGs already on disk ──
   fs.mkdirSync(sceneFrameDir, { recursive: true });
+  const existingPNGs = fs.existsSync(sceneFrameDir)
+    ? fs.readdirSync(sceneFrameDir).filter(f => /^frame_\d{6}\.png$/.test(f)).length
+    : 0;
+  const startFrame = existingPNGs; // 0 = fresh start, N = resume from frame N
+
+  if (startFrame > 0 && startFrame <= totalFrames) {
+    log(`│  ♻️  Resuming from frame ${startFrame}/${totalFrames} (${((startFrame / totalFrames) * 100).toFixed(0)}% done)`);
+  } else if (startFrame > totalFrames) {
+    // All frames captured but MP4 missing — jump straight to encoding
+    log(`│  ⚡ All ${totalFrames} frames found — re-encoding MP4`);
+    await encodeScene(sceneFrameDir, wavPath, sceneOut);
+    return sceneOut;
+  } else {
+    log(`│  🆕 Fresh render`);
+  }
 
   // ── Open page ──
   const page = await browser.newPage();
   await page.setViewport({ width: WIDTH, height: HEIGHT, deviceScaleFactor: 1 });
-
-  // Silence console noise from the app
   page.on('console', () => {});
   page.on('pageerror', () => {});
 
   const url = `${VITE_URL}/?render=1&scene=${sceneId}`;
   log(`│  Loading: ${url}`);
   await page.goto(url, { waitUntil: 'networkidle0', timeout: 30000 });
-
-  // Wait for the React render control to be ready
   await waitFor(page, () => window.__renderReady === true);
-  log(`│  Render control ready`);
 
-  // Extra settle time so initial CSS animations have a baseline frame
-  await delay(300);
+  if (startFrame > 0) {
+    // Warm up: jump to the resume p value so React state is correct.
+    // Wait 400ms for CSS transitions to settle before we start shooting.
+    const warmP = startFrame / totalFrames;
+    log(`│  🔥 Warming up to p=${warmP.toFixed(4)}…`);
+    await page.evaluate((p) => window.__renderSetP(p), warmP);
+    await delay(400);
+  } else {
+    // Fresh start: short settle for initial animations
+    await delay(300);
+  }
 
-  // ── Capture frames ──
+  // ── Capture frames (from startFrame onward) ──
   log(`│  Capturing frames…`);
-  for (let i = 0; i <= totalFrames; i++) {
+  for (let i = startFrame; i <= totalFrames; i++) {
     const p = i === totalFrames ? 1 : i / totalFrames;
 
-    // Advance progress
     await page.evaluate((prog) => window.__renderSetP(prog), p);
-
-    // Let React commit + one more rAF for CSS
     await waitRAF(page);
 
-    // Screenshot
     const framePath = path.join(sceneFrameDir, `frame_${String(i).padStart(6, '0')}.png`);
     await page.screenshot({ path: framePath, type: 'png' });
 
@@ -190,37 +216,38 @@ async function renderScene(browser, sceneId) {
       tick(`frame ${i}/${totalFrames}  (${((i / totalFrames) * 100).toFixed(0)}%)`);
     }
   }
-  log(`\n│  ✓ ${totalFrames + 1} frames captured`);
+  const newFrames = totalFrames - startFrame + 1;
+  log(`\n│  ✓ ${newFrames} new frame(s) captured  (${totalFrames + 1} total)`);
   await page.close();
 
-  // ── FFmpeg: frames + audio → scene MP4 ──
-  const sceneOut = path.join(OUT_DIR, `scene_${String(ALL_SCENES.indexOf(sceneId) + 1).padStart(2, '0')}_id${sceneId}.mp4`);
-  log(`│  Encoding → ${path.basename(sceneOut)}`);
+  // ── Encode ──
+  await encodeScene(sceneFrameDir, wavPath, sceneOut);
+  return sceneOut;
+}
 
+// ─── FFmpeg encode helper (shared by fresh render and re-encode path) ─────────
+async function encodeScene(framesDir, wavPath, sceneOut) {
+  log(`│  Encoding → ${path.basename(sceneOut)}`);
   ffmpeg(
     '-y',
-    '-r',     String(FPS),
-    '-i',     path.join(sceneFrameDir, 'frame_%06d.png'),
-    '-i',     wavPath,
-    '-c:v',   'libx264',
-    '-preset','fast',
-    '-crf',   '18',            // near-lossless quality
-    '-pix_fmt','yuv420p',      // broad compatibility
-    '-c:a',   'aac',
-    '-b:a',   '192k',
-    '-shortest',               // trim to audio length
-    '-movflags','+faststart',  // web-optimised MP4
+    '-r',          String(FPS),
+    '-i',          path.join(framesDir, 'frame_%06d.png'),
+    '-i',          wavPath,
+    '-c:v',        'libx264',
+    '-preset',     'fast',
+    '-crf',        '18',
+    '-pix_fmt',    'yuv420p',
+    '-c:a',        'aac',
+    '-b:a',        '192k',
+    '-shortest',
+    '-movflags',   '+faststart',
     sceneOut,
   );
-
   log(`└── ✓ ${path.basename(sceneOut)}`);
 
-  // Clean frames to save disk space (unless KEEP_FRAMES)
   if (!KEEP_FRAMES) {
-    fs.rmSync(sceneFrameDir, { recursive: true, force: true });
+    fs.rmSync(framesDir, { recursive: true, force: true });
   }
-
-  return sceneOut;
 }
 
 // ─── Main ─────────────────────────────────────────────────────────────────────
