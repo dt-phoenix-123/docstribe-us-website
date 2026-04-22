@@ -526,38 +526,38 @@ function StatScene({ scene, progress }) {
           </div>
         )}
 
-        {/* ═══ PHASE 2: Timeline — centered, narrower ═══ */}
+        {/* ═══ PHASE 2: Timeline — full width, deep cards ═══ */}
         {phase === 2 && (
-          <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '10px 16px', gap: 8, overflow: 'hidden' }}>
-            <div style={{ width: '100%', maxWidth: 360, display: 'flex', alignItems: 'center', gap: 10, flexShrink: 0, animation: 'dpBeatIn 0.5s ease both' }}>
-              <span style={{ fontSize: 6.5, fontWeight: 700, color: MUTED, letterSpacing: 1.5, textTransform: 'uppercase' }}>4 Root Causes · Same Pattern · Every Time</span>
+          <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '12px 20px', gap: 10, overflow: 'auto' }}>
+            <div style={{ width: '100%', maxWidth: 480, display: 'flex', alignItems: 'center', gap: 10, flexShrink: 0, animation: 'dpBeatIn 0.5s ease both' }}>
+              <span style={{ fontSize: 8, fontWeight: 800, color: MUTED, letterSpacing: 1.5, textTransform: 'uppercase' }}>4 Root Causes · Same Pattern · Every Time</span>
               <div style={{ flex: 1, height: 1, background: BORDER }} />
             </div>
-            {/* Narrower, centered timeline */}
-            <div style={{ position: 'relative', width: '100%', maxWidth: 360, flex: 1, overflow: 'hidden' }}>
+            {/* Full-width timeline */}
+            <div style={{ position: 'relative', width: '100%', maxWidth: 480 }}>
               {/* Vertical spine */}
-              <div style={{ position: 'absolute', left: 11, top: 6, bottom: 6, width: 1.5, background: `linear-gradient(180deg,${AMBER}55,${INDIGO}55,${RED}55,${PURPLE}55)`, borderRadius: 1 }} />
+              <div style={{ position: 'absolute', left: 14, top: 8, bottom: 8, width: 2, background: `linear-gradient(180deg,${AMBER}60,${INDIGO}60,${RED}60,${PURPLE}60)`, borderRadius: 2 }} />
               {GAP_ITEMS.map(({ label, pct, sub, col, threshold }, i) => {
                 const visible = p >= threshold;
                 if (!visible) return null;
-                const barActive = p >= threshold + 0.04;
+                const barActive = p >= threshold + 0.03;
                 return (
-                  <div key={label} style={{ display: 'flex', gap: 10, marginBottom: 10, position: 'relative', alignItems: 'flex-start', animation: 'dpSpringIn 0.55s cubic-bezier(0.34,1.4,0.64,1) both' }}>
+                  <div key={label} style={{ display: 'flex', gap: 14, marginBottom: 14, position: 'relative', alignItems: 'flex-start', animation: 'dpSpringIn 0.55s cubic-bezier(0.34,1.4,0.64,1) both' }}>
                     {/* Numbered node */}
-                    <div style={{ flexShrink: 0, width: 22, display: 'flex', justifyContent: 'center', paddingTop: 1 }}>
-                      <div style={{ width: 22, height: 22, borderRadius: '50%', background: col, display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1, boxShadow: `0 0 12px ${col}55`, flexShrink: 0 }}>
-                        <span style={{ fontSize: 9, fontWeight: 900, color: '#fff' }}>{i + 1}</span>
+                    <div style={{ flexShrink: 0, width: 28, display: 'flex', justifyContent: 'center', paddingTop: 2 }}>
+                      <div style={{ width: 28, height: 28, borderRadius: '50%', background: col, display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1, boxShadow: `0 0 14px ${col}60`, flexShrink: 0 }}>
+                        <span style={{ fontSize: 12, fontWeight: 900, color: '#fff' }}>{i + 1}</span>
                       </div>
                     </div>
                     {/* Card */}
-                    <div style={{ flex: 1, background: 'rgba(255,255,255,0.88)', border: `1px solid ${BORDER}`, borderLeft: `2.5px solid ${col}`, borderRadius: 8, padding: '6px 10px', boxShadow: '0 1px 6px rgba(0,0,0,0.06)' }}>
-                      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 8, marginBottom: 3 }}>
-                        <span style={{ fontSize: 8, fontWeight: 700, color: TXT, lineHeight: 1.25 }}>{label}</span>
-                        <span style={{ fontSize: 17, fontWeight: 900, color: col, lineHeight: 1, flexShrink: 0, fontFamily: 'Sora' }}>{pct}%</span>
+                    <div style={{ flex: 1, background: 'rgba(255,255,255,0.92)', border: `1px solid ${BORDER}`, borderLeft: `3px solid ${col}`, borderRadius: 10, padding: '10px 14px', boxShadow: '0 2px 10px rgba(0,0,0,0.07)' }}>
+                      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 10, marginBottom: 4 }}>
+                        <span style={{ fontSize: 11, fontWeight: 700, color: TXT, lineHeight: 1.25 }}>{label}</span>
+                        <span style={{ fontSize: 24, fontWeight: 900, color: col, lineHeight: 1, flexShrink: 0, fontFamily: 'Sora' }}>{pct}%</span>
                       </div>
-                      <div style={{ fontSize: 6, color: DIM, marginBottom: 4 }}>{sub}</div>
-                      <div style={{ height: 3, borderRadius: 2, background: `${col}12`, overflow: 'hidden' }}>
-                        <div style={{ height: '100%', borderRadius: 2, background: `linear-gradient(90deg,${col},${col}bb)`, width: barActive ? `${pct}%` : '0%', transition: 'width 1.1s cubic-bezier(0.34,1.2,0.64,1)', boxShadow: `0 0 5px ${col}50` }}/>
+                      <div style={{ fontSize: 8, color: DIM, marginBottom: 6 }}>{sub}</div>
+                      <div style={{ height: 4, borderRadius: 2, background: `${col}14`, overflow: 'hidden' }}>
+                        <div style={{ height: '100%', borderRadius: 2, background: `linear-gradient(90deg,${col},${col}bb)`, width: barActive ? `${pct}%` : '0%', transition: 'width 1.1s cubic-bezier(0.34,1.2,0.64,1)', boxShadow: `0 0 6px ${col}55` }}/>
                       </div>
                     </div>
                   </div>
