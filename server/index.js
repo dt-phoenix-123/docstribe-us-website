@@ -413,7 +413,7 @@ const UAE_DEMO_SCENES = [
   {
     id: 4, timecode: '0:28–0:42', journeyStage: 'pre-visit',
     title: 'Pre-Visit Intelligence',
-    voText: "The moment a patient walks through your door, Docstribe is already running — connected through your hospital's existing payer API contracts. Coverage tier, co-pay, network status, active authorisations — all pulled live, before the patient reaches the consultation desk. No new payer contracts. No replacement systems. Just real-time eligibility through the APIs you already have.",
+    voText: "The moment a patient walks through your door, Docstribe is already running — connected through your hospital's existing payer API contracts. Coverage tier, co-pay, network status, active authorisations — all pulled live, before the patient reaches the consultation desk.",
   },
   {
     id: 6, timecode: '0:42–1:00', journeyStage: 'ambient-cdi',

@@ -1022,14 +1022,14 @@ function EligibilityScreen({ progress }) {
   const apiActive = p >= 0.30 && p < 0.44;
   const cleared   = p >= 0.58;
 
-  // Status result cards — appear after API check, full-width tiles
+  // Status result cards — all appear before the Cleared banner (no content after consultation desk)
   const results = [
-    { label: 'Insurance Status', value: 'Active · Daman Enhanced',  icon: '✓',  col: GREEN,  show: 0.48 },
-    { label: 'Network',          value: 'In-Network',                icon: '✓',  col: GREEN,  show: 0.52 },
-    { label: 'Co-pay',           value: 'AED 50 / visit',            icon: '◎',  col: AMBER,  show: 0.56 },
-    { label: 'Pre-auth',         value: 'Not Required ✓',            icon: '✓',  col: GREEN,  show: 0.60 },
-    { label: 'Deductible',       value: 'AED 6,550 remaining',       icon: '◎',  col: INDIGO, show: 0.64 },
-    { label: 'Coverage',         value: 'DM · HTN · CKD — Covered',  icon: '✓',  col: TEAL,   show: 0.68 },
+    { label: 'Insurance Status', value: 'Active · Daman Enhanced',  icon: '✓',  col: GREEN,  show: 0.38 },
+    { label: 'Network',          value: 'In-Network',                icon: '✓',  col: GREEN,  show: 0.42 },
+    { label: 'Co-pay',           value: 'AED 50 / visit',            icon: '◎',  col: AMBER,  show: 0.46 },
+    { label: 'Pre-auth',         value: 'Not Required ✓',            icon: '✓',  col: GREEN,  show: 0.50 },
+    { label: 'Deductible',       value: 'AED 6,550 remaining',       icon: '◎',  col: INDIGO, show: 0.53 },
+    { label: 'Coverage',         value: 'DM · HTN · CKD — Covered',  icon: '✓',  col: TEAL,   show: 0.56 },
   ];
 
   return (
