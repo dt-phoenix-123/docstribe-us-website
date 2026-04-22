@@ -122,12 +122,11 @@ const SCENES = [
     id: 4, type: 'product', color: GREEN,
     title: 'Pre-Visit Intelligence',
     breadcrumb: 'Eligibility & Pre-Authorisation',
-    vo: "The moment a patient walks through your door, Docstribe is already running — connected through your hospital's existing payer API contracts. Coverage tier, co-pay, network status, active authorisations — all pulled live, before the patient reaches the consultation desk. No new payer contracts. No replacement systems. Just real-time eligibility through the APIs you already have.",
+    vo: "The moment a patient walks through your door, Docstribe is already running — connected through your hospital's existing payer API contracts. Coverage tier, co-pay, network status, active authorisations — all pulled live, before the patient reaches the consultation desk.",
     beats: [
       { at: 0.10, stat: 'Profile mapped',  sub: 'coverage · co-pay · network · authorisations · live' },
-      { at: 0.36, stat: 'Eligible ✓',      sub: 'Daman Enhanced · co-pay AED 25 · In-network' },
-      { at: 0.62, stat: 'All confirmed',    sub: 'before they reach the consultation desk' },
-      { at: 0.85, stat: 'Zero admin.',      sub: 'no calls · no lookups · no surprises' },
+      { at: 0.46, stat: 'Eligible ✓',      sub: 'Daman Enhanced · co-pay AED 25 · In-network' },
+      { at: 0.80, stat: 'All confirmed',    sub: 'before they reach the consultation desk' },
     ],
   },
   {
@@ -736,48 +735,100 @@ function KPIScene({ scene, progress }) {
             <div style={{ fontSize: 13, fontWeight: 800, color: TXT }}>Here's what changes in 60 days:</div>
           </div>
 
-          {/* KPI cards — 3 columns with arc gauges */}
-          <div style={{ display: 'flex', gap: 10, justifyContent: 'center', width: '100%', maxWidth: 640, position: 'relative', zIndex: 1 }}>
-            {kpiBeats.map((b, i) => {
-              const show   = progress >= b.at;
-              const active = spot(progress, b.at, b.at + 0.18);
-              const c = colors[i];
-              const R = 32, stroke = 8;
-              const circ = Math.PI * R;
-              const indPct = i===0 ? 0.60 : i===1 ? 0.75 : 0.55;
-              const dsPct  = i===0 ? 0.92 : i===1 ? 0.99 : 0.82;
-              return (
-                <div key={i} style={{ background: active ? `linear-gradient(160deg,${c}12,${c}04)` : 'rgba(255,255,255,0.95)', border: `1px solid ${c}${active ? '55' : show ? '22' : '10'}`, borderTop: `3px solid ${c}${active ? 'cc' : show ? '70' : '25'}`, borderRadius: 16, padding: '18px 16px', flex: 1, minWidth: 120, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6, opacity: show ? 1 : 0, animation: show ? `dpSpringIn 0.65s cubic-bezier(0.34,1.4,0.64,1) both` : 'none', boxShadow: active ? `0 0 0 2px ${c}40, 0 6px 24px ${c}20, 0 4px 12px rgba(0,0,0,0.07)` : '0 1px 6px rgba(0,0,0,0.07)', transform: active ? 'scale(1.06)' : 'scale(1)', transition: 'transform 0.4s ease, box-shadow 0.4s ease, background 0.4s ease', position: 'relative', overflow: 'hidden' }}>
-                  {active && <div style={{ position: 'absolute', inset: -16, pointerEvents: 'none', background: `radial-gradient(ellipse 80% 70% at 50% 50%,${c}20 0%,transparent 70%)`, animation: 'dpBloom 1.4s ease-out both', zIndex: 0 }}/>}
-                  {/* Arc gauge */}
-                  <div style={{ position: 'relative', width: 80, height: 44, flexShrink: 0, zIndex: 1 }}>
-                    <svg width="80" height="50" viewBox="0 0 80 50" style={{ overflow: 'visible' }}>
-                      <path d={`M 8 44 A ${R} ${R} 0 0 1 72 44`} fill="none" stroke={`${MUTED}18`} strokeWidth={stroke} strokeLinecap="round"/>
-                      <path d={`M 8 44 A ${R} ${R} 0 0 1 72 44`} fill="none" stroke={`${MUTED}45`} strokeWidth={stroke-2} strokeLinecap="round"
-                        strokeDasharray={`${show ? indPct * circ : 0} ${circ}`} style={{ transition: 'stroke-dasharray 1.0s cubic-bezier(0.34,1.2,0.64,1)' }}/>
-                      <path d={`M 8 44 A ${R} ${R} 0 0 1 72 44`} fill="none" stroke={c} strokeWidth={stroke} strokeLinecap="round"
-                        strokeDasharray={`${show ? dsPct * circ : 0} ${circ}`} style={{ transition: `stroke-dasharray 1.2s cubic-bezier(0.34,1.2,0.64,1) 0.2s`, filter: `drop-shadow(0 0 4px ${c}80)` }}/>
-                    </svg>
-                    <div style={{ position: 'absolute', bottom: 4, left: 0, right: 0, textAlign: 'center' }}>
-                      <span style={{ fontSize: 7, fontWeight: 700, color: c }}>vs Industry</span>
+          {/* KPI cards — redesigned: clear hierarchy, Sora numbers, arc gauge */}
+          {(() => {
+            const kpiMeta = [
+              { label: 'Denial Reduction', number: '↓30%', desc: 'fewer denials in 60 days', cmp: 'Industry avg ~30% denial rate', indPct: 0.60, dsPct: 0.92 },
+              { label: 'Clean Claim Rate', number: '99%',  desc: 'first-pass submission',    cmp: 'Industry avg 75% clean rate',  indPct: 0.75, dsPct: 0.99 },
+              { label: 'Case Mix Index',   number: '+0.15',desc: 'CMI improvement',           cmp: 'Industry avg CMI uplift ~0.05',indPct: 0.55, dsPct: 0.82 },
+            ];
+            return (
+              <div style={{ display: 'flex', gap: 12, justifyContent: 'center', width: '100%', maxWidth: 580, position: 'relative', zIndex: 1 }}>
+                {kpiBeats.map((b, i) => {
+                  const show   = progress >= b.at;
+                  const active = spot(progress, b.at, b.at + 0.18);
+                  const c  = colors[i];
+                  const m  = kpiMeta[i];
+                  const R  = 33, stroke = 7;
+                  const circ = Math.PI * R;
+                  return (
+                    <div key={i} style={{
+                      flex: 1, minWidth: 128,
+                      background: active
+                        ? `linear-gradient(170deg,${c}13,${c}05,rgba(255,255,255,0.97))`
+                        : 'rgba(255,255,255,0.96)',
+                      border: `1px solid ${c}${active ? '45' : show ? '22' : '0d'}`,
+                      borderTop: `3px solid ${c}`,
+                      borderRadius: 18,
+                      padding: '16px 14px 18px',
+                      display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 0,
+                      opacity: show ? 1 : 0,
+                      animation: show ? `dpSpringIn 0.65s cubic-bezier(0.34,1.4,0.64,1) both` : 'none',
+                      boxShadow: active
+                        ? `0 0 0 2px ${c}30, 0 10px 36px ${c}18, 0 4px 14px rgba(0,0,0,0.07)`
+                        : '0 2px 10px rgba(0,0,0,0.06)',
+                      transform: active ? 'scale(1.055) translateY(-3px)' : 'scale(1)',
+                      transition: 'transform 0.4s cubic-bezier(0.34,1.2,0.64,1), box-shadow 0.4s ease, background 0.4s ease',
+                      position: 'relative', overflow: 'hidden',
+                    }}>
+                      {/* Bloom behind card on active */}
+                      {active && <div style={{ position: 'absolute', inset: -20, pointerEvents: 'none', background: `radial-gradient(ellipse 80% 70% at 50% 50%,${c}1a 0%,transparent 70%)`, animation: 'dpBloom 1.4s ease-out both', zIndex: 0 }}/>}
+
+                      {/* ── Metric name header ── */}
+                      <div style={{ fontSize: 7, fontWeight: 800, color: `${c}cc`, letterSpacing: 1.6, textTransform: 'uppercase', marginBottom: 12, zIndex: 1, textAlign: 'center' }}>
+                        {m.label}
+                      </div>
+
+                      {/* ── Arc gauge ── */}
+                      <div style={{ position: 'relative', width: 82, height: 46, flexShrink: 0, zIndex: 1 }}>
+                        <svg width="82" height="52" viewBox="0 0 82 52" style={{ overflow: 'visible' }}>
+                          {/* Track */}
+                          <path d={`M 8 46 A ${R} ${R} 0 0 1 74 46`} fill="none" stroke={`${MUTED}15`} strokeWidth={stroke} strokeLinecap="round"/>
+                          {/* Industry benchmark — lighter, thinner */}
+                          <path d={`M 8 46 A ${R} ${R} 0 0 1 74 46`} fill="none" stroke={`${MUTED}45`} strokeWidth={stroke - 2} strokeLinecap="round"
+                            strokeDasharray={`${show ? m.indPct * circ : 0} ${circ}`}
+                            style={{ transition: 'stroke-dasharray 1.0s cubic-bezier(0.34,1.2,0.64,1)' }}/>
+                          {/* Docstribe fill — full weight + glow */}
+                          <path d={`M 8 46 A ${R} ${R} 0 0 1 74 46`} fill="none" stroke={c} strokeWidth={stroke} strokeLinecap="round"
+                            strokeDasharray={`${show ? m.dsPct * circ : 0} ${circ}`}
+                            style={{ transition: `stroke-dasharray 1.3s cubic-bezier(0.34,1.2,0.64,1) 0.15s`, filter: `drop-shadow(0 0 5px ${c}80)` }}/>
+                        </svg>
+                        {/* Arc centre legend */}
+                        <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, display: 'flex', justifyContent: 'space-between', padding: '0 2px' }}>
+                          <span style={{ fontSize: 5.5, fontWeight: 600, color: MUTED }}>Ind.</span>
+                          <span style={{ fontSize: 5.5, fontWeight: 700, color: c }}>DS</span>
+                        </div>
+                      </div>
+
+                      {/* ── Hero number with ring burst ── */}
+                      <div style={{ position: 'relative', display: 'inline-block', zIndex: 1, marginTop: 10, marginBottom: 8 }}>
+                        {show && (
+                          <div key={`ring-${i}-${show}`} style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%,-50%)', width: 52, height: 52, borderRadius: '50%', border: `2px solid ${c}55`, animation: 'dpStatRing 1.2s ease-out both', pointerEvents: 'none' }} />
+                        )}
+                        <div style={{ fontSize: 40, fontWeight: 900, color: c, fontFamily: 'Sora, sans-serif', lineHeight: 1, letterSpacing: -2, textShadow: active ? `0 0 28px ${c}45` : 'none', transition: 'text-shadow 0.4s ease' }}>
+                          {show ? <CountUp value={m.number} duration={750} key={`k${i}-${show}`}/> : m.number}
+                        </div>
+                      </div>
+
+                      {/* ── Divider ── */}
+                      <div style={{ width: 28, height: 1.5, borderRadius: 1, background: `linear-gradient(90deg,transparent,${c}80,transparent)`, zIndex: 1, marginBottom: 8 }}/>
+
+                      {/* ── Short description ── */}
+                      <div style={{ fontSize: 8, fontWeight: 600, color: DIM, textAlign: 'center', lineHeight: 1.5, zIndex: 1 }}>
+                        {m.desc}
+                      </div>
+
+                      {/* ── Industry comparison note ── */}
+                      <div style={{ fontSize: 6, color: MUTED, marginTop: 6, zIndex: 1, textAlign: 'center', lineHeight: 1.4, opacity: 0.85 }}>
+                        {m.cmp}
+                      </div>
                     </div>
-                  </div>
-                  {/* ── E: KPI number with stat ring burst on reveal ── */}
-                  {i === 2 && <div style={{ fontSize: 7, fontWeight: 800, color: c, letterSpacing: 2, textTransform: 'uppercase', opacity: 0.75, zIndex: 1 }}>CMI</div>}
-                  <div style={{ position: 'relative', display: 'inline-block', zIndex: 1 }}>
-                    {show && (
-                      <div key={`ring-${i}-${show}`} style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%,-50%)', width: 44, height: 44, borderRadius: '50%', border: `2px solid ${c}65`, animation: 'dpStatRing 1.1s ease-out both', pointerEvents: 'none' }} />
-                    )}
-                    <div style={{ fontSize: 28, fontWeight: 900, color: c, fontFamily: 'Sora', lineHeight: 1, letterSpacing: -1 }}>
-                      {show ? <CountUp value={b.stat} duration={700} key={`k${i}-${show}`}/> : b.stat}
-                    </div>
-                  </div>
-                  <div style={{ width: 16, height: 1.5, borderRadius: 1, background: c, zIndex: 1 }}/>
-                  <div style={{ fontSize: 7, color: DIM, textAlign: 'center', lineHeight: 1.5, zIndex: 1 }}>{b.sub}</div>
-                </div>
-              );
-            })}
-          </div>
+                  );
+                })}
+              </div>
+            );
+          })()}
+
 
           {/* 60-Day Timeline with animated connecting bars */}
           {progress >= 0.93 && (
@@ -960,39 +1011,28 @@ function EligibilityScreen({ progress }) {
   // OPD-only flow — 5 steps across the full screen
   const flow = [
     { label: 'Patient Arrives',  icon: '🏥', show: 0.04 },
-    { label: 'EMR Auto-Fetch',   icon: '📋', show: 0.14, api: false },
-    { label: 'Your Payer API',   icon: '🔗', show: 0.26, api: true  },
-    { label: 'Eligibility Check',icon: '🔍', show: 0.38, api: false },
-    { label: 'Cleared ✓',        icon: '✅', show: 0.52, api: false },
+    { label: 'EMR Auto-Fetch',   icon: '📋', show: 0.16, api: false },
+    { label: 'Payer API Live',   icon: '🔗', show: 0.30, api: true  },
+    { label: 'Eligibility Check',icon: '🔍', show: 0.44, api: false },
+    { label: 'Cleared ✓',        icon: '✅', show: 0.58, api: false },
   ];
 
-  const apiActive = p >= 0.26 && p < 0.38;
-  const cleared   = p >= 0.52;
+  const apiActive = p >= 0.30 && p < 0.44;
+  const cleared   = p >= 0.58;
 
   // Status result cards — appear after API check, full-width tiles
   const results = [
-    { label: 'Insurance Status', value: 'Active · Daman Enhanced',  icon: '✓',  col: GREEN,  show: 0.40, hero: false },
-    { label: 'Network',          value: 'In-Network',                icon: '✓',  col: GREEN,  show: 0.43, hero: false },
-    { label: 'Co-pay',           value: 'AED 50 / visit',            icon: '◎',  col: AMBER,  show: 0.46, hero: false },
-    { label: 'Pre-auth',         value: 'Not Required ✓',            icon: '✓',  col: GREEN,  show: 0.49, hero: false },
-    { label: 'Deductible',       value: 'AED 6,550 remaining',       icon: '◎',  col: INDIGO, show: 0.52, hero: false },
-    { label: 'Coverage',         value: 'DM · HTN · CKD — Covered',  icon: '✓',  col: TEAL,   show: 0.55, hero: false },
+    { label: 'Insurance Status', value: 'Active · Daman Enhanced',  icon: '✓',  col: GREEN,  show: 0.48 },
+    { label: 'Network',          value: 'In-Network',                icon: '✓',  col: GREEN,  show: 0.52 },
+    { label: 'Co-pay',           value: 'AED 50 / visit',            icon: '◎',  col: AMBER,  show: 0.56 },
+    { label: 'Pre-auth',         value: 'Not Required ✓',            icon: '✓',  col: GREEN,  show: 0.60 },
+    { label: 'Deductible',       value: 'AED 6,550 remaining',       icon: '◎',  col: INDIGO, show: 0.64 },
+    { label: 'Coverage',         value: 'DM · HTN · CKD — Covered',  icon: '✓',  col: TEAL,   show: 0.68 },
   ];
 
   return (
     <ProductShell breadcrumb="Eligibility & Pre-Authorisation" color={GREEN}>
       <div style={{ padding: '14px 18px', height: '100%', display: 'flex', flexDirection: 'column', gap: 14, overflow: 'hidden' }}>
-
-        {/* Change 5g — Integration Context Banner */}
-        {progress>=0.01 && (
-          <div style={{background:`${TEAL}08`,border:`1px solid ${TEAL}25`,borderRadius:9,padding:'7px 12px',display:'flex',gap:10,alignItems:'center',flexShrink:0,animation:'dpRowBlurIn 0.5s ease both'}}>
-            <div style={{flexShrink:0,width:22,height:22,borderRadius:6,background:`${TEAL}18`,border:`1px solid ${TEAL}40`,display:'flex',alignItems:'center',justifyContent:'center',fontSize:11}}>🔌</div>
-            <div>
-              <div style={{fontSize:8,fontWeight:800,color:TEAL,marginBottom:1}}>Connects to your existing Payer APIs — no new contracts needed</div>
-              <div style={{fontSize:6.5,color:DIM}}>Works with Daman, AXA Gulf, Bupa Arabia, Neuron Health &amp; any FHIR-compliant endpoint your hospital already uses</div>
-            </div>
-          </div>
-        )}
 
         {/* ── Header ── */}
         <div style={{ display: 'flex', gap: 10, alignItems: 'center', flexShrink: 0 }}>
