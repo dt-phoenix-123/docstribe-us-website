@@ -2576,12 +2576,18 @@ function Caption({ sentence }) {
 
 /* ═══════════════════ MAIN DEMO PLAYER ══════════════════════════ */
 export default function DemoPlayer() {
-  const [splashDone, setSplashDone] = useState(false);
-  const [idx,        setIdx]        = useState(0);
+  /* ── Render mode — puppeteer-driven offline frame capture ── */
+  const _rp          = new URLSearchParams(typeof window !== 'undefined' ? window.location.search : '');
+  const IS_RENDER    = _rp.get('render') === '1';
+  const RENDER_SID   = IS_RENDER ? parseInt(_rp.get('scene') || '1', 10) : null;
+  const RENDER_START = IS_RENDER ? Math.max(0, SCENES.findIndex(s => s.id === RENDER_SID)) : 0;
+
+  const [splashDone, setSplashDone] = useState(IS_RENDER);          // skip splash in render mode
+  const [idx,        setIdx]        = useState(RENDER_START);
   const [isPlaying,  setIsPlaying]  = useState(false);
   const [progress,   setProgress]   = useState(0);
   const [loading,    setLoading]    = useState(false);
-  const [started,    setStarted]    = useState(false);
+  const [started,    setStarted]    = useState(IS_RENDER);           // skip intro delay
   const [exitIdx,    setExitIdx]    = useState(null);
   const [sentIdx,    setSentIdx]    = useState(0);
   const [clickHint,  setClickHint]  = useState(null); // 'play' | 'pause' | null
@@ -2650,6 +2656,23 @@ export default function DemoPlayer() {
       audioCacheRef.current.set(s.id, buf);
     } catch {} // best-effort — silent failure is fine
   }, []);
+
+  /* ── Expose render control to puppeteer ── */
+  useEffect(() => {
+    if (!IS_RENDER) return;
+    const sc    = SCENES[idx];
+    const sents = splitSentences(sc.vo);
+    const wc    = sents.map(s => s.split(/\s+/).length);
+    const total = wc.reduce((a, b) => a + b, 0);
+    const fracs = wc.reduce((acc, w) => { acc.push((acc[acc.length - 1] || 0) + w / total); return acc; }, []);
+    window.__renderSetP = (p) => {
+      setProgress(p);
+      let si = sents.length - 1;
+      for (let j = 0; j < fracs.length; j++) { if (p <= fracs[j]) { si = j; break; } }
+      setSentIdx(si);
+    };
+    window.__renderReady = true;
+  }, [IS_RENDER, idx]);
 
   const playScene = useCallback(async (sceneIdx) => {
     const s = SCENES[sceneIdx];
@@ -2744,6 +2767,23 @@ export default function DemoPlayer() {
 
   const totalPct = ((idx + progress) / SCENES.length) * 100;
   const currentSentence = sentences[sentIdx] || '';
+
+  /* ── RENDER MODE: fullscreen scene, no chrome, no splash ── */
+  if (IS_RENDER) {
+    return (
+      <div id="render-root" style={{ position: 'fixed', inset: 0, overflow: 'hidden', fontFamily: 'Sora,sans-serif', background: '#f8fafc' }}>
+        <div style={{ position: 'absolute', inset: 0 }}>
+          <SceneVisual scene={scene} progress={progress} />
+        </div>
+        <SceneStatStrip scene={scene} progress={progress} />
+        {/* Caption bar — matches normal player position */}
+        <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, zIndex: 50, minHeight: 30, display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'rgba(0,0,0,0.70)', backdropFilter: 'blur(8px)', padding: '4px 20px' }}>
+          {currentSentence ? <span style={{ fontSize: 11.5, color: '#fff', textAlign: 'center', lineHeight: 1.4 }}>{currentSentence}</span> : null}
+        </div>
+        <style>{`body,html{margin:0;padding:0;overflow:hidden;width:1280px;height:720px;}`}</style>
+      </div>
+    );
+  }
 
   return (
     <section id="demo" style={{ background: 'linear-gradient(180deg,#000004 0%,#060810 100%)', padding: '64px 20px 72px', fontFamily: 'Sora,sans-serif' }}>
