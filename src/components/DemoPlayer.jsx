@@ -134,7 +134,7 @@ const SCENES = [
     id: 6, type: 'product', color: AMBER,
     title: 'Clinical Intelligence',
     breadcrumb: 'Ambient Scribe · CDI',
-    vo: "While the doctor sees the patient, Docstribe is already working. Three signals mapped. Three gaps found. A Nephrology referral — not yet ordered. Jardiance — not yet prescribed. A follow-up HbA1c — not scheduled. The physician acts on each — one click, three actions captured before the patient leaves the room. Then the CDI query fires: is this diabetes controlled or uncontrolled? The physician responds in five seconds. The code corrects. Four thousand two hundred dirhams — captured right there, at point of care.",
+    vo: "While the doctor sees the patient, Docstribe is already working. Three signals mapped. Three gaps found. A Nephrology referral — not yet ordered. Jardiance — not yet prescribed. A follow-up HbA1c — not scheduled. The physician acts on each — one click, three actions captured before the patient leaves the room. Then the CDI query fires: is this diabetes controlled or uncontrolled? The physician responds in five seconds. The code corrects. Two thousand four hundred and fifty dirhams — captured right there, at point of care.",
     beats: [
       { at: 0.06, stat: 'Listens live',          sub: 'physician-patient encounter · ambient · passive' },
       { at: 0.28, stat: 'Holistic profile built', sub: 'risk · next steps · codes · governance · real time' },
@@ -1446,7 +1446,7 @@ function CDIScreen({ progress }) {
             <div style={{ fontSize: 26, fontWeight: 900, color: locked ? PURPLE : DIM, fontFamily: 'Sora', lineHeight: 1, transition: 'color 0.8s', textShadow: 'none' }}>
               {locked ? <CountUp value={locked ? '1.04' : '0.82'} duration={600} key={locked ? 'locked' : 'base'} /> : '0.82'}
             </div>
-            {locked && <div style={{ fontSize: 8, color: GREEN, fontWeight: 700, marginTop: 2, animation: 'dpBeatIn 0.4s ease both' }}>+AED 4,200</div>}
+            {locked && <div style={{ fontSize: 8, color: GREEN, fontWeight: 700, marginTop: 2, animation: 'dpBeatIn 0.4s ease both' }}>+AED 2,450</div>}
           </div>
         </div>
 
@@ -1624,7 +1624,7 @@ function CDIScreen({ progress }) {
                     ))}
                     {locked && (
                       <div style={{ textAlign: 'center', paddingTop: 4, animation: 'dpSpringIn 0.7s cubic-bezier(0.34,1.4,0.64,1) both' }}>
-                        <div style={{ fontSize: 28, fontWeight: 900, color: GREEN, fontFamily: 'Sora', letterSpacing: -1.5, lineHeight: 1, textShadow: 'none' }}>+AED 4,200</div>
+                        <div style={{ fontSize: 28, fontWeight: 900, color: GREEN, fontFamily: 'Sora', letterSpacing: -1.5, lineHeight: 1, textShadow: 'none' }}>+AED 2,450</div>
                         <div style={{ fontSize: 9, color: DIM, marginTop: 4 }}>captured at point of care</div>
                       </div>
                     )}

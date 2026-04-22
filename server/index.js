@@ -418,7 +418,7 @@ const UAE_DEMO_SCENES = [
   {
     id: 6, timecode: '0:42–1:00', journeyStage: 'ambient-cdi',
     title: 'Clinical Intelligence',
-    voText: "While the doctor sees the patient, Docstribe is already working. Three signals mapped. Three gaps found. A Nephrology referral — not yet ordered. Jardiance — not yet prescribed. A follow-up HbA1c — not scheduled. The physician acts on each — one click, three actions captured before the patient leaves the room. Then the CDI query fires: is this diabetes controlled or uncontrolled? The physician responds in five seconds. The code corrects. Four thousand two hundred dirhams — captured right there, at point of care.",
+    voText: "While the doctor sees the patient, Docstribe is already working. Three signals mapped. Three gaps found. A Nephrology referral — not yet ordered. Jardiance — not yet prescribed. A follow-up HbA1c — not scheduled. The physician acts on each — one click, three actions captured before the patient leaves the room. Then the CDI query fires: is this diabetes controlled or uncontrolled? The physician responds in five seconds. The code corrects. Two thousand four hundred and fifty dirhams — captured right there, at point of care.",
   },
   {
     id: 7, timecode: '1:00–1:14', journeyStage: 'coding',
