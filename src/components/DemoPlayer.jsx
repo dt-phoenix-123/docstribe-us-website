@@ -640,9 +640,9 @@ function KPIScene({ scene, progress }) {
         </div>
       </div>
 
-      {/* ── Phase 1 content ── */}
+      {/* ── Phase 1 content — removed from DOM once Phase 2 fully takes over ── */}
       <div style={{ flex: 1, position: 'relative', overflow: 'hidden' }}>
-        <div style={{ position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 14, padding: '12px 48px', opacity: introOpacity, transition: 'opacity 0.6s ease', pointerEvents: introOpacity < 0.1 ? 'none' : 'auto', zIndex: 1 }}>
+        {introOpacity > 0 && <div style={{ position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 14, padding: '12px 48px', opacity: introOpacity, transition: 'opacity 0.5s ease', pointerEvents: 'none', zIndex: 1 }}>
 
           {/* Compliance trust strip */}
           {progress >= 0.03 && (
@@ -677,20 +677,22 @@ function KPIScene({ scene, progress }) {
             <div style={{ display: 'flex', gap: 14, justifyContent: 'center', width: '100%', maxWidth: 380 }}>
               {/* 100+ Hospitals — fires at "A hundred hospitals" */}
               <div style={{ flex: 1, textAlign: 'center', padding: '12px 10px', background: `${TEAL}0e`, border: `1px solid ${TEAL}30`, borderRadius: 14, animation: 'dpSpringIn 0.7s cubic-bezier(0.34,1.4,0.64,1) both' }}>
+                <div style={{ fontSize: 7, fontWeight: 600, color: `${TEAL}99`, letterSpacing: 0.3, marginBottom: 4 }}>deployed across</div>
                 <div style={{ fontSize: 42, fontWeight: 900, color: TEAL, lineHeight: 1, letterSpacing: -2, fontFamily: 'Sora' }}>
                   <CountUp value="100+" duration={700} key="h100" />
                 </div>
-                <div style={{ fontSize: 8, fontWeight: 700, color: TEAL, marginTop: 5 }}>Hospital Deployments</div>
+                <div style={{ fontSize: 8, fontWeight: 700, color: TEAL, marginTop: 5 }}>hospitals</div>
                 <div style={{ fontSize: 6.5, color: MUTED, marginTop: 2 }}>US · UAE · India</div>
               </div>
               {/* 10M+ Lives — fires slightly later at "Ten million patient lives" */}
               {progress >= 0.46 && (
                 <div style={{ flex: 1, textAlign: 'center', padding: '12px 10px', background: `${INDIGO}0e`, border: `1px solid ${INDIGO}30`, borderRadius: 14, animation: 'dpSpringIn 0.7s cubic-bezier(0.34,1.4,0.64,1) both' }}>
+                  <div style={{ fontSize: 7, fontWeight: 600, color: `${INDIGO}99`, letterSpacing: 0.3, marginBottom: 4 }}>managing</div>
                   <div style={{ fontSize: 42, fontWeight: 900, color: INDIGO, lineHeight: 1, letterSpacing: -2, fontFamily: 'Sora' }}>
                     <CountUp value="10M+" duration={800} key="m10" />
                   </div>
-                  <div style={{ fontSize: 8, fontWeight: 700, color: INDIGO, marginTop: 5 }}>Patient Lives</div>
-                  <div style={{ fontSize: 6.5, color: MUTED, marginTop: 2 }}>managed globally</div>
+                  <div style={{ fontSize: 8, fontWeight: 700, color: INDIGO, marginTop: 5 }}>patient lives</div>
+                  <div style={{ fontSize: 6.5, color: MUTED, marginTop: 2 }}>globally</div>
                 </div>
               )}
             </div>
@@ -722,7 +724,7 @@ function KPIScene({ scene, progress }) {
               <div style={{ fontSize: 10, fontWeight: 800, color: TXT, marginTop: 3 }}>↓30% Denials · 99% Clean Rate · +0.15 CMI</div>
             </div>
           )}
-        </div>
+        </div>}
 
         {/* ── Phase 2: KPI Outcomes ── */}
         <div style={{ position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 14, padding: '16px 28px', opacity: kpiOpacity, transition: 'opacity 0.6s ease', pointerEvents: kpiOpacity < 0.1 ? 'none' : 'auto', zIndex: 1 }}>
