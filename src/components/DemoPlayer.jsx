@@ -134,7 +134,7 @@ const SCENES = [
     id: 6, type: 'product', color: AMBER,
     title: 'Clinical Intelligence',
     breadcrumb: 'Ambient Scribe · CDI',
-    vo: "While the doctor sees the patient, Docstribe is already working. Three signals mapped. Three gaps found. A Nephrology referral — not yet ordered. Medications — not yet ordered. A follow-up HbA1c — not scheduled. The physician acts on each — one click, three actions captured, all grounded in ACC and AHA guidelines, before the patient leaves the room. Then the CDI query fires: is this diabetes controlled or uncontrolled? The physician responds in five seconds. The code corrects. Two thousand four hundred and fifty dirhams — captured right there, at point of care.",
+    vo: "While the doctor sees the patient, Docstribe is already working. Three signals mapped. Three gaps found. A Nephrology referral — not yet ordered. Medications — not yet ordered. A follow-up HbA1c — not scheduled. The physician acts on each — one click, three actions captured, all grounded in clinical guidelines such as ACC and AHA, before the patient leaves the room. Then the CDI query fires: is this diabetes controlled or uncontrolled? The physician responds in five seconds. The code corrects. Two thousand four hundred and fifty dirhams — captured right there, at point of care.",
     beats: [
       { at: 0.06, stat: 'Listens live',          sub: 'physician-patient encounter · ambient · passive' },
       { at: 0.28, stat: 'Holistic profile built', sub: 'risk · next steps · codes · governance · real time' },
@@ -1542,6 +1542,23 @@ function CDIScreen({ progress }) {
                       </div>
                     </div>
                   ))}
+
+                  {/* ── Clinical guidelines banner — fires when VO says "ACC and AHA" ── */}
+                  {opp3Click && (
+                    <div style={{ marginTop: 2, paddingTop: 10, borderTop: `1px solid ${BORDER}`, animation: 'dpBeatIn 0.5s ease both' }}>
+                      <div style={{ fontSize: 7, fontWeight: 600, color: MUTED, marginBottom: 7, letterSpacing: 0.3 }}>All actionables grounded in clinical guidelines:</div>
+                      <div style={{ display: 'flex', gap: 7, flexWrap: 'wrap' }}>
+                        {[
+                          { label: 'ACC',       col: RED    },
+                          { label: 'AHA',       col: INDIGO },
+                          { label: 'ADA 2024',  col: TEAL   },
+                          { label: 'KDIGO 2024',col: PURPLE },
+                        ].map(({ label, col }, i) => (
+                          <span key={label} style={{ fontSize: 8, fontWeight: 800, color: col, background: `${col}14`, border: `1.5px solid ${col}40`, borderRadius: 7, padding: '4px 11px', animation: `dpSpringIn 0.45s cubic-bezier(0.34,1.4,0.64,1) ${i * 0.09}s both`, boxShadow: `0 0 8px ${col}20` }}>{label}</span>
+                        ))}
+                      </div>
+                    </div>
+                  )}
                 </div>
               )}
 
