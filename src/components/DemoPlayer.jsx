@@ -108,7 +108,7 @@ const SCENES = [
   {
     id: 2, type: 'kpi', color: TEAL,
     title: 'Introducing Docstribe',
-    vo: "Docstribe is purpose-built to close this gap. Built by doctors with more than thirty years of grounded clinical experience — not software engineers guessing at medicine. A hundred hospitals. Ten million patient lives. This is a clinician-built intelligence engine. Denials drop by thirty percent. Clean claim rates reach ninety-nine percent. Case mix index rises by point fifteen. Sixty days. Contractually guaranteed.",
+    vo: "Docstribe is purpose-built to close this gap. Built by doctors with more than thirty years of grounded clinical experience — not software engineers guessing at medicine. Deployed in over a hundred hospitals. Managing ten million patient lives. This is a clinician-built intelligence engine. Denials drop by thirty percent. Clean claim rates reach ninety-nine percent. Case mix index rises by point fifteen. Sixty days. Contractually guaranteed.",
     beats: [
       { at: 0.04, stat: 'Docstribe',      sub: 'Clinical intelligence · clinician-built' },
       { at: 0.22, stat: '100+ Hospitals', sub: 'US · UAE · India · live deployments' },
