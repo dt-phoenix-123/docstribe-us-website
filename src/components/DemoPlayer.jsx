@@ -373,108 +373,106 @@ const Badge = ({ text, color }) => (
 
 /* ══════════════════ SCENE VISUALS ══════════════════════════════ */
 
-/* Scene 1 — Revenue gap: Cinematic dark corporate opening */
+/* Scene 1 — Revenue gap: Corporate executive, centered, timed to VO */
 function StatScene({ scene, progress }) {
   const p = progress;
-  const beat0Show   = p >= 0.04;
-  const beat0Active = p >= 0.12;
-  const beat1Show   = p >= 0.27;
-  const beat1Active = p >= 0.35;
-  const beat2Show   = p >= 0.52;
-  const beat3Show   = p >= 0.87;
+
+  // ── Timings aligned to VO beats (fractions of actual audio duration) ─
+  // VO: "In the UAE — twelve to eighteen percent…" ≈83 words total
+  const beat0Show    = p >= 0.05;   // "twelve to eighteen percent" (word 6/83 ≈ 0.07)
+  const beat0Active  = p >= 0.12;   // stat activates red
+  const showClaim    = p >= 0.15;   // denied claim card — illustrates "claims denied"
+  const showCostCard = p >= 0.21;   // "three point five million dirhams" (word 19/83)
+  const showGlobalCard = p >= 0.40; // "World-class systems stay below five percent" (word 35/83)
+  const beat1Show    = p >= 0.44;   // "sixty-five percent" (word 38/83 ≈ 0.46)
+  const beat1Active  = p >= 0.51;   // gauge sweeps after "entirely preventable"
+  const beat2Show    = p >= 0.63;   // "Four root causes" (word 55/83 ≈ 0.66)
+  const beat3Show    = p >= 0.85;   // "Eighty-seven percent" (word 73/83 ≈ 0.88)
   const phase = beat3Show ? 3 : beat2Show ? 2 : 1;
 
   const GAP_ITEMS = [
-    { label: 'Clinical Documentation Gaps', pct: 38, sub: 'CC/MCC missed · DRG undercoded at discharge',  col: AMBER,  threshold: 0.52 },
-    { label: 'Missing Authorizations',       pct: 27, sub: 'Auth not captured at point of order entry',     col: INDIGO, threshold: 0.62 },
-    { label: 'Coding Errors',                pct: 22, sub: 'ICD/DRG mismatches · NCCI violations',         col: RED,    threshold: 0.71 },
+    { label: 'Clinical Documentation Gaps', pct: 38, sub: 'CC/MCC missed · DRG undercoded at discharge',  col: AMBER,  threshold: 0.67 },
+    { label: 'Missing Authorizations',       pct: 27, sub: 'Auth not captured at point of order entry',     col: INDIGO, threshold: 0.72 },
+    { label: 'Coding Errors',                pct: 22, sub: 'ICD/DRG mismatches · NCCI violations',         col: RED,    threshold: 0.76 },
     { label: 'Claim Edit Failures',          pct: 13, sub: 'Payer edit rules · MUE limits unmet',          col: PURPLE, threshold: 0.80 },
   ];
-
-  // Light palette — consistent with all product screens
-  const CARD   = 'rgba(255,255,255,0.88)';
-  const CBORD  = BORDER;
-  const HTXT   = TXT;
-  const STXT   = DIM;
-  const MONO   = MUTED;
 
   return (
     <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(160deg,#e8f2ff 0%,#f0f8f4 40%,#ece8ff 80%,#e8f0ff 100%)', display: 'flex', flexDirection: 'column', fontFamily: 'Sora, sans-serif', overflow: 'hidden' }}>
 
-      {/* Radial glow */}
-      <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none', background: `radial-gradient(ellipse 70% 50% at 50% 20%, ${TEAL}0c 0%, transparent 70%)`, animation: 'dpBreath 4s ease-in-out infinite' }} />
-
-      {/* Subtle grid overlay */}
-      <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none', backgroundImage: 'linear-gradient(rgba(100,116,139,0.055) 1px,transparent 1px),linear-gradient(90deg,rgba(100,116,139,0.055) 1px,transparent 1px)', backgroundSize: '48px 48px' }} />
+      {/* Background */}
+      <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none', background: `radial-gradient(ellipse 70% 50% at 50% 40%, ${TEAL}0b 0%, transparent 70%)`, animation: 'dpBreath 4s ease-in-out infinite' }} />
+      <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none', backgroundImage: 'linear-gradient(rgba(100,116,139,0.05) 1px,transparent 1px),linear-gradient(90deg,rgba(100,116,139,0.05) 1px,transparent 1px)', backgroundSize: '48px 48px' }} />
 
       {/* ── HEADER STRIP ── */}
-      <div style={{ position: 'relative', zIndex: 2, display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '9px 16px', borderBottom: `1px solid ${BORDER}`, flexShrink: 0, opacity: p >= 0.02 ? 1 : 0, transition: 'opacity 0.8s', background: 'rgba(255,255,255,0.45)', backdropFilter: 'blur(6px)' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+      <div style={{ position: 'relative', zIndex: 2, display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '8px 16px', borderBottom: `1px solid ${BORDER}`, flexShrink: 0, opacity: p >= 0.02 ? 1 : 0, transition: 'opacity 0.8s', background: 'rgba(255,255,255,0.40)', backdropFilter: 'blur(6px)' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 7 }}>
           <div style={{ width: 5, height: 5, borderRadius: '50%', background: RED, boxShadow: `0 0 6px ${RED}`, animation: 'dpPulse 1.2s ease-in-out infinite' }} />
           <span style={{ fontSize: 6, fontWeight: 700, color: MUTED, letterSpacing: 1.8, textTransform: 'uppercase' }}>UAE Healthcare · Revenue Intelligence Brief · 2024</span>
         </div>
-        {/* Claim flow strip — right-aligned */}
         <div style={{ display: 'flex', gap: 2.5, alignItems: 'center' }}>
           {Array.from({length: 12}, (_, i) => {
             const denied = i === 3 || i === 9;
             return (
-              <div key={i} style={{ width: denied ? 22 : 15, height: 6, borderRadius: 2, background: denied ? `${RED}18` : `${TEAL}10`, border: `1px solid ${denied ? RED + '45' : TEAL + '22'}`, boxShadow: denied && beat0Active ? `0 0 8px ${RED}50` : 'none', transition: 'box-shadow 0.4s', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <div key={i} style={{ width: denied ? 20 : 14, height: 6, borderRadius: 2, background: denied ? `${RED}18` : `${TEAL}10`, border: `1px solid ${denied ? RED + '45' : TEAL + '22'}`, boxShadow: denied && beat0Active ? `0 0 7px ${RED}50` : 'none', transition: 'box-shadow 0.4s', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                 {denied && beat0Active && <span style={{ fontSize: 4, color: RED, fontWeight: 900 }}>✕</span>}
               </div>
             );
           })}
-          <span style={{ fontSize: 5.5, fontWeight: 700, color: RED, marginLeft: 5, opacity: beat0Active ? 1 : 0, transition: 'opacity 0.6s' }}>≈2 in 12 denied</span>
+          <span style={{ fontSize: 5.5, fontWeight: 700, color: RED, marginLeft: 4, opacity: beat0Active ? 1 : 0, transition: 'opacity 0.6s' }}>≈2 in 12 denied</span>
         </div>
       </div>
 
-      {/* ── MAIN CONTENT ── */}
+      {/* ── MAIN ── */}
       <div style={{ position: 'relative', zIndex: 1, flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
 
-        {/* ═══ PHASE 1: Hero stats — cinematic one-then-two reveal ═══ */}
+        {/* ═══ PHASE 1: Stats — vertically centered in mid-screen ═══ */}
         {phase === 1 && (
-          <div style={{ flex: 1, display: 'flex', flexDirection: 'column', padding: '10px 16px 10px', gap: 5, overflow: 'hidden' }}>
+          <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '8px 20px', gap: 10, overflow: 'hidden' }}>
 
-            {/* Eyebrow */}
+            {/* Eyebrow label — centered */}
             {beat0Show && (
-              <div style={{ animation: 'dpBeatIn 0.5s ease both', flexShrink: 0 }}>
-                <span style={{ fontSize: 5.5, fontWeight: 700, color: MONO, letterSpacing: 2, textTransform: 'uppercase' }}>First-Pass Denial Rate · UAE Private Hospitals</span>
+              <div style={{ animation: 'dpBeatIn 0.5s ease both', textAlign: 'center' }}>
+                <span style={{ fontSize: 6, fontWeight: 700, color: MUTED, letterSpacing: 2, textTransform: 'uppercase' }}>First-Pass Denial Rate · UAE Private Hospitals</span>
               </div>
             )}
 
-            {/* Hero number */}
+            {/* Hero stat — centered, dominant */}
             {beat0Show && (
-              <div style={{ flexShrink: 0, animation: 'dpEmergeStat 0.9s cubic-bezier(0.34,1.2,0.64,1) both' }}>
-                <div style={{ fontSize: beat1Show ? 36 : 52, fontWeight: 900, color: beat0Active ? RED : `${RED}50`, lineHeight: 1, letterSpacing: -2, transition: 'all 0.6s cubic-bezier(0.34,1.2,0.64,1)', fontFamily: 'Sora' }}>
+              <div style={{ textAlign: 'center', animation: 'dpEmergeStat 0.9s cubic-bezier(0.34,1.2,0.64,1) both' }}>
+                <div style={{ fontSize: beat1Show ? 40 : 58, fontWeight: 900, color: beat0Active ? RED : `${RED}45`, lineHeight: 1, letterSpacing: -2.5, transition: 'all 0.65s cubic-bezier(0.34,1.2,0.64,1)', fontFamily: 'Sora' }}>
                   <CountUp value="12–18%" duration={900} key={`b0-${beat0Show}`}/>
                 </div>
-                {!beat1Show && <div style={{ fontSize: 8.5, color: STXT, marginTop: 4 }}>of UAE hospital claims denied on first submission</div>}
+                <div style={{ fontSize: 8.5, color: DIM, marginTop: 5, textAlign: 'center' }}>of UAE hospital claims denied on first submission</div>
               </div>
             )}
 
-            {/* Context row — AED impact + benchmark */}
-            {beat0Active && p >= 0.15 && !beat1Show && (
-              <div style={{ display: 'flex', gap: 8, animation: 'dpBeatIn 0.5s ease 0.15s both', flexShrink: 0 }}>
-                <div style={{ flex: 1, padding: '8px 10px', background: `${RED}0c`, border: `1px solid ${RED}25`, borderRadius: 8 }}>
+            {/* Context row: AED 3.5M (at "three point five million") + <5% (at "world-class") — hidden when 65% appears */}
+            {showCostCard && !beat1Show && (
+              <div style={{ display: 'flex', gap: 10, width: '100%', maxWidth: 300, animation: 'dpBeatIn 0.5s ease both' }}>
+                <div style={{ flex: 1, padding: '8px 10px', background: `${RED}0c`, border: `1px solid ${RED}22`, borderRadius: 9, textAlign: 'center' }}>
                   <div style={{ fontSize: 5.5, color: MUTED, letterSpacing: 1, textTransform: 'uppercase', marginBottom: 3 }}>Annual Revenue at Risk</div>
-                  <div style={{ fontSize: 16, fontWeight: 900, color: RED, fontFamily: 'Sora' }}>AED <CountUp value="3.5M+" duration={1200}/></div>
-                  <div style={{ fontSize: 6, color: DIM, marginTop: 1 }}>per 350-bed facility · avoidable</div>
+                  <div style={{ fontSize: 15, fontWeight: 900, color: RED, fontFamily: 'Sora', lineHeight: 1.1 }}>AED <CountUp value="3.5M+" duration={1100}/></div>
+                  <div style={{ fontSize: 6, color: DIM, marginTop: 2 }}>per 350-bed facility</div>
                 </div>
-                <div style={{ flex: 1, padding: '8px 10px', background: `${GREEN}08`, border: `1px solid ${GREEN}20`, borderRadius: 8 }}>
-                  <div style={{ fontSize: 5.5, color: MUTED, letterSpacing: 1, textTransform: 'uppercase', marginBottom: 3 }}>Best-in-Class Benchmark</div>
-                  <div style={{ fontSize: 16, fontWeight: 900, color: GREEN, fontFamily: 'Sora' }}>&lt; 5%</div>
-                  <div style={{ fontSize: 6, color: DIM, marginTop: 1 }}>denial rate · world-class RCM</div>
-                </div>
+                {showGlobalCard && (
+                  <div style={{ flex: 1, padding: '8px 10px', background: `${GREEN}08`, border: `1px solid ${GREEN}25`, borderRadius: 9, textAlign: 'center', animation: 'dpBeatIn 0.5s ease both' }}>
+                    <div style={{ fontSize: 5.5, color: MUTED, letterSpacing: 1, textTransform: 'uppercase', marginBottom: 3 }}>Global Standard</div>
+                    <div style={{ fontSize: 15, fontWeight: 900, color: GREEN, fontFamily: 'Sora', lineHeight: 1.1 }}>&lt; 5%</div>
+                    <div style={{ fontSize: 6, color: DIM, marginTop: 2 }}>world-class denial rate</div>
+                  </div>
+                )}
               </div>
             )}
 
-            {/* Denied claim card */}
-            {beat0Active && p >= 0.19 && !beat1Show && (
-              <div style={{ borderRadius: 9, background: 'rgba(255,255,255,0.90)', border: `1.5px solid ${RED}40`, boxShadow: `0 3px 16px ${RED}10`, padding: '8px 11px', animation: 'dpSpringIn 0.6s cubic-bezier(0.34,1.4,0.64,1) both', flexShrink: 0 }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 6 }}>
+            {/* Denied claim — centered, compact (disappears before 65% stat) */}
+            {showClaim && p < 0.38 && (
+              <div style={{ borderRadius: 9, background: 'rgba(255,255,255,0.92)', border: `1.5px solid ${RED}40`, boxShadow: `0 3px 18px ${RED}10`, padding: '8px 12px', animation: 'dpSpringIn 0.6s cubic-bezier(0.34,1.4,0.64,1) both', width: '100%', maxWidth: 260 }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 5 }}>
                   <span style={{ fontSize: 6, fontWeight: 700, color: MUTED, letterSpacing: 0.5 }}>CLAIM · AE-24-8821</span>
-                  <span style={{ fontSize: 9.5, fontWeight: 900, color: RED, letterSpacing: 1.5, border: `1.5px solid ${RED}`, borderRadius: 4, padding: '1px 6px', background: `${RED}08` }}>DENIED</span>
+                  <span style={{ fontSize: 9, fontWeight: 900, color: RED, letterSpacing: 1.5, border: `1.5px solid ${RED}`, borderRadius: 4, padding: '1px 6px', background: `${RED}08` }}>DENIED</span>
                 </div>
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '4px 14px' }}>
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '3px 12px' }}>
                   {[['Patient','F.H. · 42F'],['Payer','Daman'],['Amount','AED 2,450'],['Service','Endocrinology']].map(([k,v]) => (
                     <div key={k} style={{ display: 'flex', justifyContent: 'space-between' }}>
                       <span style={{ fontSize: 5.5, color: MUTED }}>{k}</span>
@@ -485,35 +483,39 @@ function StatScene({ scene, progress }) {
               </div>
             )}
 
-            {/* Beat 1 — Preventable % (slides in at p=0.27) */}
+            {/* Divider between stats */}
             {beat1Show && (
-              <div style={{ animation: 'dpBeatIn 0.6s ease both', flexShrink: 0 }}>
-                <div style={{ height: 1, background: CBORD, margin: '4px 0 6px' }} />
-                <div style={{ fontSize: 5.5, fontWeight: 700, color: MONO, letterSpacing: 2, textTransform: 'uppercase', marginBottom: 4 }}>Of Those Denials — Entirely Preventable</div>
-                <div style={{ fontSize: 36, fontWeight: 900, color: beat1Active ? AMBER : `${AMBER}45`, lineHeight: 1, letterSpacing: -2, transition: 'color 0.6s', fontFamily: 'Sora' }}>
+              <div style={{ width: 48, height: 1, background: BORDER, animation: 'dpBeatIn 0.3s ease both' }} />
+            )}
+
+            {/* Beat 1: 60-70% preventable — centered */}
+            {beat1Show && (
+              <div style={{ textAlign: 'center', animation: 'dpBeatIn 0.6s ease both' }}>
+                <div style={{ fontSize: 6, fontWeight: 700, color: MUTED, letterSpacing: 2, textTransform: 'uppercase', marginBottom: 5 }}>Of Those Denials — Entirely Preventable</div>
+                <div style={{ fontSize: 40, fontWeight: 900, color: beat1Active ? AMBER : `${AMBER}45`, lineHeight: 1, letterSpacing: -2, transition: 'color 0.6s', fontFamily: 'Sora' }}>
                   <CountUp value="60–70%" duration={900} key={`b1-${beat1Show}`}/>
                 </div>
-                <div style={{ fontSize: 8, color: STXT, marginTop: 4 }}>a root cause that could have been caught before submission</div>
-                {/* Arc gauge */}
-                {p >= 0.31 && (() => {
-                  const R = 34, cx = 50, cy = 40, circ = Math.PI * R;
+                <div style={{ fontSize: 8, color: DIM, marginTop: 5 }}>caught before the claim ever leaves the building</div>
+                {/* Arc gauge — centered (appears when VO says "entirely preventable") */}
+                {p >= 0.50 && (() => {
+                  const R = 34, cx = 52, cy = 40, circ = Math.PI * R;
                   return (
-                    <div style={{ marginTop: 6, display: 'flex', alignItems: 'center', gap: 18, animation: 'dpBeatIn 0.5s ease both' }}>
-                      <svg width="100" height="48" viewBox="0 0 100 48" style={{ overflow: 'visible', flexShrink: 0 }}>
-                        <path d={`M ${cx-R} ${cy} A ${R} ${R} 0 0 1 ${cx+R} ${cy}`} fill="none" stroke={`${MUTED}20`} strokeWidth="7" strokeLinecap="round"/>
+                    <div style={{ marginTop: 8, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 5, animation: 'dpBeatIn 0.5s ease both' }}>
+                      <svg width="104" height="50" viewBox="0 0 104 50" style={{ overflow: 'visible' }}>
+                        <path d={`M ${cx-R} ${cy} A ${R} ${R} 0 0 1 ${cx+R} ${cy}`} fill="none" stroke={`${MUTED}22`} strokeWidth="7" strokeLinecap="round"/>
                         <path d={`M ${cx-R} ${cy} A ${R} ${R} 0 0 1 ${cx+R} ${cy}`} fill="none" stroke={AMBER} strokeWidth="7" strokeLinecap="round"
                           strokeDasharray={`${beat1Active ? circ * 0.65 : 0} ${circ}`}
                           style={{ transition: 'stroke-dasharray 1.5s cubic-bezier(0.34,1.2,0.64,1) 0.2s', filter: `drop-shadow(0 0 5px ${AMBER}65)` }}/>
-                        <text x={cx} y={cy - 5} fontSize="14" fontWeight="900" textAnchor="middle" fill={beat1Active ? AMBER : `${MUTED}40`} style={{ transition: 'fill 0.5s', fontFamily: 'Sora' }}>65%</text>
+                        <text x={cx} y={cy - 6} fontSize="13" fontWeight="900" textAnchor="middle" fill={beat1Active ? AMBER : `${MUTED}45`} style={{ transition: 'fill 0.5s', fontFamily: 'Sora' }}>65%</text>
                       </svg>
-                      <div style={{ display: 'flex', flexDirection: 'column', gap: 5 }}>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: 5 }}>
-                          <div style={{ width: 6, height: 6, borderRadius: '50%', background: AMBER, flexShrink: 0 }} />
+                      <div style={{ display: 'flex', gap: 14 }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
+                          <div style={{ width: 6, height: 6, borderRadius: '50%', background: AMBER }} />
                           <span style={{ fontSize: 6.5, fontWeight: 700, color: AMBER }}>65% Preventable</span>
                         </div>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: 5 }}>
-                          <div style={{ width: 6, height: 6, borderRadius: '50%', background: 'rgba(255,255,255,0.22)', flexShrink: 0 }} />
-                          <span style={{ fontSize: 6.5, color: STXT }}>35% Unavoidable</span>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
+                          <div style={{ width: 6, height: 6, borderRadius: '50%', background: `${MUTED}45` }} />
+                          <span style={{ fontSize: 6.5, color: MUTED }}>35% Unavoidable</span>
                         </div>
                       </div>
                     </div>
@@ -524,75 +526,69 @@ function StatScene({ scene, progress }) {
           </div>
         )}
 
-        {/* ═══ PHASE 2: Timeline of 4 root causes ═══ */}
+        {/* ═══ PHASE 2: Timeline — centered, narrower ═══ */}
         {phase === 2 && (
-          <div style={{ flex: 1, display: 'flex', flexDirection: 'column', padding: '10px 16px 10px', gap: 8, overflow: 'hidden' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexShrink: 0, animation: 'dpBeatIn 0.5s ease both' }}>
-              <span style={{ fontSize: 6.5, fontWeight: 700, color: MONO, letterSpacing: 1.8, textTransform: 'uppercase' }}>4 Root Causes · Same Pattern · Every Time</span>
-              <div style={{ flex: 1, height: 1, background: CBORD }} />
+          <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '10px 16px', gap: 8, overflow: 'hidden' }}>
+            <div style={{ width: '100%', maxWidth: 360, display: 'flex', alignItems: 'center', gap: 10, flexShrink: 0, animation: 'dpBeatIn 0.5s ease both' }}>
+              <span style={{ fontSize: 6.5, fontWeight: 700, color: MUTED, letterSpacing: 1.5, textTransform: 'uppercase' }}>4 Root Causes · Same Pattern · Every Time</span>
+              <div style={{ flex: 1, height: 1, background: BORDER }} />
             </div>
-            {/* Timeline */}
-            <div style={{ position: 'relative', flex: 1, overflow: 'hidden' }}>
+            {/* Narrower, centered timeline */}
+            <div style={{ position: 'relative', width: '100%', maxWidth: 360, flex: 1, overflow: 'hidden' }}>
               {/* Vertical spine */}
-              <div style={{ position: 'absolute', left: 11, top: 8, bottom: 8, width: 1.5, background: `linear-gradient(180deg,${AMBER}50,${INDIGO}50,${RED}50,${PURPLE}50)`, borderRadius: 1 }} />
+              <div style={{ position: 'absolute', left: 11, top: 6, bottom: 6, width: 1.5, background: `linear-gradient(180deg,${AMBER}55,${INDIGO}55,${RED}55,${PURPLE}55)`, borderRadius: 1 }} />
               {GAP_ITEMS.map(({ label, pct, sub, col, threshold }, i) => {
                 const visible = p >= threshold;
                 if (!visible) return null;
                 const barActive = p >= threshold + 0.04;
                 return (
-                  <div key={label} style={{ display: 'flex', gap: 10, marginBottom: 11, position: 'relative', alignItems: 'flex-start', animation: 'dpSpringIn 0.55s cubic-bezier(0.34,1.4,0.64,1) both' }}>
-                    {/* Numbered circle node */}
+                  <div key={label} style={{ display: 'flex', gap: 10, marginBottom: 10, position: 'relative', alignItems: 'flex-start', animation: 'dpSpringIn 0.55s cubic-bezier(0.34,1.4,0.64,1) both' }}>
+                    {/* Numbered node */}
                     <div style={{ flexShrink: 0, width: 22, display: 'flex', justifyContent: 'center', paddingTop: 1 }}>
-                      <div style={{ width: 22, height: 22, borderRadius: '50%', background: col, display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1, boxShadow: `0 0 14px ${col}60`, flexShrink: 0 }}>
+                      <div style={{ width: 22, height: 22, borderRadius: '50%', background: col, display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1, boxShadow: `0 0 12px ${col}55`, flexShrink: 0 }}>
                         <span style={{ fontSize: 9, fontWeight: 900, color: '#fff' }}>{i + 1}</span>
                       </div>
                     </div>
-                    {/* Content card */}
-                    <div style={{ flex: 1, background: CARD, border: `1px solid ${CBORD}`, borderLeft: `2.5px solid ${col}`, borderRadius: 8, padding: '7px 10px' }}>
-                      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 8, marginBottom: 4 }}>
-                        <span style={{ fontSize: 8, fontWeight: 700, color: HTXT, lineHeight: 1.25 }}>{label}</span>
-                        <span style={{ fontSize: 18, fontWeight: 900, color: col, lineHeight: 1, flexShrink: 0, fontFamily: 'Sora' }}>{pct}%</span>
+                    {/* Card */}
+                    <div style={{ flex: 1, background: 'rgba(255,255,255,0.88)', border: `1px solid ${BORDER}`, borderLeft: `2.5px solid ${col}`, borderRadius: 8, padding: '6px 10px', boxShadow: '0 1px 6px rgba(0,0,0,0.06)' }}>
+                      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 8, marginBottom: 3 }}>
+                        <span style={{ fontSize: 8, fontWeight: 700, color: TXT, lineHeight: 1.25 }}>{label}</span>
+                        <span style={{ fontSize: 17, fontWeight: 900, color: col, lineHeight: 1, flexShrink: 0, fontFamily: 'Sora' }}>{pct}%</span>
                       </div>
-                      <div style={{ fontSize: 6, color: DIM, marginBottom: 5 }}>{sub}</div>
-                      <div style={{ height: 3.5, borderRadius: 2, background: 'rgba(255,255,255,0.06)', overflow: 'hidden' }}>
-                        <div style={{ height: '100%', borderRadius: 2, background: `linear-gradient(90deg,${col},${col}bb)`, width: barActive ? `${pct}%` : '0%', transition: 'width 1.1s cubic-bezier(0.34,1.2,0.64,1)', boxShadow: `0 0 6px ${col}55` }}/>
+                      <div style={{ fontSize: 6, color: DIM, marginBottom: 4 }}>{sub}</div>
+                      <div style={{ height: 3, borderRadius: 2, background: `${col}12`, overflow: 'hidden' }}>
+                        <div style={{ height: '100%', borderRadius: 2, background: `linear-gradient(90deg,${col},${col}bb)`, width: barActive ? `${pct}%` : '0%', transition: 'width 1.1s cubic-bezier(0.34,1.2,0.64,1)', boxShadow: `0 0 5px ${col}50` }}/>
                       </div>
                     </div>
                   </div>
                 );
               })}
-              {/* Summary row — all 4 visible */}
-              {p >= 0.84 && (
-                <div style={{ display: 'flex', gap: 6, marginLeft: 32, animation: 'dpBeatIn 0.5s ease both' }}>
-                  <div style={{ flex: 1, background: `${TEAL}14`, border: `1px solid ${TEAL}35`, borderRadius: 7, padding: '5px 8px', textAlign: 'center' }}>
-                    <div style={{ fontSize: 5.5, color: MONO, letterSpacing: 1, textTransform: 'uppercase' }}>Total Addressable</div>
-                    <div style={{ fontSize: 18, fontWeight: 900, color: TEAL, fontFamily: 'Sora', lineHeight: 1.2 }}>87%</div>
-                    <div style={{ fontSize: 5.5, color: STXT }}>catchable with Docstribe</div>
-                  </div>
-                </div>
-              )}
             </div>
           </div>
         )}
 
-        {/* ═══ PHASE 3: Bridge to solution ═══ */}
+        {/* ═══ PHASE 3: 87% → Bridge — triggered when all 4 roots shown ═══ */}
         {phase === 3 && (
-          <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 14, padding: '0 16px', animation: 'dpSpringIn 0.8s cubic-bezier(0.34,1.4,0.64,1) both' }}>
-            <div style={{ width: 48, height: 48, borderRadius: '50%', background: `${TEAL}20`, border: `2px solid ${TEAL}55`, display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: `0 0 32px ${TEAL}40`, animation: 'dpBreath 2.5s ease-in-out infinite' }}>
-              <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
-                <rect x="3" y="11" width="18" height="11" rx="2" stroke={TEAL} strokeWidth="2"/>
-                <path d="M7 11V7a5 5 0 0 1 10 0v4" stroke={TEAL} strokeWidth="2" strokeLinecap="round"/>
-              </svg>
+          <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 12, padding: '0 20px', animation: 'dpSpringIn 0.7s cubic-bezier(0.34,1.4,0.64,1) both' }}>
+            {/* 87% hero number */}
+            <div style={{ textAlign: 'center', animation: 'dpEmergeStat 0.8s cubic-bezier(0.34,1.2,0.64,1) both' }}>
+              <div style={{ fontSize: 5.5, fontWeight: 700, color: MUTED, letterSpacing: 2, textTransform: 'uppercase', marginBottom: 4 }}>Total Addressable · Docstribe</div>
+              <div style={{ fontSize: 62, fontWeight: 900, color: TEAL, fontFamily: 'Sora', lineHeight: 1, letterSpacing: -3, textShadow: `0 0 40px ${TEAL}40` }}>87%</div>
+              <div style={{ fontSize: 9, color: DIM, marginTop: 5 }}>of denials are catchable before the claim leaves the building</div>
             </div>
-            <div style={{ textAlign: 'center' }}>
-              <div style={{ fontSize: 22, fontWeight: 900, color: HTXT, letterSpacing: -0.5, lineHeight: 1.2, animation: 'dpEmergeStat 0.9s ease both' }}>Someone has to close all four.</div>
-              <div style={{ fontSize: 11, color: TEAL, fontWeight: 700, marginTop: 8, animation: 'dpBeatIn 0.7s ease 0.4s both' }}>Docstribe is built precisely to solve all four.</div>
+            {/* Divider */}
+            <div style={{ width: 40, height: 1.5, background: BORDER, borderRadius: 1, animation: 'dpBeatIn 0.4s ease 0.3s both' }} />
+            {/* Resolution */}
+            <div style={{ textAlign: 'center', animation: 'dpBeatIn 0.7s ease 0.35s both' }}>
+              <div style={{ fontSize: 20, fontWeight: 900, color: TXT, letterSpacing: -0.5, lineHeight: 1.2 }}>Someone has to close all four.</div>
+              <div style={{ fontSize: 10, color: TEAL, fontWeight: 700, marginTop: 6, animation: 'dpBeatIn 0.6s ease 0.6s both' }}>Docstribe is built precisely to solve all four.</div>
             </div>
-            <div style={{ display: 'flex', gap: 8 }}>
+            {/* Chips */}
+            <div style={{ display: 'flex', gap: 8, animation: 'dpBeatIn 0.5s ease 0.5s both' }}>
               {[['CDI', AMBER], ['Auth', INDIGO], ['Coding', RED], ['Edits', PURPLE]].map(([label, col], i) => (
-                <div key={i} style={{ padding: '8px 14px', background: `${col}15`, border: `1px solid ${col}40`, borderRadius: 8, animation: `dpSpringIn 0.5s cubic-bezier(0.34,1.4,0.64,1) ${0.3 + i * 0.09}s both`, textAlign: 'center' }}>
+                <div key={i} style={{ padding: '7px 12px', background: `${col}12`, border: `1px solid ${col}35`, borderRadius: 8, animation: `dpSpringIn 0.5s cubic-bezier(0.34,1.4,0.64,1) ${0.55 + i * 0.08}s both`, textAlign: 'center' }}>
                   <div style={{ fontSize: 8, fontWeight: 800, color: col }}>{label}</div>
-                  <div style={{ fontSize: 6, color: STXT, marginTop: 2 }}>Solved ✓</div>
+                  <div style={{ fontSize: 6, color: DIM, marginTop: 2 }}>Solved ✓</div>
                 </div>
               ))}
             </div>
