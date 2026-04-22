@@ -81,7 +81,7 @@ function splitSentences(text) {
 function highlightCaption(text) {
   if (!text) return null;
   // Split on key terms — capturing group keeps the matched parts at odd indices
-  const pattern = /(twelve to eighteen|sixty to seventy|thirty percent|twenty-five percent|zero point fifteen|sixty.?day|one point four million|eighteen thousand four hundred|two hundred fourteen|four hundred twenty|one thousand nine hundred|ninety-one thousand|twenty-eight thousand five hundred|zero point nine four|one point three four|zero leakage|per payor.?per batch|personalized intelligence|built for you|one click to submit|one click|order entry|zero manual entry|CARC \d+|ICD-10-CM|NABIDH|DHA|IR-DRG weight|IR-DRG|CMI|NCCI|MUE|Docstribe|guaranteed|Nephrology referral|Nephrology|Jardiance|HbA1c|CDI query|referral|three actions|nothing missed|\d+(?:\.\d+)?%)/gi;
+  const pattern = /(twelve to eighteen|sixty to seventy|thirty percent|twenty-five percent|zero point fifteen|sixty.?day|one point four million|eighteen thousand four hundred|two hundred fourteen|four hundred twenty|one thousand nine hundred|ninety-one thousand|twenty-eight thousand five hundred|zero point nine four|one point three four|zero leakage|per payor.?per batch|personalized intelligence|built for you|one click to submit|one click|order entry|zero manual entry|CARC \d+|ICD-10-CM|NABIDH|DHA|IR-DRG weight|IR-DRG|CMI|NCCI|MUE|Docstribe|guaranteed|Nephrology referral|Nephrology|Medications|ACC and AHA|ACC.AHA|HbA1c|CDI query|referral|three actions|nothing missed|\d+(?:\.\d+)?%)/gi;
   const parts = text.split(pattern);
   return parts.map((part, i) =>
     i % 2 === 1
@@ -134,7 +134,7 @@ const SCENES = [
     id: 6, type: 'product', color: AMBER,
     title: 'Clinical Intelligence',
     breadcrumb: 'Ambient Scribe · CDI',
-    vo: "While the doctor sees the patient, Docstribe is already working. Three signals mapped. Three gaps found. A Nephrology referral — not yet ordered. Jardiance — not yet prescribed. A follow-up HbA1c — not scheduled. The physician acts on each — one click, three actions captured before the patient leaves the room. Then the CDI query fires: is this diabetes controlled or uncontrolled? The physician responds in five seconds. The code corrects. Two thousand four hundred and fifty dirhams — captured right there, at point of care.",
+    vo: "While the doctor sees the patient, Docstribe is already working. Three signals mapped. Three gaps found. A Nephrology referral — not yet ordered. Medications — not yet ordered. A follow-up HbA1c — not scheduled. The physician acts on each — one click, three actions captured, all grounded in ACC and AHA guidelines, before the patient leaves the room. Then the CDI query fires: is this diabetes controlled or uncontrolled? The physician responds in five seconds. The code corrects. Two thousand four hundred and fifty dirhams — captured right there, at point of care.",
     beats: [
       { at: 0.06, stat: 'Listens live',          sub: 'physician-patient encounter · ambient · passive' },
       { at: 0.28, stat: 'Holistic profile built', sub: 'risk · next steps · codes · governance · real time' },
@@ -1073,7 +1073,7 @@ function AmbientScreen({ progress }) {
     financial: { pending: 'AED 2,450', authRef: 'DM-2024-01', authStatus: 'approved' },
     aiProfile: {
       referral: 'Nephrology consult',
-      next: 'Jardiance Rx + CDI query',
+      next: 'Medications order + CDI query',
       guideline: 'ADA 2024: eGFR 60→45 stage transition warrants SGLT2 initiation + nephrology co-management',
     },
   };
@@ -1087,7 +1087,7 @@ function AmbientScreen({ progress }) {
   const lines = [
     { text: '"HbA1c nine point one — definitely uncontrolled. She needs intensification."',               show: 0.12 },
     { text: 'BP one forty two over eighty eight. eGFR sixty eight — CKD Stage 3 territory.',            show: 0.22 },
-    { text: 'Adjusting Metformin, adding Jardiance ten milligrams. Nephrology referral flagged.',        show: 0.34 },
+    { text: 'Adjusting Metformin. Medications not yet ordered per ACC/AHA. Nephrology referral flagged.', show: 0.34 },
   ];
   const entities = [
     { label: 'HbA1c',      value: '9.1% ↑',    col: RED,    show: 0.14 },
@@ -1327,7 +1327,7 @@ function CDIScreen({ progress }) {
 
   // ── Timings aligned to VO (85-word script) ──────────────────────
   // "Three signals mapped" @word12 ≈0.14 · "Nephrology referral" @0.22
-  // "Jardiance" @0.28 · "HbA1c" @0.35 · "physician acts" @0.42
+  // "Medications" @0.28 · "HbA1c" @0.35 · "physician acts" @0.42
   // "CDI query fires" @0.64 · "physician responds" @0.78 · "code corrects" @0.84
 
   // Mic fades quickly — content visible before "Three signals mapped"
@@ -1357,7 +1357,7 @@ function CDIScreen({ progress }) {
   // Physician note lines (build during CDI phase, inside drawer)
   const noteLines = [
     { text: '"HbA1c nine point one. Definitely uncontrolled. Needs intensification."', show: 0.63 },
-    { text: 'BP 142/88. eGFR 68 — CKD Stage 3. Adding Jardiance. Nephrology referral.', show: 0.68 },
+    { text: 'BP 142/88. eGFR 68 — CKD Stage 3. Medications per ACC/AHA. Nephrology referral.', show: 0.68 },
     { text: 'Impression: Type 2 DM — hyperglycaemia.', show: 0.73, cursor: true },
   ];
 
@@ -1519,7 +1519,7 @@ function CDIScreen({ progress }) {
 
                   {[
                     { show: opp1Show, clicked: opp1Click, icon: '🔵', title: 'Nephrology Consult',       type: 'Inter-dept Referral', col: INDIGO, actionLabel: 'Send Referral', doneLabel: 'Referral Sent ✓' },
-                    { show: opp2Show, clicked: opp2Click, icon: '💊', title: 'Jardiance (Empagliflozin)',type: 'Missing Order',        col: TEAL,   actionLabel: 'Order Now',      doneLabel: 'Ordered ✓'       },
+                    { show: opp2Show, clicked: opp2Click, icon: '💊', title: 'Medications Not Ordered', type: 'ACC/AHA Guideline Gap', col: TEAL,   actionLabel: 'Order Now',      doneLabel: 'Ordered ✓'       },
                     { show: opp3Show, clicked: opp3Click, icon: '🔬', title: 'HbA1c Retest in 3 Months',type: 'Follow-up Required',   col: PURPLE, actionLabel: 'Schedule',       doneLabel: 'Scheduled ✓'     },
                   ].map((opp, i) => !opp.show ? null : (
                     <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 10, position: 'relative', animation: 'dpSpringIn 0.55s cubic-bezier(0.34,1.4,0.64,1) both' }}>
@@ -1633,7 +1633,7 @@ function CDIScreen({ progress }) {
                         <div style={{ fontSize: 7, fontWeight: 800, color: GREEN, letterSpacing: 0.6 }}>OUTCOMES CAPTURED AT POINT OF CARE</div>
                         {[
                           { label: 'Nephrology referral sent',      col: INDIGO },
-                          { label: 'Jardiance order placed',         col: TEAL   },
+                          { label: 'Medications ordered',            col: TEAL   },
                           { label: 'HbA1c retest scheduled',         col: PURPLE },
                           { label: 'Code E11.65 locked · E-signed',  col: GREEN  },
                         ].map((item, i) => (
