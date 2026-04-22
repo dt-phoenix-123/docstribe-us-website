@@ -649,7 +649,7 @@ function KPIScene({ scene, progress }) {
             <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', justifyContent: 'center' }}>
               {[
                 { label: 'NABIDH Verified ✓',  color: TEAL   },
-                { label: 'DHA Approved ✓',      color: GREEN  },
+                { label: 'DHA Compliant ✓',     color: GREEN  },
                 { label: 'IR-DRG Optimised ✓',  color: INDIGO },
                 { label: 'SOC 2 Compliant ✓',   color: PURPLE },
               ].map((b, i) => (
