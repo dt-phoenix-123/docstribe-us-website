@@ -727,12 +727,12 @@ function KPIScene({ scene, progress }) {
                   </div>
                 </div>
                 {/* Big KPI number */}
-                {i === 2 && <div style={{ fontSize: 8, fontWeight: 800, color: c, letterSpacing: 2, textTransform: 'uppercase', opacity: 0.75, zIndex: 1 }}>CMI</div>}
-                <div style={{ fontSize: 44, fontWeight: 900, color: c, fontFamily: 'Sora', lineHeight: 1, letterSpacing: -2, zIndex: 1 }}>
+                {i === 2 && <div style={{ fontSize: 7, fontWeight: 800, color: c, letterSpacing: 2, textTransform: 'uppercase', opacity: 0.75, zIndex: 1 }}>CMI</div>}
+                <div style={{ fontSize: 28, fontWeight: 900, color: c, fontFamily: 'Sora', lineHeight: 1, letterSpacing: -1, zIndex: 1 }}>
                   {show ? <CountUp value={b.stat} duration={700} key={`k${i}-${show}`}/> : b.stat}
                 </div>
-                <div style={{ width: 20, height: 2, borderRadius: 1, background: c, zIndex: 1 }}/>
-                <div style={{ fontSize: 7.5, color: DIM, textAlign: 'center', lineHeight: 1.5, zIndex: 1 }}>{b.sub}</div>
+                <div style={{ width: 16, height: 1.5, borderRadius: 1, background: c, zIndex: 1 }}/>
+                <div style={{ fontSize: 7, color: DIM, textAlign: 'center', lineHeight: 1.5, zIndex: 1 }}>{b.sub}</div>
               </div>
             );
           })}
