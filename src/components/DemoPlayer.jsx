@@ -602,170 +602,216 @@ function StatScene({ scene, progress }) {
 
 /* Scene 2 — Intro Docstribe (p<0.62), then KPI outcomes (p>=0.64) */
 function KPIScene({ scene, progress }) {
-  // VO: "purpose-built to close this gap…thirty years…hundred hospitals…ten million…denials drop…clean rate…CMI…sixty days"
-  // ≈60 words: thirty years @word14 ≈0.23 · hundred hospitals @0.43 · denials drop @0.65 · clean rate @0.73 · CMI @0.83
+  // VO ≈60 words · thirty years @0.22 · hundred hospitals @0.36 · 10M lives @0.46
   // intro fades out 0.60→0.68, outcomes fade in 0.62→0.70
   const introOpacity = progress < 0.60 ? 1 : progress > 0.68 ? 0 : 1 - (progress - 0.60) / 0.08;
   const kpiOpacity   = progress < 0.62 ? 0 : progress > 0.70 ? 1 : (progress - 0.62) / 0.08;
   const kpiBeats = scene.beats.slice(3); // beats 3,4,5 = ↓30%, 99%, +0.15 CMI
   const colors = [RED, GREEN, PURPLE];
 
+  // ── A: floating ambient node positions (fixed so they don't shift on re-render)
+  const ambientNodes = [
+    { top: '12%', left: '8%',  size: 6, col: TEAL,   delay: '0s',    dur: '3.2s' },
+    { top: '72%', left: '6%',  size: 4, col: INDIGO, delay: '0.5s',  dur: '2.8s' },
+    { top: '30%', left: '88%', size: 7, col: PURPLE, delay: '1.0s',  dur: '3.6s' },
+    { top: '65%', left: '91%', size: 5, col: TEAL,   delay: '1.5s',  dur: '2.5s' },
+    { top: '18%', left: '50%', size: 4, col: INDIGO, delay: '0.8s',  dur: '4.0s' },
+    { top: '82%', left: '48%', size: 6, col: TEAL,   delay: '2.0s',  dur: '3.0s' },
+    { top: '48%', left: '3%',  size: 5, col: PURPLE, delay: '1.3s',  dur: '3.4s' },
+  ];
+
   return (
     <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(160deg,#e8f2ff 0%,#f0f8f4 40%,#ece8ff 80%,#e8f0ff 100%)', overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
 
+      {/* ── A: Ambient background — breathing orb + floating nodes ── */}
+      <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none', zIndex: 0 }}>
+        <div style={{ position: 'absolute', top: '30%', left: '50%', transform: 'translate(-50%,-50%)', width: 420, height: 420, borderRadius: '50%', background: `radial-gradient(ellipse 60% 60% at 50% 50%, ${TEAL}0d 0%, transparent 70%)`, animation: 'dpBreath 4s ease-in-out infinite' }} />
+        {ambientNodes.map((n, i) => (
+          <div key={i} style={{ position: 'absolute', top: n.top, left: n.left, width: n.size, height: n.size, borderRadius: '50%', background: n.col, opacity: 0.18, animation: `dpPulse ${n.dur} ease-in-out ${n.delay} infinite` }} />
+        ))}
+      </div>
+
       {/* ── PERSISTENT HEADER — always visible across both phases ── */}
       <div style={{ flexShrink: 0, position: 'relative', zIndex: 20, display: 'flex', flexDirection: 'column', alignItems: 'center', paddingTop: 16, paddingBottom: 8, borderBottom: `1px solid ${BORDER}`, background: 'rgba(255,255,255,0.45)', backdropFilter: 'blur(6px)' }}>
-        {/* Purposefully built eyebrow */}
         <div style={{ fontSize: 7.5, fontWeight: 700, color: TEAL, letterSpacing: 2, textTransform: 'uppercase', marginBottom: 4, opacity: introOpacity > 0 ? 1 : 0.7, transition: 'opacity 0.5s' }}>
           {introOpacity > 0 ? 'Purposefully built to close the gap' : 'Clinical Intelligence · UAE'}
         </div>
-        {/* Docstribe wordmark — always present, dpLogoReveal ends at opacity:1 (unlike dpBloom which fades out) */}
         <div style={{ fontSize: 48, fontWeight: 900, background: `linear-gradient(135deg,#0f172a 30%,${TEAL} 60%,${INDIGO})`, WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', letterSpacing: -1.5, lineHeight: 1, animation: 'dpLogoReveal 0.9s cubic-bezier(0.34,1.4,0.64,1) both' }}>
           Docstribe
         </div>
       </div>
 
-      {/* ── Phase 1 content — scrolls below persistent header ── */}
+      {/* ── Phase 1 content ── */}
       <div style={{ flex: 1, position: 'relative', overflow: 'hidden' }}>
-      <div style={{ position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 14, padding: '12px 48px', opacity: introOpacity, transition: 'opacity 0.6s ease', pointerEvents: introOpacity < 0.1 ? 'none' : 'auto' }}>
+        <div style={{ position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 14, padding: '12px 48px', opacity: introOpacity, transition: 'opacity 0.6s ease', pointerEvents: introOpacity < 0.1 ? 'none' : 'auto', zIndex: 1 }}>
 
-        {/* Compliance trust strip — ambient, appears first while VO opens */}
-        {progress >= 0.03 && (
-          <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', justifyContent: 'center' }}>
-            {[
-              { label: 'NABIDH Verified ✓',  color: TEAL   },
-              { label: 'DHA Approved ✓',      color: GREEN  },
-              { label: 'IR-DRG Optimised ✓',  color: INDIGO },
-              { label: 'SOC 2 Compliant ✓',   color: PURPLE },
-            ].map((b, i) => (
-              <span key={i} style={{ fontSize: 7.5, fontWeight: 700, color: b.color, background: `${b.color}12`, border: `1px solid ${b.color}30`, borderRadius: 20, padding: '4px 11px', animation: `dpSpringIn 0.5s cubic-bezier(0.34,1.4,0.64,1) ${i*0.09}s both` }}>{b.label}</span>
-            ))}
-          </div>
-        )}
-
-        {/* 30+ Years — fires when VO says "thirty years" (word 14/60 ≈ 0.23) */}
-        {progress >= 0.20 && (
-          <div style={{ display: 'flex', alignItems: 'center', gap: 12, background: `${AMBER}10`, border: `1px solid ${AMBER}35`, borderRadius: 14, padding: '10px 20px', animation: 'dpSpringIn 0.7s cubic-bezier(0.34,1.4,0.64,1) both', width: '100%', maxWidth: 440 }}>
-            <div style={{ fontSize: 38, fontWeight: 900, color: AMBER, lineHeight: 1, letterSpacing: -1, flexShrink: 0 }}>30<span style={{ fontSize: 18 }}>+</span></div>
-            <div>
-              <div style={{ fontSize: 9.5, fontWeight: 800, color: AMBER }}>Years of Grounded Clinical Experience</div>
-              <div style={{ fontSize: 7, color: DIM, lineHeight: 1.5 }}>Built by doctors — not software engineers — who lived these problems before solving them</div>
-            </div>
-          </div>
-        )}
-
-        {/* Geographic network — fires before "A hundred hospitals" (word 26/60 ≈ 0.43) */}
-        {progress >= 0.40 && (
-          <div style={{ position: 'relative', width: 320, height: 72, animation: 'dpBeatIn 0.7s ease both', flexShrink: 0 }}>
-            <svg width="320" height="72" viewBox="0 0 320 72" fill="none" style={{ position: 'absolute', inset: 0, overflow: 'visible' }}>
-              <path d="M 36 36 Q 120 10 160 36 Q 200 62 284 36" stroke={`${TEAL}35`} strokeWidth="1.5" strokeDasharray="6 5" fill="none"/>
-              <circle cx="36"  cy="36" r="16" fill={`${TEAL}10`}  stroke={`${TEAL}30`}  strokeWidth="1"/>
-              <circle cx="160" cy="36" r="16" fill={`${AMBER}10`} stroke={`${AMBER}30`} strokeWidth="1"/>
-              <circle cx="284" cy="36" r="16" fill={`${INDIGO}10`} stroke={`${INDIGO}30`} strokeWidth="1"/>
-            </svg>
-            {[
-              { x: 36,  color: TEAL,   label: 'USA',   hosp: '42+', delay: '0s'    },
-              { x: 160, color: AMBER,  label: 'UAE',   hosp: '38+', delay: '0.14s' },
-              { x: 284, color: INDIGO, label: 'India', hosp: '25+', delay: '0.28s' },
-            ].map((city, i) => (
-              <div key={i} style={{ position: 'absolute', top: 36, left: city.x, transform: 'translate(-50%,-50%)', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2, animation: `dpSpringIn 0.55s cubic-bezier(0.34,1.4,0.64,1) ${city.delay} both` }}>
-                <div style={{ width: 10, height: 10, borderRadius: '50%', background: city.color, boxShadow: `0 0 10px ${city.color}80`, border: `2px solid rgba(255,255,255,0.9)`, zIndex: 1, animation: 'dpPulse 2s ease-in-out infinite' }}/>
-                <div style={{ fontSize: 7.5, fontWeight: 800, color: city.color, whiteSpace: 'nowrap', marginTop: 16 }}>{city.label}</div>
-                <div style={{ fontSize: 6, color: MUTED }}>{city.hosp} hospitals</div>
-              </div>
-            ))}
-          </div>
-        )}
-
-        {/* Guarantee promise — appears near end of Phase 1, before KPI transition */}
-        {progress >= 0.55 && (
-          <div style={{ background: `${GREEN}10`, border: `1px solid ${GREEN}35`, borderRadius: 12, padding: '8px 20px', animation: 'dpSpringIn 0.6s cubic-bezier(0.34,1.4,0.64,1) both', textAlign: 'center' }}>
-            <div style={{ fontSize: 8, fontWeight: 700, color: GREEN, letterSpacing: 0.5 }}>CONTRACTUAL OUTCOMES · 60 DAYS</div>
-            <div style={{ fontSize: 10, fontWeight: 800, color: TXT, marginTop: 3 }}>↓30% Denials · 99% Clean Rate · +0.15 CMI</div>
-          </div>
-        )}
-      </div>
-
-      {/* ── Phase 2: KPI Outcomes ── */}
-      <div style={{ position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 14, padding: '16px 28px', opacity: kpiOpacity, transition: 'opacity 0.6s ease', pointerEvents: kpiOpacity < 0.1 ? 'none' : 'auto' }}>
-
-        <div style={{ textAlign: 'center', animation: 'dpBeatIn 0.5s ease both' }}>
-          <div style={{ fontSize: 8.5, fontWeight: 700, color: `${AMBER}90`, letterSpacing: 1.5, textTransform: 'uppercase', marginBottom: 3 }}>Closing those four gaps — contractually</div>
-          <div style={{ fontSize: 13, fontWeight: 800, color: TXT }}>Here's what changes in 60 days:</div>
-        </div>
-
-        {/* KPI cards — 3 columns, each with arc gauge showing industry vs Docstribe */}
-        <div style={{ display: 'flex', gap: 10, justifyContent: 'center', width: '100%', maxWidth: 640 }}>
-          {kpiBeats.map((b, i) => {
-            const show = progress >= b.at;
-            const active = spot(progress, b.at, b.at + 0.18);
-            const c = colors[i];
-            // Arc gauge params — semi-circle (180°) using SVG stroke-dasharray
-            const R = 32, stroke = 8;
-            const circ = Math.PI * R; // half circumference for 180° arc
-            // industry and Docstribe percentages per KPI
-            const indPct = i===0 ? 0.60 : i===1 ? 0.75 : 0.55;
-            const dsPct  = i===0 ? 0.92 : i===1 ? 0.99 : 0.82;
-            return (
-              <div key={i} style={{ background: active ? `linear-gradient(160deg,${c}12,${c}04)` : 'rgba(255,255,255,0.95)', border: `1px solid ${c}${active ? '55' : show ? '22' : '10'}`, borderTop: `3px solid ${c}${active ? 'cc' : show ? '70' : '25'}`, borderRadius: 16, padding: '18px 16px', flex: 1, minWidth: 120, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6, opacity: show ? 1 : 0, animation: show ? `dpSpringIn 0.65s cubic-bezier(0.34,1.4,0.64,1) both` : 'none', boxShadow: active ? `0 0 0 2px ${c}40, 0 6px 24px ${c}20, 0 4px 12px rgba(0,0,0,0.07)` : '0 1px 6px rgba(0,0,0,0.07)', transform: active ? 'scale(1.06)' : 'scale(1)', transition: 'transform 0.4s ease, box-shadow 0.4s ease, background 0.4s ease', position: 'relative', overflow: 'hidden' }}>
-                {active && <div style={{ position: 'absolute', inset: -16, pointerEvents: 'none', background: `radial-gradient(ellipse 80% 70% at 50% 50%,${c}20 0%,transparent 70%)`, animation: 'dpBloom 1.4s ease-out both', zIndex: 0 }}/>}
-                {/* Semi-circle arc gauge — industry (gray) vs Docstribe (color) */}
-                <div style={{ position: 'relative', width: 80, height: 44, flexShrink: 0, zIndex: 1 }}>
-                  <svg width="80" height="50" viewBox="0 0 80 50" style={{ overflow: 'visible' }}>
-                    {/* Background track */}
-                    <path d={`M 8 44 A ${R} ${R} 0 0 1 72 44`} fill="none" stroke={`${MUTED}18`} strokeWidth={stroke} strokeLinecap="round"/>
-                    {/* Industry arc (gray, slightly thinner) */}
-                    <path d={`M 8 44 A ${R} ${R} 0 0 1 72 44`} fill="none" stroke={`${MUTED}45`} strokeWidth={stroke-2} strokeLinecap="round"
-                      strokeDasharray={`${show ? indPct * circ : 0} ${circ}`} style={{ transition: 'stroke-dasharray 1.0s cubic-bezier(0.34,1.2,0.64,1)' }}/>
-                    {/* Docstribe arc (color, full weight) */}
-                    <path d={`M 8 44 A ${R} ${R} 0 0 1 72 44`} fill="none" stroke={c} strokeWidth={stroke} strokeLinecap="round"
-                      strokeDasharray={`${show ? dsPct * circ : 0} ${circ}`} style={{ transition: `stroke-dasharray 1.2s cubic-bezier(0.34,1.2,0.64,1) 0.2s`, filter: `drop-shadow(0 0 4px ${c}80)` }}/>
-                  </svg>
-                  {/* Center label */}
-                  <div style={{ position: 'absolute', bottom: 4, left: 0, right: 0, textAlign: 'center' }}>
-                    <span style={{ fontSize: 7, fontWeight: 700, color: c }}>vs Industry</span>
-                  </div>
-                </div>
-                {/* Big KPI number */}
-                {i === 2 && <div style={{ fontSize: 7, fontWeight: 800, color: c, letterSpacing: 2, textTransform: 'uppercase', opacity: 0.75, zIndex: 1 }}>CMI</div>}
-                <div style={{ fontSize: 28, fontWeight: 900, color: c, fontFamily: 'Sora', lineHeight: 1, letterSpacing: -1, zIndex: 1 }}>
-                  {show ? <CountUp value={b.stat} duration={700} key={`k${i}-${show}`}/> : b.stat}
-                </div>
-                <div style={{ width: 16, height: 1.5, borderRadius: 1, background: c, zIndex: 1 }}/>
-                <div style={{ fontSize: 7, color: DIM, textAlign: 'center', lineHeight: 1.5, zIndex: 1 }}>{b.sub}</div>
-              </div>
-            );
-          })}
-        </div>
-
-        {/* 60-Day Timeline — appears when VO says "Sixty days" (word 57/60 ≈ 0.95) */}
-        {progress >= 0.93 && (
-          <div style={{ width: '100%', maxWidth: 520, animation: 'dpBeatIn 0.6s ease both' }}>
-            <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'center', gap: 0 }}>
+          {/* Compliance trust strip */}
+          {progress >= 0.03 && (
+            <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', justifyContent: 'center' }}>
               {[
-                { day: 'Day 0',  label: 'Deploy',         col: TEAL   },
-                { day: 'Day 14', label: 'First results',  col: INDIGO },
-                { day: 'Day 30', label: '50% lift',       col: PURPLE },
-                { day: 'Day 60', label: 'Guaranteed ✓',   col: GREEN  },
-              ].map((m, mi) => (
-                <Fragment key={mi}>
-                  <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 3, flexShrink: 0, animation: `dpSpringIn 0.45s cubic-bezier(0.34,1.4,0.64,1) ${mi*0.10}s both` }}>
-                    <div style={{ width: mi === 3 ? 14 : 10, height: mi === 3 ? 14 : 10, borderRadius: '50%', background: m.col, boxShadow: `0 0 ${mi===3?14:8}px ${m.col}80`, border: `2px solid rgba(255,255,255,0.9)`, animation: mi===3 ? 'dpPulse 1.5s ease-in-out infinite' : 'none' }}/>
-                    <div style={{ fontSize: 7, fontWeight: 800, color: m.col }}>{m.day}</div>
-                    <div style={{ fontSize: 6, color: mi===3 ? GREEN : MUTED, fontWeight: mi===3 ? 700 : 400, textAlign: 'center', maxWidth: 52 }}>{m.label}</div>
-                  </div>
-                  {mi < 3 && <div style={{ flex: 1, height: 2, background: `linear-gradient(90deg,${m.col}55,${[INDIGO,PURPLE,GREEN][mi]}55)`, borderRadius: 1, alignSelf: 'flex-start', marginTop: 5, marginBottom: 24 }}/>}
-                </Fragment>
+                { label: 'NABIDH Verified ✓',  color: TEAL   },
+                { label: 'DHA Approved ✓',      color: GREEN  },
+                { label: 'IR-DRG Optimised ✓',  color: INDIGO },
+                { label: 'SOC 2 Compliant ✓',   color: PURPLE },
+              ].map((b, i) => (
+                <span key={i} style={{ fontSize: 7.5, fontWeight: 700, color: b.color, background: `${b.color}12`, border: `1px solid ${b.color}30`, borderRadius: 20, padding: '4px 11px', animation: `dpSpringIn 0.5s cubic-bezier(0.34,1.4,0.64,1) ${i*0.09}s both` }}>{b.label}</span>
               ))}
             </div>
-            {progress >= 0.97 && (
-              <div style={{ textAlign: 'center', marginTop: 8, fontSize: 8, color: MUTED, animation: 'dpBeatIn 0.5s ease both' }}>
-                All outcomes contractual · auditable · <span style={{ color: GREEN, fontWeight: 700 }}>backed by Docstribe SLA</span>
+          )}
+
+          {/* ── B: "30+ Years" — dramatic centred hero stat with ring burst ── */}
+          {progress >= 0.20 && (
+            <div style={{ textAlign: 'center', position: 'relative', animation: 'dpEmergeStat 0.9s cubic-bezier(0.34,1.2,0.64,1) both' }}>
+              {/* Ring burst */}
+              <div key="ring30" style={{ position: 'absolute', top: '38%', left: '50%', transform: 'translate(-50%,-50%)', width: 80, height: 80, borderRadius: '50%', border: `2px solid ${AMBER}55`, animation: 'dpStatRing 1.1s ease-out both', pointerEvents: 'none' }} />
+              {/* Hero number */}
+              <div style={{ fontSize: 72, fontWeight: 900, color: AMBER, lineHeight: 1, letterSpacing: -3, fontFamily: 'Sora', position: 'relative' }}>
+                30<span style={{ fontSize: 34, letterSpacing: -1 }}>+</span>
               </div>
-            )}
+              <div style={{ fontSize: 10, fontWeight: 800, color: AMBER, letterSpacing: 0.4, marginTop: 5 }}>Years of Grounded Clinical Experience</div>
+              <div style={{ fontSize: 7.5, color: DIM, marginTop: 5 }}>Built by doctors — not software engineers guessing at medicine</div>
+            </div>
+          )}
+
+          {/* ── C: "100+ Hospitals" + "10M+ Lives" — two sequenced hero stat tiles ── */}
+          {progress >= 0.36 && (
+            <div style={{ display: 'flex', gap: 14, justifyContent: 'center', width: '100%', maxWidth: 380 }}>
+              {/* 100+ Hospitals — fires at "A hundred hospitals" */}
+              <div style={{ flex: 1, textAlign: 'center', padding: '12px 10px', background: `${TEAL}0e`, border: `1px solid ${TEAL}30`, borderRadius: 14, animation: 'dpSpringIn 0.7s cubic-bezier(0.34,1.4,0.64,1) both' }}>
+                <div style={{ fontSize: 42, fontWeight: 900, color: TEAL, lineHeight: 1, letterSpacing: -2, fontFamily: 'Sora' }}>
+                  <CountUp value="100+" duration={700} key="h100" />
+                </div>
+                <div style={{ fontSize: 8, fontWeight: 700, color: TEAL, marginTop: 5 }}>Hospital Deployments</div>
+                <div style={{ fontSize: 6.5, color: MUTED, marginTop: 2 }}>US · UAE · India</div>
+              </div>
+              {/* 10M+ Lives — fires slightly later at "Ten million patient lives" */}
+              {progress >= 0.46 && (
+                <div style={{ flex: 1, textAlign: 'center', padding: '12px 10px', background: `${INDIGO}0e`, border: `1px solid ${INDIGO}30`, borderRadius: 14, animation: 'dpSpringIn 0.7s cubic-bezier(0.34,1.4,0.64,1) both' }}>
+                  <div style={{ fontSize: 42, fontWeight: 900, color: INDIGO, lineHeight: 1, letterSpacing: -2, fontFamily: 'Sora' }}>
+                    <CountUp value="10M+" duration={800} key="m10" />
+                  </div>
+                  <div style={{ fontSize: 8, fontWeight: 700, color: INDIGO, marginTop: 5 }}>Patient Lives</div>
+                  <div style={{ fontSize: 6.5, color: MUTED, marginTop: 2 }}>managed globally</div>
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* Geo country pills — replace the SVG map */}
+          {progress >= 0.46 && (
+            <div style={{ display: 'flex', gap: 8, justifyContent: 'center', animation: 'dpBeatIn 0.5s ease both' }}>
+              {[
+                { flag: '🇺🇸', label: 'USA',   hosp: '42+ hospitals', col: TEAL   },
+                { flag: '🇦🇪', label: 'UAE',   hosp: '38+ hospitals', col: AMBER  },
+                { flag: '🇮🇳', label: 'India', hosp: '25+ hospitals', col: INDIGO },
+              ].map((g, i) => (
+                <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '5px 12px', background: `${g.col}0c`, border: `1px solid ${g.col}28`, borderRadius: 20, animation: `dpSpringIn 0.4s cubic-bezier(0.34,1.4,0.64,1) ${i * 0.10}s both` }}>
+                  <span style={{ fontSize: 14 }}>{g.flag}</span>
+                  <div>
+                    <div style={{ fontSize: 7.5, fontWeight: 800, color: g.col }}>{g.label}</div>
+                    <div style={{ fontSize: 6, color: MUTED }}>{g.hosp}</div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+
+          {/* Guarantee promise */}
+          {progress >= 0.55 && (
+            <div style={{ background: `${GREEN}10`, border: `1px solid ${GREEN}35`, borderRadius: 12, padding: '8px 20px', animation: 'dpSpringIn 0.6s cubic-bezier(0.34,1.4,0.64,1) both', textAlign: 'center' }}>
+              <div style={{ fontSize: 8, fontWeight: 700, color: GREEN, letterSpacing: 0.5 }}>CONTRACTUAL OUTCOMES · 60 DAYS</div>
+              <div style={{ fontSize: 10, fontWeight: 800, color: TXT, marginTop: 3 }}>↓30% Denials · 99% Clean Rate · +0.15 CMI</div>
+            </div>
+          )}
+        </div>
+
+        {/* ── Phase 2: KPI Outcomes ── */}
+        <div style={{ position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 14, padding: '16px 28px', opacity: kpiOpacity, transition: 'opacity 0.6s ease', pointerEvents: kpiOpacity < 0.1 ? 'none' : 'auto', zIndex: 1 }}>
+
+          {/* ── D: Phase 2 breathing ambient orb ── */}
+          <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none', background: `radial-gradient(ellipse 60% 55% at 50% 50%, ${TEAL}0a 0%, transparent 70%)`, animation: 'dpBreath 3.5s ease-in-out infinite' }} />
+
+          <div style={{ textAlign: 'center', animation: 'dpBeatIn 0.5s ease both', position: 'relative', zIndex: 1 }}>
+            <div style={{ fontSize: 8.5, fontWeight: 700, color: `${AMBER}90`, letterSpacing: 1.5, textTransform: 'uppercase', marginBottom: 3 }}>Closing those four gaps — contractually</div>
+            <div style={{ fontSize: 13, fontWeight: 800, color: TXT }}>Here's what changes in 60 days:</div>
           </div>
-        )}
-      </div>
+
+          {/* KPI cards — 3 columns with arc gauges */}
+          <div style={{ display: 'flex', gap: 10, justifyContent: 'center', width: '100%', maxWidth: 640, position: 'relative', zIndex: 1 }}>
+            {kpiBeats.map((b, i) => {
+              const show   = progress >= b.at;
+              const active = spot(progress, b.at, b.at + 0.18);
+              const c = colors[i];
+              const R = 32, stroke = 8;
+              const circ = Math.PI * R;
+              const indPct = i===0 ? 0.60 : i===1 ? 0.75 : 0.55;
+              const dsPct  = i===0 ? 0.92 : i===1 ? 0.99 : 0.82;
+              return (
+                <div key={i} style={{ background: active ? `linear-gradient(160deg,${c}12,${c}04)` : 'rgba(255,255,255,0.95)', border: `1px solid ${c}${active ? '55' : show ? '22' : '10'}`, borderTop: `3px solid ${c}${active ? 'cc' : show ? '70' : '25'}`, borderRadius: 16, padding: '18px 16px', flex: 1, minWidth: 120, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6, opacity: show ? 1 : 0, animation: show ? `dpSpringIn 0.65s cubic-bezier(0.34,1.4,0.64,1) both` : 'none', boxShadow: active ? `0 0 0 2px ${c}40, 0 6px 24px ${c}20, 0 4px 12px rgba(0,0,0,0.07)` : '0 1px 6px rgba(0,0,0,0.07)', transform: active ? 'scale(1.06)' : 'scale(1)', transition: 'transform 0.4s ease, box-shadow 0.4s ease, background 0.4s ease', position: 'relative', overflow: 'hidden' }}>
+                  {active && <div style={{ position: 'absolute', inset: -16, pointerEvents: 'none', background: `radial-gradient(ellipse 80% 70% at 50% 50%,${c}20 0%,transparent 70%)`, animation: 'dpBloom 1.4s ease-out both', zIndex: 0 }}/>}
+                  {/* Arc gauge */}
+                  <div style={{ position: 'relative', width: 80, height: 44, flexShrink: 0, zIndex: 1 }}>
+                    <svg width="80" height="50" viewBox="0 0 80 50" style={{ overflow: 'visible' }}>
+                      <path d={`M 8 44 A ${R} ${R} 0 0 1 72 44`} fill="none" stroke={`${MUTED}18`} strokeWidth={stroke} strokeLinecap="round"/>
+                      <path d={`M 8 44 A ${R} ${R} 0 0 1 72 44`} fill="none" stroke={`${MUTED}45`} strokeWidth={stroke-2} strokeLinecap="round"
+                        strokeDasharray={`${show ? indPct * circ : 0} ${circ}`} style={{ transition: 'stroke-dasharray 1.0s cubic-bezier(0.34,1.2,0.64,1)' }}/>
+                      <path d={`M 8 44 A ${R} ${R} 0 0 1 72 44`} fill="none" stroke={c} strokeWidth={stroke} strokeLinecap="round"
+                        strokeDasharray={`${show ? dsPct * circ : 0} ${circ}`} style={{ transition: `stroke-dasharray 1.2s cubic-bezier(0.34,1.2,0.64,1) 0.2s`, filter: `drop-shadow(0 0 4px ${c}80)` }}/>
+                    </svg>
+                    <div style={{ position: 'absolute', bottom: 4, left: 0, right: 0, textAlign: 'center' }}>
+                      <span style={{ fontSize: 7, fontWeight: 700, color: c }}>vs Industry</span>
+                    </div>
+                  </div>
+                  {/* ── E: KPI number with stat ring burst on reveal ── */}
+                  {i === 2 && <div style={{ fontSize: 7, fontWeight: 800, color: c, letterSpacing: 2, textTransform: 'uppercase', opacity: 0.75, zIndex: 1 }}>CMI</div>}
+                  <div style={{ position: 'relative', display: 'inline-block', zIndex: 1 }}>
+                    {show && (
+                      <div key={`ring-${i}-${show}`} style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%,-50%)', width: 44, height: 44, borderRadius: '50%', border: `2px solid ${c}65`, animation: 'dpStatRing 1.1s ease-out both', pointerEvents: 'none' }} />
+                    )}
+                    <div style={{ fontSize: 28, fontWeight: 900, color: c, fontFamily: 'Sora', lineHeight: 1, letterSpacing: -1 }}>
+                      {show ? <CountUp value={b.stat} duration={700} key={`k${i}-${show}`}/> : b.stat}
+                    </div>
+                  </div>
+                  <div style={{ width: 16, height: 1.5, borderRadius: 1, background: c, zIndex: 1 }}/>
+                  <div style={{ fontSize: 7, color: DIM, textAlign: 'center', lineHeight: 1.5, zIndex: 1 }}>{b.sub}</div>
+                </div>
+              );
+            })}
+          </div>
+
+          {/* 60-Day Timeline with animated connecting bars */}
+          {progress >= 0.93 && (
+            <div style={{ width: '100%', maxWidth: 520, animation: 'dpBeatIn 0.6s ease both', position: 'relative', zIndex: 1 }}>
+              <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'center', gap: 0 }}>
+                {[
+                  { day: 'Day 0',  label: 'Deploy',        col: TEAL   },
+                  { day: 'Day 14', label: 'First results', col: INDIGO },
+                  { day: 'Day 30', label: '50% lift',      col: PURPLE },
+                  { day: 'Day 60', label: 'Guaranteed ✓',  col: GREEN  },
+                ].map((m, mi) => (
+                  <Fragment key={mi}>
+                    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 3, flexShrink: 0, animation: `dpSpringIn 0.45s cubic-bezier(0.34,1.4,0.64,1) ${mi*0.10}s both` }}>
+                      <div style={{ width: mi===3 ? 14 : 10, height: mi===3 ? 14 : 10, borderRadius: '50%', background: m.col, boxShadow: `0 0 ${mi===3?14:8}px ${m.col}80`, border: '2px solid rgba(255,255,255,0.9)', animation: mi===3 ? 'dpPulse 1.5s ease-in-out infinite' : 'none' }}/>
+                      <div style={{ fontSize: 7, fontWeight: 800, color: m.col }}>{m.day}</div>
+                      <div style={{ fontSize: 6, color: mi===3 ? GREEN : MUTED, fontWeight: mi===3 ? 700 : 400, textAlign: 'center', maxWidth: 52 }}>{m.label}</div>
+                    </div>
+                    {/* ── F: Animated connecting bar fills from left ── */}
+                    {mi < 3 && (
+                      <div style={{ flex: 1, height: 2, background: 'rgba(0,0,0,0.07)', borderRadius: 1, alignSelf: 'flex-start', marginTop: 5, marginBottom: 24, overflow: 'hidden' }}>
+                        <div style={{ height: '100%', width: '100%', background: `linear-gradient(90deg,${m.col}55,${[INDIGO,PURPLE,GREEN][mi]}55)`, borderRadius: 1, transform: 'translateX(-100%)', animation: `dpSlideInBar 0.6s cubic-bezier(0.34,1.2,0.64,1) ${0.15 + mi * 0.14}s both` }} />
+                      </div>
+                    )}
+                  </Fragment>
+                ))}
+              </div>
+              {progress >= 0.97 && (
+                <div style={{ textAlign: 'center', marginTop: 8, fontSize: 8, color: MUTED, animation: 'dpBeatIn 0.5s ease both' }}>
+                  All outcomes contractual · auditable · <span style={{ color: GREEN, fontWeight: 700 }}>backed by Docstribe SLA</span>
+                </div>
+              )}
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );
@@ -2950,6 +2996,10 @@ export default function DemoPlayer() {
           0%   { opacity:0; transform:scale(0.92) translateY(18px); filter:blur(16px); }
           55%  { opacity:1; filter:blur(2px); }
           100% { opacity:1; transform:scale(1) translateY(0); filter:blur(0); }
+        }
+        @keyframes dpSlideInBar {
+          from { transform: translateX(-100%); }
+          to   { transform: translateX(0); }
         }
       `}</style>
     </section>
