@@ -108,14 +108,14 @@ const SCENES = [
   {
     id: 2, type: 'kpi', color: TEAL,
     title: 'Introducing Docstribe',
-    vo: "Docstribe is purposefully built to solve it. Built by doctors with more than thirty years of grounded clinical experience — not software engineers guessing at medicine. A hundred hospitals. Ten million patient lives. This is a clinician-built intelligence engine. Denials drop by thirty percent. Clean claim rates reach ninety-nine percent. Case mix index rises by point fifteen. Sixty days. Contractually guaranteed.",
+    vo: "Docstribe is purpose-built to close this gap. Built by doctors with more than thirty years of grounded clinical experience — not software engineers guessing at medicine. A hundred hospitals. Ten million patient lives. This is a clinician-built intelligence engine. Denials drop by thirty percent. Clean claim rates reach ninety-nine percent. Case mix index rises by point fifteen. Sixty days. Contractually guaranteed.",
     beats: [
       { at: 0.04, stat: 'Docstribe',      sub: 'Clinical intelligence · clinician-built' },
       { at: 0.22, stat: '100+ Hospitals', sub: 'US · UAE · India · live deployments' },
-      { at: 0.36, stat: '10M+ Lives',     sub: 'Patient population managed globally' },
-      { at: 0.52, stat: '↓30% Denials',  sub: '60 days · contractually guaranteed' },
-      { at: 0.68, stat: '99% Clean Rate', sub: 'first-pass claim submission' },
-      { at: 0.82, stat: '+0.15',          sub: 'CMI · case mix index improvement · 60 days' },
+      { at: 0.40, stat: '10M+ Lives',     sub: 'Patient population managed globally' },
+      { at: 0.64, stat: '↓30% Denials',  sub: '60 days · contractually guaranteed' },
+      { at: 0.73, stat: '99% Clean Rate', sub: 'first-pass claim submission' },
+      { at: 0.83, stat: '+0.15',          sub: 'CMI · case mix index improvement · 60 days' },
     ],
   },
   {
@@ -600,12 +600,13 @@ function StatScene({ scene, progress }) {
   );
 }
 
-/* Scene 2 — Intro Docstribe (p<0.46), then KPI outcomes (p>=0.48) */
+/* Scene 2 — Intro Docstribe (p<0.62), then KPI outcomes (p>=0.64) */
 function KPIScene({ scene, progress }) {
-  // intro fades out 0.38→0.46, outcomes fade in 0.40→0.48
-  // Phase 1: credential intro (beats 0-2). Phase 2: 3 KPI outcome cards (beats 3-5)
-  const introOpacity = progress < 0.38 ? 1 : progress > 0.46 ? 0 : 1 - (progress - 0.38) / 0.08;
-  const kpiOpacity   = progress < 0.40 ? 0 : progress > 0.48 ? 1 : (progress - 0.40) / 0.08;
+  // VO: "purpose-built to close this gap…thirty years…hundred hospitals…ten million…denials drop…clean rate…CMI…sixty days"
+  // ≈60 words: thirty years @word14 ≈0.23 · hundred hospitals @0.43 · denials drop @0.65 · clean rate @0.73 · CMI @0.83
+  // intro fades out 0.60→0.68, outcomes fade in 0.62→0.70
+  const introOpacity = progress < 0.60 ? 1 : progress > 0.68 ? 0 : 1 - (progress - 0.60) / 0.08;
+  const kpiOpacity   = progress < 0.62 ? 0 : progress > 0.70 ? 1 : (progress - 0.62) / 0.08;
   const kpiBeats = scene.beats.slice(3); // beats 3,4,5 = ↓30%, 99%, +0.15 CMI
   const colors = [RED, GREEN, PURPLE];
 
@@ -628,17 +629,33 @@ function KPIScene({ scene, progress }) {
       <div style={{ flex: 1, position: 'relative', overflow: 'hidden' }}>
       <div style={{ position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 14, padding: '12px 48px', opacity: introOpacity, transition: 'opacity 0.6s ease', pointerEvents: introOpacity < 0.1 ? 'none' : 'auto' }}>
 
-        {/* 30+ Years — grounded research callout */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: 12, background: `${AMBER}10`, border: `1px solid ${AMBER}35`, borderRadius: 14, padding: '10px 20px', animation: 'dpSpringIn 0.7s cubic-bezier(0.34,1.4,0.64,1) 0.15s both', width: '100%', maxWidth: 440 }}>
-          <div style={{ fontSize: 38, fontWeight: 900, color: AMBER, lineHeight: 1, letterSpacing: -1, flexShrink: 0 }}>30<span style={{ fontSize: 18 }}>+</span></div>
-          <div>
-            <div style={{ fontSize: 9.5, fontWeight: 800, color: AMBER }}>Years of Grounded Clinical Experience</div>
-            <div style={{ fontSize: 7, color: DIM, lineHeight: 1.5 }}>Built by doctors — not software engineers — who lived these problems before solving them</div>
+        {/* Compliance trust strip — ambient, appears first while VO opens */}
+        {progress >= 0.03 && (
+          <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', justifyContent: 'center' }}>
+            {[
+              { label: 'NABIDH Verified ✓',  color: TEAL   },
+              { label: 'DHA Approved ✓',      color: GREEN  },
+              { label: 'IR-DRG Optimised ✓',  color: INDIGO },
+              { label: 'SOC 2 Compliant ✓',   color: PURPLE },
+            ].map((b, i) => (
+              <span key={i} style={{ fontSize: 7.5, fontWeight: 700, color: b.color, background: `${b.color}12`, border: `1px solid ${b.color}30`, borderRadius: 20, padding: '4px 11px', animation: `dpSpringIn 0.5s cubic-bezier(0.34,1.4,0.64,1) ${i*0.09}s both` }}>{b.label}</span>
+            ))}
           </div>
-        </div>
+        )}
 
-        {/* Geographic network — clean dots + connecting arcs */}
-        {progress >= 0.04 && (
+        {/* 30+ Years — fires when VO says "thirty years" (word 14/60 ≈ 0.23) */}
+        {progress >= 0.20 && (
+          <div style={{ display: 'flex', alignItems: 'center', gap: 12, background: `${AMBER}10`, border: `1px solid ${AMBER}35`, borderRadius: 14, padding: '10px 20px', animation: 'dpSpringIn 0.7s cubic-bezier(0.34,1.4,0.64,1) both', width: '100%', maxWidth: 440 }}>
+            <div style={{ fontSize: 38, fontWeight: 900, color: AMBER, lineHeight: 1, letterSpacing: -1, flexShrink: 0 }}>30<span style={{ fontSize: 18 }}>+</span></div>
+            <div>
+              <div style={{ fontSize: 9.5, fontWeight: 800, color: AMBER }}>Years of Grounded Clinical Experience</div>
+              <div style={{ fontSize: 7, color: DIM, lineHeight: 1.5 }}>Built by doctors — not software engineers — who lived these problems before solving them</div>
+            </div>
+          </div>
+        )}
+
+        {/* Geographic network — fires before "A hundred hospitals" (word 26/60 ≈ 0.43) */}
+        {progress >= 0.40 && (
           <div style={{ position: 'relative', width: 320, height: 72, animation: 'dpBeatIn 0.7s ease both', flexShrink: 0 }}>
             <svg width="320" height="72" viewBox="0 0 320 72" fill="none" style={{ position: 'absolute', inset: 0, overflow: 'visible' }}>
               <path d="M 36 36 Q 120 10 160 36 Q 200 62 284 36" stroke={`${TEAL}35`} strokeWidth="1.5" strokeDasharray="6 5" fill="none"/>
@@ -660,29 +677,8 @@ function KPIScene({ scene, progress }) {
           </div>
         )}
 
-        {/* Single-line credentials — compact, no wall of text */}
-        <div style={{ fontSize: 11, color: TXT, textAlign: 'center', fontWeight: 500, lineHeight: 1.6, opacity: progress >= 0.05 ? 1 : 0, transition: 'opacity 0.6s ease' }}>
-          <span style={{ color: AMBER, fontWeight: 800 }}>30+ years</span> clinical practice ·{' '}
-          <span style={{ color: TEAL, fontWeight: 800 }}>100+ hospitals</span> ·{' '}
-          <span style={{ color: INDIGO, fontWeight: 800 }}>10M+ patient lives</span>
-        </div>
-
-        {/* Compliance trust strip — all at once, staggered spring-in */}
-        {progress >= 0.08 && (
-          <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', justifyContent: 'center' }}>
-            {[
-              { label: 'NABIDH Verified ✓',  color: TEAL   },
-              { label: 'DHA Approved ✓',      color: GREEN  },
-              { label: 'IR-DRG Optimised ✓',  color: INDIGO },
-              { label: 'SOC 2 Compliant ✓',   color: PURPLE },
-            ].map((b, i) => (
-              <span key={i} style={{ fontSize: 7.5, fontWeight: 700, color: b.color, background: `${b.color}12`, border: `1px solid ${b.color}30`, borderRadius: 20, padding: '4px 11px', animation: `dpSpringIn 0.5s cubic-bezier(0.34,1.4,0.64,1) ${i*0.09}s both` }}>{b.label}</span>
-            ))}
-          </div>
-        )}
-
-        {/* Guarantee promise — appears near end of Phase 1 */}
-        {progress >= 0.24 && (
+        {/* Guarantee promise — appears near end of Phase 1, before KPI transition */}
+        {progress >= 0.55 && (
           <div style={{ background: `${GREEN}10`, border: `1px solid ${GREEN}35`, borderRadius: 12, padding: '8px 20px', animation: 'dpSpringIn 0.6s cubic-bezier(0.34,1.4,0.64,1) both', textAlign: 'center' }}>
             <div style={{ fontSize: 8, fontWeight: 700, color: GREEN, letterSpacing: 0.5 }}>CONTRACTUAL OUTCOMES · 60 DAYS</div>
             <div style={{ fontSize: 10, fontWeight: 800, color: TXT, marginTop: 3 }}>↓30% Denials · 99% Clean Rate · +0.15 CMI</div>
@@ -742,8 +738,8 @@ function KPIScene({ scene, progress }) {
           })}
         </div>
 
-        {/* 60-Day Timeline — appears at 85% progress, anchors the guarantee */}
-        {progress >= 0.84 && (
+        {/* 60-Day Timeline — appears when VO says "Sixty days" (word 57/60 ≈ 0.95) */}
+        {progress >= 0.93 && (
           <div style={{ width: '100%', maxWidth: 520, animation: 'dpBeatIn 0.6s ease both' }}>
             <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'center', gap: 0 }}>
               {[
@@ -762,7 +758,7 @@ function KPIScene({ scene, progress }) {
                 </Fragment>
               ))}
             </div>
-            {progress >= 0.90 && (
+            {progress >= 0.97 && (
               <div style={{ textAlign: 'center', marginTop: 8, fontSize: 8, color: MUTED, animation: 'dpBeatIn 0.5s ease both' }}>
                 All outcomes contractual · auditable · <span style={{ color: GREEN, fontWeight: 700 }}>backed by Docstribe SLA</span>
               </div>

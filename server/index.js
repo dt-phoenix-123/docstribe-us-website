@@ -408,7 +408,7 @@ const UAE_DEMO_SCENES = [
   {
     id: 2, timecode: '0:14–0:28', journeyStage: 'outcomes',
     title: 'Introducing Docstribe',
-    voText: "Docstribe is purposefully built to solve it. Built by doctors with more than thirty years of grounded clinical experience — not software engineers guessing at medicine. A hundred hospitals. Ten million patient lives. This is a clinician-built intelligence engine. Denials drop by thirty percent. Clean claim rates reach ninety-nine percent. Case mix index rises by point fifteen. Sixty days. Contractually guaranteed.",
+    voText: "Docstribe is purpose-built to close this gap. Built by doctors with more than thirty years of grounded clinical experience — not software engineers guessing at medicine. A hundred hospitals. Ten million patient lives. This is a clinician-built intelligence engine. Denials drop by thirty percent. Clean claim rates reach ninety-nine percent. Case mix index rises by point fifteen. Sixty days. Contractually guaranteed.",
   },
   {
     id: 4, timecode: '0:28–0:42', journeyStage: 'pre-visit',
