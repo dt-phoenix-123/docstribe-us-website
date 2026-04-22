@@ -1325,37 +1325,40 @@ function CDIQueryCard({ col, title, sub, question, guidelinePills, opts, answere
 function CDIScreen({ progress }) {
   const p = progress;
 
-  // Phase 1: mic animation (0-0.16 visible, fades by 0.20)
-  // Phase 2: patient profile + risk + governance (0.16-0.54)
-  // Phase 3: CDI drawer slides in from left (0.54+), OPD only
-  const micOpacity     = p < 0.10 ? 1 : p > 0.18 ? 0 : 1 - (p - 0.10) / 0.08;
-  const contentOpacity = p < 0.15 ? 0 : p > 0.22 ? 1 : (p - 0.15) / 0.07;
-  const isListening    = p >= 0.06 && p < 0.18;
+  // ── Timings aligned to VO (85-word script) ──────────────────────
+  // "Three signals mapped" @word12 ≈0.14 · "Nephrology referral" @0.22
+  // "Jardiance" @0.28 · "HbA1c" @0.35 · "physician acts" @0.42
+  // "CDI query fires" @0.64 · "physician responds" @0.78 · "code corrects" @0.84
 
-  const signalShow = p >= 0.22;       // signal assessment grid
-  const opp1Show   = p >= 0.35;       // Nephrology referral card
-  const opp2Show   = p >= 0.43;       // Jardiance order card
-  const opp3Show   = p >= 0.51;       // HbA1c retest card
+  // Mic fades quickly — content visible before "Three signals mapped"
+  const micOpacity     = p < 0.07 ? 1 : p > 0.13 ? 0 : 1 - (p - 0.07) / 0.06;
+  const contentOpacity = p < 0.10 ? 0 : p > 0.16 ? 1 : (p - 0.10) / 0.06;
+  const isListening    = p >= 0.06 && p < 0.13;
 
-  const opp1Click  = p >= 0.41;       // Nephrology → Referral Sent ✓
-  const opp2Click  = p >= 0.49;       // Jardiance → Ordered ✓
-  const opp3Click  = p >= 0.55;       // HbA1c → Scheduled ✓
+  const signalShow = p >= 0.11;       // "Three signals mapped" @0.14 — 3% lead
+  const opp1Show   = p >= 0.20;       // "Nephrology referral" @0.22 — 2% lead
+  const opp2Show   = p >= 0.26;       // "Jardiance" @0.28 — 2% lead
+  const opp3Show   = p >= 0.33;       // "HbA1c — not scheduled" @0.35 — 2% lead
+
+  const opp1Click  = p >= 0.40;       // "physician acts on each" @0.42 — 2% lead
+  const opp2Click  = p >= 0.46;       // staggered after opp1
+  const opp3Click  = p >= 0.52;       // staggered after opp2
   const oppCount   = opp3Click ? 3 : opp2Click ? 2 : opp1Click ? 1 : 0;
 
-  const drawerOpen = p >= 0.61;
-  const answered   = p >= 0.67;
-  const locked     = p >= 0.78;
+  const drawerOpen = p >= 0.61;       // "CDI query fires" @0.64 — 3% lead
+  const answered   = p >= 0.76;       // "physician responds in five seconds" @0.78
+  const locked     = p >= 0.82;       // "The code corrects" @0.84
 
   const enhancements = [
     { from: 'E11.9', to: 'E11.65', label: 'T2DM Uncontrolled — HbA1c 9.1%', badge: 'CC captured', col: RED,  show: answered },
     { from: 'CPT 99214', to: '99214 + 83036', label: 'HbA1c lab — MUE ✓ separate', badge: '+CPT',    col: TEAL, show: locked },
   ];
 
-  // Physician note lines (build during CDI phase)
+  // Physician note lines (build during CDI phase, inside drawer)
   const noteLines = [
-    { text: '"HbA1c nine point one. Definitely uncontrolled. Needs intensification."', show: 0.56 },
-    { text: 'BP 142/88. eGFR 68 — CKD Stage 3. Adding Jardiance. Nephrology referral.', show: 0.63 },
-    { text: 'Impression: Type 2 DM — hyperglycaemia.', show: 0.68, cursor: true },
+    { text: '"HbA1c nine point one. Definitely uncontrolled. Needs intensification."', show: 0.63 },
+    { text: 'BP 142/88. eGFR 68 — CKD Stage 3. Adding Jardiance. Nephrology referral.', show: 0.68 },
+    { text: 'Impression: Type 2 DM — hyperglycaemia.', show: 0.73, cursor: true },
   ];
 
   const patient = {
@@ -1449,7 +1452,7 @@ function CDIScreen({ progress }) {
 
         {/* Patient profile card — prominent, bigger */}
         <div style={{ flexShrink: 0 }}>
-          <PatientProfileCard patient={patient} progress={p} showFrom={0.16} />
+          <PatientProfileCard patient={patient} progress={p} showFrom={0.12} />
         </div>
 
         {/* ── Below-patient: two columns when opp cards appear ── */}
