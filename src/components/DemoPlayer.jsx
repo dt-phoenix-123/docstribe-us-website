@@ -1455,95 +1455,97 @@ function CDIScreen({ progress }) {
           <PatientProfileCard patient={patient} progress={p} showFrom={0.12} />
         </div>
 
-        {/* ── Below-patient: two columns when opp cards appear ── */}
+        {/* ── Below-patient: floating modal — signals → gap timeline ── */}
         {!drawerOpen && signalShow && (
-          <div style={{ flex: 1, display: 'flex', gap: 10, overflow: 'hidden' }}>
+          <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden' }}>
 
-            {/* LEFT — Clinical signals */}
-            <div style={{ width: opp1Show ? '42%' : '100%', flexShrink: 0, display: 'flex', flexDirection: 'column', gap: 6, transition: 'width 0.5s ease', overflow: 'hidden' }}>
-              <div style={{ fontSize: 7, fontWeight: 700, color: AMBER, letterSpacing: 0.8, textTransform: 'uppercase', flexShrink: 0 }}>Clinical Signals</div>
-              {[
-                { label: 'HbA1c', value: '9.1% ↑', col: RED,    risk: 'HIGH'     },
-                { label: 'eGFR',  value: '68 ↓',   col: INDIGO, risk: 'WATCH'    },
-                { label: 'BP',    value: '142/88',  col: AMBER,  risk: 'ELEVATED' },
-              ].map((sig, i) => (
-                <div key={i} style={{ background: `${sig.col}0c`, border: `1px solid ${sig.col}30`, borderRadius: 8, padding: '7px 10px', animation: `dpSpringIn 0.5s ease ${i * 0.1}s both`, flexShrink: 0 }}>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            {/* ── Modal card — re-animates when phase flips to gaps ── */}
+            <div key={opp1Show ? 'gaps' : 'signals'} style={{ width: '92%', maxWidth: 380, background: 'rgba(255,255,255,0.97)', border: `1px solid ${BORDER}`, borderRadius: 14, boxShadow: '0 8px 40px rgba(0,0,0,0.13), 0 2px 8px rgba(0,0,0,0.07)', padding: '14px 16px', animation: 'dpSpringIn 0.55s cubic-bezier(0.34,1.4,0.64,1) both' }}>
+
+              {/* Modal header */}
+              <div style={{ display: 'flex', alignItems: 'center', gap: 7, marginBottom: 12, paddingBottom: 10, borderBottom: `1px solid ${BORDER}` }}>
+                <div style={{ width: 7, height: 7, borderRadius: '50%', background: opp1Show ? AMBER : RED, animation: 'dpPulse 1.1s ease infinite', flexShrink: 0 }} />
+                <span style={{ fontSize: 9, fontWeight: 800, color: opp1Show ? AMBER : RED, letterSpacing: 0.6, textTransform: 'uppercase' }}>
+                  {opp1Show ? '3 Gaps Found' : '3 Signals Mapped'}
+                </span>
+                <span style={{ fontSize: 7, color: DIM, marginLeft: 2 }}>
+                  {opp1Show ? 'Physician actionables' : 'Risk stratification complete'}
+                </span>
+                {opp1Show && (
+                  <span key={oppCount} style={{ marginLeft: 'auto', fontSize: 7, fontWeight: 800, color: oppCount === 3 ? GREEN : AMBER, background: oppCount === 3 ? `${GREEN}14` : `${AMBER}12`, border: `1px solid ${oppCount === 3 ? GREEN + '45' : AMBER + '40'}`, borderRadius: 10, padding: '2px 9px', animation: 'dpSpringIn 0.4s ease both', flexShrink: 0 }}>
+                    {oppCount} of 3 actioned
+                  </span>
+                )}
+              </div>
+
+              {/* ── PHASE A: Signal chips (before opp1Show) ── */}
+              {!opp1Show && (
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 7 }}>
+                  {[
+                    { label: 'HbA1c', value: '9.1% ↑', col: RED,    risk: 'HIGH',     desc: 'Uncontrolled — intensification needed' },
+                    { label: 'eGFR',  value: '68 ↓',   col: INDIGO, risk: 'WATCH',    desc: 'CKD Stage 3 — nephrology threshold' },
+                    { label: 'BP',    value: '142/88',  col: AMBER,  risk: 'ELEVATED', desc: 'Above target — optimisation required' },
+                  ].map((sig, i) => (
+                    <div key={i} style={{ display: 'flex', gap: 10, alignItems: 'center', padding: '9px 12px', borderRadius: 9, background: `${sig.col}08`, border: `1px solid ${sig.col}28`, animation: `dpSpringIn 0.55s cubic-bezier(0.34,1.4,0.64,1) ${i * 0.13}s both` }}>
+                      <div style={{ width: 34, height: 34, borderRadius: '50%', background: `${sig.col}18`, border: `2px solid ${sig.col}45`, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                        <span style={{ fontSize: 11, fontWeight: 900, color: sig.col, lineHeight: 1, fontFamily: 'Sora' }}>{sig.value.split(' ')[0].replace('%','').replace('↑','').replace('↓','')}</span>
+                      </div>
+                      <div style={{ flex: 1 }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+                          <span style={{ fontSize: 9, fontWeight: 700, color: TXT }}>{sig.label}</span>
+                          <span style={{ fontSize: 12, fontWeight: 900, color: sig.col, fontFamily: 'Sora', letterSpacing: -0.5 }}>{sig.value}</span>
+                          <span style={{ marginLeft: 'auto', fontSize: 6.5, fontWeight: 800, color: sig.col, background: `${sig.col}18`, border: `1px solid ${sig.col}30`, borderRadius: 4, padding: '1px 6px' }}>{sig.risk}</span>
+                        </div>
+                        <div style={{ fontSize: 7, color: DIM, marginTop: 2 }}>{sig.desc}</div>
+                      </div>
+                    </div>
+                  ))}
+                  {/* Composite risk footer */}
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '8px 12px', borderRadius: 9, background: `${RED}0e`, border: `1.5px solid ${RED}35`, animation: 'dpBeatIn 0.4s ease 0.42s both', marginTop: 2 }}>
                     <div>
-                      <div style={{ fontSize: 6, color: MUTED, letterSpacing: 0.5, marginBottom: 2 }}>{sig.label}</div>
-                      <div style={{ fontSize: 16, fontWeight: 900, color: sig.col, fontFamily: 'Sora', lineHeight: 1 }}>{sig.value}</div>
+                      <div style={{ fontSize: 7, fontWeight: 800, color: MUTED, letterSpacing: 0.8, textTransform: 'uppercase' }}>Composite Risk · 3 signals</div>
+                      <div style={{ fontSize: 6.5, color: DIM, marginTop: 2 }}>Multi-comorbidity · threshold exceeded</div>
                     </div>
-                    <span style={{ fontSize: 6, fontWeight: 800, color: sig.col, background: `${sig.col}18`, border: `1px solid ${sig.col}25`, borderRadius: 4, padding: '2px 5px' }}>{sig.risk}</span>
+                    <span style={{ fontSize: 20, fontWeight: 900, color: RED, fontFamily: 'Sora' }}>HIGH</span>
                   </div>
                 </div>
-              ))}
-              <div style={{ background: `${RED}10`, border: `2px solid ${RED}40`, borderRadius: 8, padding: '7px 10px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexShrink: 0 }}>
-                <div>
-                  <div style={{ fontSize: 6, fontWeight: 700, color: MUTED, letterSpacing: 0.5 }}>COMPOSITE RISK</div>
-                  <div style={{ fontSize: 6, color: DIM, marginTop: 1 }}>Multi-comorbidity · 3 signals</div>
-                </div>
-                <div style={{ fontSize: 15, fontWeight: 900, color: RED }}>HIGH</div>
-              </div>
-            </div>
+              )}
 
-            {/* RIGHT — Physician actionables */}
-            {opp1Show && (
-              <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 7, overflow: 'auto', animation: 'dpSlideInLeft 0.5s ease both' }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexShrink: 0 }}>
-                  <span style={{ fontSize: 8, fontWeight: 800, color: AMBER, letterSpacing: 0.6 }}>PHYSICIAN ACTIONABLES</span>
-                  <span key={oppCount} style={{ fontSize: 7, fontWeight: 800, color: oppCount > 0 ? GREEN : AMBER, background: oppCount > 0 ? `${GREEN}14` : `${AMBER}18`, border: `1px solid ${oppCount > 0 ? GREEN + '40' : AMBER + '40'}`, borderRadius: 10, padding: '2px 9px', animation: 'dpSpringIn 0.4s cubic-bezier(0.34,1.6,0.64,1) both', transition: 'all 0.4s' }}>{oppCount} of 3 actioned</span>
-                </div>
-                {[
-                  {
-                    show: opp1Show, clicked: opp1Click,
-                    icon: '🔵', title: 'Nephrology Consult',        type: 'Inter-dept Referral',
-                    status: 'NOT ORDERED',    statusCol: RED,
-                    guideline: 'KDIGO 2024',  guidelineCol: INDIGO,
-                    reason: 'eGFR 68 — CKD Stage 3 requires nephrology co-management',
-                    col: INDIGO, actionLabel: 'Send Referral', doneLabel: 'Referral Sent ✓',
-                  },
-                  {
-                    show: opp2Show, clicked: opp2Click,
-                    icon: '💊', title: 'Jardiance (Empagliflozin)', type: 'Missing Order',
-                    status: 'NOT PRESCRIBED', statusCol: RED,
-                    guideline: 'AHA/ACC 2023', guidelineCol: TEAL,
-                    reason: 'SGLT2 inhibitor indicated for T2DM + CKD Stage 3',
-                    col: TEAL, actionLabel: 'Order Now', doneLabel: 'Ordered ✓',
-                  },
-                  {
-                    show: opp3Show, clicked: opp3Click,
-                    icon: '🔬', title: 'HbA1c Retest in 3 Months', type: 'Follow-up Required',
-                    status: 'NOT SCHEDULED', statusCol: AMBER,
-                    guideline: 'ADA 2024 §6.1', guidelineCol: PURPLE,
-                    reason: 'Protocol mandates recheck after treatment intensification',
-                    col: PURPLE, actionLabel: 'Schedule', doneLabel: 'Scheduled ✓',
-                  },
-                ].filter(opp => opp.show).map((opp, i) => (
-                  <div key={i} style={{ display: 'flex', gap: 10, alignItems: 'flex-start', padding: '9px 12px', borderRadius: 10, background: opp.clicked ? `${opp.col}10` : `${opp.col}0a`, border: `1px solid ${opp.clicked ? opp.col + '50' : opp.col + '30'}`, animation: 'dpRowBlurIn 0.45s ease both', flexShrink: 0, transition: 'background 0.4s, border-color 0.4s' }}>
-                    <div style={{ fontSize: 16, flexShrink: 0, filter: opp.clicked ? `drop-shadow(0 0 4px ${opp.col}80)` : 'none', transition: 'filter 0.4s' }}>{opp.icon}</div>
-                    <div style={{ flex: 1, minWidth: 0 }}>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 3 }}>
-                        <span style={{ fontSize: 8, fontWeight: 700, color: opp.col }}>{opp.title}</span>
-                        <span style={{ fontSize: 6.5, fontWeight: 800, color: opp.clicked ? opp.col : opp.statusCol, background: opp.clicked ? `${opp.col}12` : `${opp.statusCol}12`, border: `1px solid ${opp.clicked ? opp.col + '30' : opp.statusCol + '30'}`, borderRadius: 4, padding: '1px 6px', flexShrink: 0, transition: 'all 0.4s' }}>
-                          {opp.clicked ? '✓ DONE' : opp.status}
-                        </span>
+              {/* ── PHASE B: Gap timeline chips (opp1Show onwards) ── */}
+              {opp1Show && (
+                <div style={{ position: 'relative', paddingLeft: 24 }}>
+                  {/* Vertical spine */}
+                  <div style={{ position: 'absolute', left: 8, top: 6, bottom: 6, width: 2, background: `linear-gradient(180deg,${INDIGO}55,${TEAL}55,${PURPLE}55)`, borderRadius: 2 }} />
+
+                  {[
+                    { show: opp1Show, clicked: opp1Click, icon: '🔵', title: 'Nephrology Consult',       type: 'Inter-dept Referral', col: INDIGO, actionLabel: 'Send Referral', doneLabel: 'Referral Sent ✓' },
+                    { show: opp2Show, clicked: opp2Click, icon: '💊', title: 'Jardiance (Empagliflozin)',type: 'Missing Order',        col: TEAL,   actionLabel: 'Order Now',      doneLabel: 'Ordered ✓'       },
+                    { show: opp3Show, clicked: opp3Click, icon: '🔬', title: 'HbA1c Retest in 3 Months',type: 'Follow-up Required',   col: PURPLE, actionLabel: 'Schedule',       doneLabel: 'Scheduled ✓'     },
+                  ].map((opp, i) => !opp.show ? null : (
+                    <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 10, position: 'relative', animation: 'dpSpringIn 0.55s cubic-bezier(0.34,1.4,0.64,1) both' }}>
+                      {/* Timeline node */}
+                      <div style={{ position: 'absolute', left: -24, width: 16, height: 16, borderRadius: '50%', background: opp.clicked ? opp.col : 'rgba(255,255,255,0.95)', border: `2.5px solid ${opp.col}`, display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1, transition: 'background 0.4s', boxShadow: opp.clicked ? `0 0 12px ${opp.col}70` : 'none' }}>
+                        {opp.clicked && <span style={{ fontSize: 7, color: '#fff', fontWeight: 900 }}>✓</span>}
                       </div>
-                      <div style={{ display: 'flex', gap: 6, alignItems: 'center', marginBottom: 3 }}>
-                        <span style={{ fontSize: 6.5, color: MUTED }}>{opp.type}</span>
-                        <span style={{ fontSize: 6.5, fontWeight: 700, color: opp.guidelineCol, background: `${opp.guidelineCol}10`, border: `1px solid ${opp.guidelineCol}25`, borderRadius: 10, padding: '1px 7px' }}>{opp.guideline}</span>
-                      </div>
-                      <div style={{ fontSize: 7, color: DIM, marginBottom: 6 }}>{opp.reason}</div>
-                      <div key={opp.clicked ? 'done' : 'idle'} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 5, padding: '5px 10px', borderRadius: 6, background: opp.clicked ? `${opp.col}18` : `${opp.col}10`, border: `1px solid ${opp.clicked ? opp.col + '60' : opp.col + '35'}`, cursor: 'default', animation: opp.clicked ? 'dpClickPop 0.4s ease both' : 'dpSpringIn 0.4s ease both', transition: 'background 0.35s, border-color 0.35s', boxShadow: opp.clicked ? `0 0 10px ${opp.col}30` : 'none' }}>
-                        {!opp.clicked && <div style={{ width: 5, height: 5, borderRadius: '50%', background: opp.col, animation: 'dpPulse 1s ease-in-out infinite', flexShrink: 0 }} />}
-                        <span style={{ fontSize: 7.5, fontWeight: 800, color: opp.clicked ? opp.col : `${opp.col}cc`, letterSpacing: 0.3 }}>
-                          {opp.clicked ? opp.doneLabel : opp.actionLabel}
-                        </span>
+                      {/* Row card */}
+                      <div style={{ flex: 1, display: 'flex', alignItems: 'center', gap: 9, padding: '9px 11px', borderRadius: 9, background: opp.clicked ? `${opp.col}12` : `${opp.col}07`, border: `1px solid ${opp.clicked ? opp.col + '55' : opp.col + '28'}`, transition: 'all 0.4s' }}>
+                        <span style={{ fontSize: 15, flexShrink: 0 }}>{opp.icon}</span>
+                        <div style={{ flex: 1, minWidth: 0 }}>
+                          <div style={{ fontSize: 9, fontWeight: 700, color: opp.col, lineHeight: 1.2 }}>{opp.title}</div>
+                          <div style={{ fontSize: 6.5, color: DIM, marginTop: 1 }}>{opp.type}</div>
+                        </div>
+                        {/* Action chip */}
+                        <div key={opp.clicked ? 'done' : 'idle'} style={{ display: 'flex', alignItems: 'center', gap: 4, padding: '5px 10px', borderRadius: 7, background: opp.clicked ? `${opp.col}20` : `${opp.col}10`, border: `1px solid ${opp.clicked ? opp.col + '65' : opp.col + '35'}`, animation: opp.clicked ? 'dpClickPop 0.4s ease both' : 'dpSpringIn 0.4s ease both', flexShrink: 0, transition: 'background 0.35s, border-color 0.35s', boxShadow: opp.clicked ? `0 0 10px ${opp.col}35` : 'none' }}>
+                          {!opp.clicked && <div style={{ width: 4, height: 4, borderRadius: '50%', background: opp.col, animation: 'dpPulse 1s ease-in-out infinite', flexShrink: 0 }} />}
+                          <span style={{ fontSize: 7.5, fontWeight: 800, color: opp.col, whiteSpace: 'nowrap' }}>{opp.clicked ? opp.doneLabel : opp.actionLabel}</span>
+                        </div>
                       </div>
                     </div>
-                  </div>
-                ))}
-              </div>
-            )}
+                  ))}
+                </div>
+              )}
+
+            </div>
           </div>
         )}
 
