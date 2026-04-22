@@ -837,6 +837,11 @@ function PipelineSVG() {
    MAIN COMPONENT
    ────────────────────────────────────────────── */
 export default function App() {
+  /* Render mode — puppeteer capture: skip entire website, show only the scene */
+  if (new URLSearchParams(window.location.search).get('render') === '1') {
+    return <DemoPlayer />;
+  }
+
   return (
     <div>
 

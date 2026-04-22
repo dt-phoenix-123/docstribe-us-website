@@ -2771,16 +2771,18 @@ export default function DemoPlayer() {
   /* ── RENDER MODE: fullscreen scene, no chrome, no splash ── */
   if (IS_RENDER) {
     return (
-      <div id="render-root" style={{ position: 'fixed', inset: 0, overflow: 'hidden', fontFamily: 'Sora,sans-serif', background: '#f8fafc' }}>
+      <div id="render-root" style={{ position: 'relative', width: '100vw', height: '100vh', overflow: 'hidden', fontFamily: 'Sora,sans-serif' }}>
+        {/* Scene fills the full 1280×720 viewport */}
         <div style={{ position: 'absolute', inset: 0 }}>
           <SceneVisual scene={scene} progress={progress} />
         </div>
         <SceneStatStrip scene={scene} progress={progress} />
-        {/* Caption bar — matches normal player position */}
+        {/* Caption strip — anchored to bottom */}
         <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, zIndex: 50, minHeight: 30, display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'rgba(0,0,0,0.70)', backdropFilter: 'blur(8px)', padding: '4px 20px' }}>
-          {currentSentence ? <span style={{ fontSize: 11.5, color: '#fff', textAlign: 'center', lineHeight: 1.4 }}>{currentSentence}</span> : null}
+          {currentSentence
+            ? <span style={{ fontSize: 11.5, color: '#fff', textAlign: 'center', lineHeight: 1.4 }}>{currentSentence}</span>
+            : null}
         </div>
-        <style>{`body,html{margin:0;padding:0;overflow:hidden;width:1280px;height:720px;}`}</style>
       </div>
     );
   }
