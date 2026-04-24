@@ -108,14 +108,18 @@ const SCENES = [
   {
     id: 2, type: 'kpi', color: TEAL,
     title: 'Introducing Docstribe',
-    vo: "Docstribe is purpose-built to close this gap. Built by doctors with more than thirty years of grounded clinical experience — not software engineers guessing at medicine. Deployed in over a hundred hospitals. Managing ten million patient lives. This is a clinician-built intelligence engine. Denials drop by thirty percent. Clean claim rates reach ninety-nine percent. Case mix index rises by point fifteen. Sixty days. Contractually guaranteed.",
+    vo: "Four gaps. One answer: Docstribe — built by clinicians. Extensive research with practitioners carrying over thirty years of combined experience — working through denial patterns, payer contracts, and clinical documentation — led to a single unifying discovery: revenue gaps are not a billing problem. They are a clinical workflow problem. Every denial traces back to a breakdown in how clinical encounters are documented, coded, and submitted. The root cause sits at the intersection of clinical understanding and payer logic. Bridge that intersection — and you close all four gaps at once. That is exactly what Docstribe does. Nine AI-native algorithms, built from scratch, deeply grounded in both clinical workflow intelligence and payer contract rules. Not adapted from generic tools. Purpose-built for healthcare revenue cycle. Deployed across one hundred hospitals. Managing ten million lives. Denials drop thirty percent. Clean claim rate reaches ninety-nine percent. Case mix index rises by point fifteen. Sixty days. Contractually guaranteed.",
     beats: [
-      { at: 0.04, stat: 'Docstribe',      sub: 'Clinical intelligence · clinician-built' },
-      { at: 0.22, stat: '100+ Hospitals', sub: 'US · UAE · India · live deployments' },
-      { at: 0.40, stat: '10M+ Lives',     sub: 'Patient population managed globally' },
-      { at: 0.64, stat: '↓30% Denials',  sub: '60 days · contractually guaranteed' },
-      { at: 0.73, stat: '99% Clean Rate', sub: 'first-pass claim submission' },
-      { at: 0.83, stat: '+0.15',          sub: 'CMI · case mix index improvement · 60 days' },
+      { at: 0.04, stat: 'Four Gaps.',         sub: 'One answer: Docstribe' },
+      { at: 0.26, stat: 'Root Cause Found',   sub: 'revenue gaps = clinical workflow failures' },
+      { at: 0.40, stat: 'The 4-Flow Chain',   sub: 'doc → codes → claims → payer · one gap = denial' },
+      { at: 0.65, stat: '9 AI-Native Models', sub: 'built from scratch · clinical + payer grounded' },
+      { at: 0.79, stat: 'Purpose-Built RCM',  sub: 'not adapted from generic tools' },
+      { at: 0.83, stat: '100+ Hospitals',     sub: 'UAE · India · US · live deployments' },
+      { at: 0.87, stat: '10M+ Lives',         sub: 'patient population managed globally' },
+      { at: 0.87, stat: '↓30% Denials',       sub: '60 days · contractually guaranteed' },
+      { at: 0.90, stat: '99% Clean Rate',     sub: 'first-pass claim submission' },
+      { at: 0.94, stat: '+0.15 CMI',          sub: 'case mix index improvement · 60 days' },
     ],
   },
   {
@@ -133,7 +137,7 @@ const SCENES = [
     id: 6, type: 'product', color: AMBER,
     title: 'Clinical Intelligence',
     breadcrumb: 'Ambient Scribe · CDI',
-    vo: "While the doctor sees the patient, Docstribe is already working. Three signals mapped. Three gaps found. A Nephrology referral — not yet ordered. Medications — not yet ordered. A follow-up HbA1c — not scheduled. The physician acts on each — one click, three actions captured, all grounded in clinical guidelines such as ACC and AHA, before the patient leaves the room. Then the CDI query fires: is this diabetes controlled or uncontrolled? The physician responds in five seconds. The code corrects. Two thousand four hundred and fifty dirhams — captured right there, at point of care.",
+    vo: "While the doctor sees the patient, Docstribe is already working. Three gaps found — a Nephrology referral not yet ordered, medications not yet prescribed, a follow-up HbA1c not scheduled. One click. Three actions captured before the patient leaves. Then the CDI query fires: controlled or uncontrolled diabetes? The physician responds in five seconds. The code corrects. Two thousand four hundred and fifty dirhams — captured at point of care.",
     beats: [
       { at: 0.06, stat: 'Listens live',          sub: 'physician-patient encounter · ambient · passive' },
       { at: 0.28, stat: 'Holistic profile built', sub: 'risk · next steps · codes · governance · real time' },
@@ -145,7 +149,7 @@ const SCENES = [
     id: 7, type: 'product', color: PURPLE,
     title: 'AI-Powered Coding',
     breadcrumb: 'ICD-10-CM · Smart Coding Engine',
-    vo: "Every diagnosis carries an ICD code. Every procedure, a CPT. Docstribe generates both automatically — zero manual entry. Together they drive your IR-DRG weight — the multiplier that decides what your hospital gets paid per admission. Every code is validated through NCCI and MUE checks. One click to submit. The weight lifts from zero point nine four to one point three four. Eighteen thousand four hundred dirhams — per case. That is what nothing missed looks like.",
+    vo: "Docstribe generates every ICD and CPT automatically — zero manual entry. Together they drive your IR-DRG weight, the multiplier that decides what your hospital gets paid per admission. Every code validated through NCCI and MUE checks. One click to submit. The weight lifts from zero point nine four to one point three four. Eighteen thousand four hundred dirhams — per case. Nothing missed.",
     beats: [
       { at: 0.08, stat: 'NCCI + MUE applied',    sub: 'payer edits matched · codes validated before send' },
       { at: 0.36, stat: 'CC/MCC auto-captured',  sub: 'every complication documented before discharge' },
@@ -158,7 +162,7 @@ const SCENES = [
     title: 'Denial Prevention & Recovery',
     breadcrumb: 'Payer Contract Intelligence · Appeal Generator',
     // Merged denial intel + one-click recovery
-    vo: "It doesn't stop here. We go deeper — into every payer's contract, every batch, every rule. Denials have patterns, and Docstribe maps every one of them. Between sixty-seven and ninety-one percent of what would be denied is caught and corrected before the claim goes out. And when one does slip through, a single click pulls the contract, matches the clause, and drafts the appeal. Thirty seconds — not three weeks.",
+    vo: "Into every payer's contract, every batch, every rule. Denials have patterns, and Docstribe maps every one. Between sixty-seven and ninety-one percent of what would be denied is caught before the claim goes out. When one slips through, a single click pulls the contract, matches the clause, and drafts the appeal. Thirty seconds — not three weeks.",
     beats: [
       { at: 0.08, stat: 'Per payer · per batch', sub: 'Daman · Thiqa · AXA Gulf · Oman Insurance' },
       { at: 0.46, stat: '67–91% recoverable',    sub: 'pre-submission · flagged before send' },
@@ -171,7 +175,7 @@ const SCENES = [
     title: 'Clinical Engagement & Closing',
     breadcrumb: 'Service Line Growth · Clinical Engagement',
     // Folds in closing sentiment from removed scene 11
-    vo: "Four alerts. Surfaced automatically. Not from a template — from learning your hospital's case mix, your payer contracts, your denial patterns. Every department. Every physician. Every claim makes it sharper. Generic AI misses what is uniquely yours. The question worth asking: what revenue is your hospital not seeing right now?",
+    vo: "Four alerts. Surfaced automatically. Not from a template — from learning your hospital's case mix, your payer contracts, your denial patterns. Every claim makes it sharper. Generic AI misses what is uniquely yours. The question worth asking: what revenue is your hospital not seeing right now?",
     beats: [
       { at: 0.10, stat: 'Ops queue · live',      sub: 'clinical signals → revenue action · Day Zero' },
       { at: 0.32, stat: '4 alerts · now',         sub: 'Respiratory · Cardiology · Neurology · Oncology' },
@@ -378,22 +382,22 @@ function StatScene({ scene, progress }) {
 
   // ── Timings aligned to VO beats (fractions of actual audio duration) ─
   // VO: "In the UAE — twelve to eighteen percent…" ≈83 words total
-  const beat0Show    = p >= 0.05;   // "twelve to eighteen percent" (word 6/83 ≈ 0.07)
-  const beat0Active  = p >= 0.12;   // stat activates red
-  const showClaim    = p >= 0.15;   // denied claim card — illustrates "claims denied"
-  const showCostCard = p >= 0.21;   // "three point five million dirhams" (word 19/83)
-  const showGlobalCard = p >= 0.40; // "World-class systems stay below five percent" (word 35/83)
-  const beat1Show    = p >= 0.44;   // "sixty-five percent" (word 38/83 ≈ 0.46)
-  const beat1Active  = p >= 0.51;   // gauge sweeps after "entirely preventable"
-  const beat2Show    = p >= 0.63;   // "Four root causes" (word 55/83 ≈ 0.66)
-  const beat3Show    = p >= 0.85;   // "Eighty-seven percent" (word 73/83 ≈ 0.88)
+  const beat0Show    = p >= 0.03;   // hero stat — up immediately
+  const beat0Active  = p >= 0.10;   // stat activates red
+  const showClaim    = p >= 0.11;   // denied claim card — illustrates "claims denied"
+  const showCostCard = p >= 0.17;   // "three point five million dirhams"
+  const showGlobalCard = p >= 0.38; // "World-class systems stay below five percent"
+  const beat1Show    = p >= 0.44;   // "sixty-five percent"
+  const beat1Active  = p >= 0.50;   // gauge sweeps after "entirely preventable"
+  const beat2Show    = p >= 0.63;   // "Four root causes"
+  const beat3Show    = p >= 0.85;   // "Eighty-seven percent"
   const phase = beat3Show ? 3 : beat2Show ? 2 : 1;
 
   const GAP_ITEMS = [
-    { label: 'Clinical Documentation Gaps', pct: 38, sub: 'CC/MCC missed · DRG undercoded at discharge',  col: AMBER,  threshold: 0.67 },
-    { label: 'Missing Authorizations',       pct: 27, sub: 'Auth not captured at point of order entry',     col: INDIGO, threshold: 0.72 },
-    { label: 'Coding Errors',                pct: 22, sub: 'ICD/DRG mismatches · NCCI violations',         col: RED,    threshold: 0.76 },
-    { label: 'Claim Edit Failures',          pct: 13, sub: 'Payer edit rules · MUE limits unmet',          col: PURPLE, threshold: 0.80 },
+    { label: 'Clinical Documentation Gaps', pct: 38, sub: 'CC/MCC missed · DRG undercoded at discharge',  col: AMBER,  threshold: 0.63 },
+    { label: 'Missing Authorizations',       pct: 27, sub: 'Auth not captured at point of order entry',     col: INDIGO, threshold: 0.69 },
+    { label: 'Coding Errors',                pct: 22, sub: 'ICD/DRG mismatches · NCCI violations',         col: RED,    threshold: 0.74 },
+    { label: 'Claim Edit Failures',          pct: 13, sub: 'Payer edit rules · MUE limits unmet',          col: PURPLE, threshold: 0.78 },
   ];
 
   return (
@@ -438,8 +442,9 @@ function StatScene({ scene, progress }) {
 
             {/* Hero stat — centered, dominant */}
             {beat0Show && (
-              <div style={{ textAlign: 'center', animation: 'dpEmergeStat 0.9s cubic-bezier(0.34,1.2,0.64,1) both' }}>
-                <div style={{ fontSize: beat1Show ? 40 : 58, fontWeight: 900, color: beat0Active ? RED : `${RED}45`, lineHeight: 1, letterSpacing: -2.5, transition: 'all 0.65s cubic-bezier(0.34,1.2,0.64,1)', fontFamily: 'Sora' }}>
+              <div style={{ textAlign: 'center', animation: 'dpEmergeStat 0.9s cubic-bezier(0.34,1.2,0.64,1) both', position: 'relative' }}>
+                {beat0Active && <div style={{ position: 'absolute', inset: -20, borderRadius: '50%', background: `radial-gradient(ellipse 100% 100% at 50% 50%, ${RED}12, transparent)`, animation: 'dpBreath 2.5s ease-in-out infinite', pointerEvents: 'none' }} />}
+                <div style={{ fontSize: beat1Show ? 40 : 58, fontWeight: 900, color: beat0Active ? RED : `${RED}45`, lineHeight: 1, letterSpacing: -2.5, transition: 'all 0.65s cubic-bezier(0.34,1.2,0.64,1)', fontFamily: 'Sora', textShadow: beat0Active ? `0 0 32px ${RED}40` : 'none' }}>
                   <CountUp value="12–18%" duration={900} key={`b0-${beat0Show}`}/>
                 </div>
                 <div style={{ fontSize: 8.5, color: DIM, marginTop: 5, textAlign: 'center' }}>of UAE hospital claims denied on first submission</div>
@@ -449,10 +454,11 @@ function StatScene({ scene, progress }) {
             {/* Context row: AED 3.5M (at "three point five million") + <5% (at "world-class") — hidden when 65% appears */}
             {showCostCard && !beat1Show && (
               <div style={{ display: 'flex', gap: 10, width: '100%', maxWidth: 300, animation: 'dpBeatIn 0.5s ease both' }}>
-                <div style={{ flex: 1, padding: '8px 10px', background: `${RED}0c`, border: `1px solid ${RED}22`, borderRadius: 9, textAlign: 'center' }}>
-                  <div style={{ fontSize: 5.5, color: MUTED, letterSpacing: 1, textTransform: 'uppercase', marginBottom: 3 }}>Annual Revenue at Risk</div>
-                  <div style={{ fontSize: 15, fontWeight: 900, color: RED, fontFamily: 'Sora', lineHeight: 1.1 }}>AED <CountUp value="3.5M+" duration={1100}/></div>
-                  <div style={{ fontSize: 6, color: DIM, marginTop: 2 }}>per 350-bed facility</div>
+                <div style={{ flex: 1, padding: '8px 10px', background: `${RED}0c`, border: `1px solid ${RED}30`, borderRadius: 9, textAlign: 'center', boxShadow: `0 0 18px ${RED}14`, position: 'relative', overflow: 'hidden' }}>
+                  <div style={{ position: 'absolute', inset: 0, background: `${RED}05`, animation: 'dpBreath 2.2s ease-in-out infinite', borderRadius: 8, pointerEvents: 'none' }} />
+                  <div style={{ fontSize: 5.5, color: MUTED, letterSpacing: 1, textTransform: 'uppercase', marginBottom: 3, position: 'relative' }}>Annual Revenue at Risk</div>
+                  <div style={{ fontSize: 15, fontWeight: 900, color: RED, fontFamily: 'Sora', lineHeight: 1.1, position: 'relative', textShadow: `0 0 20px ${RED}45` }}>AED <CountUp value="3.5M+" duration={1100}/></div>
+                  <div style={{ fontSize: 6, color: DIM, marginTop: 2, position: 'relative' }}>per 350-bed facility</div>
                 </div>
                 {showGlobalCard && (
                   <div style={{ flex: 1, padding: '8px 10px', background: `${GREEN}08`, border: `1px solid ${GREEN}25`, borderRadius: 9, textAlign: 'center', animation: 'dpBeatIn 0.5s ease both' }}>
@@ -464,12 +470,14 @@ function StatScene({ scene, progress }) {
               </div>
             )}
 
-            {/* Denied claim — centered, compact (disappears before 65% stat) */}
-            {showClaim && p < 0.38 && (
-              <div style={{ borderRadius: 9, background: 'rgba(255,255,255,0.92)', border: `1.5px solid ${RED}40`, boxShadow: `0 3px 18px ${RED}10`, padding: '8px 12px', animation: 'dpSpringIn 0.6s cubic-bezier(0.34,1.4,0.64,1) both', width: '100%', maxWidth: 260 }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 5 }}>
+            {/* Denied claim — centered, compact (disappears when 65% stat appears) */}
+            {showClaim && p < 0.44 && (
+              <div style={{ borderRadius: 9, background: 'rgba(255,255,255,0.92)', border: `1.5px solid ${RED}50`, boxShadow: `0 3px 18px ${RED}18, 0 0 0 3px ${RED}0a`, padding: '8px 12px', animation: 'dpSpringIn 0.6s cubic-bezier(0.34,1.4,0.64,1) both', width: '100%', maxWidth: 260, position: 'relative', overflow: 'hidden' }}>
+                {/* Pulsing red glow */}
+                <div style={{ position: 'absolute', inset: 0, background: `${RED}06`, animation: 'dpBreath 1.8s ease-in-out infinite', pointerEvents: 'none', borderRadius: 8 }} />
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 5, position: 'relative' }}>
                   <span style={{ fontSize: 6, fontWeight: 700, color: MUTED, letterSpacing: 0.5 }}>CLAIM · AE-24-8821</span>
-                  <span style={{ fontSize: 9, fontWeight: 900, color: RED, letterSpacing: 1.5, border: `1.5px solid ${RED}`, borderRadius: 4, padding: '1px 6px', background: `${RED}08` }}>DENIED</span>
+                  <span style={{ fontSize: 9, fontWeight: 900, color: RED, letterSpacing: 1.5, border: `1.5px solid ${RED}`, borderRadius: 4, padding: '1px 6px', background: `${RED}08`, animation: 'dpPulse 1.4s ease-in-out infinite' }}>DENIED</span>
                 </div>
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '3px 12px' }}>
                   {[['Patient','F.H. · 42F'],['Payer','Daman'],['Amount','AED 2,450'],['Service','Endocrinology']].map(([k,v]) => (
@@ -531,6 +539,15 @@ function StatScene({ scene, progress }) {
             <div style={{ width: '100%', maxWidth: 480, display: 'flex', alignItems: 'center', gap: 10, flexShrink: 0, animation: 'dpBeatIn 0.5s ease both' }}>
               <span style={{ fontSize: 8, fontWeight: 800, color: MUTED, letterSpacing: 1.5, textTransform: 'uppercase' }}>4 Root Causes · Same Pattern · Every Time</span>
               <div style={{ flex: 1, height: 1, background: BORDER }} />
+              {/* Running denial total accumulator */}
+              {(() => {
+                const visiblePct = GAP_ITEMS.filter(g => p >= g.threshold).reduce((s, g) => s + g.pct, 0);
+                return visiblePct > 0 ? (
+                  <div style={{ flexShrink: 0, fontSize: 7, fontWeight: 800, color: RED, background: `${RED}0e`, border: `1px solid ${RED}30`, borderRadius: 8, padding: '3px 8px', animation: 'dpBeatIn 0.3s ease both' }}>
+                    {visiblePct}% of denials
+                  </div>
+                ) : null;
+              })()}
             </div>
             {/* Full-width timeline */}
             <div style={{ position: 'relative', width: '100%', maxWidth: 480 }}>
@@ -599,228 +616,771 @@ function StatScene({ scene, progress }) {
   );
 }
 
-/* Scene 2 — Intro Docstribe (p<0.62), then KPI outcomes (p>=0.64) */
-function KPIScene({ scene, progress }) {
-  // VO ≈60 words · thirty years @0.22 · hundred hospitals @0.36 · 10M lives @0.46
-  // intro fades out 0.60→0.68, outcomes fade in 0.62→0.70
-  const introOpacity = progress < 0.60 ? 1 : progress > 0.68 ? 0 : 1 - (progress - 0.60) / 0.08;
-  const kpiOpacity   = progress < 0.62 ? 0 : progress > 0.70 ? 1 : (progress - 0.62) / 0.08;
-  const kpiBeats = scene.beats.slice(3); // beats 3,4,5 = ↓30%, 99%, +0.15 CMI
-  const colors = [RED, GREEN, PURPLE];
+/* ─── DataFlowMesh — animated dot-grid background ─────────────── */
+function DataFlowMesh({ progress }) {
+  const cols = 8, rows = 6;
+  const dots = [];
+  for (let r = 0; r < rows; r++) {
+    for (let c = 0; c < cols; c++) {
+      const x = 12 + c * (100 / (cols - 1)) * 0.94;
+      const y = 12 + r * (100 / (rows - 1)) * 0.94;
+      const op = 0.022 + 0.022 * Math.sin(c * 0.9 + r * 0.7 + progress * 18);
+      const fill = (c + r) % 2 === 0 ? TEAL : INDIGO;
+      dots.push(<circle key={`${r}-${c}`} cx={`${x}%`} cy={`${y}%`} r="1.5" fill={fill} opacity={op} />);
+    }
+  }
+  return (
+    <svg style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', pointerEvents: 'none', zIndex: 0 }}>
+      {dots}
+    </svg>
+  );
+}
 
-  // ── A: floating ambient node positions (fixed so they don't shift on re-render)
-  const ambientNodes = [
-    { top: '12%', left: '8%',  size: 6, col: TEAL,   delay: '0s',    dur: '3.2s' },
-    { top: '72%', left: '6%',  size: 4, col: INDIGO, delay: '0.5s',  dur: '2.8s' },
-    { top: '30%', left: '88%', size: 7, col: PURPLE, delay: '1.0s',  dur: '3.6s' },
-    { top: '65%', left: '91%', size: 5, col: TEAL,   delay: '1.5s',  dur: '2.5s' },
-    { top: '18%', left: '50%', size: 4, col: INDIGO, delay: '0.8s',  dur: '4.0s' },
-    { top: '82%', left: '48%', size: 6, col: TEAL,   delay: '2.0s',  dur: '3.0s' },
-    { top: '48%', left: '3%',  size: 5, col: PURPLE, delay: '1.3s',  dur: '3.4s' },
+/* ─── RCMOriginBadge — replaces compliance pills ──────────────── */
+function RCMOriginBadge() {
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 5, animation: 'dpBeatIn 0.5s ease both' }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+        <span style={{ fontSize: 7.5, fontWeight: 700, color: DIM, background: 'rgba(0,0,0,0.05)', border: `1px solid ${BORDER}`, borderRadius: 20, padding: '4px 12px', animation: 'dpSpringIn 0.5s cubic-bezier(0.34,1.4,0.64,1) both' }}>
+          🌐 Global RCM Research
+        </span>
+        <span style={{ fontSize: 9, color: MUTED }}>──▶</span>
+        <span style={{ fontSize: 7.5, fontWeight: 700, color: TEAL, background: `${TEAL}10`, border: `1px solid ${TEAL}30`, borderRadius: 20, padding: '4px 12px', animation: 'dpSpringIn 0.5s cubic-bezier(0.34,1.4,0.64,1) 0.10s both' }}>
+          Clinical Workflow = Root Cause
+        </span>
+      </div>
+      <div style={{ fontSize: 7, color: MUTED, fontStyle: 'italic', textAlign: 'center' }}>
+        deep immersion in worldwide healthcare revenue cycle
+      </div>
+    </div>
+  );
+}
+
+/* ─── ClinicalWorkflowChain ────────────────────────────────────── */
+function ClinicalWorkflowChain({ progress }) {
+  const nodes = [
+    { icon: '📋', label: 'Clinical Doc', color: TEAL },
+    { icon: '🔢', label: 'Coding',       color: INDIGO },
+    { icon: '📄', label: 'Claims',       color: PURPLE },
+    { icon: '🏛',  label: 'Payer Logic', color: AMBER },
+  ];
+  // Two-phase timing:
+  // 1. nodeShow  — when the card springs in (builds visual context as VO says "traces back to a breakdown")
+  // 2. nodeGlow  — when the card glows/pulses (matches exact VO word: "documented / coded / submitted / payer logic")
+  //    "documented" = word 60/150 = p≈0.400 | "coded" = word 61/150 = p≈0.407
+  //    "submitted"  = word 63/150 = p≈0.420 | "payer logic" = words 75-76/150 = p≈0.500
+  const nodeShow = [0.33, 0.35, 0.37, 0.46]; // spread stagger right after chain appears at 0.32
+  const nodeGlow = [0.39, 0.40, 0.42, 0.49]; // exact VO word timing — glow fires here
+  const allVisible = progress >= 0.48; // all 4 nodes visible → flowing dots animate
+  return (
+    <div style={{ width: '100%', maxWidth: 540, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 12 }}>
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 5, flexWrap: 'wrap', width: '100%', position: 'relative' }}>
+        {nodes.map((n, i) => {
+          const show   = progress >= nodeShow[i];
+          const active = progress >= nodeGlow[i] && progress <= (nodeGlow[i] + 0.11);
+          return (
+            <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
+              <div style={{
+                display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 5,
+                background: active ? `${n.color}1a` : 'rgba(255,255,255,0.93)',
+                border: `1.5px solid ${n.color}${active ? '65' : '30'}`,
+                borderRadius: 22, padding: '12px 22px',
+                opacity: show ? 1 : 0,
+                animation: show ? `dpSpringIn 0.55s cubic-bezier(0.34,1.4,0.64,1) both` : 'none',
+                boxShadow: active ? `0 0 26px ${n.color}40, 0 4px 14px rgba(0,0,0,0.07)` : '0 2px 10px rgba(0,0,0,0.05)',
+                transition: 'box-shadow 0.45s ease, background 0.45s ease, border-color 0.45s ease',
+                position: 'relative', minWidth: 78,
+              }}>
+                {active && <div style={{ position: 'absolute', inset: -6, borderRadius: 28, border: `2px solid ${n.color}50`, animation: 'dpStatRing 1.2s ease-out both' }} />}
+                <span style={{ fontSize: 22 }}>{n.icon}</span>
+                <span style={{ fontSize: 12, fontWeight: 800, color: n.color, letterSpacing: 0.2, whiteSpace: 'nowrap' }}>{n.label}</span>
+              </div>
+              {i < 3 && (
+                <svg width="32" height="18" viewBox="0 0 32 18" style={{ flexShrink: 0, opacity: progress >= nodeShow[i + 1] ? 1 : 0.12 }}>
+                  <path d="M1 9 L24 9" stroke={n.color} strokeWidth="2" strokeLinecap="round"
+                    strokeDasharray="38"
+                    style={{ animation: progress >= nodeShow[i + 1] ? 'dpArrowDraw 0.45s ease both' : 'none' }} />
+                  <path d="M21 5 L27 9 L21 13" fill="none" stroke={n.color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
+                    opacity={progress >= nodeShow[i + 1] ? 1 : 0.12} />
+                  {allVisible && (
+                    <circle r="3" fill={n.color} opacity="0.85">
+                      <animateMotion dur={`${1.1 + i * 0.18}s`} repeatCount="indefinite" path="M1 9 L24 9" />
+                    </circle>
+                  )}
+                </svg>
+              )}
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
+/* ─── AlgoNetworkGraph — cinematic AI Agentic Workforce (corporate video) ─ */
+function AlgoNetworkGraph({ progress }) {
+  // VO word-exact sync:
+  // "clinical workflow intelligence" = words 106-108/152, p≈0.703-0.716 → glow at p=0.70
+  // "payer contract rules"           = words 110-112/152, p≈0.724-0.737 → glow at p=0.73
+  const glowClinical = progress >= 0.70 && progress <= 0.78;
+  const glowPayer    = progress >= 0.73 && progress <= 0.81;
+  const anyGlow      = glowClinical || glowPayer;
+
+  const clinicalAgents = [
+    { icon: '🧠', name: 'CDI Model',      role: 'Clinical Doc Intelligence',   color: GREEN  },
+    { icon: '🔢', name: 'ICD Engine',     role: 'Code Mapping & Validation',   color: GREEN  },
+    { icon: '💬', name: 'Clinical NLP',   role: 'Encounter Text Analysis',     color: TEAL   },
+    { icon: '📊', name: 'DRG Optimizer',  role: 'DRG Weight Maximization',     color: TEAL   },
+    { icon: '🏷', name: 'CC/MCC Capture', role: 'Complication Detection',      color: GREEN  },
+  ];
+  const payerAgents = [
+    { icon: '⚡', name: 'Denial Shield',  role: 'Pre-submission Denial Block', color: AMBER     },
+    { icon: '🔐', name: 'Auth AI',        role: 'Prior Auth Automation',       color: AMBER     },
+    { icon: '📋', name: 'NCCI Guard',     role: 'Edit & Bundling Rules',       color: '#b45309' },
+    { icon: '🎯', name: 'Payer Intel',    role: 'Contract Rule Engine',        color: AMBER     },
   ];
 
-  return (
-    <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(160deg,#e8f2ff 0%,#f0f8f4 40%,#ece8ff 80%,#e8f0ff 100%)', overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
+  // Cards stagger in: clinical 0-4 at p=0.64+i*0.016, payer 5-8 at same offsets
+  const nodeStart = i => 0.64 + i * 0.016;
 
-      {/* ── A: Ambient background — breathing orb + floating nodes ── */}
-      <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none', zIndex: 0 }}>
-        <div style={{ position: 'absolute', top: '30%', left: '50%', transform: 'translate(-50%,-50%)', width: 420, height: 420, borderRadius: '50%', background: `radial-gradient(ellipse 60% 60% at 50% 50%, ${TEAL}0d 0%, transparent 70%)`, animation: 'dpBreath 4s ease-in-out infinite' }} />
-        {ambientNodes.map((n, i) => (
-          <div key={i} style={{ position: 'absolute', top: n.top, left: n.left, width: n.size, height: n.size, borderRadius: '50%', background: n.col, opacity: 0.18, animation: `dpPulse ${n.dur} ease-in-out ${n.delay} infinite` }} />
-        ))}
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6, width: '100%' }}>
+
+      {/* Three-column layout: Clinical | Hub | Payer */}
+      <div style={{ display: 'flex', gap: 10, alignItems: 'center', width: '100%', maxWidth: 540 }}>
+
+        {/* LEFT — Clinical Intelligence (cards slide in from left) */}
+        <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 4 }}>
+          <div style={{
+            fontSize: 9, fontWeight: 900, letterSpacing: 1.5, textTransform: 'uppercase',
+            textAlign: 'center', marginBottom: 2, transition: 'all 0.4s ease',
+            color: glowClinical ? GREEN : `${GREEN}65`,
+            textShadow: glowClinical ? `0 0 14px ${GREEN}70` : 'none',
+          }}>⚕ Clinical</div>
+          {clinicalAgents.map((a, i) => {
+            const show = progress >= nodeStart(i);
+            return (
+              <div key={i} style={{
+                position: 'relative', overflow: 'hidden', borderRadius: 10,
+                background: show ? (glowClinical ? `${a.color}13` : 'rgba(255,255,255,0.88)') : 'transparent',
+                borderTop: show ? `1px solid ${a.color}${glowClinical ? '45' : '18'}` : '1px solid transparent',
+                borderBottom: show ? `1px solid ${a.color}${glowClinical ? '45' : '18'}` : '1px solid transparent',
+                borderLeft: show ? `1px solid ${a.color}${glowClinical ? '45' : '18'}` : '1px solid transparent',
+                borderRight: show ? `3px solid ${a.color}${glowClinical ? 'cc' : '55'}` : '3px solid transparent',
+                opacity: show ? 1 : 0,
+                animation: show ? 'dpSlideInLeft 0.42s cubic-bezier(0.34,1.2,0.64,1) both' : 'none',
+                boxShadow: glowClinical ? `0 0 22px ${a.color}1a, 0 2px 8px rgba(0,0,0,0.04)` : show ? '0 1px 6px rgba(0,0,0,0.05)' : 'none',
+                transition: 'background 0.35s ease, box-shadow 0.35s ease',
+              }}>
+                {/* Chrome shimmer when glowing */}
+                {glowClinical && show && <div style={{ position: 'absolute', inset: 0, background: `linear-gradient(105deg,transparent 32%,${a.color}18 50%,transparent 68%)`, animation: 'dpChromeShimmer 2.4s ease-in-out infinite', pointerEvents: 'none' }} />}
+                <div style={{ padding: '6px 8px', display: 'flex', alignItems: 'center', gap: 6 }}>
+                  <span style={{ fontSize: 14, flexShrink: 0, filter: glowClinical ? `drop-shadow(0 0 6px ${a.color}80)` : 'none', transition: 'filter 0.35s ease' }}>{a.icon}</span>
+                  <div style={{ flex: 1, minWidth: 0 }}>
+                    <div style={{ fontSize: 10, fontWeight: 800, lineHeight: 1.2, color: glowClinical ? a.color : '#1e293b', transition: 'color 0.35s ease' }}>{a.name}</div>
+                    <div style={{ fontSize: 7.5, color: MUTED, marginTop: 1, lineHeight: 1.2 }}>{a.role}</div>
+                  </div>
+                  {/* Live status dot */}
+                  <div style={{
+                    width: 6, height: 6, borderRadius: '50%', flexShrink: 0,
+                    background: glowClinical ? a.color : `${a.color}40`,
+                    boxShadow: glowClinical ? `0 0 8px ${a.color}, 0 0 18px ${a.color}55` : 'none',
+                    animation: glowClinical ? 'dpPulse 1.1s ease-in-out infinite' : 'none',
+                    transition: 'all 0.35s ease',
+                  }} />
+                </div>
+              </div>
+            );
+          })}
+        </div>
+
+        {/* CENTER — Docstribe AI Core hub with pulsing rings */}
+        <div style={{ flexShrink: 0, width: 64, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 5 }}>
+          {/* Circular hub */}
+          <div style={{ position: 'relative', width: 56, height: 56, flexShrink: 0 }}>
+            {/* Expanding concentric rings */}
+            {[0, 0.85, 1.7].map((delay, ri) => (
+              <div key={ri} style={{
+                position: 'absolute',
+                inset: -7 - ri * 5,
+                borderRadius: '50%',
+                border: `1.5px solid ${TEAL}${anyGlow ? '38' : '18'}`,
+                animation: `dpStatRing 2.4s ease-out ${delay}s infinite`,
+                pointerEvents: 'none',
+                transition: 'border-color 0.4s ease',
+              }} />
+            ))}
+            {/* Hub circle itself */}
+            <div style={{
+              position: 'absolute', inset: 0, borderRadius: '50%',
+              background: anyGlow
+                ? `radial-gradient(circle at 40% 40%, ${TEAL}32, ${TEAL}10 60%, transparent)`
+                : `radial-gradient(circle at 40% 40%, ${TEAL}1a, ${TEAL}07 60%, transparent)`,
+              border: `2px solid ${TEAL}${anyGlow ? '72' : '48'}`,
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              animation: 'dpBreath 2.8s ease-in-out infinite',
+              boxShadow: anyGlow ? `0 0 32px ${TEAL}45, 0 0 58px ${TEAL}18` : `0 0 14px ${TEAL}25`,
+              transition: 'all 0.4s ease',
+            }}>
+              <span style={{ fontSize: 22 }}>🤖</span>
+            </div>
+          </div>
+          {/* Label */}
+          <div style={{ textAlign: 'center', lineHeight: 1.35 }}>
+            <div style={{ fontSize: 8.5, fontWeight: 900, color: TEAL, letterSpacing: 0.2 }}>Docstribe</div>
+            <div style={{ fontSize: 6.5, fontWeight: 700, color: `${TEAL}85`, letterSpacing: 0.6 }}>AI CORE</div>
+          </div>
+          {/* Animated flow arrows */}
+          <div style={{ display: 'flex', gap: 3, alignItems: 'center' }}>
+            <span style={{ fontSize: 9, color: `${TEAL}70`, animation: 'dpPulse 1.6s ease-in-out infinite' }}>←</span>
+            <span style={{ fontSize: 5.5, color: `${TEAL}50`, fontWeight: 700, letterSpacing: 0.5 }}>ORCH</span>
+            <span style={{ fontSize: 9, color: `${TEAL}70`, animation: 'dpPulse 1.6s ease-in-out 0.8s infinite' }}>→</span>
+          </div>
+        </div>
+
+        {/* RIGHT — Payer Intelligence (cards slide in from right) */}
+        <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 4 }}>
+          <div style={{
+            fontSize: 9, fontWeight: 900, letterSpacing: 1.5, textTransform: 'uppercase',
+            textAlign: 'center', marginBottom: 2, transition: 'all 0.4s ease',
+            color: glowPayer ? AMBER : `${AMBER}65`,
+            textShadow: glowPayer ? `0 0 14px ${AMBER}70` : 'none',
+          }}>💰 Payer</div>
+          {payerAgents.map((a, i) => {
+            const show = progress >= nodeStart(5 + i);
+            return (
+              <div key={i} style={{
+                position: 'relative', overflow: 'hidden', borderRadius: 10,
+                background: show ? (glowPayer ? `${a.color}13` : 'rgba(255,255,255,0.88)') : 'transparent',
+                borderTop: show ? `1px solid ${a.color}${glowPayer ? '45' : '18'}` : '1px solid transparent',
+                borderBottom: show ? `1px solid ${a.color}${glowPayer ? '45' : '18'}` : '1px solid transparent',
+                borderRight: show ? `1px solid ${a.color}${glowPayer ? '45' : '18'}` : '1px solid transparent',
+                borderLeft: show ? `3px solid ${a.color}${glowPayer ? 'cc' : '55'}` : '3px solid transparent',
+                opacity: show ? 1 : 0,
+                animation: show ? 'dpSlideInRight 0.42s cubic-bezier(0.34,1.2,0.64,1) both' : 'none',
+                boxShadow: glowPayer ? `0 0 22px ${a.color}1a, 0 2px 8px rgba(0,0,0,0.04)` : show ? '0 1px 6px rgba(0,0,0,0.05)' : 'none',
+                transition: 'background 0.35s ease, box-shadow 0.35s ease',
+              }}>
+                {glowPayer && show && <div style={{ position: 'absolute', inset: 0, background: `linear-gradient(105deg,transparent 32%,${a.color}18 50%,transparent 68%)`, animation: 'dpChromeShimmer 2.4s ease-in-out infinite', pointerEvents: 'none' }} />}
+                <div style={{ padding: '6px 8px', display: 'flex', alignItems: 'center', gap: 6 }}>
+                  {/* Status dot on left (faces center) */}
+                  <div style={{
+                    width: 6, height: 6, borderRadius: '50%', flexShrink: 0,
+                    background: glowPayer ? a.color : `${a.color}40`,
+                    boxShadow: glowPayer ? `0 0 8px ${a.color}, 0 0 18px ${a.color}55` : 'none',
+                    animation: glowPayer ? 'dpPulse 1.1s ease-in-out infinite' : 'none',
+                    transition: 'all 0.35s ease',
+                  }} />
+                  <span style={{ fontSize: 14, flexShrink: 0, filter: glowPayer ? `drop-shadow(0 0 6px ${a.color}80)` : 'none', transition: 'filter 0.35s ease' }}>{a.icon}</span>
+                  <div style={{ flex: 1, minWidth: 0 }}>
+                    <div style={{ fontSize: 10, fontWeight: 800, lineHeight: 1.2, color: glowPayer ? a.color : '#1e293b', transition: 'color 0.35s ease' }}>{a.name}</div>
+                    <div style={{ fontSize: 7.5, color: MUTED, marginTop: 1, lineHeight: 1.2 }}>{a.role}</div>
+                  </div>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+
       </div>
 
-      {/* ── PERSISTENT HEADER — always visible across both phases ── */}
+      {/* Bottom context pills */}
+      <div style={{ display: 'flex', gap: 10, justifyContent: 'center', marginTop: 2 }}>
+        <div style={{
+          display: 'flex', alignItems: 'center', gap: 5, padding: '4px 13px',
+          background: glowClinical ? `${GREEN}12` : `${GREEN}07`,
+          border: `1.5px solid ${GREEN}${glowClinical ? '55' : '22'}`,
+          borderRadius: 20,
+          boxShadow: glowClinical ? `0 0 20px ${GREEN}35` : 'none',
+          transition: 'all 0.3s ease',
+        }}>
+          <span style={{ fontSize: 11 }}>🩺</span>
+          <span style={{ fontSize: 11, fontWeight: 700, color: glowClinical ? GREEN : DIM }}>Clinical Logic</span>
+          {glowClinical && <span style={{ fontSize: 9, fontWeight: 800, color: GREEN, background: `${GREEN}18`, padding: '1px 6px', borderRadius: 10, animation: 'dpPulse 1.3s ease-in-out infinite' }}>ACTIVE</span>}
+        </div>
+        <div style={{
+          display: 'flex', alignItems: 'center', gap: 5, padding: '4px 13px',
+          background: glowPayer ? `${AMBER}12` : `${AMBER}07`,
+          border: `1.5px solid ${AMBER}${glowPayer ? '55' : '22'}`,
+          borderRadius: 20,
+          boxShadow: glowPayer ? `0 0 20px ${AMBER}35` : 'none',
+          transition: 'all 0.3s ease',
+        }}>
+          <span style={{ fontSize: 11 }}>📋</span>
+          <span style={{ fontSize: 11, fontWeight: 700, color: glowPayer ? AMBER : DIM }}>Payer Logic</span>
+          {glowPayer && <span style={{ fontSize: 9, fontWeight: 800, color: AMBER, background: `${AMBER}18`, padding: '1px 6px', borderRadius: 10, animation: 'dpPulse 1.3s ease-in-out infinite' }}>ACTIVE</span>}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ─── GuaranteeSeal — premium stamp ───────────────────────────── */
+function GuaranteeSeal() {
+  const r = 36, textR = 33;
+  const arcText = 'CONTRACTUALLY GUARANTEED · DOCSTRIBE SLA ·';
+  const chars = arcText.split('');
+  const totalAngle = 340;
+  const startAngle = -170;
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6, animation: 'dpStampDrop 0.7s cubic-bezier(0.34,1.2,0.64,1) both' }}>
+      <svg width="82" height="82" viewBox="0 0 82 82">
+        {/* Outer ring */}
+        <circle cx="41" cy="41" r={r} fill="none" stroke={TEAL} strokeWidth="3" />
+        {/* Inner ring */}
+        <circle cx="41" cy="41" r="30" fill="none" stroke={AMBER} strokeWidth="1.5" opacity="0.8" />
+        {/* Ring burst */}
+        <circle cx="41" cy="41" r={r} fill="none" stroke={`${TEAL}40`} strokeWidth="1"
+          style={{ animation: 'dpStatRing 1.4s ease-out both' }} />
+        {/* Curved text */}
+        {chars.map((ch, i) => {
+          const angle = startAngle + (i / chars.length) * totalAngle;
+          const rad = (angle - 90) * Math.PI / 180;
+          const x = 41 + textR * Math.cos(rad);
+          const y = 41 + textR * Math.sin(rad);
+          const rot = angle;
+          return (
+            <text key={i} x={x} y={y} textAnchor="middle" dominantBaseline="middle"
+              fontSize="3.8" fontWeight="700" fill={`${TEAL}cc`} fontFamily="Sora, sans-serif"
+              transform={`rotate(${rot}, ${x}, ${y})`}>{ch}</text>
+          );
+        })}
+        {/* Center content */}
+        <text x="41" y="37" textAnchor="middle" fontSize="20" fontWeight="900" fill={TEAL} fontFamily="Sora, sans-serif">60</text>
+        <text x="41" y="49" textAnchor="middle" fontSize="6" fontWeight="800" fill={TEAL} fontFamily="Sora, sans-serif" letterSpacing="1">DAYS</text>
+      </svg>
+    </div>
+  );
+}
+
+/* Scene 2 — Discovery (p<0.62) then KPI Impact (p>=0.62) */
+function KPIScene({ scene, progress }) {
+  // VO ≈152 words · Root Cause @0.24 · Chain @0.35 · AlgoNet @0.60 · KPIs @0.89–0.96
+  // Hard switch at 0.80: Phase 1 gone, Phase 2 in — no overlap
+  const introOpacity = progress < 0.80 ? 1 : 0;
+  const kpiOpacity   = progress >= 0.80 ? 1 : 0;
+  const kpiBeats     = scene.beats.slice(7); // beats 7,8,9 → ↓30%, 99%, +0.15 CMI
+  const colors       = [RED, GREEN, PURPLE];
+
+  // VO: "revenue gaps are NOT a billing problem" = words 39-45, p≈0.252-0.290
+  const showBillingX = progress >= 0.26 && progress < 0.33;
+  // VO: "They are a clinical workflow problem" = words 46-51, p≈0.297-0.329
+  const showWorkflow = progress >= 0.31;
+  // VO: "thirty years of combined experience" = words 17-21, p≈0.110-0.135
+  const spotYears    = progress >= 0.09 && progress <= 0.15;
+
+  return (
+    <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(160deg,#e0eeff 0%,#e8f5ef 35%,#ede8ff 70%,#e4edff 100%)', overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
+
+      {/* Background: DataFlowMesh + breathing orb */}
+      <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none', zIndex: 0 }}>
+        <DataFlowMesh progress={progress} />
+        <div style={{ position: 'absolute', top: '30%', left: '50%', transform: 'translate(-50%,-50%)', width: 420, height: 420, borderRadius: '50%', background: `radial-gradient(ellipse 60% 60% at 50% 50%, ${TEAL}0d 0%, transparent 70%)`, animation: 'dpBreath 4s ease-in-out infinite' }} />
+      </div>
+
+      {/* Persistent header */}
       <div style={{ flexShrink: 0, position: 'relative', zIndex: 20, display: 'flex', flexDirection: 'column', alignItems: 'center', paddingTop: 16, paddingBottom: 8, borderBottom: `1px solid ${BORDER}`, background: 'rgba(255,255,255,0.45)', backdropFilter: 'blur(6px)' }}>
         <div style={{ fontSize: 7.5, fontWeight: 700, color: TEAL, letterSpacing: 2, textTransform: 'uppercase', marginBottom: 4, opacity: introOpacity > 0 ? 1 : 0.7, transition: 'opacity 0.5s' }}>
-          {introOpacity > 0 ? 'Purposefully built to close the gap' : 'Clinical Intelligence · UAE'}
+          {introOpacity > 0 ? 'Four Gaps. One Answer.' : 'Clinical Intelligence · UAE'}
         </div>
-        <div style={{ fontSize: 48, fontWeight: 900, background: `linear-gradient(135deg,#0f172a 30%,${TEAL} 60%,${INDIGO})`, WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', letterSpacing: -1.5, lineHeight: 1, animation: 'dpLogoReveal 0.9s cubic-bezier(0.34,1.4,0.64,1) both' }}>
+        <div style={{ fontSize: 48, fontWeight: 900, background: `linear-gradient(135deg,#0f172a 30%,${TEAL} 60%,${INDIGO})`, WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', letterSpacing: -1.5, lineHeight: 1, animation: 'dpLogoReveal 0.9s cubic-bezier(0.34,1.4,0.64,1) both, dpBreath 4.5s ease-in-out 1.2s infinite', filter: `drop-shadow(0 2px 18px ${TEAL}30)` }}>
           Docstribe
         </div>
       </div>
 
-      {/* ── Phase 1 content — removed from DOM once Phase 2 fully takes over ── */}
       <div style={{ flex: 1, position: 'relative', overflow: 'hidden' }}>
-        {introOpacity > 0 && <div style={{ position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 14, padding: '12px 48px', opacity: introOpacity, transition: 'opacity 0.5s ease', pointerEvents: 'none', zIndex: 1 }}>
 
-          {/* Compliance trust strip */}
-          {progress >= 0.03 && (
-            <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', justifyContent: 'center' }}>
-              {[
-                { label: 'NABIDH Verified ✓',  color: TEAL   },
-                { label: 'DHA Compliant ✓',     color: GREEN  },
-                { label: 'IR-DRG Optimised ✓',  color: INDIGO },
-                { label: 'SOC 2 Compliant ✓',   color: PURPLE },
-              ].map((b, i) => (
-                <span key={i} style={{ fontSize: 7.5, fontWeight: 700, color: b.color, background: `${b.color}12`, border: `1px solid ${b.color}30`, borderRadius: 20, padding: '4px 11px', animation: `dpSpringIn 0.5s cubic-bezier(0.34,1.4,0.64,1) ${i*0.09}s both` }}>{b.label}</span>
-              ))}
-            </div>
-          )}
+        {/* Phase 1 — three full-screen sub-phases, hard snap transitions — no crossfade blending */}
+        {introOpacity > 0 && (
+          <div style={{ position: 'absolute', inset: 0, opacity: introOpacity, transition: 'opacity 0.4s ease', pointerEvents: 'none', zIndex: 1 }}>
 
-          {/* ── B: "30+ Years" — dramatic centred hero stat with ring burst ── */}
-          {progress >= 0.20 && (
-            <div style={{ textAlign: 'center', position: 'relative', animation: 'dpEmergeStat 0.9s cubic-bezier(0.34,1.2,0.64,1) both' }}>
-              {/* Ring burst */}
-              <div key="ring30" style={{ position: 'absolute', top: '38%', left: '50%', transform: 'translate(-50%,-50%)', width: 80, height: 80, borderRadius: '50%', border: `2px solid ${AMBER}55`, animation: 'dpStatRing 1.1s ease-out both', pointerEvents: 'none' }} />
-              {/* Hero number */}
-              <div style={{ fontSize: 72, fontWeight: 900, color: AMBER, lineHeight: 1, letterSpacing: -3, fontFamily: 'Sora', position: 'relative' }}>
-                30<span style={{ fontSize: 34, letterSpacing: -1 }}>+</span>
-              </div>
-              <div style={{ fontSize: 10, fontWeight: 800, color: AMBER, letterSpacing: 0.4, marginTop: 5 }}>Years of Grounded Clinical Experience</div>
-              <div style={{ fontSize: 7.5, color: DIM, marginTop: 5 }}>Built by doctors — not software engineers guessing at medicine</div>
-            </div>
-          )}
+            {/* ── Sub-phase A: Discovery (p < 0.33) — snaps out when Chain begins ── */}
+            {progress < 0.33 && (
+                <div style={{ position: 'absolute', inset: 0, zIndex: 2, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 14, padding: '16px 28px' }}>
 
-          {/* ── C: "100+ Hospitals" + "10M+ Lives" — two sequenced hero stat tiles ── */}
-          {progress >= 0.36 && (
-            <div style={{ display: 'flex', gap: 14, justifyContent: 'center', width: '100%', maxWidth: 380 }}>
-              {/* 100+ Hospitals — fires at "A hundred hospitals" */}
-              <div style={{ flex: 1, textAlign: 'center', padding: '12px 10px', background: `${TEAL}0e`, border: `1px solid ${TEAL}30`, borderRadius: 14, animation: 'dpSpringIn 0.7s cubic-bezier(0.34,1.4,0.64,1) both' }}>
-                <div style={{ fontSize: 7, fontWeight: 600, color: `${TEAL}99`, letterSpacing: 0.3, marginBottom: 4 }}>deployed across</div>
-                <div style={{ fontSize: 42, fontWeight: 900, color: TEAL, lineHeight: 1, letterSpacing: -2, fontFamily: 'Sora' }}>
-                  <CountUp value="100+" duration={700} key="h100" />
+                  {/* ── Stage A1 (p < 0.03): Four gap callback cards — snap out at 0.03 ── */}
+                  {progress < 0.03 && (
+                    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 14, width: '100%', maxWidth: 420 }}>
+                      <div style={{ fontSize: 10, fontWeight: 700, color: MUTED, letterSpacing: 1.8, textTransform: 'uppercase', animation: 'dpBeatIn 0.5s ease both' }}>Four gaps — every UAE hospital faces them</div>
+                      <div style={{ display: 'flex', gap: 8, justifyContent: 'center', width: '100%' }}>
+                        {[
+                          { icon: '📋', label: 'Clinical\nDocumentation', col: AMBER,  delay: '0s',    breathPeriod: '2.6s', breathDelay: '0s'   },
+                          { icon: '🔐', label: 'Missing\nAuthorizations', col: INDIGO, delay: '0.07s', breathPeriod: '2.9s', breathDelay: '0.4s' },
+                          { icon: '🔢', label: 'Coding\nErrors',          col: RED,    delay: '0.14s', breathPeriod: '2.4s', breathDelay: '0.7s' },
+                          { icon: '📨', label: 'Claim Edit\nFailures',    col: PURPLE, delay: '0.21s', breathPeriod: '3.1s', breathDelay: '1.0s' },
+                        ].map((g, i) => (
+                          <div key={i} style={{
+                            flex: '1 1 0', padding: '14px 6px', textAlign: 'center',
+                            background: `${g.col}0e`, border: `1.5px solid ${g.col}35`, borderRadius: 16,
+                            animation: `dpSpringIn 0.55s cubic-bezier(0.34,1.4,0.64,1) ${g.delay} both, dpBreath ${g.breathPeriod} ease-in-out ${g.breathDelay} infinite`,
+                            boxShadow: `0 0 22px ${g.col}20`,
+                            position: 'relative', overflow: 'hidden',
+                          }}>
+                            {/* Subtle shimmer on each gap card */}
+                            <div style={{ position: 'absolute', inset: 0, background: `linear-gradient(120deg,transparent 35%,${g.col}12 50%,transparent 65%)`, animation: `dpChromeShimmer ${4 + i * 0.5}s ease-in-out ${i * 0.9}s infinite`, pointerEvents: 'none' }} />
+                            <div style={{ fontSize: 26, marginBottom: 7, filter: `drop-shadow(0 2px 8px ${g.col}55)` }}>{g.icon}</div>
+                            <div style={{ fontSize: 10, fontWeight: 800, color: g.col, lineHeight: 1.4, whiteSpace: 'pre-line', position: 'relative' }}>{g.label}</div>
+                          </div>
+                        ))}
+                      </div>
+                      {/* Closing CTA — no brand echo (header speaks for itself) */}
+                      <div style={{ display: 'flex', alignItems: 'center', gap: 8, animation: 'dpBeatIn 0.5s ease 0.35s both' }}>
+                        <div style={{ width: 28, height: 1.5, background: `linear-gradient(90deg,transparent,${TEAL}70)`, borderRadius: 1 }} />
+                        <div style={{ fontSize: 13, fontWeight: 900, color: TXT, letterSpacing: -0.2 }}>One answer closes all four.</div>
+                        <div style={{ width: 28, height: 1.5, background: `linear-gradient(90deg,${TEAL}70,transparent)`, borderRadius: 1 }} />
+                      </div>
+                    </div>
+                  )}
+
+                  {/* ── Stage A2 (p 0.03–0.22): Built by clinicians — cinematic stagger ── */}
+                  {progress >= 0.03 && progress < 0.22 && (
+                    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 12, width: '100%', maxWidth: 460 }}>
+
+                      {/* Header — sets up the 30+ proof below */}
+                      <div style={{ textAlign: 'center', animation: 'dpBeatIn 0.4s ease both' }}>
+                        <div style={{ fontSize: 10, fontWeight: 700, color: MUTED, letterSpacing: 1.8, textTransform: 'uppercase', marginBottom: 3 }}>Built by clinicians · backed by research</div>
+                        <div style={{ fontSize: 15, fontWeight: 900, color: TXT, letterSpacing: -0.3 }}>Over 30 years of combined clinical experience</div>
+                      </div>
+
+                      {/* Hero 30+ panel — springs in at p=0.03, spotlights at p=0.09 */}
+                      <div style={{
+                        width: '100%', padding: '16px 24px', textAlign: 'center',
+                        background: spotYears ? `${TEAL}13` : `${TEAL}07`,
+                        border: `2px solid ${TEAL}${spotYears ? '68' : '25'}`,
+                        borderRadius: 20,
+                        boxShadow: spotYears ? `0 0 60px ${TEAL}45, 0 4px 30px ${TEAL}22` : `0 2px 14px ${TEAL}10`,
+                        transition: 'all 0.45s ease',
+                        animation: 'dpSpringIn 0.55s cubic-bezier(0.34,1.4,0.64,1) both',
+                        position: 'relative', overflow: 'hidden',
+                      }}>
+                        {/* Shimmer sweep on the whole panel */}
+                        <div style={{ position: 'absolute', inset: 0, background: `linear-gradient(105deg,transparent 35%,${TEAL}0f 50%,transparent 65%)`, animation: 'dpChromeShimmer 3.8s ease-in-out infinite', pointerEvents: 'none' }} />
+
+                        {/* 30+ number — CountUp + continuous breath */}
+                        <div style={{
+                          fontSize: 66, fontWeight: 900, color: TEAL, fontFamily: 'Sora', lineHeight: 1, letterSpacing: -3,
+                          filter: spotYears ? `drop-shadow(0 0 26px ${TEAL}95)` : `drop-shadow(0 0 10px ${TEAL}45)`,
+                          transition: 'filter 0.4s ease',
+                          animation: 'dpBreath 2.4s ease-in-out infinite',
+                          marginBottom: 4,
+                        }}>
+                          <CountUp value="30+" duration={1100} key="yrs30" />
+                        </div>
+                        <div style={{ fontSize: 12, fontWeight: 700, color: DIM, letterSpacing: 0.3, position: 'relative' }}>Years of Combined Clinical Research</div>
+
+                        {/* Research tags — sync to when VO says each phrase
+                            "denial patterns" = word 25-26, p≈0.161-0.168
+                            "payer contracts" = word 27-28, p≈0.174-0.181
+                            "clinical documentation" = word 30-31, p≈0.194-0.200 */}
+                        <div style={{ display: 'flex', gap: 6, justifyContent: 'center', marginTop: 8, flexWrap: 'wrap' }}>
+                          {[
+                            { label: 'Denial Patterns',        p: 0.15, col: RED    },
+                            { label: 'Payer Contracts',        p: 0.17, col: AMBER  },
+                            { label: 'Clinical Documentation', p: 0.19, col: TEAL   },
+                          ].map((t, i) => progress >= t.p && (
+                            <span key={i} style={{
+                              fontSize: 9, fontWeight: 700, color: t.col,
+                              background: `${t.col}0e`, border: `1px solid ${t.col}35`,
+                              borderRadius: 20, padding: '3px 12px',
+                              animation: 'dpSpringIn 0.45s cubic-bezier(0.34,1.4,0.64,1) both',
+                            }}>{t.label}</span>
+                          ))}
+                        </div>
+                      </div>
+
+                      {/* Three clinician expertise chips — stagger in as VO builds context
+                            "by clinicians" = word 9-10, p≈0.058-0.065  → chip 1 at p=0.06
+                            "practitioners carrying" = word 14-15, p≈0.090-0.097 → chip 2 at p=0.09
+                            "thirty years" = word 17-18, p≈0.110-0.116 → chip 3 at p=0.12 */}
+                      <div style={{ display: 'flex', gap: 8, width: '100%' }}>
+                        {[
+                          { icon: '🩺', label: 'Clinical Ops',   col: TEAL,   p: 0.06 },
+                          { icon: '📋', label: 'Revenue Cycle',  col: INDIGO, p: 0.09 },
+                          { icon: '⚖️', label: 'Payer Strategy', col: AMBER,  p: 0.12 },
+                        ].map((c, i) => progress >= c.p && (
+                          <div key={i} style={{
+                            flex: '1 1 0', padding: '14px 10px', textAlign: 'center',
+                            background: `${c.col}0d`, border: `1.5px solid ${c.col}35`, borderRadius: 16,
+                            boxShadow: `0 0 18px ${c.col}18`,
+                            animation: `dpSpringIn 0.5s cubic-bezier(0.34,1.4,0.64,1) both, dpBreath ${2.4 + i * 0.3}s ease-in-out ${i * 0.5}s infinite`,
+                            position: 'relative', overflow: 'hidden',
+                          }}>
+                            {/* Shimmer sweep for live feel */}
+                            <div style={{ position: 'absolute', inset: 0, background: `linear-gradient(105deg,transparent 30%,${c.col}18 50%,transparent 70%)`, animation: `dpChromeShimmer ${3.2 + i * 0.4}s ease-in-out ${i * 0.8}s infinite`, pointerEvents: 'none' }} />
+                            <div style={{ fontSize: 26, filter: `drop-shadow(0 2px 8px ${c.col}55)` }}>{c.icon}</div>
+                            <div style={{ fontSize: 11, fontWeight: 800, color: c.col, marginTop: 7, position: 'relative' }}>{c.label}</div>
+                          </div>
+                        ))}
+                      </div>
+
+                      {/* Discovery badge — p≥0.17: VO "led to a single unifying discovery" */}
+                      {progress >= 0.17 && (
+                        <div style={{
+                          width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 12,
+                          padding: '13px 24px', background: `${TEAL}12`, border: `2px solid ${TEAL}55`,
+                          borderRadius: 18, boxShadow: `0 0 44px ${TEAL}38, 0 4px 20px ${TEAL}18`,
+                          animation: 'dpStampDrop 0.55s cubic-bezier(0.34,1.4,0.64,1) both, dpBreath 2.2s ease-in-out 0.6s infinite',
+                          position: 'relative', overflow: 'hidden',
+                        }}>
+                          <div style={{ position: 'absolute', inset: 0, background: `linear-gradient(105deg,transparent 32%,${TEAL}18 50%,transparent 68%)`, animation: 'dpChromeShimmer 2.8s ease-in-out infinite', pointerEvents: 'none' }} />
+                          <span style={{ fontSize: 22, filter: `drop-shadow(0 0 10px ${TEAL}90)`, position: 'relative' }}>⚡</span>
+                          <div style={{ textAlign: 'center', position: 'relative' }}>
+                            <div style={{ fontSize: 9, fontWeight: 700, color: `${TEAL}90`, letterSpacing: 1.8, textTransform: 'uppercase', marginBottom: 2 }}>Led to a</div>
+                            <div style={{ fontSize: 14, fontWeight: 900, color: TEAL, letterSpacing: -0.2 }}>Single Unifying Discovery</div>
+                          </div>
+                          <span style={{ fontSize: 22, filter: `drop-shadow(0 0 10px ${TEAL}90)`, position: 'relative' }}>⚡</span>
+                        </div>
+                      )}
+                    </div>
+                  )}
+
+                  {/* ── Stage A3 (p ≥ 0.22): Discovery reveal — snap in at 0.22 ── */}
+                  {progress >= 0.22 && (
+                    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 13, width: '100%', maxWidth: 420 }}>
+                      <div style={{ fontSize: 11, fontWeight: 700, color: DIM, letterSpacing: 1.6, textTransform: 'uppercase', animation: 'dpBeatIn 0.4s ease both' }}>The single unifying discovery</div>
+
+                      {/* Billing Problem — struck through with stamp drama */}
+                      {showBillingX && (
+                        <div style={{
+                          width: '100%', padding: '14px 20px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 12,
+                          background: `${RED}08`, border: `1.5px solid ${RED}35`, borderRadius: 16,
+                          animation: 'dpStampDrop 0.5s cubic-bezier(0.34,1.4,0.64,1) both',
+                          boxShadow: `0 0 28px ${RED}20`,
+                        }}>
+                          <span style={{ fontSize: 11, color: MUTED, fontWeight: 600 }}>Revenue gaps are NOT a</span>
+                          <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                            <span style={{ fontSize: 19, fontWeight: 900, color: RED, textDecoration: 'line-through', textDecorationThickness: 3, textDecorationColor: `${RED}cc`, opacity: 0.85 }}>Billing Problem</span>
+                            <span style={{ fontSize: 18, animation: 'dpClickPop 0.35s ease 0.3s both' }}>❌</span>
+                          </div>
+                        </div>
+                      )}
+
+                      {/* Clinical Workflow Problem — cinematic hero reveal */}
+                      {showWorkflow && (
+                        <div style={{
+                          width: '100%', padding: '18px 20px', textAlign: 'center',
+                          background: `${TEAL}10`, border: `2.5px solid ${TEAL}52`,
+                          borderRadius: 20, boxShadow: `0 0 55px ${TEAL}35, 0 4px 22px ${TEAL}18`,
+                          animation: 'dpSpringIn 0.6s cubic-bezier(0.34,1.4,0.64,1) both',
+                          position: 'relative', overflow: 'hidden',
+                        }}>
+                          {/* Bloom burst on reveal */}
+                          <div style={{ position: 'absolute', inset: -40, borderRadius: 50, pointerEvents: 'none', background: `radial-gradient(ellipse 80% 70% at 50% 50%,${TEAL}28 0%,transparent 65%)`, animation: 'dpBloom 1.6s ease-out both', zIndex: 0 }} />
+                          <div style={{ fontSize: 10, fontWeight: 600, color: MUTED, letterSpacing: 1.4, textTransform: 'uppercase', marginBottom: 6, position: 'relative' }}>Revenue gaps are a</div>
+                          <div style={{ fontSize: 25, fontWeight: 900, color: TEAL, letterSpacing: -0.5, position: 'relative', filter: `drop-shadow(0 0 12px ${TEAL}50)` }}>Clinical Workflow Problem</div>
+                          <div style={{ display: 'flex', gap: 6, justifyContent: 'center', marginTop: 8 }}>
+                            {['Documentation', 'Coding', 'Claims', 'Payer Logic'].map((t, i) => (
+                              <span key={i} style={{
+                                fontSize: 9, fontWeight: 700, color: TEAL, background: `${TEAL}10`,
+                                border: `1px solid ${TEAL}25`, borderRadius: 12, padding: '2px 8px',
+                                animation: `dpSpringIn 0.35s ease ${0.1 + i * 0.07}s both`,
+                              }}>{t}</span>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+
+                      {/* Insight chips — appear with workflow card (p≈0.31) */}
+                      {progress >= 0.31 && (
+                        <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', justifyContent: 'center' }}>
+                          {[
+                            { label: '🌐 Global RCM Research',    col: INDIGO, d: '0s'   },
+                            { label: '🔬 Clinical Workflow Gaps', col: TEAL,   d: '0.1s' },
+                            { label: '📑 Payer Contract Logic',   col: AMBER,  d: '0.2s' },
+                          ].map((c, i) => (
+                            <span key={i} style={{
+                              fontSize: 10, fontWeight: 700, color: c.col, background: `${c.col}0d`,
+                              border: `1px solid ${c.col}30`, borderRadius: 20, padding: '4px 12px',
+                              animation: `dpSpringIn 0.45s cubic-bezier(0.34,1.4,0.64,1) ${c.d} both`,
+                            }}>{c.label}</span>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  )}
                 </div>
-                <div style={{ fontSize: 8, fontWeight: 700, color: TEAL, marginTop: 5 }}>hospitals</div>
-                <div style={{ fontSize: 6.5, color: MUTED, marginTop: 2 }}>US · UAE · India</div>
-              </div>
-              {/* 10M+ Lives — fires slightly later at "Ten million patient lives" */}
-              {progress >= 0.46 && (
-                <div style={{ flex: 1, textAlign: 'center', padding: '12px 10px', background: `${INDIGO}0e`, border: `1px solid ${INDIGO}30`, borderRadius: 14, animation: 'dpSpringIn 0.7s cubic-bezier(0.34,1.4,0.64,1) both' }}>
-                  <div style={{ fontSize: 7, fontWeight: 600, color: `${INDIGO}99`, letterSpacing: 0.3, marginBottom: 4 }}>managing</div>
-                  <div style={{ fontSize: 42, fontWeight: 900, color: INDIGO, lineHeight: 1, letterSpacing: -2, fontFamily: 'Sora' }}>
-                    <CountUp value="10M+" duration={800} key="m10" />
+            )}
+
+            {/* ── Sub-phase B: Chain (p 0.33–0.60) — snaps in right after workflow revelation ── */}
+            {progress >= 0.33 && progress < 0.60 && (
+              <div style={{ position: 'absolute', inset: 0, zIndex: 2, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 18, padding: '16px 22px' }}>
+                <div style={{ textAlign: 'center', animation: 'dpBeatIn 0.4s ease both' }}>
+                  <div style={{ fontSize: 13, fontWeight: 800, color: DIM, letterSpacing: 1.8, textTransform: 'uppercase' }}>The Clinical-Financial Chain</div>
+                  <div style={{ fontSize: 11, color: MUTED, marginTop: 4 }}>every denial traces back to a breakdown in this sequence</div>
+                </div>
+                <ClinicalWorkflowChain progress={progress} />
+                {progress >= 0.52 && (
+                  <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8 }}>
+                    <div style={{
+                      display: 'inline-flex', alignItems: 'center', gap: 8,
+                      padding: '8px 20px', background: `${RED}12`, border: `2px solid ${RED}60`,
+                      borderRadius: 14, fontSize: 12, fontWeight: 900, color: RED,
+                      animation: 'dpClickPop 0.4s cubic-bezier(0.34,1.4,0.64,1) both, dpBreath 1.5s ease-in-out 0.5s infinite',
+                      boxShadow: `0 0 32px ${RED}40, 0 0 60px ${RED}15`,
+                    }}>
+                      <span style={{ filter: `drop-shadow(0 0 6px ${RED}80)` }}>⚠</span>
+                      <span>Break in this chain = Denial</span>
+                    </div>
+                    <div style={{ fontSize: 11, fontWeight: 700, color: MUTED, textAlign: 'center', maxWidth: 380, animation: 'dpBeatIn 0.5s ease both', lineHeight: 1.6 }}>
+                      Bridge the gap between clinical understanding and payer logic —&nbsp;
+                      <span style={{ color: TEAL, fontWeight: 900 }}>close all four at once.</span>
+                    </div>
                   </div>
-                  <div style={{ fontSize: 8, fontWeight: 700, color: INDIGO, marginTop: 5 }}>patient lives</div>
-                  <div style={{ fontSize: 6.5, color: MUTED, marginTop: 2 }}>globally</div>
+                )}
+              </div>
+            )}
+
+            {/* ── Sub-phase C: AlgoNet (p ≥ 0.60) — snaps in at 0.60, stays until Phase 2 ── */}
+            {progress >= 0.60 && (
+              <div style={{ position: 'absolute', inset: 0, zIndex: 2, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 10, padding: '12px 18px' }}>
+                <div style={{ textAlign: 'center', animation: 'dpBeatIn 0.4s ease both' }}>
+                  <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'center', gap: 8, marginBottom: 3 }}>
+                    <span style={{ fontSize: 44, fontWeight: 900, color: TEAL, lineHeight: 1, fontFamily: 'Sora', letterSpacing: -2, animation: 'dpBreath 3s ease-in-out 0.5s infinite', filter: `drop-shadow(0 0 16px ${TEAL}65)` }}>9</span>
+                    <span style={{ fontSize: 16, fontWeight: 900, color: DIM, letterSpacing: 0.2 }}>AI-Native Algorithms</span>
+                  </div>
+                  <div style={{ fontSize: 10, color: MUTED, letterSpacing: 1.2, textTransform: 'uppercase' }}>purpose-built · dual-grounded · clinical + payer logic</div>
+                </div>
+                {progress >= 0.60 && progress < 0.65 && (
+                  <div style={{ display: 'flex', gap: 10, animation: 'dpBeatIn 0.4s ease both' }}>
+                    {['⚡ Not adapted', '🏗 Built from scratch', '🎯 Purpose-built for RCM'].map((t, i) => (
+                      <span key={i} style={{
+                        fontSize: 10, color: TEAL, background: `${TEAL}0d`, border: `1px solid ${TEAL}28`,
+                        borderRadius: 20, padding: '4px 10px',
+                        animation: `dpSpringIn 0.4s ease ${i * 0.09}s both`,
+                      }}>{t}</span>
+                    ))}
+                  </div>
+                )}
+                <AlgoNetworkGraph progress={progress} />
+              </div>
+            )}
+
+          </div>
+        )}
+
+        {/* Phase 2: KPI Impact — snaps in at 0.80 */}
+        <div style={{ position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 10, padding: '10px 20px', opacity: kpiOpacity, transition: 'opacity 0.4s ease', pointerEvents: kpiOpacity < 0.1 ? 'none' : 'auto', zIndex: 1 }}>
+
+          <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none', background: `radial-gradient(ellipse 60% 55% at 50% 50%, ${TEAL}0a 0%, transparent 70%)`, animation: 'dpBreath 3.5s ease-in-out infinite' }} />
+
+          {/* Scale tiles */}
+          {progress >= 0.80 && (
+            <div style={{ display: 'flex', gap: 10, justifyContent: 'center', width: '100%', maxWidth: 360, position: 'relative', zIndex: 1 }}>
+              <div style={{ flex: 1, textAlign: 'center', padding: '9px 10px', background: `${TEAL}0e`, border: `1px solid ${TEAL}30`, borderRadius: 14, animation: 'dpSpringIn 0.7s cubic-bezier(0.34,1.4,0.64,1) both' }}>
+                <div style={{ fontSize: 9, fontWeight: 600, color: `${TEAL}99`, marginBottom: 2 }}>deployed across</div>
+                <div style={{ fontSize: 36, fontWeight: 900, color: TEAL, lineHeight: 1, letterSpacing: -2, fontFamily: 'Sora' }}><CountUp value="100+" duration={700} key="h100" /></div>
+                <div style={{ fontSize: 11, fontWeight: 700, color: TEAL, marginTop: 3 }}>hospitals</div>
+                <div style={{ fontSize: 9, color: MUTED, marginTop: 2 }}>UAE · India · US</div>
+              </div>
+              {progress >= 0.83 && (
+                <div style={{ flex: 1, textAlign: 'center', padding: '9px 10px', background: `${INDIGO}0e`, border: `1px solid ${INDIGO}30`, borderRadius: 14, animation: 'dpSpringIn 0.7s cubic-bezier(0.34,1.4,0.64,1) both' }}>
+                  <div style={{ fontSize: 9, fontWeight: 600, color: `${INDIGO}99`, marginBottom: 2 }}>managing</div>
+                  <div style={{ fontSize: 36, fontWeight: 900, color: INDIGO, lineHeight: 1, letterSpacing: -2, fontFamily: 'Sora' }}><CountUp value="10M+" duration={800} key="m10" /></div>
+                  <div style={{ fontSize: 11, fontWeight: 700, color: INDIGO, marginTop: 3 }}>patient lives</div>
+                  <div style={{ fontSize: 9, color: MUTED, marginTop: 2 }}>globally</div>
                 </div>
               )}
             </div>
           )}
 
-          {/* Geo country pills — replace the SVG map */}
-          {progress >= 0.46 && (
-            <div style={{ display: 'flex', gap: 8, justifyContent: 'center', animation: 'dpBeatIn 0.5s ease both' }}>
-              {[
-                { flag: '🇺🇸', label: 'USA',   col: TEAL   },
-                { flag: '🇦🇪', label: 'UAE',   col: AMBER  },
-                { flag: '🇮🇳', label: 'India', col: INDIGO },
-              ].map((g, i) => (
-                <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '5px 14px', background: `${g.col}0c`, border: `1px solid ${g.col}28`, borderRadius: 20, animation: `dpSpringIn 0.4s cubic-bezier(0.34,1.4,0.64,1) ${i * 0.10}s both` }}>
-                  <span style={{ fontSize: 14 }}>{g.flag}</span>
-                  <div style={{ fontSize: 8, fontWeight: 800, color: g.col }}>{g.label}</div>
+          {/* Geo pills */}
+          {progress >= 0.83 && (
+            <div style={{ display: 'flex', gap: 7, justifyContent: 'center', position: 'relative', zIndex: 1 }}>
+              {[{ flag: '🇦🇪', label: 'UAE', col: AMBER }, { flag: '🇮🇳', label: 'India', col: INDIGO }, { flag: '🇺🇸', label: 'USA', col: TEAL }].map((g, i) => (
+                <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 5, padding: '4px 11px', background: `${g.col}0c`, border: `1px solid ${g.col}28`, borderRadius: 20, animation: `dpSpringIn 0.4s cubic-bezier(0.34,1.4,0.64,1) ${i * 0.08}s both` }}>
+                  <span style={{ fontSize: 11 }}>{g.flag}</span>
+                  <div style={{ fontSize: 11, fontWeight: 800, color: g.col }}>{g.label}</div>
                 </div>
               ))}
             </div>
           )}
 
-          {/* Guarantee promise */}
-          {progress >= 0.55 && (
-            <div style={{ background: `${GREEN}10`, border: `1px solid ${GREEN}35`, borderRadius: 12, padding: '8px 20px', animation: 'dpSpringIn 0.6s cubic-bezier(0.34,1.4,0.64,1) both', textAlign: 'center' }}>
-              <div style={{ fontSize: 8, fontWeight: 700, color: GREEN, letterSpacing: 0.5 }}>CONTRACTUAL OUTCOMES · 60 DAYS</div>
-              <div style={{ fontSize: 10, fontWeight: 800, color: TXT, marginTop: 3 }}>↓30% Denials · 99% Clean Rate · +0.15 CMI</div>
+          {/* Outcome heading */}
+          {progress >= 0.85 && (
+            <div style={{ textAlign: 'center', animation: 'dpBeatIn 0.5s ease both', position: 'relative', zIndex: 1 }}>
+              <div style={{ fontSize: 11, fontWeight: 700, color: `${AMBER}90`, letterSpacing: 1.5, textTransform: 'uppercase' }}>Contractual outcomes · 60 days</div>
             </div>
           )}
-        </div>}
 
-        {/* ── Phase 2: KPI Outcomes ── */}
-        <div style={{ position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 14, padding: '16px 28px', opacity: kpiOpacity, transition: 'opacity 0.6s ease', pointerEvents: kpiOpacity < 0.1 ? 'none' : 'auto', zIndex: 1 }}>
-
-          {/* ── D: Phase 2 breathing ambient orb ── */}
-          <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none', background: `radial-gradient(ellipse 60% 55% at 50% 50%, ${TEAL}0a 0%, transparent 70%)`, animation: 'dpBreath 3.5s ease-in-out infinite' }} />
-
-          <div style={{ textAlign: 'center', animation: 'dpBeatIn 0.5s ease both', position: 'relative', zIndex: 1 }}>
-            <div style={{ fontSize: 8.5, fontWeight: 700, color: `${AMBER}90`, letterSpacing: 1.5, textTransform: 'uppercase', marginBottom: 3 }}>Closing those four gaps — contractually</div>
-            <div style={{ fontSize: 13, fontWeight: 800, color: TXT }}>Here's what changes in 60 days:</div>
-          </div>
-
-          {/* KPI cards — redesigned: clear hierarchy, Sora numbers, arc gauge */}
+          {/* KPI cards */}
           {(() => {
             const kpiMeta = [
-              { label: 'Denial Reduction', number: '↓30%', desc: 'fewer denials in 60 days', cmp: 'Industry avg ~30% denial rate', indPct: 0.60, dsPct: 0.92 },
-              { label: 'Clean Claim Rate', number: '99%',  desc: 'first-pass submission',    cmp: 'Industry avg 75% clean rate',  indPct: 0.75, dsPct: 0.99 },
-              { label: 'Case Mix Index',   number: '+0.15',desc: 'CMI improvement',           cmp: 'Industry avg CMI uplift ~0.05',indPct: 0.55, dsPct: 0.82 },
+              { label: 'Denial Reduction', number: '↓30%', desc: 'fewer denials in 60 days', cmp: 'Industry avg ~30% denial rate', indPct: 0.60, dsPct: 0.92, sparkline: [0.60, 0.76, 0.92], delta: '↓30% vs Ind.' },
+              { label: 'Clean Claim Rate', number: '99%',  desc: 'first-pass submission',    cmp: 'Industry avg 75% clean rate',  indPct: 0.75, dsPct: 0.99, sparkline: [0.75, 0.88, 0.99], delta: '+24% vs Ind.' },
+              { label: 'Case Mix Index',   number: '+0.15',desc: 'CMI improvement',           cmp: 'Industry avg CMI uplift ~0.05',indPct: 0.55, dsPct: 0.82, sparkline: [0.55, 0.68, 0.82], delta: '+3× vs Ind.'  },
             ];
+            const R = 33, stroke = 7, circ = Math.PI * R;
             return (
-              <div style={{ display: 'flex', gap: 12, justifyContent: 'center', width: '100%', maxWidth: 580, position: 'relative', zIndex: 1 }}>
+              <div style={{ display: 'flex', gap: 10, justifyContent: 'center', width: '100%', maxWidth: 580, position: 'relative', zIndex: 1 }}>
                 {kpiBeats.map((b, i) => {
                   const show   = progress >= b.at;
                   const active = spot(progress, b.at, b.at + 0.18);
-                  const c  = colors[i];
-                  const m  = kpiMeta[i];
-                  const R  = 33, stroke = 7;
-                  const circ = Math.PI * R;
+                  const c = colors[i];
+                  const m = kpiMeta[i];
                   return (
                     <div key={i} style={{
-                      flex: 1, minWidth: 128,
-                      background: active
-                        ? `linear-gradient(170deg,${c}13,${c}05,rgba(255,255,255,0.97))`
-                        : 'rgba(255,255,255,0.96)',
+                      flex: 1, minWidth: 118,
+                      background: active ? `linear-gradient(170deg,${c}13,${c}05,rgba(255,255,255,0.97))` : 'rgba(255,255,255,0.96)',
                       border: `1px solid ${c}${active ? '45' : show ? '22' : '0d'}`,
                       borderTop: `3px solid ${c}`,
-                      borderRadius: 18,
-                      padding: '16px 14px 18px',
+                      borderRadius: 18, padding: '13px 11px 14px',
                       display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 0,
                       opacity: show ? 1 : 0,
                       animation: show ? `dpSpringIn 0.65s cubic-bezier(0.34,1.4,0.64,1) both` : 'none',
-                      boxShadow: active
-                        ? `0 0 0 2px ${c}30, 0 10px 36px ${c}18, 0 4px 14px rgba(0,0,0,0.07)`
-                        : '0 2px 10px rgba(0,0,0,0.06)',
+                      boxShadow: active ? `0 0 0 2px ${c}30, 0 10px 36px ${c}18, 0 4px 14px rgba(0,0,0,0.07)` : '0 2px 10px rgba(0,0,0,0.06)',
                       transform: active ? 'scale(1.055) translateY(-3px)' : 'scale(1)',
                       transition: 'transform 0.4s cubic-bezier(0.34,1.2,0.64,1), box-shadow 0.4s ease, background 0.4s ease',
                       position: 'relative', overflow: 'hidden',
                     }}>
-                      {/* Bloom behind card on active */}
                       {active && <div style={{ position: 'absolute', inset: -20, pointerEvents: 'none', background: `radial-gradient(ellipse 80% 70% at 50% 50%,${c}1a 0%,transparent 70%)`, animation: 'dpBloom 1.4s ease-out both', zIndex: 0 }}/>}
 
-                      {/* ── Metric name header ── */}
-                      <div style={{ fontSize: 7, fontWeight: 800, color: `${c}cc`, letterSpacing: 1.6, textTransform: 'uppercase', marginBottom: 12, zIndex: 1, textAlign: 'center' }}>
-                        {m.label}
-                      </div>
+                      <div style={{ fontSize: 7, fontWeight: 800, color: `${c}cc`, letterSpacing: 1.6, textTransform: 'uppercase', marginBottom: 10, zIndex: 1, textAlign: 'center' }}>{m.label}</div>
 
-                      {/* ── Arc gauge ── */}
+                      {/* Arc gauge */}
                       <div style={{ position: 'relative', width: 82, height: 46, flexShrink: 0, zIndex: 1 }}>
                         <svg width="82" height="52" viewBox="0 0 82 52" style={{ overflow: 'visible' }}>
-                          {/* Track */}
                           <path d={`M 8 46 A ${R} ${R} 0 0 1 74 46`} fill="none" stroke={`${MUTED}15`} strokeWidth={stroke} strokeLinecap="round"/>
-                          {/* Industry benchmark — lighter, thinner */}
                           <path d={`M 8 46 A ${R} ${R} 0 0 1 74 46`} fill="none" stroke={`${MUTED}45`} strokeWidth={stroke - 2} strokeLinecap="round"
                             strokeDasharray={`${show ? m.indPct * circ : 0} ${circ}`}
                             style={{ transition: 'stroke-dasharray 1.0s cubic-bezier(0.34,1.2,0.64,1)' }}/>
-                          {/* Docstribe fill — full weight + glow */}
                           <path d={`M 8 46 A ${R} ${R} 0 0 1 74 46`} fill="none" stroke={c} strokeWidth={stroke} strokeLinecap="round"
                             strokeDasharray={`${show ? m.dsPct * circ : 0} ${circ}`}
                             style={{ transition: `stroke-dasharray 1.3s cubic-bezier(0.34,1.2,0.64,1) 0.15s`, filter: `drop-shadow(0 0 5px ${c}80)` }}/>
                         </svg>
-                        {/* Arc centre legend */}
                         <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, display: 'flex', justifyContent: 'space-between', padding: '0 2px' }}>
                           <span style={{ fontSize: 5.5, fontWeight: 600, color: MUTED }}>Ind.</span>
                           <span style={{ fontSize: 5.5, fontWeight: 700, color: c }}>DS</span>
                         </div>
                       </div>
 
-                      {/* ── Hero number with ring burst ── */}
-                      <div style={{ position: 'relative', display: 'inline-block', zIndex: 1, marginTop: 10, marginBottom: 8 }}>
-                        {show && (
-                          <div key={`ring-${i}-${show}`} style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%,-50%)', width: 52, height: 52, borderRadius: '50%', border: `2px solid ${c}55`, animation: 'dpStatRing 1.2s ease-out both', pointerEvents: 'none' }} />
-                        )}
-                        <div style={{ fontSize: 40, fontWeight: 900, color: c, fontFamily: 'Sora, sans-serif', lineHeight: 1, letterSpacing: -2, textShadow: active ? `0 0 28px ${c}45` : 'none', transition: 'text-shadow 0.4s ease' }}>
+                      {/* Hero number — 52px */}
+                      <div style={{ position: 'relative', display: 'inline-block', zIndex: 1, marginTop: 8, marginBottom: 6 }}>
+                        {show && <div key={`ring-${i}-${show}`} style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%,-50%)', width: 56, height: 56, borderRadius: '50%', border: `2px solid ${c}55`, animation: 'dpStatRing 1.2s ease-out both', pointerEvents: 'none' }} />}
+                        <div style={{ fontSize: 52, fontWeight: 900, color: c, fontFamily: 'Sora, sans-serif', lineHeight: 1, letterSpacing: -2, textShadow: active ? `0 0 28px ${c}45` : 'none', transition: 'text-shadow 0.4s ease' }}>
                           {show ? <CountUp value={m.number} duration={750} key={`k${i}-${show}`}/> : m.number}
                         </div>
                       </div>
 
-                      {/* ── Divider ── */}
-                      <div style={{ width: 28, height: 1.5, borderRadius: 1, background: `linear-gradient(90deg,transparent,${c}80,transparent)`, zIndex: 1, marginBottom: 8 }}/>
+                      <div style={{ width: 28, height: 1.5, borderRadius: 1, background: `linear-gradient(90deg,transparent,${c}80,transparent)`, zIndex: 1, marginBottom: 5 }}/>
+                      <div style={{ fontSize: 7.5, fontWeight: 600, color: DIM, textAlign: 'center', lineHeight: 1.5, zIndex: 1 }}>{m.desc}</div>
 
-                      {/* ── Short description ── */}
-                      <div style={{ fontSize: 8, fontWeight: 600, color: DIM, textAlign: 'center', lineHeight: 1.5, zIndex: 1 }}>
-                        {m.desc}
-                      </div>
+                      {/* Sparkline */}
+                      {show && (
+                        <div style={{ width: '100%', marginTop: 5, zIndex: 1 }}>
+                          <svg width="100%" height="20" viewBox="0 0 62 20" preserveAspectRatio="none">
+                            <polyline points={m.sparkline.map((v, j) => `${j * 31},${18 - v * 16}`).join(' ')}
+                              fill="none" stroke={c} strokeWidth="1.8" strokeLinejoin="round" opacity="0.75" />
+                            {m.sparkline.map((v, j) => (
+                              <circle key={j} cx={j * 31} cy={18 - v * 16} r={j === 2 ? 2.5 : 1.5} fill={c} opacity={j === 2 ? 1 : 0.45} />
+                            ))}
+                          </svg>
+                          <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 5, color: MUTED, marginTop: 1 }}>
+                            <span>Industry</span><span style={{ color: c, fontWeight: 700 }}>Docstribe</span>
+                          </div>
+                        </div>
+                      )}
 
-                      {/* ── Industry comparison note ── */}
-                      <div style={{ fontSize: 6, color: MUTED, marginTop: 6, zIndex: 1, textAlign: 'center', lineHeight: 1.4, opacity: 0.85 }}>
-                        {m.cmp}
-                      </div>
+                      <div style={{ fontSize: 6, color: MUTED, marginTop: 4, zIndex: 1, textAlign: 'center', lineHeight: 1.4, opacity: 0.85 }}>{m.cmp}</div>
                     </div>
                   );
                 })}
@@ -828,37 +1388,25 @@ function KPIScene({ scene, progress }) {
             );
           })()}
 
-
-          {/* 60-Day Timeline with animated connecting bars */}
-          {progress >= 0.93 && (
-            <div style={{ width: '100%', maxWidth: 520, animation: 'dpBeatIn 0.6s ease both', position: 'relative', zIndex: 1 }}>
-              <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'center', gap: 0 }}>
-                {[
-                  { day: 'Day 0',  label: 'Deploy',        col: TEAL   },
-                  { day: 'Day 14', label: 'First results', col: INDIGO },
-                  { day: 'Day 30', label: '50% lift',      col: PURPLE },
-                  { day: 'Day 60', label: 'Guaranteed ✓',  col: GREEN  },
-                ].map((m, mi) => (
-                  <Fragment key={mi}>
-                    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 3, flexShrink: 0, animation: `dpSpringIn 0.45s cubic-bezier(0.34,1.4,0.64,1) ${mi*0.10}s both` }}>
-                      <div style={{ width: mi===3 ? 14 : 10, height: mi===3 ? 14 : 10, borderRadius: '50%', background: m.col, boxShadow: `0 0 ${mi===3?14:8}px ${m.col}80`, border: '2px solid rgba(255,255,255,0.9)', animation: mi===3 ? 'dpPulse 1.5s ease-in-out infinite' : 'none' }}/>
-                      <div style={{ fontSize: 7, fontWeight: 800, color: m.col }}>{m.day}</div>
-                      <div style={{ fontSize: 6, color: mi===3 ? GREEN : MUTED, fontWeight: mi===3 ? 700 : 400, textAlign: 'center', maxWidth: 52 }}>{m.label}</div>
-                    </div>
-                    {/* ── F: Animated connecting bar fills from left ── */}
-                    {mi < 3 && (
-                      <div style={{ flex: 1, height: 2, background: 'rgba(0,0,0,0.07)', borderRadius: 1, alignSelf: 'flex-start', marginTop: 5, marginBottom: 24, overflow: 'hidden' }}>
-                        <div style={{ height: '100%', width: '100%', background: `linear-gradient(90deg,${m.col}55,${[INDIGO,PURPLE,GREEN][mi]}55)`, borderRadius: 1, transform: 'translateX(-100%)', animation: `dpSlideInBar 0.6s cubic-bezier(0.34,1.2,0.64,1) ${0.15 + mi * 0.14}s both` }} />
+          {/* GuaranteeSeal + milestone nodes */}
+          {progress >= 0.97 && (
+            <div style={{ display: 'flex', alignItems: 'center', gap: 20, position: 'relative', zIndex: 1, animation: 'dpBeatIn 0.5s ease both' }}>
+              <GuaranteeSeal />
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
+                <div style={{ fontSize: 9, fontWeight: 800, color: TXT }}>All outcomes contractual</div>
+                <div style={{ fontSize: 7, color: MUTED }}>Auditable · backed by Docstribe SLA</div>
+                {progress >= 0.97 && (
+                  <div style={{ display: 'flex', gap: 10, marginTop: 4 }}>
+                    {[{ d: 'Day 0', l: 'Deploy', c: TEAL }, { d: 'Day 30', l: '50% lift', c: PURPLE }, { d: 'Day 60', l: 'Guaranteed ✓', c: GREEN }].map((mi, idx) => (
+                      <div key={idx} style={{ textAlign: 'center', animation: `dpSpringIn 0.4s cubic-bezier(0.34,1.4,0.64,1) ${idx * 0.08}s both` }}>
+                        <div style={{ width: idx===2 ? 11 : 8, height: idx===2 ? 11 : 8, borderRadius: '50%', background: mi.c, margin: '0 auto 3px', boxShadow: `0 0 8px ${mi.c}80`, animation: idx===2 ? 'dpPulse 1.5s ease-in-out infinite' : 'none' }} />
+                        <div style={{ fontSize: 6.5, fontWeight: 700, color: mi.c }}>{mi.d}</div>
+                        <div style={{ fontSize: 5.5, color: idx===2 ? GREEN : MUTED, fontWeight: idx===2 ? 700 : 400 }}>{mi.l}</div>
                       </div>
-                    )}
-                  </Fragment>
-                ))}
+                    ))}
+                  </div>
+                )}
               </div>
-              {progress >= 0.97 && (
-                <div style={{ textAlign: 'center', marginTop: 8, fontSize: 8, color: MUTED, animation: 'dpBeatIn 0.5s ease both' }}>
-                  All outcomes contractual · auditable · <span style={{ color: GREEN, fontWeight: 700 }}>backed by Docstribe SLA</span>
-                </div>
-              )}
             </div>
           )}
         </div>
@@ -3008,7 +3556,8 @@ export default function DemoPlayer() {
           0%   { transform:translateX(-200%); }
           100% { transform:translateX(400%); }
         }
-        @keyframes dpSlideInLeft { from { transform: translateX(-100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+        @keyframes dpSlideInLeft  { from { transform: translateX(-100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+        @keyframes dpSlideInRight { from { transform: translateX(100%);  opacity: 0; } to { transform: translateX(0); opacity: 1; } }
         @keyframes dpClickPop {
           0%   { transform: scale(1);    }
           25%  { transform: scale(0.88); }
@@ -3039,6 +3588,25 @@ export default function DemoPlayer() {
         @keyframes dpSlideInBar {
           from { transform: translateX(-100%); }
           to   { transform: translateX(0); }
+        }
+        @keyframes dpDataFlow {
+          0%   { stroke-dashoffset: 50; opacity: 0.65; }
+          100% { stroke-dashoffset: 0;  opacity: 0.10; }
+        }
+        @keyframes dpStampDrop {
+          0%   { transform: scale(0.35) rotate(-10deg); opacity: 0; }
+          55%  { transform: scale(1.10) rotate(3deg);   opacity: 1; }
+          75%  { transform: scale(0.95) rotate(-1deg);  opacity: 1; }
+          100% { transform: scale(1.00) rotate(0deg);   opacity: 1; }
+        }
+        @keyframes dpArrowDraw {
+          0%   { stroke-dashoffset: 38; opacity: 0; }
+          20%  { opacity: 1; }
+          100% { stroke-dashoffset: 0;  opacity: 1; }
+        }
+        @keyframes dpArcFill {
+          0%   { stroke-dashoffset: 264; }
+          100% { stroke-dashoffset: 0;   }
         }
       `}</style>
     </section>

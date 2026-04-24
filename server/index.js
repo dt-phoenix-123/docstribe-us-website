@@ -408,7 +408,7 @@ const UAE_DEMO_SCENES = [
   {
     id: 2, timecode: '0:14–0:28', journeyStage: 'outcomes',
     title: 'Introducing Docstribe',
-    voText: "Docstribe is purpose-built to close this gap. Built by doctors with more than thirty years of grounded clinical experience — not software engineers guessing at medicine. Deployed in over a hundred hospitals. Managing ten million patient lives. This is a clinician-built intelligence engine. Denials drop by thirty percent. Clean claim rates reach ninety-nine percent. Case mix index rises by point fifteen. Sixty days. Contractually guaranteed.",
+    voText: "Four gaps. One answer: Docstribe — built by clinicians. Extensive research with practitioners carrying over thirty years of combined experience — working through denial patterns, payer contracts, and clinical documentation — led to a single unifying discovery: revenue gaps are not a billing problem. They are a clinical workflow problem. Every denial traces back to a breakdown in how clinical encounters are documented, coded, and submitted. The root cause sits at the intersection of clinical understanding and payer logic. Bridge that intersection — and you close all four gaps at once. That is exactly what Docstribe does. Nine AI-native algorithms, built from scratch, deeply grounded in both clinical workflow intelligence and payer contract rules. Not adapted from generic tools. Purpose-built for healthcare revenue cycle. Deployed across one hundred hospitals. Managing ten million lives. Denials drop thirty percent. Clean claim rate reaches ninety-nine percent. Case mix index rises by point fifteen. Sixty days. Contractually guaranteed.",
   },
   {
     id: 4, timecode: '0:28–0:42', journeyStage: 'pre-visit',
@@ -418,28 +418,31 @@ const UAE_DEMO_SCENES = [
   {
     id: 6, timecode: '0:42–1:00', journeyStage: 'ambient-cdi',
     title: 'Clinical Intelligence',
-    voText: "While the doctor sees the patient, Docstribe is already working. Three signals mapped. Three gaps found. A Nephrology referral — not yet ordered. Medications — not yet ordered. A follow-up HbA1c — not scheduled. The physician acts on each — one click, three actions captured, all grounded in clinical guidelines such as ACC and AHA, before the patient leaves the room. Then the CDI query fires: is this diabetes controlled or uncontrolled? The physician responds in five seconds. The code corrects. Two thousand four hundred and fifty dirhams — captured right there, at point of care.",
+    voText: "While the doctor sees the patient, Docstribe is already working. Three gaps found — a Nephrology referral not yet ordered, medications not yet prescribed, a follow-up HbA1c not scheduled. One click. Three actions captured before the patient leaves. Then the CDI query fires: controlled or uncontrolled diabetes? The physician responds in five seconds. The code corrects. Two thousand four hundred and fifty dirhams — captured at point of care.",
   },
   {
     id: 7, timecode: '1:00–1:14', journeyStage: 'coding',
     title: 'AI-Powered Coding',
-    voText: "Every diagnosis carries an ICD code. Every procedure, a CPT. Docstribe generates both automatically — zero manual entry. Together they drive your IR-DRG weight — the multiplier that decides what your hospital gets paid per admission. Every code is validated through NCCI and MUE checks. One click to submit. The weight lifts from zero point nine four to one point three four. Eighteen thousand four hundred dirhams — per case. That is what nothing missed looks like.",
+    voText: "Docstribe generates every ICD and CPT automatically — zero manual entry. Together they drive your IR-DRG weight, the multiplier that decides what your hospital gets paid per admission. Every code validated through NCCI and MUE checks. One click to submit. The weight lifts from zero point nine four to one point three four. Eighteen thousand four hundred dirhams — per case. Nothing missed.",
   },
   {
     id: 8, timecode: '1:14–1:32', journeyStage: 'denial-recovery',
     title: 'Denial Prevention & Recovery',
-    voText: "It doesn't stop here. We go deeper — into every payer's contract, every batch, every rule. Denials have patterns, and Docstribe maps every one of them. Between sixty-seven and ninety-one percent of what would be denied is caught and corrected before the claim goes out. And when one does slip through, a single click pulls the contract, matches the clause, and drafts the appeal. Thirty seconds — not three weeks.",
+    voText: "Into every payer's contract, every batch, every rule. Denials have patterns, and Docstribe maps every one. Between sixty-seven and ninety-one percent of what would be denied is caught before the claim goes out. When one slips through, a single click pulls the contract, matches the clause, and drafts the appeal. Thirty seconds — not three weeks.",
   },
   {
     id: 10, timecode: '1:32–1:52', journeyStage: 'service-line',
     title: 'Clinical Engagement',
-    voText: "Four alerts. Surfaced automatically. Not from a template — from learning your hospital's case mix, your payer contracts, your denial patterns. Every department. Every physician. Every claim makes it sharper. Generic AI misses what is uniquely yours. The question worth asking: what revenue is your hospital not seeing right now?",
+    voText: "Four alerts. Surfaced automatically. Not from a template — from learning your hospital's case mix, your payer contracts, your denial patterns. Every claim makes it sharper. Generic AI misses what is uniquely yours. The question worth asking: what revenue is your hospital not seeing right now?",
   },
 ];
 
 // ── Audio cache — in-memory (loaded from disk on startup) ─────────────────────
 let cachedIntroAudio = null;
 const cachedDemoAudios = new Map(); // sceneId → base64 WAV
+// Generation lock: sceneId → Promise<string|null>
+// Prevents concurrent TTS calls for the same scene (startup loop + on-demand race)
+const generatingScenes = new Map();
 
 // ── Startup: load all audio from disk, only call TTS for missing files ─────────
 (async () => {
@@ -486,21 +489,28 @@ const cachedDemoAudios = new Map(); // sceneId → base64 WAV
   // Generate missing scenes sequentially (rate-limit safe)
   console.log(`🎬  Generating ${missing.length} missing scene(s) — will save to disk for future restarts...`);
   for (const scene of missing) {
-    let audio = null;
-    for (let attempt = 1; attempt <= 3 && !audio; attempt++) {
-      if (attempt > 1) {
-        console.log(`   🔄  Retrying scene ${scene.id} (attempt ${attempt})...`);
-        await new Promise(r => setTimeout(r, 3000 * (attempt - 1)));
+    // Register in the lock map so on-demand requests piggyback instead of racing
+    const genPromise = (async () => {
+      let audio = null;
+      for (let attempt = 1; attempt <= 3 && !audio; attempt++) {
+        if (attempt > 1) {
+          console.log(`   🔄  Retrying scene ${scene.id} (attempt ${attempt})...`);
+          await new Promise(r => setTimeout(r, 3000 * (attempt - 1)));
+        }
+        audio = await generateAudio(scene.voText, DEMO_TTS_STYLE);
       }
-      audio = await generateAudio(scene.voText, DEMO_TTS_STYLE);
-    }
-    if (audio) {
-      cachedDemoAudios.set(scene.id, audio);
-      saveAudioToDisk(`scene-${scene.id}`, audio);
-      console.log(`   ✅  Scene ${scene.id} generated & saved: ${scene.title}`);
-    } else {
-      console.warn(`   ⚠️  Scene ${scene.id} failed — will generate on demand`);
-    }
+      generatingScenes.delete(scene.id);
+      if (audio) {
+        cachedDemoAudios.set(scene.id, audio);
+        saveAudioToDisk(`scene-${scene.id}`, audio);
+        console.log(`   ✅  Scene ${scene.id} generated & saved: ${scene.title}`);
+      } else {
+        console.warn(`   ⚠️  Scene ${scene.id} failed — will generate on demand`);
+      }
+      return audio;
+    })();
+    generatingScenes.set(scene.id, genPromise);
+    await genPromise; // keep sequential — wait before starting next scene
     await new Promise(r => setTimeout(r, 1500)); // rate limit gap
   }
   console.log(`🎬  Demo audio ready: ${cachedDemoAudios.size} / ${UAE_DEMO_SCENES.length} scenes cached.`);
@@ -533,13 +543,26 @@ app.post('/api/demo', async (req, res) => {
     // Serve from in-memory cache (already loaded from disk at startup)
     let audio = cachedDemoAudios.get(sceneId) || null;
     if (!audio) {
-      // Last-resort: generate on demand and save to disk so it's ready next restart
-      console.log(`⚡ Generating demo scene ${sceneId} on demand (not yet cached)...`);
-      audio = await generateAudio(scene.voText, DEMO_TTS_STYLE).catch(() => null);
-      if (audio) {
-        cachedDemoAudios.set(sceneId, audio);
-        saveAudioToDisk(`scene-${sceneId}`, audio);
+      // If the startup loop (or a prior on-demand request) is already generating this
+      // scene, reuse that same promise — avoids concurrent Gemini TTS calls that
+      // trigger rate-limit / "internal error" failures.
+      if (!generatingScenes.has(sceneId)) {
+        console.log(`⚡ Generating demo scene ${sceneId} on demand (not yet cached)...`);
+        const genPromise = generateAudio(scene.voText, DEMO_TTS_STYLE)
+          .catch(() => null)
+          .then(result => {
+            generatingScenes.delete(sceneId);
+            if (result) {
+              cachedDemoAudios.set(sceneId, result);
+              saveAudioToDisk(`scene-${sceneId}`, result);
+            }
+            return result;
+          });
+        generatingScenes.set(sceneId, genPromise);
+      } else {
+        console.log(`⏳ Scene ${sceneId} already generating — waiting on existing promise...`);
       }
+      audio = await generatingScenes.get(sceneId);
     }
     return res.json({ ...scene, audio });
   }
