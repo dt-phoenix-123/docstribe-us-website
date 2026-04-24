@@ -783,7 +783,7 @@ function AlgoNetworkGraph({ progress }) {
                   <span style={{ fontSize: 14, flexShrink: 0, filter: glowClinical ? `drop-shadow(0 0 6px ${a.color}80)` : 'none', transition: 'filter 0.35s ease' }}>{a.icon}</span>
                   <div style={{ flex: 1, minWidth: 0 }}>
                     <div style={{ fontSize: 10, fontWeight: 800, lineHeight: 1.2, color: glowClinical ? a.color : '#1e293b', transition: 'color 0.35s ease' }}>{a.name}</div>
-                    <div style={{ fontSize: 7.5, color: MUTED, marginTop: 1, lineHeight: 1.2 }}>{a.role}</div>
+                    <div style={{ fontSize: 9.5, color: MUTED, marginTop: 1, lineHeight: 1.2 }}>{a.role}</div>
                   </div>
                   {/* Live status dot */}
                   <div style={{
@@ -879,7 +879,7 @@ function AlgoNetworkGraph({ progress }) {
                   <span style={{ fontSize: 14, flexShrink: 0, filter: glowPayer ? `drop-shadow(0 0 6px ${a.color}80)` : 'none', transition: 'filter 0.35s ease' }}>{a.icon}</span>
                   <div style={{ flex: 1, minWidth: 0 }}>
                     <div style={{ fontSize: 10, fontWeight: 800, lineHeight: 1.2, color: glowPayer ? a.color : '#1e293b', transition: 'color 0.35s ease' }}>{a.name}</div>
-                    <div style={{ fontSize: 7.5, color: MUTED, marginTop: 1, lineHeight: 1.2 }}>{a.role}</div>
+                    <div style={{ fontSize: 9.5, color: MUTED, marginTop: 1, lineHeight: 1.2 }}>{a.role}</div>
                   </div>
                 </div>
               </div>
@@ -1226,9 +1226,9 @@ function KPIScene({ scene, progress }) {
                       <span style={{ filter: `drop-shadow(0 0 6px ${RED}80)` }}>⚠</span>
                       <span>Break in this chain = Denial</span>
                     </div>
-                    <div style={{ fontSize: 11, fontWeight: 700, color: MUTED, textAlign: 'center', maxWidth: 380, animation: 'dpBeatIn 0.5s ease both', lineHeight: 1.6 }}>
+                    <div style={{ fontSize: 13, fontWeight: 700, color: DIM, textAlign: 'center', maxWidth: 380, animation: 'dpBeatIn 0.5s ease both', lineHeight: 1.65 }}>
                       Bridge the gap between clinical understanding and payer logic —&nbsp;
-                      <span style={{ color: TEAL, fontWeight: 900 }}>close all four at once.</span>
+                      <span style={{ color: TEAL, fontWeight: 900, fontSize: 14, filter: `drop-shadow(0 0 8px ${TEAL}50)` }}>close all four at once.</span>
                     </div>
                   </div>
                 )}
@@ -1240,12 +1240,12 @@ function KPIScene({ scene, progress }) {
               <div style={{ position: 'absolute', inset: 0, zIndex: 2, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 10, padding: '12px 18px' }}>
                 <div style={{ textAlign: 'center', animation: 'dpBeatIn 0.4s ease both' }}>
                   <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'center', gap: 8, marginBottom: 3 }}>
-                    <span style={{ fontSize: 44, fontWeight: 900, color: TEAL, lineHeight: 1, fontFamily: 'Sora', letterSpacing: -2, animation: 'dpBreath 3s ease-in-out 0.5s infinite', filter: `drop-shadow(0 0 16px ${TEAL}65)` }}>9</span>
-                    <span style={{ fontSize: 16, fontWeight: 900, color: DIM, letterSpacing: 0.2 }}>AI-Native Algorithms</span>
+                    <span style={{ fontSize: 54, fontWeight: 900, color: TEAL, lineHeight: 1, fontFamily: 'Sora', letterSpacing: -2.5, animation: 'dpBreath 3s ease-in-out 0.5s infinite', filter: `drop-shadow(0 0 22px ${TEAL}70)` }}>9</span>
+                    <span style={{ fontSize: 17, fontWeight: 900, color: DIM, letterSpacing: 0.2 }}>AI-Native Algorithms</span>
                   </div>
                   <div style={{ fontSize: 10, color: MUTED, letterSpacing: 1.2, textTransform: 'uppercase' }}>purpose-built · dual-grounded · clinical + payer logic</div>
                 </div>
-                {progress >= 0.60 && progress < 0.65 && (
+                {progress >= 0.60 && progress < 0.68 && (
                   <div style={{ display: 'flex', gap: 10, animation: 'dpBeatIn 0.4s ease both' }}>
                     {['⚡ Not adapted', '🏗 Built from scratch', '🎯 Purpose-built for RCM'].map((t, i) => (
                       <span key={i} style={{
@@ -1271,18 +1271,22 @@ function KPIScene({ scene, progress }) {
           {/* Scale tiles */}
           {progress >= 0.80 && (
             <div style={{ display: 'flex', gap: 10, justifyContent: 'center', width: '100%', maxWidth: 360, position: 'relative', zIndex: 1 }}>
-              <div style={{ flex: 1, textAlign: 'center', padding: '9px 10px', background: `${TEAL}0e`, border: `1px solid ${TEAL}30`, borderRadius: 14, animation: 'dpSpringIn 0.7s cubic-bezier(0.34,1.4,0.64,1) both' }}>
-                <div style={{ fontSize: 9, fontWeight: 600, color: `${TEAL}99`, marginBottom: 2 }}>deployed across</div>
-                <div style={{ fontSize: 36, fontWeight: 900, color: TEAL, lineHeight: 1, letterSpacing: -2, fontFamily: 'Sora' }}><CountUp value="100+" duration={700} key="h100" /></div>
-                <div style={{ fontSize: 11, fontWeight: 700, color: TEAL, marginTop: 3 }}>hospitals</div>
-                <div style={{ fontSize: 9, color: MUTED, marginTop: 2 }}>UAE · India · US</div>
+              <div style={{ flex: 1, textAlign: 'center', padding: '9px 10px', background: `${TEAL}0e`, border: `1px solid ${TEAL}30`, borderRadius: 14, animation: 'dpSlideInLeft 0.65s cubic-bezier(0.34,1.4,0.64,1) both', boxShadow: `0 0 28px ${TEAL}18`, position: 'relative', overflow: 'hidden' }}>
+                <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(105deg,transparent 30%,rgba(255,255,255,0.28) 50%,transparent 70%)', animation: 'dpChromeShimmer 3s ease-in-out 0.3s infinite', pointerEvents: 'none' }} />
+                <div style={{ position: 'absolute', inset: 0, background: `${TEAL}05`, animation: 'dpBreath 2.8s ease-in-out infinite', pointerEvents: 'none', borderRadius: 14 }} />
+                <div style={{ fontSize: 9, fontWeight: 600, color: `${TEAL}99`, marginBottom: 2, position: 'relative' }}>deployed across</div>
+                <div style={{ fontSize: 36, fontWeight: 900, color: TEAL, lineHeight: 1, letterSpacing: -2, fontFamily: 'Sora', position: 'relative', textShadow: `0 0 22px ${TEAL}40` }}><CountUp value="100+" duration={700} key="h100" /></div>
+                <div style={{ fontSize: 11, fontWeight: 700, color: TEAL, marginTop: 3, position: 'relative' }}>hospitals</div>
+                <div style={{ fontSize: 9, color: MUTED, marginTop: 2, position: 'relative' }}>UAE · India · US</div>
               </div>
               {progress >= 0.83 && (
-                <div style={{ flex: 1, textAlign: 'center', padding: '9px 10px', background: `${INDIGO}0e`, border: `1px solid ${INDIGO}30`, borderRadius: 14, animation: 'dpSpringIn 0.7s cubic-bezier(0.34,1.4,0.64,1) both' }}>
-                  <div style={{ fontSize: 9, fontWeight: 600, color: `${INDIGO}99`, marginBottom: 2 }}>managing</div>
-                  <div style={{ fontSize: 36, fontWeight: 900, color: INDIGO, lineHeight: 1, letterSpacing: -2, fontFamily: 'Sora' }}><CountUp value="10M+" duration={800} key="m10" /></div>
-                  <div style={{ fontSize: 11, fontWeight: 700, color: INDIGO, marginTop: 3 }}>patient lives</div>
-                  <div style={{ fontSize: 9, color: MUTED, marginTop: 2 }}>globally</div>
+                <div style={{ flex: 1, textAlign: 'center', padding: '9px 10px', background: `${INDIGO}0e`, border: `1px solid ${INDIGO}30`, borderRadius: 14, animation: 'dpSlideInRight 0.65s cubic-bezier(0.34,1.4,0.64,1) both', boxShadow: `0 0 28px ${INDIGO}18`, position: 'relative', overflow: 'hidden' }}>
+                  <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(105deg,transparent 30%,rgba(255,255,255,0.28) 50%,transparent 70%)', animation: 'dpChromeShimmer 3s ease-in-out 0.8s infinite', pointerEvents: 'none' }} />
+                  <div style={{ position: 'absolute', inset: 0, background: `${INDIGO}05`, animation: 'dpBreath 2.5s ease-in-out 0.6s infinite', pointerEvents: 'none', borderRadius: 14 }} />
+                  <div style={{ fontSize: 9, fontWeight: 600, color: `${INDIGO}99`, marginBottom: 2, position: 'relative' }}>managing</div>
+                  <div style={{ fontSize: 36, fontWeight: 900, color: INDIGO, lineHeight: 1, letterSpacing: -2, fontFamily: 'Sora', position: 'relative', textShadow: `0 0 22px ${INDIGO}40` }}><CountUp value="10M+" duration={800} key="m10" /></div>
+                  <div style={{ fontSize: 11, fontWeight: 700, color: INDIGO, marginTop: 3, position: 'relative' }}>patient lives</div>
+                  <div style={{ fontSize: 9, color: MUTED, marginTop: 2, position: 'relative' }}>globally</div>
                 </div>
               )}
             </div>
@@ -1339,7 +1343,7 @@ function KPIScene({ scene, progress }) {
                     }}>
                       {active && <div style={{ position: 'absolute', inset: -20, pointerEvents: 'none', background: `radial-gradient(ellipse 80% 70% at 50% 50%,${c}1a 0%,transparent 70%)`, animation: 'dpBloom 1.4s ease-out both', zIndex: 0 }}/>}
 
-                      <div style={{ fontSize: 7, fontWeight: 800, color: `${c}cc`, letterSpacing: 1.6, textTransform: 'uppercase', marginBottom: 10, zIndex: 1, textAlign: 'center' }}>{m.label}</div>
+                      <div style={{ fontSize: 10, fontWeight: 800, color: `${c}cc`, letterSpacing: 1.4, textTransform: 'uppercase', marginBottom: 10, zIndex: 1, textAlign: 'center' }}>{m.label}</div>
 
                       {/* Arc gauge */}
                       <div style={{ position: 'relative', width: 82, height: 46, flexShrink: 0, zIndex: 1 }}>
@@ -1353,8 +1357,8 @@ function KPIScene({ scene, progress }) {
                             style={{ transition: `stroke-dasharray 1.3s cubic-bezier(0.34,1.2,0.64,1) 0.15s`, filter: `drop-shadow(0 0 5px ${c}80)` }}/>
                         </svg>
                         <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, display: 'flex', justifyContent: 'space-between', padding: '0 2px' }}>
-                          <span style={{ fontSize: 5.5, fontWeight: 600, color: MUTED }}>Ind.</span>
-                          <span style={{ fontSize: 5.5, fontWeight: 700, color: c }}>DS</span>
+                          <span style={{ fontSize: 8, fontWeight: 600, color: MUTED }}>Ind.</span>
+                          <span style={{ fontSize: 8, fontWeight: 700, color: c }}>DS</span>
                         </div>
                       </div>
 
@@ -1367,7 +1371,7 @@ function KPIScene({ scene, progress }) {
                       </div>
 
                       <div style={{ width: 28, height: 1.5, borderRadius: 1, background: `linear-gradient(90deg,transparent,${c}80,transparent)`, zIndex: 1, marginBottom: 5 }}/>
-                      <div style={{ fontSize: 7.5, fontWeight: 600, color: DIM, textAlign: 'center', lineHeight: 1.5, zIndex: 1 }}>{m.desc}</div>
+                      <div style={{ fontSize: 10, fontWeight: 600, color: DIM, textAlign: 'center', lineHeight: 1.5, zIndex: 1 }}>{m.desc}</div>
 
                       {/* Sparkline */}
                       {show && (
@@ -1379,13 +1383,13 @@ function KPIScene({ scene, progress }) {
                               <circle key={j} cx={j * 31} cy={18 - v * 16} r={j === 2 ? 2.5 : 1.5} fill={c} opacity={j === 2 ? 1 : 0.45} />
                             ))}
                           </svg>
-                          <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 5, color: MUTED, marginTop: 1 }}>
+                          <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 8, color: MUTED, marginTop: 1 }}>
                             <span>Industry</span><span style={{ color: c, fontWeight: 700 }}>Docstribe</span>
                           </div>
                         </div>
                       )}
 
-                      <div style={{ fontSize: 6, color: MUTED, marginTop: 4, zIndex: 1, textAlign: 'center', lineHeight: 1.4, opacity: 0.85 }}>{m.cmp}</div>
+                      <div style={{ fontSize: 9, color: MUTED, marginTop: 4, zIndex: 1, textAlign: 'center', lineHeight: 1.4, opacity: 0.85 }}>{m.cmp}</div>
                     </div>
                   );
                 })}
@@ -1394,23 +1398,21 @@ function KPIScene({ scene, progress }) {
           })()}
 
           {/* GuaranteeSeal + milestone nodes */}
-          {progress >= 0.97 && (
-            <div style={{ display: 'flex', alignItems: 'center', gap: 20, position: 'relative', zIndex: 1, animation: 'dpBeatIn 0.5s ease both' }}>
+          {progress >= 0.94 && (
+            <div style={{ display: 'flex', alignItems: 'center', gap: 20, position: 'relative', zIndex: 1, animation: 'dpStampDrop 0.7s cubic-bezier(0.34,1.4,0.64,1) both' }}>
               <GuaranteeSeal />
               <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
-                <div style={{ fontSize: 9, fontWeight: 800, color: TXT }}>All outcomes contractual</div>
-                <div style={{ fontSize: 7, color: MUTED }}>Auditable · backed by Docstribe SLA</div>
-                {progress >= 0.97 && (
-                  <div style={{ display: 'flex', gap: 10, marginTop: 4 }}>
-                    {[{ d: 'Day 0', l: 'Deploy', c: TEAL }, { d: 'Day 30', l: '50% lift', c: PURPLE }, { d: 'Day 60', l: 'Guaranteed ✓', c: GREEN }].map((mi, idx) => (
-                      <div key={idx} style={{ textAlign: 'center', animation: `dpSpringIn 0.4s cubic-bezier(0.34,1.4,0.64,1) ${idx * 0.08}s both` }}>
-                        <div style={{ width: idx===2 ? 11 : 8, height: idx===2 ? 11 : 8, borderRadius: '50%', background: mi.c, margin: '0 auto 3px', boxShadow: `0 0 8px ${mi.c}80`, animation: idx===2 ? 'dpPulse 1.5s ease-in-out infinite' : 'none' }} />
-                        <div style={{ fontSize: 6.5, fontWeight: 700, color: mi.c }}>{mi.d}</div>
-                        <div style={{ fontSize: 5.5, color: idx===2 ? GREEN : MUTED, fontWeight: idx===2 ? 700 : 400 }}>{mi.l}</div>
-                      </div>
-                    ))}
-                  </div>
-                )}
+                <div style={{ fontSize: 12, fontWeight: 800, color: TXT }}>All outcomes contractual</div>
+                <div style={{ fontSize: 10, color: MUTED }}>Auditable · backed by Docstribe SLA</div>
+                <div style={{ display: 'flex', gap: 10, marginTop: 4 }}>
+                  {[{ d: 'Day 0', l: 'Deploy', c: TEAL }, { d: 'Day 30', l: '50% lift', c: PURPLE }, { d: 'Day 60', l: 'Guaranteed ✓', c: GREEN }].map((mi, idx) => (
+                    <div key={idx} style={{ textAlign: 'center', animation: `dpSpringIn 0.4s cubic-bezier(0.34,1.4,0.64,1) ${idx * 0.10}s both` }}>
+                      <div style={{ width: idx===2 ? 12 : 9, height: idx===2 ? 12 : 9, borderRadius: '50%', background: mi.c, margin: '0 auto 3px', boxShadow: `0 0 10px ${mi.c}80`, animation: idx===2 ? 'dpPulse 1.5s ease-in-out infinite' : 'none' }} />
+                      <div style={{ fontSize: 9, fontWeight: 700, color: mi.c }}>{mi.d}</div>
+                      <div style={{ fontSize: 8, color: idx===2 ? GREEN : MUTED, fontWeight: idx===2 ? 700 : 400 }}>{mi.l}</div>
+                    </div>
+                  ))}
+                </div>
               </div>
             </div>
           )}
