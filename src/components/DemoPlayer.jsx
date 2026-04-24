@@ -411,18 +411,18 @@ function StatScene({ scene, progress }) {
       <div style={{ position: 'relative', zIndex: 2, display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '8px 16px', borderBottom: `1px solid ${BORDER}`, flexShrink: 0, opacity: p >= 0.02 ? 1 : 0, transition: 'opacity 0.8s', background: 'rgba(255,255,255,0.40)', backdropFilter: 'blur(6px)' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 7 }}>
           <div style={{ width: 5, height: 5, borderRadius: '50%', background: RED, boxShadow: `0 0 6px ${RED}`, animation: 'dpPulse 1.2s ease-in-out infinite' }} />
-          <span style={{ fontSize: 6, fontWeight: 700, color: MUTED, letterSpacing: 1.8, textTransform: 'uppercase' }}>UAE Healthcare · Revenue Intelligence Brief · 2024</span>
+          <span style={{ fontSize: 9, fontWeight: 700, color: MUTED, letterSpacing: 1.8, textTransform: 'uppercase' }}>UAE Healthcare · Revenue Intelligence Brief · 2024</span>
         </div>
         <div style={{ display: 'flex', gap: 2.5, alignItems: 'center' }}>
           {Array.from({length: 12}, (_, i) => {
             const denied = i === 3 || i === 9;
             return (
               <div key={i} style={{ width: denied ? 20 : 14, height: 6, borderRadius: 2, background: denied ? `${RED}18` : `${TEAL}10`, border: `1px solid ${denied ? RED + '45' : TEAL + '22'}`, boxShadow: denied && beat0Active ? `0 0 7px ${RED}50` : 'none', transition: 'box-shadow 0.4s', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                {denied && beat0Active && <span style={{ fontSize: 4, color: RED, fontWeight: 900 }}>✕</span>}
+                {denied && beat0Active && <span style={{ fontSize: 6, color: RED, fontWeight: 900 }}>✕</span>}
               </div>
             );
           })}
-          <span style={{ fontSize: 5.5, fontWeight: 700, color: RED, marginLeft: 4, opacity: beat0Active ? 1 : 0, transition: 'opacity 0.6s' }}>≈2 in 12 denied</span>
+          <span style={{ fontSize: 9, fontWeight: 700, color: RED, marginLeft: 4, opacity: beat0Active ? 1 : 0, transition: 'opacity 0.6s' }}>≈2 in 12 denied</span>
         </div>
       </div>
 
@@ -431,12 +431,12 @@ function StatScene({ scene, progress }) {
 
         {/* ═══ PHASE 1: Stats — vertically centered in mid-screen ═══ */}
         {phase === 1 && (
-          <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '8px 20px', gap: 10, overflow: 'hidden' }}>
+          <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '8px 20px', gap: 10, overflow: 'hidden', animation: 'dpBeatIn 0.5s ease both' }}>
 
             {/* Eyebrow label — centered */}
             {beat0Show && (
               <div style={{ animation: 'dpBeatIn 0.5s ease both', textAlign: 'center' }}>
-                <span style={{ fontSize: 6, fontWeight: 700, color: MUTED, letterSpacing: 2, textTransform: 'uppercase' }}>First-Pass Denial Rate · UAE Private Hospitals</span>
+                <span style={{ fontSize: 9, fontWeight: 700, color: MUTED, letterSpacing: 2, textTransform: 'uppercase' }}>First-Pass Denial Rate · UAE Private Hospitals</span>
               </div>
             )}
 
@@ -444,46 +444,49 @@ function StatScene({ scene, progress }) {
             {beat0Show && (
               <div style={{ textAlign: 'center', animation: 'dpEmergeStat 0.9s cubic-bezier(0.34,1.2,0.64,1) both', position: 'relative' }}>
                 {beat0Active && <div style={{ position: 'absolute', inset: -20, borderRadius: '50%', background: `radial-gradient(ellipse 100% 100% at 50% 50%, ${RED}12, transparent)`, animation: 'dpBreath 2.5s ease-in-out infinite', pointerEvents: 'none' }} />}
-                <div style={{ fontSize: beat1Show ? 40 : 58, fontWeight: 900, color: beat0Active ? RED : `${RED}45`, lineHeight: 1, letterSpacing: -2.5, transition: 'all 0.65s cubic-bezier(0.34,1.2,0.64,1)', fontFamily: 'Sora', textShadow: beat0Active ? `0 0 32px ${RED}40` : 'none' }}>
+                <div style={{ fontSize: beat1Show ? 46 : 58, fontWeight: 900, color: beat0Active ? RED : `${RED}45`, lineHeight: 1, letterSpacing: -2.5, transition: 'all 0.65s cubic-bezier(0.34,1.2,0.64,1)', fontFamily: 'Sora', textShadow: beat0Active ? `0 0 32px ${RED}40` : 'none', animation: beat0Active ? 'dpBreath 3s ease-in-out infinite' : 'none' }}>
                   <CountUp value="12–18%" duration={900} key={`b0-${beat0Show}`}/>
                 </div>
-                <div style={{ fontSize: 8.5, color: DIM, marginTop: 5, textAlign: 'center' }}>of UAE hospital claims denied on first submission</div>
+                <div style={{ fontSize: 12, color: DIM, marginTop: 5, textAlign: 'center' }}>of UAE hospital claims denied on first submission</div>
               </div>
             )}
 
             {/* Context row: AED 3.5M (at "three point five million") + <5% (at "world-class") — hidden when 65% appears */}
             {showCostCard && !beat1Show && (
-              <div style={{ display: 'flex', gap: 10, width: '100%', maxWidth: 300, animation: 'dpBeatIn 0.5s ease both' }}>
+              <div style={{ display: 'flex', gap: 10, width: '100%', maxWidth: 300, animation: 'dpSpringIn 0.6s cubic-bezier(0.34,1.4,0.64,1) both' }}>
                 <div style={{ flex: 1, padding: '8px 10px', background: `${RED}0c`, border: `1px solid ${RED}30`, borderRadius: 9, textAlign: 'center', boxShadow: `0 0 18px ${RED}14`, position: 'relative', overflow: 'hidden' }}>
                   <div style={{ position: 'absolute', inset: 0, background: `${RED}05`, animation: 'dpBreath 2.2s ease-in-out infinite', borderRadius: 8, pointerEvents: 'none' }} />
-                  <div style={{ fontSize: 5.5, color: MUTED, letterSpacing: 1, textTransform: 'uppercase', marginBottom: 3, position: 'relative' }}>Annual Revenue at Risk</div>
-                  <div style={{ fontSize: 15, fontWeight: 900, color: RED, fontFamily: 'Sora', lineHeight: 1.1, position: 'relative', textShadow: `0 0 20px ${RED}45` }}>AED <CountUp value="3.5M+" duration={1100}/></div>
-                  <div style={{ fontSize: 6, color: DIM, marginTop: 2, position: 'relative' }}>per 350-bed facility</div>
+                  <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(105deg,transparent 30%,rgba(255,255,255,0.28) 50%,transparent 70%)', animation: 'dpChromeShimmer 2.8s ease-in-out 0.4s infinite', pointerEvents: 'none', borderRadius: 8 }} />
+                  <div style={{ fontSize: 8, color: MUTED, letterSpacing: 1, textTransform: 'uppercase', marginBottom: 3, position: 'relative' }}>Annual Revenue at Risk</div>
+                  <div style={{ fontSize: 18, fontWeight: 900, color: RED, fontFamily: 'Sora', lineHeight: 1.1, position: 'relative', textShadow: `0 0 20px ${RED}45` }}>AED <CountUp value="3.5M+" duration={1100}/></div>
+                  <div style={{ fontSize: 9, color: DIM, marginTop: 2, position: 'relative' }}>per 350-bed facility</div>
                 </div>
                 {showGlobalCard && (
-                  <div style={{ flex: 1, padding: '8px 10px', background: `${GREEN}08`, border: `1px solid ${GREEN}25`, borderRadius: 9, textAlign: 'center', animation: 'dpBeatIn 0.5s ease both' }}>
-                    <div style={{ fontSize: 5.5, color: MUTED, letterSpacing: 1, textTransform: 'uppercase', marginBottom: 3 }}>Global Standard</div>
-                    <div style={{ fontSize: 15, fontWeight: 900, color: GREEN, fontFamily: 'Sora', lineHeight: 1.1 }}>&lt; 5%</div>
-                    <div style={{ fontSize: 6, color: DIM, marginTop: 2 }}>world-class denial rate</div>
+                  <div style={{ flex: 1, padding: '8px 10px', background: `${GREEN}08`, border: `1px solid ${GREEN}25`, borderRadius: 9, textAlign: 'center', animation: 'dpSpringIn 0.5s cubic-bezier(0.34,1.4,0.64,1) both', position: 'relative', overflow: 'hidden' }}>
+                    <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(105deg,transparent 30%,rgba(255,255,255,0.20) 50%,transparent 70%)', animation: 'dpChromeShimmer 3.2s ease-in-out 0.8s infinite', pointerEvents: 'none', borderRadius: 8 }} />
+                    <div style={{ fontSize: 8, color: MUTED, letterSpacing: 1, textTransform: 'uppercase', marginBottom: 3, position: 'relative' }}>Global Standard</div>
+                    <div style={{ fontSize: 18, fontWeight: 900, color: GREEN, fontFamily: 'Sora', lineHeight: 1.1, position: 'relative' }}>&lt; 5%</div>
+                    <div style={{ fontSize: 9, color: DIM, marginTop: 2, position: 'relative' }}>world-class denial rate</div>
                   </div>
                 )}
               </div>
             )}
 
-            {/* Denied claim — centered, compact (disappears when 65% stat appears) */}
-            {showClaim && p < 0.44 && (
-              <div style={{ borderRadius: 9, background: 'rgba(255,255,255,0.92)', border: `1.5px solid ${RED}50`, boxShadow: `0 3px 18px ${RED}18, 0 0 0 3px ${RED}0a`, padding: '8px 12px', animation: 'dpSpringIn 0.6s cubic-bezier(0.34,1.4,0.64,1) both', width: '100%', maxWidth: 260, position: 'relative', overflow: 'hidden' }}>
+            {/* Denied claim — soft fade + collapse when 65% appears */}
+            {showClaim && (
+              <div style={{ borderRadius: 9, background: 'rgba(255,255,255,0.92)', border: `1.5px solid ${RED}50`, boxShadow: `0 3px 18px ${RED}18, 0 0 0 3px ${RED}0a`, padding: p < 0.44 ? '8px 12px' : '0 12px', animation: 'dpSpringIn 0.6s cubic-bezier(0.34,1.4,0.64,1) both', width: '100%', maxWidth: 260, position: 'relative', overflow: 'hidden',
+                opacity: p < 0.44 ? 1 : 0, maxHeight: p < 0.44 ? '200px' : '0px', transition: 'opacity 0.5s ease, max-height 0.5s ease, padding 0.5s ease' }}>
                 {/* Pulsing red glow */}
                 <div style={{ position: 'absolute', inset: 0, background: `${RED}06`, animation: 'dpBreath 1.8s ease-in-out infinite', pointerEvents: 'none', borderRadius: 8 }} />
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 5, position: 'relative' }}>
-                  <span style={{ fontSize: 6, fontWeight: 700, color: MUTED, letterSpacing: 0.5 }}>CLAIM · AE-24-8821</span>
-                  <span style={{ fontSize: 9, fontWeight: 900, color: RED, letterSpacing: 1.5, border: `1.5px solid ${RED}`, borderRadius: 4, padding: '1px 6px', background: `${RED}08`, animation: 'dpPulse 1.4s ease-in-out infinite' }}>DENIED</span>
+                  <span style={{ fontSize: 9, fontWeight: 700, color: MUTED, letterSpacing: 0.5 }}>CLAIM · AE-24-8821</span>
+                  <span style={{ fontSize: 11, fontWeight: 900, color: RED, letterSpacing: 1.5, border: `1.5px solid ${RED}`, borderRadius: 4, padding: '1px 6px', background: `${RED}08`, animation: 'dpPulse 1.4s ease-in-out infinite' }}>DENIED</span>
                 </div>
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '3px 12px' }}>
                   {[['Patient','F.H. · 42F'],['Payer','Daman'],['Amount','AED 2,450'],['Service','Endocrinology']].map(([k,v]) => (
                     <div key={k} style={{ display: 'flex', justifyContent: 'space-between' }}>
-                      <span style={{ fontSize: 5.5, color: MUTED }}>{k}</span>
-                      <span style={{ fontSize: 6.5, fontWeight: 700, color: TXT }}>{v}</span>
+                      <span style={{ fontSize: 8, color: MUTED }}>{k}</span>
+                      <span style={{ fontSize: 10, fontWeight: 700, color: TXT }}>{v}</span>
                     </div>
                   ))}
                 </div>
@@ -498,11 +501,11 @@ function StatScene({ scene, progress }) {
             {/* Beat 1: 60-70% preventable — centered */}
             {beat1Show && (
               <div style={{ textAlign: 'center', animation: 'dpBeatIn 0.6s ease both' }}>
-                <div style={{ fontSize: 6, fontWeight: 700, color: MUTED, letterSpacing: 2, textTransform: 'uppercase', marginBottom: 5 }}>Of Those Denials — Entirely Preventable</div>
-                <div style={{ fontSize: 40, fontWeight: 900, color: beat1Active ? AMBER : `${AMBER}45`, lineHeight: 1, letterSpacing: -2, transition: 'color 0.6s', fontFamily: 'Sora' }}>
+                <div style={{ fontSize: 9, fontWeight: 700, color: MUTED, letterSpacing: 2, textTransform: 'uppercase', marginBottom: 5 }}>Of Those Denials — Entirely Preventable</div>
+                <div style={{ fontSize: 44, fontWeight: 900, color: beat1Active ? AMBER : `${AMBER}45`, lineHeight: 1, letterSpacing: -2, transition: 'color 0.6s', fontFamily: 'Sora', animation: beat1Active ? 'dpBreath 2.6s ease-in-out infinite' : 'none' }}>
                   <CountUp value="60–70%" duration={900} key={`b1-${beat1Show}`}/>
                 </div>
-                <div style={{ fontSize: 8, color: DIM, marginTop: 5 }}>caught before the claim ever leaves the building</div>
+                <div style={{ fontSize: 11, color: DIM, marginTop: 5 }}>caught before the claim ever leaves the building</div>
                 {/* Arc gauge — centered (appears when VO says "entirely preventable") */}
                 {p >= 0.50 && (() => {
                   const R = 34, cx = 52, cy = 40, circ = Math.PI * R;
@@ -518,11 +521,11 @@ function StatScene({ scene, progress }) {
                       <div style={{ display: 'flex', gap: 14 }}>
                         <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
                           <div style={{ width: 6, height: 6, borderRadius: '50%', background: AMBER }} />
-                          <span style={{ fontSize: 6.5, fontWeight: 700, color: AMBER }}>65% Preventable</span>
+                          <span style={{ fontSize: 9, fontWeight: 700, color: AMBER }}>65% Preventable</span>
                         </div>
                         <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
                           <div style={{ width: 6, height: 6, borderRadius: '50%', background: `${MUTED}45` }} />
-                          <span style={{ fontSize: 6.5, color: MUTED }}>35% Unavoidable</span>
+                          <span style={{ fontSize: 9, color: MUTED }}>35% Unavoidable</span>
                         </div>
                       </div>
                     </div>
@@ -535,15 +538,15 @@ function StatScene({ scene, progress }) {
 
         {/* ═══ PHASE 2: Timeline — full width, deep cards ═══ */}
         {phase === 2 && (
-          <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '12px 20px', gap: 10, overflow: 'auto' }}>
+          <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '12px 20px', gap: 10, overflow: 'auto', animation: 'dpBeatIn 0.55s ease both' }}>
             <div style={{ width: '100%', maxWidth: 480, display: 'flex', alignItems: 'center', gap: 10, flexShrink: 0, animation: 'dpBeatIn 0.5s ease both' }}>
-              <span style={{ fontSize: 8, fontWeight: 800, color: MUTED, letterSpacing: 1.5, textTransform: 'uppercase' }}>4 Root Causes · Same Pattern · Every Time</span>
+              <span style={{ fontSize: 11, fontWeight: 800, color: MUTED, letterSpacing: 1.5, textTransform: 'uppercase' }}>4 Root Causes · Same Pattern · Every Time</span>
               <div style={{ flex: 1, height: 1, background: BORDER }} />
               {/* Running denial total accumulator */}
               {(() => {
                 const visiblePct = GAP_ITEMS.filter(g => p >= g.threshold).reduce((s, g) => s + g.pct, 0);
                 return visiblePct > 0 ? (
-                  <div style={{ flexShrink: 0, fontSize: 7, fontWeight: 800, color: RED, background: `${RED}0e`, border: `1px solid ${RED}30`, borderRadius: 8, padding: '3px 8px', animation: 'dpBeatIn 0.3s ease both' }}>
+                  <div style={{ flexShrink: 0, fontSize: 10, fontWeight: 800, color: RED, background: `${RED}0e`, border: `1px solid ${RED}30`, borderRadius: 8, padding: '3px 8px', animation: 'dpBeatIn 0.3s ease both' }}>
                     {visiblePct}% of denials
                   </div>
                 ) : null;
@@ -559,20 +562,21 @@ function StatScene({ scene, progress }) {
                 const barActive = p >= threshold + 0.03;
                 return (
                   <div key={label} style={{ display: 'flex', gap: 14, marginBottom: 14, position: 'relative', alignItems: 'flex-start', animation: 'dpSpringIn 0.55s cubic-bezier(0.34,1.4,0.64,1) both' }}>
-                    {/* Numbered node */}
+                    {/* Numbered node — breathes */}
                     <div style={{ flexShrink: 0, width: 28, display: 'flex', justifyContent: 'center', paddingTop: 2 }}>
-                      <div style={{ width: 28, height: 28, borderRadius: '50%', background: col, display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1, boxShadow: `0 0 14px ${col}60`, flexShrink: 0 }}>
+                      <div style={{ width: 28, height: 28, borderRadius: '50%', background: col, display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1, boxShadow: `0 0 14px ${col}60`, flexShrink: 0, animation: `dpBreath ${2.2 + i * 0.3}s ease-in-out ${i * 0.2}s infinite` }}>
                         <span style={{ fontSize: 12, fontWeight: 900, color: '#fff' }}>{i + 1}</span>
                       </div>
                     </div>
-                    {/* Card */}
-                    <div style={{ flex: 1, background: 'rgba(255,255,255,0.92)', border: `1px solid ${BORDER}`, borderLeft: `3px solid ${col}`, borderRadius: 10, padding: '10px 14px', boxShadow: '0 2px 10px rgba(0,0,0,0.07)' }}>
-                      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 10, marginBottom: 4 }}>
+                    {/* Card — shimmer overlay + breathing node */}
+                    <div style={{ flex: 1, background: 'rgba(255,255,255,0.92)', border: `1px solid ${BORDER}`, borderLeft: `3px solid ${col}`, borderRadius: 10, padding: '10px 14px', boxShadow: '0 2px 10px rgba(0,0,0,0.07)', position: 'relative', overflow: 'hidden' }}>
+                      <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(105deg,transparent 30%,rgba(255,255,255,0.26) 50%,transparent 70%)', animation: `dpChromeShimmer ${3.0 + i * 0.4}s ease-in-out ${0.3 + i * 0.5}s infinite`, pointerEvents: 'none', borderRadius: 10 }} />
+                      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 10, marginBottom: 4, position: 'relative' }}>
                         <span style={{ fontSize: 11, fontWeight: 700, color: TXT, lineHeight: 1.25 }}>{label}</span>
                         <span style={{ fontSize: 24, fontWeight: 900, color: col, lineHeight: 1, flexShrink: 0, fontFamily: 'Sora' }}>{pct}%</span>
                       </div>
-                      <div style={{ fontSize: 8, color: DIM, marginBottom: 6 }}>{sub}</div>
-                      <div style={{ height: 4, borderRadius: 2, background: `${col}14`, overflow: 'hidden' }}>
+                      <div style={{ fontSize: 11, color: DIM, marginBottom: 6, position: 'relative' }}>{sub}</div>
+                      <div style={{ height: 4, borderRadius: 2, background: `${col}14`, overflow: 'hidden', position: 'relative' }}>
                         <div style={{ height: '100%', borderRadius: 2, background: `linear-gradient(90deg,${col},${col}bb)`, width: barActive ? `${pct}%` : '0%', transition: 'width 1.1s cubic-bezier(0.34,1.2,0.64,1)', boxShadow: `0 0 6px ${col}55` }}/>
                       </div>
                     </div>
@@ -588,23 +592,24 @@ function StatScene({ scene, progress }) {
           <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 12, padding: '0 20px', animation: 'dpSpringIn 0.7s cubic-bezier(0.34,1.4,0.64,1) both' }}>
             {/* 87% hero number */}
             <div style={{ textAlign: 'center', animation: 'dpEmergeStat 0.8s cubic-bezier(0.34,1.2,0.64,1) both' }}>
-              <div style={{ fontSize: 5.5, fontWeight: 700, color: MUTED, letterSpacing: 2, textTransform: 'uppercase', marginBottom: 4 }}>Total Addressable · Docstribe</div>
-              <div style={{ fontSize: 62, fontWeight: 900, color: TEAL, fontFamily: 'Sora', lineHeight: 1, letterSpacing: -3, textShadow: `0 0 40px ${TEAL}40` }}>87%</div>
-              <div style={{ fontSize: 9, color: DIM, marginTop: 5 }}>of denials are catchable before the claim leaves the building</div>
+              <div style={{ fontSize: 9, fontWeight: 700, color: MUTED, letterSpacing: 2, textTransform: 'uppercase', marginBottom: 4 }}>Total Addressable · Docstribe</div>
+              <div style={{ fontSize: 62, fontWeight: 900, color: TEAL, fontFamily: 'Sora', lineHeight: 1, letterSpacing: -3, textShadow: `0 0 40px ${TEAL}40`, animation: 'dpBreath 2.8s ease-in-out 0.3s infinite' }}>87%</div>
+              <div style={{ fontSize: 12, color: DIM, marginTop: 5 }}>of denials are catchable before the claim leaves the building</div>
             </div>
             {/* Divider */}
             <div style={{ width: 40, height: 1.5, background: BORDER, borderRadius: 1, animation: 'dpBeatIn 0.4s ease 0.3s both' }} />
-            {/* Resolution */}
-            <div style={{ textAlign: 'center', animation: 'dpBeatIn 0.7s ease 0.35s both' }}>
-              <div style={{ fontSize: 20, fontWeight: 900, color: TXT, letterSpacing: -0.5, lineHeight: 1.2 }}>Someone has to close all four.</div>
-              <div style={{ fontSize: 10, color: TEAL, fontWeight: 700, marginTop: 6, animation: 'dpBeatIn 0.6s ease 0.6s both' }}>Docstribe is built precisely to solve all four.</div>
+            {/* Resolution — stamp-drop entrance + continuous breath */}
+            <div style={{ textAlign: 'center', animation: 'dpStampDrop 0.65s cubic-bezier(0.34,1.4,0.64,1) 0.35s both' }}>
+              <div style={{ fontSize: 24, fontWeight: 900, color: TXT, letterSpacing: -0.5, lineHeight: 1.2, animation: 'dpBreath 2.5s ease-in-out 1.0s infinite', textShadow: `0 0 28px ${TXT}18` }}>Someone has to close all four.</div>
+              <div style={{ fontSize: 13, color: TEAL, fontWeight: 700, marginTop: 6, animation: 'dpBeatIn 0.6s ease 0.8s both' }}>Docstribe is built precisely to solve all four.</div>
             </div>
-            {/* Chips */}
-            <div style={{ display: 'flex', gap: 8, animation: 'dpBeatIn 0.5s ease 0.5s both' }}>
+            {/* Chips — shimmer + breathing */}
+            <div style={{ display: 'flex', gap: 8, animation: 'dpBeatIn 0.5s ease 0.6s both' }}>
               {[['CDI', AMBER], ['Auth', INDIGO], ['Coding', RED], ['Edits', PURPLE]].map(([label, col], i) => (
-                <div key={i} style={{ padding: '7px 12px', background: `${col}12`, border: `1px solid ${col}35`, borderRadius: 8, animation: `dpSpringIn 0.5s cubic-bezier(0.34,1.4,0.64,1) ${0.55 + i * 0.08}s both`, textAlign: 'center' }}>
-                  <div style={{ fontSize: 8, fontWeight: 800, color: col }}>{label}</div>
-                  <div style={{ fontSize: 6, color: DIM, marginTop: 2 }}>Solved ✓</div>
+                <div key={i} style={{ padding: '7px 12px', background: `${col}12`, border: `1px solid ${col}35`, borderRadius: 8, animation: `dpSpringIn 0.5s cubic-bezier(0.34,1.4,0.64,1) ${0.55 + i * 0.08}s both, dpBreath ${2.2 + i * 0.2}s ease-in-out ${1.0 + i * 0.15}s infinite`, textAlign: 'center', position: 'relative', overflow: 'hidden' }}>
+                  <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(105deg,transparent 25%,rgba(255,255,255,0.35) 50%,transparent 75%)', animation: `dpChromeShimmer ${3.0 + i * 0.3}s ease-in-out ${1.2 + i * 0.4}s infinite`, pointerEvents: 'none', borderRadius: 8 }} />
+                  <div style={{ fontSize: 11, fontWeight: 800, color: col, position: 'relative' }}>{label}</div>
+                  <div style={{ fontSize: 9, color: DIM, marginTop: 2, position: 'relative' }}>Solved ✓</div>
                 </div>
               ))}
             </div>
